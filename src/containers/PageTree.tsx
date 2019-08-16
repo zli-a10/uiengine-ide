@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Tree, Dropdown, Input, Icon } from "antd";
+import React from "react";
+import { Tree, Input, Icon } from "antd";
+import { DropdownMenu } from "./DropdownMenu";
 import _ from "lodash";
 import { trigger } from "../core/index";
 import commands from "../core/messages";
@@ -128,19 +129,20 @@ export class PageTree extends React.Component<ITree, ITreeState> {
             <Icon type="close" onClick={cancelEdit} />
           </>
         ) : (
-          <Dropdown overlay={menu}>
-            <a className="ant-dropdown-link" href="#">
-              Hover me <Icon type="down" />
-            </a>
-          </Dropdown>
-          //   <Dropdown
-          //     trigger="click"
-          //     placement="topRight"
-          //     arrowPointAtCenter={true}
-          //     title={props.children}
-          //     menu={menu}
-          //     onClick={onClick}
-          //   />
+          // <DropdownMenu overlay={menu}>
+          //   <a className="ant-dropdown-link" href="#">
+          //     Hover me <Icon type="down" />
+          //   </a>
+          // </DropdownMenu>
+          <DropdownMenu
+            trigger="click"
+            placement="topRight"
+            arrowPointAtCenter={true}
+            title={props.children}
+            menu={menu}
+            onClick={onClick}
+          />
+          // <div>{props.children}</div>
         )}
       </div>
     );
