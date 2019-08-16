@@ -9,7 +9,7 @@ import { Context } from "./Context";
 import "antd/dist/antd.css";
 import "./styles/index.less";
 
-export const IDEEditor: React.FC = () => {
+export const IDEEditor: React.FC = (props: any) => {
   const [componentsCollapsed, setComponentCollapse] = useState(false);
   const [propsCollapsed, setPropsCollapse] = useState(true);
   const [headerCollapsed, setHeaderCollapse] = useState(false);
@@ -82,7 +82,7 @@ export const IDEEditor: React.FC = () => {
         {componentsCollapsed ? null : (
           <Manager onClose={() => setComponentCollapse(!componentsCollapsed)} />
         )}
-        <DrawingBoard />
+        <DrawingBoard {...props} />
         {propsCollapsed ? null : (
           <PropManager onClose={() => setPropsCollapse(!propsCollapsed)} />
         )}

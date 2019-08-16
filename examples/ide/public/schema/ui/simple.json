@@ -1,0 +1,12 @@
+{
+  "component": "div",
+  "children": [
+    {
+      "component": "antd:Row",
+      "props": {
+        "span": 12,
+        "gutter": 16
+      }
+    }
+  ]
+}

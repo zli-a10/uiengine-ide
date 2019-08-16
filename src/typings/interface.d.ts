@@ -3,6 +3,11 @@ declare module "*.json" {
   export default value;
 }
 
+interface IIDEEditor {
+  layout: string;
+  config: object;
+}
+
 interface IPropManager {
   onClose: () => any;
 }

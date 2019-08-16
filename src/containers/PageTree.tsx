@@ -1,6 +1,6 @@
 import React from "react";
 import { Tree, Input, Icon } from "antd";
-import { DropdownMenu } from "./DropdownMenu";
+import { DropdownMenu } from "../components/DropdownMenu";
 import _ from "lodash";
 import { trigger } from "../core/index";
 import commands from "../core/messages";
