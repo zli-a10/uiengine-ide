@@ -9,7 +9,7 @@ import { Context } from "./Context";
 import "antd/dist/antd.css";
 import "./styles/index.less";
 
-const IDEEditor: React.FC = () => {
+export const IDEEditor: React.FC = () => {
   const [componentsCollapsed, setComponentCollapse] = useState(false);
   const [propsCollapsed, setPropsCollapse] = useState(true);
   const [headerCollapsed, setHeaderCollapse] = useState(false);
@@ -90,5 +90,3 @@ const IDEEditor: React.FC = () => {
     </Context.Provider>
   );
 };
-
-export default IDEEditor;
