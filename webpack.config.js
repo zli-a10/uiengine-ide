@@ -11,10 +11,10 @@ let outputFile, mode;
 
 if (env === "build") {
   mode = "production";
-  outputFile = libraryName + ".min.js";
+  outputFile = "index.min.js";
 } else {
   mode = "development";
-  outputFile = libraryName + ".js";
+  outputFile = "index.js";
 }
 
 const config = {
@@ -70,8 +70,8 @@ const config = {
     extensions: [".json", ".js", ".ts", ".tsx"]
   },
   externals: {
-    react: "React",
-    "react-dom": "ReactDOM"
+    react: "react",
+    "react-dom": "react-dom"
   }
 };
 
