@@ -11,7 +11,7 @@
     "test:w": "mocha -r ts-node/register -r jsdom-global/register -r ./unitTestSetup.ts --colors --watch-extensions ts,tsx -w ./test/**/*.spec.ts*",
     "test:sw": "mocha -r ts-node/register -r jsdom-global/register -r ./unitTestSetup.ts --colors --watch-extensions ts,tsx -w ",
     "test:cover": "cross-env NODE_ENV=test nyc mocha -r ts-node/register -r jsdom-global/register -r ./unitTestSetup.ts --colors ./test/**/*.spec.ts*",
-    "repl": "node -i -e \"$(< ./lib/UIEngine.js)\""
+    "repl": "node -i -e \"$(< ./lib/uiengine-ide.js)\""
   },
   "repository": {
     "type": "git",
@@ -56,6 +56,7 @@
     "eslint-loader": "^2.0.0",
     "jsdom": "^11.11.0",
     "jsdom-global": "^3.0.2",
+    "less": "^3.9.0",
     "mocha": "^4.0.1",
     "nyc": "^13.3.0",
     "source-map-loader": "^0.2.4",
@@ -79,12 +80,18 @@
     "@types/node": "^12.0.8",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
+    "antd": "^3.21.4",
     "axios": "^0.19.0",
     "axios-mock-adapter": "^1.16.0",
+    "css-loader": "^3.2.0",
     "csstype": "^2.6.5",
+    "less-loader": "^5.0.0",
     "lodash": "^4.17.11",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-draggable": "^3.3.1",
+    "react-json-view": "^1.19.1",
+    "style-loader": "^1.0.0",
     "validator": "^11.1.0"
   }
 }

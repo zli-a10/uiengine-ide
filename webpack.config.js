@@ -19,7 +19,7 @@ if (env === "build") {
 
 const config = {
   mode: mode,
-  entry: __dirname + "/src/index.ts",
+  entry: __dirname + "/src/index.tsx",
   devtool: "inline-source-map",
   output: {
     path: __dirname + "/lib",
@@ -44,12 +44,30 @@ const config = {
         test: /(\.jsx|\.js)$/,
         loader: "eslint-loader",
         exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        loader: "style-loader!css-loader"
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: "style-loader" // creates style nodes from JS strings
+          },
+          {
+            loader: "css-loader" // translates CSS into CommonJS
+          },
+          {
+            loader: "less-loader" // compiles Less to CSS
+          }
+        ]
       }
     ]
   },
   resolve: {
     modules: [path.resolve("./node_modules"), path.resolve("./src")],
-    extensions: [".json", ".js", ".ts"]
+    extensions: [".json", ".js", ".ts", ".tsx"]
   },
   externals: {
     react: "React",

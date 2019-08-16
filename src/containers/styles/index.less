@@ -1,0 +1,66 @@
+@import './motion.less';
+@import './mixins.less';
+@import './DrawingBoard.less';
+@import './Manager.less';
+@import './PropManager.less';
+@import './Libraries.less';
+@import './Header.less';
+
+body {
+    background: #333;
+}
+
+.ide-show {
+    width: 12px;
+    height: 31px;
+    transition:width 0.2s;
+    position: absolute;
+    top:0;
+    left:0;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 5px;
+    &:hover {
+        background:#fff;
+        width: 36px;
+    }
+}
+
+.tabs {
+    display:flex;
+    .tab {
+        flex: 1;
+        padding: 10px;
+        &.on {
+            border-bottom: 3px solid #015478;
+        }
+    } 
+}
+
+.ide-editor {
+    display: flex;
+}
+
+.node-title {
+    display: block;
+    
+    svg {
+        width: 16px!important;
+        height: 16px!important;
+        display: none;
+        margin-left: 10px;
+    }    
+    &:hover {
+        svg {
+            display: inline-block;
+        }
+    }
+
+    img {
+        width: 18px;
+        height: 18px;
+        border-radius: 3px;
+        padding: 3px;
+        margin-left: 5px;
+    }
+}
