@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "rm -rf ../../node_modules/ && npm link ../../ && npm link ../../node_modules/react-dom && npm link ../../node_modules/react && npm link ../../node_modules/uiengine"
+    "postinstall": "rm -rf ../../node_modules/ && npm link ../../ && npm link ../../node_modules/react-dom && npm link ../../node_modules/react"
   },
   "eslintConfig": {
     "extends": "react-app"
