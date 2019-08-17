@@ -4,7 +4,8 @@ declare module "*.json" {
 }
 
 interface IIDEEditor {
-  layout: string;
+  children?: ReactNode;
+  layouts: string;
   config: object;
 }
 

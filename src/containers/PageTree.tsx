@@ -1,9 +1,9 @@
-import React from "react";
-import { Tree, Input, Icon } from "antd";
-import { DropdownMenu } from "../components/DropdownMenu";
-import _ from "lodash";
-import { trigger } from "../core/index";
-import commands from "../core/messages";
+import React from 'react';
+import { Tree, Input, Icon } from 'antd';
+import { DropdownMenu } from '../components/DropdownMenu';
+import _ from 'lodash';
+import { trigger } from '../core/index';
+import commands from '../core/messages';
 
 const { TreeNode } = Tree;
 
@@ -12,6 +12,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     super(props);
     let defaultExpandedKeys = [];
     const items = props.tree.output.children;
+
     if (items.length) {
       defaultExpandedKeys.push(items[0].name);
     }
@@ -31,6 +32,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     const that = this;
     const removeElement = () => {
       let newElements = null;
+
       if (!parent) {
         newElements = props.tree.output.children;
       } else {
@@ -46,15 +48,17 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       const actionmMap: any = {
         Add: () => {
           const newItem = _.cloneDeep(dataRef);
+
           delete newItem.children;
-          newItem._key_ = _.uniqueId("node-");
+          newItem._key_ = _.uniqueId('node-');
           // newItem._id_.push(newItem.key);
-          newItem.name = "";
-          newItem.title = "";
-          newItem._editing_ = "add";
+          newItem.name = '';
+          newItem.title = '';
+          newItem._editing_ = 'add';
           dataRef.children = dataRef.children || [];
           dataRef.children.push(newItem);
           const expandKeys = this.state.expandKeys;
+
           if (expandKeys.indexOf(dataRef.name) === -1) {
             expandKeys.push(dataRef.name);
           }
@@ -68,21 +72,23 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         },
         Clone: () => {
           const newItem = _.cloneDeep(dataRef);
+
           delete newItem.children;
-          newItem._key_ = _.uniqueId("node-");
+          newItem._key_ = _.uniqueId('node-');
           // newItem._id_.push(newItem.key);
-          newItem._editing_ = "clone";
-          newItem.title = "Copy From " + newItem.title;
+          newItem._editing_ = 'clone';
+          newItem.title = 'Copy From ' + newItem.title;
           dataRef._parent_.children.push(newItem);
           // console.log(expandKeys);
           that.rerender();
         },
         Rename: () => {
-          dataRef._editing_ = "rename";
+          dataRef._editing_ = 'rename';
           that.rerender();
         }
       };
       const actionName = component.props.children;
+
       return actionmMap[actionName].call();
     };
     const menu = [
@@ -94,6 +100,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
     const saveSchema = (e: any) => {
       const title = e.target.value;
+
       dataRef.title = title;
       dataRef.name = _.snakeCase(title);
       dataRef._editing_ = false;
@@ -101,14 +108,15 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         type: commands.add_schema,
         content: dataRef
       });
+
       console.log(result);
       that.rerender();
     };
 
     const cancelEdit = () => {
       switch (dataRef._editing_) {
-        case "clone":
-        case "add":
+        case 'clone':
+        case 'add':
           removeElement();
           break;
       }
@@ -151,8 +159,10 @@ export class PageTree extends React.Component<ITree, ITreeState> {
   renderTreeNodes(data: any, parent: any = null) {
     return data.map((item: any) => {
       const title = item.title || item.name;
-      item._key_ = "";
+
+      item._key_ = '';
       let id: any = [];
+
       if (parent) {
         id = _.cloneDeep(parent._id_);
         item._parent_ = parent;
@@ -202,6 +212,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
   render() {
     const { tree } = this.props;
+
     console.log(this.state);
     return (
       <Tree showLine defaultExpandedKeys={this.state.expandKeys}>

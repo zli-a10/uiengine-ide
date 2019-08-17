@@ -1,1 +1,1 @@
-export * from "./containers/IDEEditor";
+export * from './containers/IDEEditor';

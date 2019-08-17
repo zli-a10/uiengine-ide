@@ -1,8 +1,8 @@
-import React from "react";
-import { Tabs, Icon } from "antd";
-import Draggable from "react-draggable";
-import { Debugger } from "./Debugger";
-import { Props } from "./Props";
+import React from 'react';
+import { Tabs, Icon } from 'antd';
+import Draggable from 'react-draggable';
+import { Debugger } from './Debugger';
+import { Props } from './Props';
 
 const TabPane = Tabs.TabPane;
 
@@ -11,30 +11,30 @@ export const PropManager: React.FC<IPropManager> = props => {
   const uiJson = {
     schema: [
       {
-        widget: "row",
+        widget: 'row',
         props: {
           children: [
             {
-              widget: "column",
+              widget: 'column',
               props: {
                 children: [
                   {
-                    widget: "field",
-                    props: { dataSource: "aam.aaa-policy.name" }
+                    widget: 'field',
+                    props: { dataSource: 'aam.aaa-policy.name' }
                   },
                   {
-                    widget: "Custom/SSLi/Service/Form",
+                    widget: 'Custom/SSLi/Service/Form',
                     props: {
-                      name: "name",
+                      name: 'name',
                       title: {
-                        create: "Add New Object",
-                        update: "Edit Object"
+                        create: 'Add New Object',
+                        update: 'Edit Object'
                       },
                       description: {
                         create:
-                          "Please provide following information to create a new object",
+                          'Please provide following information to create a new object',
                         update:
-                          "Please provide following information to edit object"
+                          'Please provide following information to edit object'
                       },
                       children: []
                     }

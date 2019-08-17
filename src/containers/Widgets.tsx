@@ -1,11 +1,12 @@
-import React from "react";
-import { Icon } from "antd";
+import React from 'react';
+import { Icon } from 'antd';
 
 const WidgetItem = (props: any) => {
   const { title, category } = props;
+
   return (
     <div className="component">
-      <Icon type="swap" style={{ fontSize: "40px" }} />
+      <Icon type="swap" style={{ fontSize: '40px' }} />
       <span>{title}</span>
     </div>
   );

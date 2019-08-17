@@ -1,5 +1,5 @@
-import React from "react";
-import { Slider, Icon, Button } from "antd";
+import React from 'react';
+import { Slider, Icon, Button } from 'antd';
 
 export const LayoutManager: React.FC<ILayoutManager> = props => {
   return (
@@ -14,7 +14,7 @@ export const LayoutManager: React.FC<ILayoutManager> = props => {
           <option>Work Flow</option>
         </select>
 
-        <Button style={{ float: "right" }}>Create a Blank Layout</Button>
+        <Button style={{ float: 'right' }}>Create a Blank Layout</Button>
       </div>
       <div className="ide-editor-list">
         <div className="ide-editor-list-item">

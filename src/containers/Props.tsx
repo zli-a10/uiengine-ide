@@ -1,6 +1,6 @@
-import React from "react";
-import { Collapse } from "antd";
-import { PropItem } from "./PropItem";
+import React from 'react';
+import { Collapse } from 'antd';
+import { PropItem } from './PropItem';
 
 const Panel = Collapse.Panel;
 
@@ -10,7 +10,7 @@ export const Props: React.FC = (props: any) => {
   return (
     <div className="ide-props-events">
       <h3>(Input)</h3>
-      <Collapse onChange={callback} accordion defaultActiveKey={"1"}>
+      <Collapse onChange={callback} accordion defaultActiveKey={'1'}>
         <Panel header="Looking" key="1">
           <ul className="list">
             <PropItem />
