@@ -1,12 +1,109 @@
 {
-  "component": "div",
+  "component": "antd:Layout",
+  "props": {
+    "className": "layout"
+  },
   "children": [
     {
-      "component": "antd:Row",
-      "props": {
-        "span": 12,
-        "gutter": 16
-      }
+      "component": "antd:Layout.Content",
+      "children": [
+        {
+          "component": "antd:Row",
+          "props": {
+            "span": 12,
+            "gutter": 16
+          },
+          "children": [
+            {
+              "component": "antd:Col",
+              "props": {
+                "span": 12
+              },
+              "children": [
+                {
+                  "component": "antd:Form",
+                  "children": [
+                    {
+                      "component": "antd:Form.Item",
+                      "props": {
+                        "label": "Name"
+                      },
+                      "children": [
+                        {
+                          "component": "antd:Input"
+                        }
+                      ]
+                    },
+                    {
+                      "component": "antd:Form.Item",
+                      "props": {
+                        "label": "Password"
+                      },
+                      "children": [
+                        {
+                          "component": "antd:Input.Password"
+                        }
+                      ]
+                    },
+                    {
+                      "component": "antd:Form.Item",
+                      "props": {
+                        "label": "Memo"
+                      },
+                      "children": [
+                        {
+                          "component": "antd:Input",
+                          "props": {
+                            "type": "textarea"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "component": "antd:Form.Item",
+                      "props": {
+                        "label": "Type"
+                      },
+                      "children": [
+                        {
+                          "component": "antd:Select",
+                          "children": [
+                            {
+                              "component": "Option",
+                              "content": "Item1",
+                              "props": {
+                                "value": "item1"
+                              }
+                            },
+                            {
+                              "component": "Option",
+                              "content": "Item2",
+                              "props": {
+                                "value": "item2"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "component": "antd:Form.Item",
+                      "props": {
+                        "label": "Other"
+                      },
+                      "children": [
+                        {
+                          "component": "antd:Input"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
