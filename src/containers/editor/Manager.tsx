@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Tabs, Icon } from 'antd';
-import { PageTree, Libraries } from './';
+import React, { useState } from "react";
+import { Tabs, Icon } from "antd";
+import { PageTree, Libraries } from "./";
 
 const TabPane = Tabs.TabPane;
 
-import { trigger } from '../core/index';
-import commands from '../core/messages';
+import { trigger } from "../../core/index";
+import commands from "../../core/messages";
 
 export const Manager: React.FC<IManager> = props => {
   // schemas fetch

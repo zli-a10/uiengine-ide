@@ -1,9 +1,9 @@
-import React from 'react';
-import { Tree, Input, Icon } from 'antd';
-import { DropdownMenu } from '../components/DropdownMenu';
-import _ from 'lodash';
-import { trigger } from '../core/index';
-import commands from '../core/messages';
+import React from "react";
+import { Tree, Input, Icon } from "antd";
+import { DropdownMenu } from "../../components/DropdownMenu";
+import _ from "lodash";
+import { trigger } from "../../core/index";
+import commands from "../../core/messages";
 
 const { TreeNode } = Tree;
 
@@ -50,11 +50,11 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           const newItem = _.cloneDeep(dataRef);
 
           delete newItem.children;
-          newItem._key_ = _.uniqueId('node-');
+          newItem._key_ = _.uniqueId("node-");
           // newItem._id_.push(newItem.key);
-          newItem.name = '';
-          newItem.title = '';
-          newItem._editing_ = 'add';
+          newItem.name = "";
+          newItem.title = "";
+          newItem._editing_ = "add";
           dataRef.children = dataRef.children || [];
           dataRef.children.push(newItem);
           const expandKeys = this.state.expandKeys;
@@ -74,16 +74,16 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           const newItem = _.cloneDeep(dataRef);
 
           delete newItem.children;
-          newItem._key_ = _.uniqueId('node-');
+          newItem._key_ = _.uniqueId("node-");
           // newItem._id_.push(newItem.key);
-          newItem._editing_ = 'clone';
-          newItem.title = 'Copy From ' + newItem.title;
+          newItem._editing_ = "clone";
+          newItem.title = "Copy From " + newItem.title;
           dataRef._parent_.children.push(newItem);
           // console.log(expandKeys);
           that.rerender();
         },
         Rename: () => {
-          dataRef._editing_ = 'rename';
+          dataRef._editing_ = "rename";
           that.rerender();
         }
       };
@@ -115,8 +115,8 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
     const cancelEdit = () => {
       switch (dataRef._editing_) {
-        case 'clone':
-        case 'add':
+        case "clone":
+        case "add":
           removeElement();
           break;
       }
@@ -160,7 +160,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     return data.map((item: any) => {
       const title = item.title || item.name;
 
-      item._key_ = '';
+      item._key_ = "";
       let id: any = [];
 
       if (parent) {
