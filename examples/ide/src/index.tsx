@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+// import App from "./App";
 import config from "./config";
 import { UIEngineRegister } from "uiengine";
 
@@ -14,8 +14,7 @@ UIEngineRegister.registerComponents(components);
 UIEngineRegister.registerPlugins(plugins);
 
 ReactDOM.render(
-  <App />,
-  // <IDEEditor layouts={["schema/ui/simple.json"]} config={config} />,
+  <IDEEditor layouts={["schema/ui/simple.json"]} config={config} />,
   document.getElementById("root")
 );
 
