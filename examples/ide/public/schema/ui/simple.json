@@ -10,14 +10,14 @@
         {
           "component": "antd:Row",
           "props": {
-            "span": 12,
+            "span": 24,
             "gutter": 16
           },
           "children": [
             {
               "component": "antd:Col",
               "props": {
-                "span": 12
+                "span": 24
               },
               "children": [
                 {
