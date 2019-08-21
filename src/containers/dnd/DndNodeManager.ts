@@ -18,7 +18,7 @@ export default class DnDNodeManager implements IDndNodeManager {
   targetParentSchema: ILayoutSchema = {};
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
-  selectNode(sourceNode: IUINode, targetNode: IUINode) {
+  private selectNode(sourceNode: IUINode, targetNode: IUINode) {
     // handle source node
     if (sourceNode) {
       this.sourceNode = sourceNode;
@@ -72,39 +72,71 @@ export default class DnDNodeManager implements IDndNodeManager {
     }
   }
 
-  async insert() {
+  async replace(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {
+    this.selectNode(sourceNode, targetNode);
     if (!this.sourceParent || !this.targetParent) return;
+    let schema;
+    if (!placeHolder) {
+      schema = this.sourceSchema;
+    } else {
+      schema = placeHolder;
+    }
 
     if (!this.targetParentChildrenSchema.length) {
       // empty target, just push
-      this.targetParentChildrenSchema.push(this.sourceSchema);
+      this.targetParentChildrenSchema.push(schema);
       this.targetParentSchema.children = this.targetParentChildrenSchema;
     } else {
-      // if dragging at itself, remove the source
-      if (this.targetParent === this.sourceParent) {
-        this.targetParentChildrenSchema.splice(this.sourceIndex, 1);
-      } else {
-        // remove from source
-        this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
-        await this.sourceParent.updateLayout();
-        this.sourceParent.sendMessage(true); // force refresh
+      if (!placeHolder) {
+        // if dragging at itself, remove the source
+        if (this.targetParent === this.sourceParent) {
+          this.targetParentChildrenSchema.splice(this.sourceIndex, 1);
+        } else {
+          // remove from source
+          this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
+          await this.sourceParent.updateLayout();
+          this.sourceParent.sendMessage(true); // force refresh
+        }
       }
+
       // console.log(this.sourceIndex, this.sourceIndex);
-      this.targetParentChildrenSchema.splice(
-        this.targetIndex,
-        0,
-        this.sourceSchema
-      );
+      this.targetParentChildrenSchema.splice(this.targetIndex, 0, schema);
     }
     await this.targetParent.updateLayout();
     this.targetParent.sendMessage(true); // force refresh}
   }
 
-  pushDown() {}
+  async insert(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {}
 
-  pushUp() {}
+  addDownRow(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {}
 
-  pushRight() {}
+  addUpRow(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {}
 
-  pushLeft() {}
+  addRightCol(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {}
+
+  addLeftCol(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  ) {}
 }

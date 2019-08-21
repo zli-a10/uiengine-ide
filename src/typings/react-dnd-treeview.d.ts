@@ -20,10 +20,30 @@ interface IDndNodeManager {
   targetParentSchema: ILayoutSchema = {};
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
-  selectNode(sourceNode: IUINode, targetNode: IUINode);
-  insert();
-  pushDown();
-  pushUp();
-  pushRight();
-  pushLeft();
+  replace(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  );
+  insert(sourceNode: IUINode, targetNode: IUINode, placeHolder?: ILayoutSchema);
+  addDownRow(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  );
+  addUpRow(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  );
+  addRightCol(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  );
+  addLeftCol(
+    sourceNode: IUINode,
+    targetNode: IUINode,
+    placeHolder?: ILayoutSchema
+  );
 }
