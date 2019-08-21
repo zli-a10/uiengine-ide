@@ -121,10 +121,25 @@ const UIEngineDndWrapper = (props: any) => {
   }
 
   drag(drop(ref));
+
+  // callbacks to add hoverstyle
+  const [hoverStyle, setHoverStyle] = useState({ backgroundColor });
+  const mouseEnter = (e: any) => {
+    setHoverStyle({
+      backgroundColor: "#cde7ff"
+    });
+  };
+
+  const mouseLeave = (e: any) => {
+    setHoverStyle({ backgroundColor });
+  };
+
   return (
     <div
       ref={ref}
-      style={{ backgroundColor, ...borderStyle }}
+      onMouseEnter={mouseEnter}
+      onMouseLeave={mouseLeave}
+      style={{ backgroundColor, ...borderStyle, ...hoverStyle }}
       className="wrapper"
     >
       <ActionMenu>

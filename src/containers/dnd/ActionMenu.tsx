@@ -29,6 +29,12 @@ const menu = (
         <Icon type="arrow-right" /> Add Right Col
       </a>
     </Menu.Item>
+    <Menu.Item key="unit-unwrapper">
+      <a target="_blank">
+        <Icon type="menu-fold" />
+        Remove Redundant Wrappers
+      </a>
+    </Menu.Item>
     <Menu.Divider />
     <Menu.Item key="unit-delete">
       <a target="_blank">
