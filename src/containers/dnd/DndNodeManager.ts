@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { NodeController } from "uiengine";
-import { VersionControl } from "./VersionControl";
+import VersionControl from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
 
 const configLayoutWrappers: IConfigWrappers = {
@@ -36,7 +36,7 @@ export default class DnDNodeManager implements IDndNodeManager {
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
   layoutWrappers: IConfigWrappers = configLayoutWrappers;
-  versionControl: IVersionControl = new VersionControl();
+  versionControl: IVersionControl = VersionControl.getInstance();
   nodeController: INodeController = NodeController.getInstance();
 
   private selectNode(sourceNode: IUINode, targetNode: IUINode) {
@@ -91,12 +91,20 @@ export default class DnDNodeManager implements IDndNodeManager {
       this.targetChildrenSchema = [];
       this.targetParent = undefined;
     }
+
+    // initial schema
+    if (this.versionControl.histories.length === 0) {
+      const activeLayout = this.nodeController.activeLayout;
+      const uiNode = this.nodeController.getUINode(activeLayout, true);
+      this.versionControl.push(uiNode.schema);
+    }
   }
 
   private async refresh() {
-    const activeLayout = this.nodeController.activeLayout;
-    console.log(this.nodeController.getUINode(activeLayout));
     if (!this.sourceParent || !this.targetParent) return;
+    const activeLayout = this.nodeController.activeLayout;
+    const uiNode = this.nodeController.getUINode(activeLayout, true);
+    this.versionControl.push(uiNode.schema);
     await this.sourceParent.updateLayout();
     this.sourceParent.sendMessage(true); // force refresh
     await this.targetParent.updateLayout();

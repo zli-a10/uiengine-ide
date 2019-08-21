@@ -101,7 +101,6 @@ const UIEngineDndWrapper = (props: any) => {
 
       const insertMethodName = `insert${_.upperFirst(regionName)}`;
       if (dndNodeManager[insertMethodName]) {
-        console.log(insertMethodName, " method");
         dndNodeManager[insertMethodName](draggingNode, hoverNode);
       }
     },
