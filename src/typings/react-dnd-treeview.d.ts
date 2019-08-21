@@ -1,3 +1,5 @@
+import { ILayoutSchema } from "uiengine/typings";
+
 // import { ILayoutSchema } from "uiengine/typings";
 
 interface DragItem {
@@ -44,4 +46,15 @@ interface IDndNodeManager {
 interface IConfigWrappers {
   row: any;
   col: any;
+}
+
+interface IHistory {
+  version: string;
+  schema: ILayoutSchema;
+}
+
+interface IVersionControl {
+  histories: Array<IHistory>;
+  push(schema: ILayoutSchema);
+  pop();
 }

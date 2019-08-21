@@ -1,5 +1,7 @@
 import _ from "lodash";
-import { IUINode, ILayoutSchema } from "uiengine/typings";
+import { NodeController } from "uiengine";
+import { VersionControl } from "./VersionControl";
+import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
 
 const configLayoutWrappers: IConfigWrappers = {
   row: {
@@ -34,6 +36,8 @@ export default class DnDNodeManager implements IDndNodeManager {
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
   layoutWrappers: IConfigWrappers = configLayoutWrappers;
+  versionControl: IVersionControl = new VersionControl();
+  nodeController: INodeController = NodeController.getInstance();
 
   private selectNode(sourceNode: IUINode, targetNode: IUINode) {
     // handle source node
@@ -90,6 +94,8 @@ export default class DnDNodeManager implements IDndNodeManager {
   }
 
   private async refresh() {
+    const activeLayout = this.nodeController.activeLayout;
+    console.log(this.nodeController.getUINode(activeLayout));
     if (!this.sourceParent || !this.targetParent) return;
     await this.sourceParent.updateLayout();
     this.sourceParent.sendMessage(true); // force refresh
@@ -238,4 +244,6 @@ export default class DnDNodeManager implements IDndNodeManager {
     this.selectNode(sourceNode, targetNode);
     await this.replaceSchema(this.sourceSchema, true, true);
   }
+
+  delete(node: IUINode) {}
 }
