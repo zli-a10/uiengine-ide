@@ -1,3 +1,5 @@
+// import { ILayoutSchema } from "uiengine/typings";
+
 interface DragItem {
   uinode: IUINode;
   type: string;
@@ -20,30 +22,26 @@ interface IDndNodeManager {
   targetParentSchema: ILayoutSchema = {};
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
-  replace(
+  insertCenter(sourceNode: IUINode, targetNode: IUINode);
+
+  insertLeft(
     sourceNode: IUINode,
     targetNode: IUINode,
-    placeHolder?: ILayoutSchema
+    wrappers?: IConfigWrappers
   );
-  insert(sourceNode: IUINode, targetNode: IUINode, placeHolder?: ILayoutSchema);
-  addDownRow(
+
+  insertRight(
     sourceNode: IUINode,
     targetNode: IUINode,
-    placeHolder?: ILayoutSchema
+    wrappers?: IConfigWrappers
   );
-  addUpRow(
-    sourceNode: IUINode,
-    targetNode: IUINode,
-    placeHolder?: ILayoutSchema
-  );
-  addRightCol(
-    sourceNode: IUINode,
-    targetNode: IUINode,
-    placeHolder?: ILayoutSchema
-  );
-  addLeftCol(
-    sourceNode: IUINode,
-    targetNode: IUINode,
-    placeHolder?: ILayoutSchema
-  );
+
+  insertTop(sourceNode: IUINode, targetNode: IUINode);
+
+  insertBottom(sourceNode: IUINode, targetNode: IUINode);
+}
+
+interface IConfigWrappers {
+  row: any;
+  col: any;
 }

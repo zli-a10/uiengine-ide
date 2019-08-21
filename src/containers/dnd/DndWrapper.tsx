@@ -66,9 +66,9 @@ const UIEngineDndWrapper = (props: any) => {
             border: "3px solid #f00"
           };
         } else {
-          const styleName = `border${_.upperFirst(regionName)}`;
+          const borderName = `border${_.upperFirst(regionName)}`;
           regionStyles = {
-            [styleName]: "3px solid #f00"
+            [borderName]: "3px solid #f00"
           };
         }
 
@@ -87,8 +87,23 @@ const UIEngineDndWrapper = (props: any) => {
         return;
       }
 
-      // TODO: need judge which place we have dragged
-      dndNodeManager.replace(draggingNode, hoverNode);
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current!.getBoundingClientRect();
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // detect update region style
+      const regionName = regionDetector.detectCurrentRegion(
+        clientOffset as XYCoord,
+        hoverBoundingRect
+      );
+
+      const insertMethodName = `insert${_.upperFirst(regionName)}`;
+      if (dndNodeManager[insertMethodName]) {
+        console.log(insertMethodName, " method");
+        dndNodeManager[insertMethodName](draggingNode, hoverNode);
+      }
     },
 
     collect: monitor => ({

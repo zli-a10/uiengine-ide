@@ -1,27 +1,37 @@
-.ant-layout {
-  .component-action {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 10px;
-    z-index: 100;
-    background: #0779e25e;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 5px;
+.component-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 10px;
+  z-index: 100;
+  background: #0779e25e;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 5px;
 
-    &:hover {
-      background: #0779e2;
-      color: #fff;
-      z-index: 200;
-    }
+  &:hover {
+    background: #0779e2;
+    color: #fff;
+    z-index: 200;
   }
+}
 
-  .wrapper {
-    border: 1px dashed rgba(160, 149, 149, 0.8);
-    padding: 5px;
-    margin: 5px;
-    overflow: hidden;
-    position: relative;
-  }
+.wrapper {
+  border: 1px dashed rgba(160, 149, 149, 0.8);
+  padding: 5px;
+  margin: 5px;
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+}
+
+.ide-wrapper-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ide-wrapper-col {
+  min-height: 50px;
+  flex: 1;
 }
