@@ -181,19 +181,13 @@ export default class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
-  private generateInlineSchema(insertLeft: boolean = true) {
-    let newSchema = {};
+  private async replaceInlineSchema(insertLeft: boolean = true) {
     if (
       this.targetParentSchema.component === this.layoutWrappers.row.component
     ) {
       // console.log("has same row");
       // has already have a row/col frame, just push
       if (this.targetSchema.component === this.layoutWrappers.col.component) {
-        // console.log(
-        //   "has same col",
-        //   _.cloneDeep(this.targetParentChildrenSchema)
-        // );
-
         const sch = {
           ...this.layoutWrappers.col,
           children: [this.sourceSchema]
@@ -201,11 +195,6 @@ export default class DndNodeManager implements IDndNodeManager {
 
         if (insertLeft) {
           this.targetParentChildrenSchema.unshift(sch);
-          // console.log(
-          //   "has same col 2",
-          //   _.cloneDeep(this.targetParentChildrenSchema),
-          //   this.sourceSchema
-          // );
         } else {
           this.targetParentChildrenSchema.push(sch);
         }
@@ -222,9 +211,12 @@ export default class DndNodeManager implements IDndNodeManager {
           }
         ];
       }
-      newSchema = this.targetSchema;
+      // newSchema = this.targetSchema;
+      // this.targetParentChildrenSchema[insertPos] = newSchema;
+      this.removeSourceNode();
+      await this.refresh();
     } else {
-      newSchema = {
+      let newSchema = {
         ...this.layoutWrappers.row,
         children: [
           {
@@ -237,8 +229,8 @@ export default class DndNodeManager implements IDndNodeManager {
           }
         ]
       };
+      await this.replaceSchema(newSchema);
     }
-    return newSchema;
   }
 
   async insertLeft(sourceNode: IUINode, targetNode: IUINode) {
@@ -247,9 +239,7 @@ export default class DndNodeManager implements IDndNodeManager {
     if (!this.canDrop) return;
 
     // build new schema using this.layoutWrappers
-    const newSchema = this.generateInlineSchema(true);
-    // this.targetParentChildrenSchema.splice(this.targetIndex, 1);
-    await this.replaceSchema(newSchema);
+    await this.replaceInlineSchema(true);
   }
 
   async insertRight(sourceNode: IUINode, targetNode: IUINode) {
@@ -257,9 +247,7 @@ export default class DndNodeManager implements IDndNodeManager {
     if (!this.canDrop) return;
 
     // build new schema using wrappers
-    const newSchema = this.generateInlineSchema(false);
-    // this.targetParentChildrenSchema.splice(this.targetIndex, 1);
-    await this.replaceSchema(newSchema);
+    await this.replaceInlineSchema(false);
   }
 
   async insertTop(sourceNode: IUINode, targetNode: IUINode) {
