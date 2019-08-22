@@ -181,25 +181,74 @@ export default class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
+  private generateInlineSchema(insertLeft: boolean = true) {
+    let newSchema = {};
+    if (
+      this.targetParentSchema.component === this.layoutWrappers.row.component
+    ) {
+      // console.log("has same row");
+      // has already have a row/col frame, just push
+      if (this.targetSchema.component === this.layoutWrappers.col.component) {
+        // console.log(
+        //   "has same col",
+        //   _.cloneDeep(this.targetParentChildrenSchema)
+        // );
+
+        const sch = {
+          ...this.layoutWrappers.col,
+          children: [this.sourceSchema]
+        };
+
+        if (insertLeft) {
+          this.targetParentChildrenSchema.unshift(sch);
+          // console.log(
+          //   "has same col 2",
+          //   _.cloneDeep(this.targetParentChildrenSchema),
+          //   this.sourceSchema
+          // );
+        } else {
+          this.targetParentChildrenSchema.push(sch);
+        }
+      } else {
+        // console.log("has differnet col");
+        this.targetParentChildrenSchema = [
+          {
+            ...this.layoutWrappers.col,
+            children: [this.sourceSchema]
+          },
+          {
+            ...this.layoutWrappers.col,
+            children: [this.targetSchema]
+          }
+        ];
+      }
+      newSchema = this.targetSchema;
+    } else {
+      newSchema = {
+        ...this.layoutWrappers.row,
+        children: [
+          {
+            ...this.layoutWrappers.col,
+            children: [this.sourceSchema]
+          },
+          {
+            ...this.layoutWrappers.col,
+            children: [this.targetSchema]
+          }
+        ]
+      };
+    }
+    return newSchema;
+  }
+
   async insertLeft(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
 
     if (!this.canDrop) return;
 
     // build new schema using this.layoutWrappers
-    const newSchema = {
-      ...this.layoutWrappers.row,
-      children: [
-        {
-          ...this.layoutWrappers.col,
-          children: [this.sourceSchema]
-        },
-        {
-          ...this.layoutWrappers.col,
-          children: [this.targetSchema]
-        }
-      ]
-    };
+    const newSchema = this.generateInlineSchema(true);
+    // this.targetParentChildrenSchema.splice(this.targetIndex, 1);
     await this.replaceSchema(newSchema);
   }
 
@@ -208,20 +257,8 @@ export default class DndNodeManager implements IDndNodeManager {
     if (!this.canDrop) return;
 
     // build new schema using wrappers
-    const newSchema = {
-      ...this.layoutWrappers.row,
-      children: [
-        {
-          ...this.layoutWrappers.col,
-          children: [this.targetSchema]
-        },
-        {
-          ...this.layoutWrappers.col,
-          children: [this.sourceSchema]
-        }
-      ]
-    };
-    this.targetParentChildrenSchema.splice(this.targetIndex, 1);
+    const newSchema = this.generateInlineSchema(false);
+    // this.targetParentChildrenSchema.splice(this.targetIndex, 1);
     await this.replaceSchema(newSchema);
   }
 
