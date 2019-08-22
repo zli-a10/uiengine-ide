@@ -19,15 +19,20 @@ export default class VersionControl implements IVersionControl {
   private async reloadSchema(schema: ILayoutSchema) {
     const activeLayout = this.nodeController.activeLayout;
     const uiNode: IUINode = this.nodeController.getUINode(activeLayout, true);
-    await uiNode.replaceLayout(schema);
+    await uiNode.replaceLayout(_.cloneDeep(schema));
     await uiNode.sendMessage(true);
   }
 
   push(schema: ILayoutSchema) {
-    // TO FIX: use diff to save history
-    // if (this.histories.length > 0) {
-    //   schema = difference(schema, this.histories[0].schema);
-    // }
+    // remove backwards histories
+    if (this.position < this.histories.length - 1) {
+      const result = this.histories.splice(
+        this.position + 1,
+        this.histories.length - this.position - 1
+      );
+    }
+
+    // add new
     const history: IHistory = {
       version: _.uniqueId(),
       schema: _.cloneDeep(schema)
@@ -37,8 +42,7 @@ export default class VersionControl implements IVersionControl {
   }
 
   async redo() {
-    if (this.histories.length === 0) return;
-    if (this.position === this.histories.length - 1) return;
+    if (this.position >= this.histories.length - 1) return;
     this.position++;
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;
@@ -47,8 +51,8 @@ export default class VersionControl implements IVersionControl {
   }
 
   async undo() {
+    if (this.position <= 0) return;
     if (this.histories.length === 0) return;
-    if (this.position === 0) return;
     this.position--;
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;

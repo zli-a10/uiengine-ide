@@ -11,12 +11,13 @@ export const DrawingBoard: React.FC = (props: any) => {
   _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const historyAction = async (e: any) => {
+    e.stopPropagation();
     const versionControl = VersionControl.getInstance();
     if (e.ctrlKey && e.code === "KeyZ") {
       await versionControl.undo();
     }
 
-    if (e.ctrlKey && e.code === "KeyR") {
+    if (e.ctrlKey && e.code === "KeyY") {
       await versionControl.redo();
     }
   };

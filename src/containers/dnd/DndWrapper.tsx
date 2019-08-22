@@ -118,19 +118,28 @@ export const UIEngineDndWrapper = (props: any) => {
   drag(drop(ref));
 
   // callbacks to add hoverstyle
-  const [hoverStyle, setHoverStyle] = useState({});
+  const defaultHoverStyle = { container: {}, band: {} };
+  const [hoverStyle, setHoverStyle] = useState(defaultHoverStyle);
   const mouseEnter = (e: any) => {
     e.stopPropagation();
     setHoverStyle({
-      border: "1px solid #0779e2",
-      background: "#0779e2",
-      color: "#fff"
+      container: {
+        border: "1px solid #0779e2",
+        background: "#0779e2",
+        color: "#fff"
+      },
+      band: {
+        border: "1px solid #0779e2",
+        background: "#0a386b",
+        color: "#fff",
+        zIndex: 201
+      }
     });
   };
 
   const mouseLeave = (e: any) => {
     e.stopPropagation();
-    setHoverStyle({});
+    setHoverStyle(defaultHoverStyle);
   };
 
   return (
@@ -138,11 +147,14 @@ export const UIEngineDndWrapper = (props: any) => {
       ref={ref}
       onMouseOver={mouseEnter}
       onMouseOut={mouseLeave}
-      style={{ backgroundColor, ...borderStyle, ...hoverStyle }}
+      style={{ backgroundColor, ...borderStyle, ...hoverStyle.container }}
       className="wrapper"
     >
       <ActionMenu uinode={uinode}>
-        <div className="component-action" style={elementLabelStyle}>
+        <div
+          className="component-action"
+          style={{ ...elementLabelStyle, ...hoverStyle.band }}
+        >
           {uinode.schema.component}
           <Icon type="more" />
         </div>
