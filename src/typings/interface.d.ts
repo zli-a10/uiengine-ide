@@ -5,7 +5,7 @@ declare module "*.json" {
 
 interface IIDEEditor {
   children?: ReactNode;
-  layouts: string;
+  layouts: [string];
   config: object;
 }
 
@@ -106,4 +106,31 @@ interface IDndNodeManager {
   insertTop(sourceNode: IUINode, targetNode: IUINode);
 
   insertBottom(sourceNode: IUINode, targetNode: IUINode);
+
+  delete(sourceNode: IUINode);
+  cleanLayout(sourceNode: IUINode);
+}
+
+// component schema for libraries
+interface IComponentInfo {
+  id: string; // component name generally
+  title: string; //"Widgets",
+  schema: ILayoutSchema;
+  url?: string;
+  library?: string;
+  version?: string;
+  preview?: string; //'xx.png'
+  icon?: string;
+}
+
+interface IComponentInfoGroup {
+  id: string;
+  children: Array<IComponentInfo>;
+  version?: string;
+  title?: string;
+}
+
+interface ICommandOutput {
+  status: number;
+  output: any;
 }

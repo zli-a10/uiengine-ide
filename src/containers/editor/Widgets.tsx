@@ -1,12 +1,26 @@
-import React from 'react';
-import { Icon } from 'antd';
+import React from "react";
+import { Icon } from "antd";
+import { useDrag } from "react-dnd";
+import { UINode } from "uiengine";
+
+import { DND_IDE_TYPE } from "../dnd";
 
 const WidgetItem = (props: any) => {
-  const { title, category } = props;
+  const { title, component, defaultProps = {} } = props;
+
+  // stimulate a ui node
+  const tempSchema = {
+    component,
+    content: defaultProps.content,
+    props: defaultProps
+  };
+  const uinode = new UINode(tempSchema);
+  // console.log(props);
+  const [, drag] = useDrag({ item: { type: DND_IDE_TYPE, uinode } });
 
   return (
-    <div className="component">
-      <Icon type="swap" style={{ fontSize: '40px' }} />
+    <div className="component" ref={drag}>
+      <Icon type="swap" style={{ fontSize: "40px" }} />
       <span>{title}</span>
     </div>
   );

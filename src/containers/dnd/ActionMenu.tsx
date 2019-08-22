@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Menu, Dropdown, Icon } from "antd";
-// const {SubMenu} = Menu;
+import DndNodeManager from "./DndNodeManager";
+const dndNodeManager = DndNodeManager.getInstance();
 
-const menu = (
-  <Menu>
-    <Menu.Item key="unit-child">
+const ActionMenu = (props: any) => {
+  const { children, uinode } = props;
+  // const {SubMenu} = Menu;
+  const deleteNode = useCallback(
+    async (e: any) => {
+      await dndNodeManager.delete(uinode);
+    },
+    [uinode]
+  );
+
+  const menu = (
+    <Menu>
+      {/* <Menu.Item key="unit-child">
       <a target="_blank">
         <Icon type="enter" /> Add Child Row
       </a>
@@ -28,29 +39,27 @@ const menu = (
       <a target="_blank">
         <Icon type="arrow-right" /> Add Right Col
       </a>
-    </Menu.Item>
-    <Menu.Item key="unit-unwrapper">
-      <a target="_blank">
-        <Icon type="menu-fold" />
-        Remove Redundant Wrappers
-      </a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="unit-delete">
-      <a target="_blank">
-        <Icon type="delete" /> Delete
-      </a>
-    </Menu.Item>
-    <Menu.Item key="unit-edit">
+    </Menu.Item> */}
+      <Menu.Item key="unit-unwrapper">
+        <a target="_blank">
+          <Icon type="menu-fold" />
+          Remove Redundant Wrappers
+        </a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="unit-delete" onClick={deleteNode}>
+        <a target="_blank">
+          <Icon type="delete" /> Delete
+        </a>
+      </Menu.Item>
+      {/* <Menu.Item key="unit-edit">
       <a target="_blank">
         <Icon type="edit" /> Edit
       </a>
-    </Menu.Item>
-  </Menu>
-);
+    </Menu.Item> */}
+    </Menu>
+  );
 
-const ActionMenu = (props: any) => {
-  const { children } = props;
   return <Dropdown overlay={menu}>{children}</Dropdown>;
 };
 

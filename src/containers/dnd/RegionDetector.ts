@@ -7,6 +7,14 @@ interface ClientRectExt extends ClientRect {
 }
 
 export default class RegionDetector {
+  static instance: RegionDetector;
+  static getInstance() {
+    if (!RegionDetector.instance) {
+      RegionDetector.instance = new RegionDetector();
+    }
+    return RegionDetector.instance;
+  }
+
   //implements IRegionDetector
   clientOffset?: XYCoord;
   clientRect?: ClientRect;

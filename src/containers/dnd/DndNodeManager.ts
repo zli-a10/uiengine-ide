@@ -18,7 +18,16 @@ const configLayoutWrappers: IConfigWrappers = {
   }
 };
 
-export default class DnDNodeManager implements IDndNodeManager {
+// TO Fix: Can't drag element into it's child
+export default class DndNodeManager implements IDndNodeManager {
+  static instance: IDndNodeManager;
+  static getInstance() {
+    if (!DndNodeManager.instance) {
+      DndNodeManager.instance = new DndNodeManager();
+    }
+    return DndNodeManager.instance;
+  }
+
   sourceNode?: IUINode;
   sourceIndex: number = -1;
   sourceSchema: ILayoutSchema = {};
@@ -101,14 +110,18 @@ export default class DnDNodeManager implements IDndNodeManager {
   }
 
   private async refresh() {
-    if (!this.sourceParent || !this.targetParent) return;
     const activeLayout = this.nodeController.activeLayout;
     const uiNode = this.nodeController.getUINode(activeLayout, true);
     this.versionControl.push(uiNode.schema);
-    await this.sourceParent.updateLayout();
-    this.sourceParent.sendMessage(true); // force refresh
-    await this.targetParent.updateLayout();
-    this.targetParent.sendMessage(true); // force refresh}
+    if (this.sourceParent) {
+      await this.sourceParent.updateLayout();
+      this.sourceParent.sendMessage(true); // force refresh
+    }
+
+    if (this.targetParent) {
+      await this.targetParent.updateLayout();
+      this.targetParent.sendMessage(true); // force refresh}
+    }
   }
 
   private removeSourceNode(index?: number) {
@@ -119,39 +132,14 @@ export default class DnDNodeManager implements IDndNodeManager {
     // remove from source
     this.sourceParentChildrenSchema.splice(index, 1);
 
-    // TO FIX: remove the col if no elements inside
-    // console.log(this.sourceChildrenSchema);
-    // // remove col
-    // if (!this.sourceParentChildrenSchema.length) {
-    //   console.log(
-    //     "this.sourceParentChildrenSchema",
-    //     this.sourceParentChildrenSchema
-    //   );
-    //   // parent is wrapper component?
-    //   const parentComponent = _.get(this.sourceParentSchema, "component");
-    //   const layoutWrappersColComponent = _.get(
-    //     this.layoutWrappers,
-    //     "col.component"
-    //   );
-    //   // const layoutWrappersRowComponent = _.get(this.layoutWrappers, 'row.component');
-    //   if (parentComponent === layoutWrappersColComponent && this.sourceParent) {
-    //     console.log(" it is the right element to remove");
-    //     // if only one element in row,
-    //     const parentSchemaChildren = _.get(
-    //       this.sourceParent,
-    //       "parent.schema.children",
-    //       []
-    //     );
-    //     if (this.sourceParent.parent && parentSchemaChildren.length) {
-    //       const parentIndex = this.sourceParent.parent.children.indexOf(
-    //         this.sourceParent.parent
-    //       );
-    //       console.log("remove index", parentIndex);
+    // remove unneccessary wrappers like dup row/col, nonesense row/col
+    // this.cleanLayout(this.sourceNode);
+  }
 
-    //       parentSchemaChildren.splice(parentIndex, 1);
-    //     }
-    //   }
-    // }
+  // TO Fix: Can't drag element into it's child
+  private canDrop() {
+    if (!this.sourceParent || !this.targetParent) return false;
+    if (this.sourceNode === this.targetNode) return false;
   }
 
   private async replaceSchema(
@@ -183,8 +171,7 @@ export default class DnDNodeManager implements IDndNodeManager {
 
   async insertCenter(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
-    if (!this.sourceParent || !this.targetParent) return;
-    if (sourceNode === targetNode) return;
+    if (!this.canDrop) return;
 
     // empty target, just push
     this.targetChildrenSchema.push(this.sourceSchema);
@@ -197,10 +184,7 @@ export default class DnDNodeManager implements IDndNodeManager {
   async insertLeft(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
 
-    if (!this.sourceParent || !this.targetParent) return;
-
-    // if dragging at itself, remove the source
-    if (sourceNode === targetNode) return;
+    if (!this.canDrop) return;
 
     // build new schema using this.layoutWrappers
     const newSchema = {
@@ -221,9 +205,7 @@ export default class DnDNodeManager implements IDndNodeManager {
 
   async insertRight(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
-    if (!this.sourceParent || !this.targetParent) return;
-    // if dragging at itself, remove the source
-    if (sourceNode === targetNode) return;
+    if (!this.canDrop) return;
 
     // build new schema using wrappers
     const newSchema = {
@@ -245,13 +227,63 @@ export default class DnDNodeManager implements IDndNodeManager {
 
   async insertTop(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop) return;
     await this.replaceSchema(this.sourceSchema, false, true);
   }
 
   async insertBottom(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop) return;
     await this.replaceSchema(this.sourceSchema, true, true);
   }
 
-  delete(node: IUINode) {}
+  async delete(sourceNode: IUINode) {
+    this.selectNode(sourceNode, {} as IUINode);
+    this.removeSourceNode();
+    await this.refresh();
+  }
+
+  async cleanLayout(sourceNode?: IUINode) {
+    if (!sourceNode) {
+      const activeLayout = this.nodeController.activeLayout;
+      sourceNode = this.nodeController.getUINode(activeLayout, true);
+    }
+
+    if (sourceNode) {
+      this.selectNode(sourceNode, {} as IUINode);
+      // TO FIX: remove the col if no elements inside
+      // console.log(this.sourceChildrenSchema);
+      // // remove col
+      // if (!this.sourceParentChildrenSchema.length) {
+      //   console.log(
+      //     "this.sourceParentChildrenSchema",
+      //     this.sourceParentChildrenSchema
+      //   );
+      //   // parent is wrapper component?
+      //   const parentComponent = _.get(this.sourceParentSchema, "component");
+      //   const layoutWrappersColComponent = _.get(
+      //     this.layoutWrappers,
+      //     "col.component"
+      //   );
+      //   // const layoutWrappersRowComponent = _.get(this.layoutWrappers, 'row.component');
+      //   if (parentComponent === layoutWrappersColComponent && this.sourceParent) {
+      //     console.log(" it is the right element to remove");
+      //     // if only one element in row,
+      //     const parentSchemaChildren = _.get(
+      //       this.sourceParent,
+      //       "parent.schema.children",
+      //       []
+      //     );
+      //     if (this.sourceParent.parent && parentSchemaChildren.length) {
+      //       const parentIndex = this.sourceParent.parent.children.indexOf(
+      //         this.sourceParent.parent
+      //       );
+      //       console.log("remove index", parentIndex);
+
+      //       parentSchemaChildren.splice(parentIndex, 1);
+      //     }
+      //   }
+      // }
+    }
+  }
 }

@@ -1,13 +1,13 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from "react";
 
 // import { _ } from 'lodash';
-import { Icon, Switch } from 'antd';
-import { Manager, PropManager, DrawingBoard } from './';
-import { Context } from './Context';
+import { Icon, Switch } from "antd";
+import { Manager, PropManager, DrawingBoard } from "./";
+import { Context } from "./Context";
 // import { useVisibilites } from '../hooks/visibility';
+import { UIEngineDndProvider } from "../dnd";
 
-import 'antd/dist/antd.css';
-import './styles/index.less';
+import "./styles/index.less";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [componentsCollapsed, setComponentCollapse] = useState(false);
@@ -26,7 +26,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
   }, [componentsCollapsed, propsCollapsed, headerCollapsed]);
 
   const [preview, setPreview] = useState(false);
-  const contextValue = useMemo < IIDEContext > (
+  const contextValue = useMemo<IIDEContext>(
     () => ({
       preview
     }),
@@ -43,7 +43,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           <Icon type="caret-right" />
         </a>
       ) : null}
-      <div className={headerCollapsed ? 'ide-header hide' : 'ide-header'}>
+      <div className={headerCollapsed ? "ide-header hide" : "ide-header"}>
         <div className="left">
           <div className="button-close">
             <Icon type="close" onClick={hideAll} />
@@ -52,7 +52,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             className="button-menu"
             onClick={() => setComponentCollapse(!componentsCollapsed)}
           >
-            <Icon type="menu" /> Editing WAF - Template{' '}
+            <Icon type="menu" /> Editing WAF - Template{" "}
           </a>
           <div className="page-name">
             <em>(last saved: 10:09)</em>
@@ -72,21 +72,27 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             >
               <Icon type="setting" />
             </a>
-            {/* <div className="more"><Icon type="more" /></div> */}
+            <div className="editor">
+              <Icon type="edit" />
+            </div>
           </div>
           <div className="brand">GUI IDE</div>
         </div>
       </div>
 
-      <div className="ide-editor">
-        {componentsCollapsed ? null : (
-          <Manager onClose={() => setComponentCollapse(!componentsCollapsed)} />
-        )}
-        <DrawingBoard {...props} />
-        {propsCollapsed ? null : (
-          <PropManager onClose={() => setPropsCollapse(!propsCollapsed)} />
-        )}
-      </div>
+      <UIEngineDndProvider>
+        <div className="ide-editor">
+          {componentsCollapsed ? null : (
+            <Manager
+              onClose={() => setComponentCollapse(!componentsCollapsed)}
+            />
+          )}
+          <DrawingBoard {...props} />
+          {propsCollapsed ? null : (
+            <PropManager onClose={() => setPropsCollapse(!propsCollapsed)} />
+          )}
+        </div>
+      </UIEngineDndProvider>
     </Context.Provider>
   );
 };

@@ -2,39 +2,33 @@ import React, { useState, useRef, useContext } from "react";
 import { Context } from "../editor/Context";
 import _ from "lodash";
 import { Icon } from "antd";
-import { DndProvider, useDrag, useDrop, DropTargetMonitor } from "react-dnd";
+import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 
-import HTML5Backend from "react-dnd-html5-backend";
 import DndNodeManager from "./DndNodeManager";
 import RegionDetector from "./RegionDetector";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
 
-export const TYPE = "uiengine-wrapper";
-const dndNodeManager = new DndNodeManager();
-const regionDetector = new RegionDetector();
+export const DND_IDE_TYPE = "uiengine-wrapper";
+const dndNodeManager = DndNodeManager.getInstance();
+const regionDetector = RegionDetector.getInstance();
 
-// Provider
-const UIEngineDndProvider = (props: any) => {
-  return <DndProvider backend={HTML5Backend}>{props.children}</DndProvider>;
-};
-
-const UIEngineDndWrapper = (props: any) => {
+export const UIEngineDndWrapper = (props: any) => {
   const { preview } = useContext(Context);
   const { children, uinode } = props;
   if (preview) return children;
 
   const ref = useRef<HTMLDivElement>(null);
   // define drag source
-  const [, drag] = useDrag({ item: { type: TYPE, uinode } });
+  const [, drag] = useDrag({ item: { type: DND_IDE_TYPE, uinode } });
 
   // active style
   const [border, setBorder] = useState({});
 
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
-    accept: TYPE,
+    accept: DND_IDE_TYPE,
     hover: async (item: DragItem, monitor: DropTargetMonitor) => {
       if (!ref.current) {
         return;
@@ -112,37 +106,43 @@ const UIEngineDndWrapper = (props: any) => {
   });
 
   // change over background
-  let backgroundColor = "rgba(200, 200, 200, 0.5)";
+  let backgroundColor = "rgba(255, 255, 255)";
   let borderStyle = {};
+  let elementLabelStyle = {};
   if (isOverCurrent) {
-    backgroundColor = "#3570bd";
+    // backgroundColor = "rgba(24, 144, 255, 0.2)";
     borderStyle = border;
+    elementLabelStyle = { background: "#f00", color: "#fff" };
   }
 
   drag(drop(ref));
 
   // callbacks to add hoverstyle
-  const [hoverStyle, setHoverStyle] = useState({ backgroundColor });
+  const [hoverStyle, setHoverStyle] = useState({});
   const mouseEnter = (e: any) => {
+    e.stopPropagation();
     setHoverStyle({
-      backgroundColor: "#cde7ff"
+      border: "1px solid #0779e2",
+      background: "#0779e2",
+      color: "#fff"
     });
   };
 
   const mouseLeave = (e: any) => {
-    setHoverStyle({ backgroundColor });
+    e.stopPropagation();
+    setHoverStyle({});
   };
 
   return (
     <div
       ref={ref}
-      onMouseEnter={mouseEnter}
-      onMouseLeave={mouseLeave}
+      onMouseOver={mouseEnter}
+      onMouseOut={mouseLeave}
       style={{ backgroundColor, ...borderStyle, ...hoverStyle }}
       className="wrapper"
     >
-      <ActionMenu>
-        <div className="component-action">
+      <ActionMenu uinode={uinode}>
+        <div className="component-action" style={elementLabelStyle}>
           {uinode.schema.component}
           <Icon type="more" />
         </div>
@@ -151,5 +151,3 @@ const UIEngineDndWrapper = (props: any) => {
     </div>
   );
 };
-
-export { UIEngineDndProvider, UIEngineDndWrapper };

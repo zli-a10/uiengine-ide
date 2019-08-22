@@ -64,10 +64,10 @@ export const Manager: React.FC<IManager> = props => {
 
       <div className="widgets">
         <Tabs defaultActiveKey="1">
-          <TabPane tab="Libraries" key="1">
+          <TabPane tab="Components" key="1">
             <Libraries list={libraries} />
           </TabPane>
-          <TabPane tab="Layouts" key="2">
+          <TabPane tab="DataSources" key="2">
             <Libraries list={layouts} />
           </TabPane>
         </Tabs>
