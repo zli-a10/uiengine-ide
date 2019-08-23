@@ -9,6 +9,8 @@ import { UIEngineDndProvider } from "../dnd";
 const { TabPane } = Tabs;
 
 import "./styles/index.less";
+// import "animate.css";
+
 import { ILayoutSchema } from "uiengine/typings";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
@@ -32,7 +34,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [info, setInfo] = useState({});
   const contextValue = useMemo<IIDEContext>(
     () => ({
-      preview: false,
+      preview,
       togglePreview: (preview: boolean) => {
         setPreview(preview);
       },

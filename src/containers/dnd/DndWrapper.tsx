@@ -43,6 +43,8 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // active style
   const [border, setBorder] = useState({});
+  // const [dropClass, setDropClass] = useState();
+  const [overClass, setOverClass] = useState();
 
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
@@ -62,6 +64,7 @@ export const UIEngineDndWrapper = (props: any) => {
       let regionStyles;
       switch (item.type) {
         case DND_IDE_NODE_TYPE:
+          if (!dndNodeManager.canDrop(draggingNode, hoverNode)) return;
           // Determine rectangle on screen
           const hoverBoundingRect = ref.current!.getBoundingClientRect();
 
@@ -85,7 +88,7 @@ export const UIEngineDndWrapper = (props: any) => {
                 [borderName]: "3px solid #f00"
               };
             }
-
+            setOverClass("node-wrapper-over");
             setBorder(regionStyles);
           }
           break;
@@ -94,6 +97,7 @@ export const UIEngineDndWrapper = (props: any) => {
             border: "3px solid #80c35f",
             backgroundColor: "#def9d1"
           };
+          setOverClass("schema-wrapper-over");
           setBorder(regionStyles);
           break;
       }
@@ -147,14 +151,15 @@ export const UIEngineDndWrapper = (props: any) => {
   // change over background
   // let backgroundColor = "rgba(255, 255, 255)";
   let borderStyle = {};
-  let overClass;
+  let overClassName = "";
 
   if (isOverCurrent) {
     borderStyle = border;
-    overClass = "wrapper-over";
+    overClassName = overClass;
   }
 
   drag(drop(ref));
+  // console.log(borderStyle, "border style");
 
   // callbacks to add hoverstyle
   const [hoverClassNames, setHoverClassNames] = useState("");
@@ -176,7 +181,7 @@ export const UIEngineDndWrapper = (props: any) => {
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={{ ...borderStyle }}
-      className={`wrapper ${overClass} ${hoverClassNames}`}
+      className={`wrapper ${overClassName} ${hoverClassNames}`}
     >
       <ActionMenu uinode={uinode}>
         <div className="component-action" title={dataSource}>

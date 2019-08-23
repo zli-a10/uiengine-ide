@@ -136,51 +136,6 @@ export default class DndNodeManager implements IDndNodeManager {
     // this.cleanLayout(this.sourceNode);
   }
 
-  // TO Fix: Can't drag element into it's child
-  private canDrop() {
-    if (!this.sourceParent || !this.targetParent) return false;
-    if (this.sourceNode === this.targetNode) return false;
-  }
-
-  private async replaceSchema(
-    newSchema: ILayoutSchema,
-    insertBottom: boolean = false,
-    verticalSwitch: boolean = false
-  ) {
-    let removeIndex = this.sourceIndex;
-    // left or right drag
-    let insertPos = this.targetIndex;
-    if (insertBottom) {
-      ++insertPos;
-    }
-    if (verticalSwitch) {
-      this.targetParentChildrenSchema.splice(insertPos, 0, newSchema);
-      // target index larger than source index, the length added one;
-      if (
-        this.sourceParent === this.targetParent &&
-        this.sourceIndex > this.targetIndex
-      ) {
-        removeIndex++;
-      }
-    } else {
-      this.targetParentChildrenSchema[insertPos] = newSchema;
-    }
-    this.removeSourceNode(removeIndex);
-    await this.refresh();
-  }
-
-  async insertCenter(sourceNode: IUINode, targetNode: IUINode) {
-    this.selectNode(sourceNode, targetNode);
-    if (!this.canDrop) return;
-
-    // empty target, just push
-    this.targetChildrenSchema.push(this.sourceSchema);
-    this.targetSchema.children = this.targetChildrenSchema;
-    // remove from source
-    this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
-    await this.refresh();
-  }
-
   private async replaceInlineSchema(insertLeft: boolean = true) {
     if (
       this.targetParentSchema.component === this.layoutWrappers.row.component
@@ -233,32 +188,94 @@ export default class DndNodeManager implements IDndNodeManager {
     }
   }
 
-  async insertLeft(sourceNode: IUINode, targetNode: IUINode) {
-    this.selectNode(sourceNode, targetNode);
+  private async replaceSchema(
+    newSchema: ILayoutSchema,
+    insertBottom: boolean = false,
+    verticalSwitch: boolean = false
+  ) {
+    let removeIndex = this.sourceIndex;
+    // left or right drag
+    let insertPos = this.targetIndex;
+    if (insertBottom) {
+      ++insertPos;
+    }
+    if (verticalSwitch) {
+      this.targetParentChildrenSchema.splice(insertPos, 0, newSchema);
+      // target index larger than source index, the length added one;
+      if (
+        this.sourceParent === this.targetParent &&
+        this.sourceIndex > this.targetIndex
+      ) {
+        removeIndex++;
+      }
+    } else {
+      this.targetParentChildrenSchema[insertPos] = newSchema;
+    }
+    this.removeSourceNode(removeIndex);
+    await this.refresh();
+  }
 
-    if (!this.canDrop) return;
+  canDrop(sourceNode: IUINode, targetNode: IUINode) {
+    this.selectNode(sourceNode, targetNode);
+    if (!this.sourceParent) return true;
+    if (!this.targetParent) return false;
+    if (this.sourceNode === this.targetNode) return false;
+
+    // can't drop inside
+    const inChild = (source: IUINode) => {
+      if (source) {
+        if (source.children.indexOf(targetNode) > -1) {
+          return true;
+        } else {
+          for (let i in source.children) {
+            if (inChild(source.children[i])) return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    const result = !inChild(sourceNode);
+    return result;
+  }
+
+  async insertCenter(sourceNode: IUINode, targetNode: IUINode) {
+    // this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop(sourceNode, targetNode)) return;
+
+    // empty target, just push
+    this.targetChildrenSchema.push(this.sourceSchema);
+    this.targetSchema.children = this.targetChildrenSchema;
+    // remove from source
+    this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
+    await this.refresh();
+  }
+
+  async insertLeft(sourceNode: IUINode, targetNode: IUINode) {
+    // this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop(sourceNode, targetNode)) return;
 
     // build new schema using this.layoutWrappers
     await this.replaceInlineSchema(true);
   }
 
   async insertRight(sourceNode: IUINode, targetNode: IUINode) {
-    this.selectNode(sourceNode, targetNode);
-    if (!this.canDrop) return;
+    // this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop(sourceNode, targetNode)) return;
 
     // build new schema using wrappers
     await this.replaceInlineSchema(false);
   }
 
   async insertTop(sourceNode: IUINode, targetNode: IUINode) {
-    this.selectNode(sourceNode, targetNode);
-    if (!this.canDrop) return;
+    // this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop(sourceNode, targetNode)) return;
     await this.replaceSchema(this.sourceSchema, false, true);
   }
 
   async insertBottom(sourceNode: IUINode, targetNode: IUINode) {
-    this.selectNode(sourceNode, targetNode);
-    if (!this.canDrop) return;
+    // this.selectNode(sourceNode, targetNode);
+    if (!this.canDrop(sourceNode, targetNode)) return;
     await this.replaceSchema(this.sourceSchema, true, true);
   }
 
