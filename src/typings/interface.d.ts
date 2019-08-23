@@ -134,3 +134,17 @@ interface ICommandOutput {
   status: number;
   output: any;
 }
+
+interface IFileLoader {
+  storage: IStorage;
+  loadFileTree();
+  loadFile(path: string);
+  removeFile(path: string);
+  updateFile(path: string, content: string);
+}
+
+interface IStorage {
+  save(path: string, content: string);
+  remove(path: string);
+  get(path: string);
+}
