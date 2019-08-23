@@ -1,5 +1,15 @@
+interface IPropInfo {
+  schema?: ILayoutSchema;
+  debug?: any;
+}
+
 interface IIDEContext {
   preview: boolean;
+  togglePreview(preview: boolean);
+  info: IPropInfo;
+  updateInfo(info: IPropInfo);
+  theme: string;
+  toggleTheme(theme: string);
 }
 
 interface IIDEEditor {

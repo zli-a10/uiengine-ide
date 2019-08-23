@@ -33,7 +33,7 @@ const getDataSource = (
 };
 
 export const UIEngineDndWrapper = (props: any) => {
-  const { preview } = useContext(Context);
+  const { preview, updateInfo } = useContext(Context);
   const { children, uinode } = props;
   if (preview) return children;
 
@@ -135,6 +135,7 @@ export const UIEngineDndWrapper = (props: any) => {
           }
           break;
       }
+      updateInfo({ schema: hoverNode.schema });
     },
 
     collect: monitor => ({

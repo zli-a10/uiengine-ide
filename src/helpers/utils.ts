@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { NodeController } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
@@ -12,4 +13,10 @@ export function difference(object: any, base: any) {
     });
   }
   return changes(object, base);
+}
+
+export function getActiveUINode() {
+  const nodeController = NodeController.getInstance();
+  const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
+  return uiNode;
 }

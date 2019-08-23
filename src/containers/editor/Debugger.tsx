@@ -1,52 +1,56 @@
 import React, { useContext } from "react";
+import _ from "lodash";
 import { Collapse, Input } from "antd";
 import { Context } from "./Context";
 import ReactJson from "react-json-view";
+import { getActiveUINode } from "../../helpers";
 
 const Panel = Collapse.Panel;
 
 export const Debugger: React.FC = (props: any) => {
   function callback() {}
-  const { preview } = useContext(Context);
-  const uiJson = {
-    schema: [
-      {
-        widget: "row",
-        props: {
-          children: [
-            {
-              widget: "column",
-              props: {
-                children: [
-                  {
-                    widget: "field",
-                    props: { dataSource: "aam.aaa-policy.name" }
-                  },
-                  {
-                    widget: "Custom/SSLi/Service/Form",
-                    props: {
-                      name: "name",
-                      title: {
-                        create: "Add New Object",
-                        update: "Edit Object"
-                      },
-                      description: {
-                        create:
-                          "Please provide following information to create a new object",
-                        update:
-                          "Please provide following information to edit object"
-                      },
-                      children: []
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
-  };
+  const { preview, info } = useContext(Context);
+  const uiNode = getActiveUINode();
+  const uiJson = _.get(uiNode, "schema", {});
+  // const uiJson = {
+  //   schema: [
+  //     {
+  //       widget: "row",
+  //       props: {
+  //         children: [
+  //           {
+  //             widget: "column",
+  //             props: {
+  //               children: [
+  //                 {
+  //                   widget: "field",
+  //                   props: { dataSource: "aam.aaa-policy.name" }
+  //                 },
+  //                 {
+  //                   widget: "Custom/SSLi/Service/Form",
+  //                   props: {
+  //                     name: "name",
+  //                     title: {
+  //                       create: "Add New Object",
+  //                       update: "Edit Object"
+  //                     },
+  //                     description: {
+  //                       create:
+  //                         "Please provide following information to create a new object",
+  //                       update:
+  //                         "Please provide following information to edit object"
+  //                     },
+  //                     children: []
+  //                   }
+  //                 }
+  //               ]
+  //             }
+  //           }
+  //         ]
+  //       }
+  //     }
+  //   ]
+  // };
 
   return (
     <div className="ide-props-events">

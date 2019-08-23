@@ -47,6 +47,7 @@ export default class VersionControl implements IVersionControl {
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;
       await this.reloadSchema(schema);
+      return schema;
     }
   }
 
@@ -57,6 +58,7 @@ export default class VersionControl implements IVersionControl {
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;
       await this.reloadSchema(schema);
+      return schema;
     }
   }
 }

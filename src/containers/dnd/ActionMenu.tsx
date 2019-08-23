@@ -1,14 +1,17 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { Menu, Dropdown, Icon } from "antd";
 import DndNodeManager from "./DndNodeManager";
 const dndNodeManager = DndNodeManager.getInstance();
+import { Context } from "../editor/Context";
 
 const ActionMenu = (props: any) => {
+  const { updateInfo } = useContext(Context);
   const { children, uinode } = props;
   // const {SubMenu} = Menu;
   const deleteNode = useCallback(
     async (e: any) => {
       await dndNodeManager.delete(uinode);
+      updateInfo({ schema: uinode.schema });
     },
     [uinode]
   );
@@ -16,37 +19,13 @@ const ActionMenu = (props: any) => {
   const unWrapNode = useCallback(
     async (e: any) => {
       await dndNodeManager.removeWrappers(uinode);
+      updateInfo({ schema: uinode.schema });
     },
     [uinode]
   );
 
   const menu = (
     <Menu>
-      {/* <Menu.Item key="unit-child">
-      <a target="_blank">
-        <Icon type="enter" /> Add Child Row
-      </a>
-    </Menu.Item>
-    <Menu.Item key="unit-up">
-      <a target="_blank">
-        <Icon type="arrow-up" /> Add Up Row
-      </a>
-    </Menu.Item>
-    <Menu.Item key="unit-down">
-      <a target="_blank">
-        <Icon type="arrow-down" /> Add Down Row
-      </a>
-    </Menu.Item>
-    <Menu.Item key="unit-left">
-      <a target="_blank">
-        <Icon type="arrow-left" /> Add Left Col
-      </a>
-    </Menu.Item>
-    <Menu.Item key="unit-right">
-      <a target="_blank">
-        <Icon type="arrow-right" /> Add Right Col
-      </a>
-    </Menu.Item> */}
       <Menu.Item key="unit-unwrapper" onClick={unWrapNode}>
         <a target="_blank">
           <Icon type="menu-fold" />
@@ -59,11 +38,6 @@ const ActionMenu = (props: any) => {
           <Icon type="delete" /> Delete
         </a>
       </Menu.Item>
-      {/* <Menu.Item key="unit-edit">
-      <a target="_blank">
-        <Icon type="edit" /> Edit
-      </a>
-    </Menu.Item> */}
     </Menu>
   );
 
