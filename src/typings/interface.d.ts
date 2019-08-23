@@ -1,4 +1,4 @@
-import { ILayoutSchema } from "uiengine/typings";
+import { ILayoutSchema, IUINode } from "uiengine/typings";
 
 declare module "*.json" {
   const value: any;
@@ -119,6 +119,7 @@ interface IDndNodeManager {
   delete(sourceNode: IUINode);
   useSchema(targetNode: IUINode, schema: ILayoutSchema);
   cleanLayout(sourceNode: IUINode);
+  removeWrappers(sourceNode: IUINode);
 }
 
 // component schema for libraries

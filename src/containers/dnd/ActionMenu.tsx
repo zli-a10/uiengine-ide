@@ -13,6 +13,13 @@ const ActionMenu = (props: any) => {
     [uinode]
   );
 
+  const unWrapNode = useCallback(
+    async (e: any) => {
+      await dndNodeManager.removeWrappers(uinode);
+    },
+    [uinode]
+  );
+
   const menu = (
     <Menu>
       {/* <Menu.Item key="unit-child">
@@ -40,10 +47,10 @@ const ActionMenu = (props: any) => {
         <Icon type="arrow-right" /> Add Right Col
       </a>
     </Menu.Item> */}
-      <Menu.Item key="unit-unwrapper">
+      <Menu.Item key="unit-unwrapper" onClick={unWrapNode}>
         <a target="_blank">
           <Icon type="menu-fold" />
-          Remove Redundant Wrappers
+          Remove Layout Wrappers
         </a>
       </Menu.Item>
       <Menu.Divider />

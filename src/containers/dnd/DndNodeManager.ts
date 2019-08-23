@@ -317,4 +317,45 @@ export default class DndNodeManager implements IDndNodeManager {
       // }
     }
   }
+
+  async removeWrappers(sourceNode: IUINode) {
+    if (!sourceNode.parent) return;
+    this.selectNode(sourceNode, {} as IUINode);
+    const removeAllWrappers = (node: IUINode) => {
+      // this.selectNode(sourceNode, {} as IUINode);
+      let sourceSchema = node.schema;
+      const layoutRowComponent = this.layoutWrappers.row.component;
+      const layoutColComponent = this.layoutWrappers.col.component;
+      let destSchema: any = [];
+      if (
+        sourceSchema.component === layoutRowComponent ||
+        sourceSchema.component === layoutColComponent
+      ) {
+        for (let i in node.children) {
+          const uiNode = node.children[i];
+          destSchema = destSchema.concat(removeAllWrappers(uiNode));
+        }
+      } else {
+        destSchema.push(_.cloneDeep(sourceSchema));
+      }
+      return destSchema;
+    };
+
+    // append to parent
+    if (this.sourceParentSchema.children) {
+      const schema = removeAllWrappers(sourceNode);
+      this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
+      const tailChildren = this.sourceParentChildrenSchema.splice(
+        this.sourceIndex,
+        this.sourceParentChildrenSchema.length
+      );
+
+      this.sourceParentSchema.children = [
+        ...this.sourceParentChildrenSchema,
+        ...schema,
+        ...tailChildren
+      ];
+      await this.refresh();
+    }
+  }
 }

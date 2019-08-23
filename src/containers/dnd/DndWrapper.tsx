@@ -15,7 +15,10 @@ import { IDataSource } from "uiengine/typings";
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
 
-const getDataSource = (datasource: IDataSource | string) => {
+const getDataSource = (
+  datasource: IDataSource | string,
+  full: boolean = false
+) => {
   if (!datasource) return "";
   let source = "";
   if (_.isObject(datasource)) {
@@ -23,7 +26,10 @@ const getDataSource = (datasource: IDataSource | string) => {
   } else {
     source = datasource;
   }
-  return _.last(source.split(":"));
+  if (full) {
+    return source;
+  }
+  return _.last(source.replace(":", ".").split("."));
 };
 
 export const UIEngineDndWrapper = (props: any) => {
@@ -158,7 +164,8 @@ export const UIEngineDndWrapper = (props: any) => {
       container: {
         border: "1px solid #0779e2",
         background: "#0779e2",
-        color: "#fff"
+        color: "#fff",
+        boxShadow: "#0779e2 0px 3px 10px"
       },
       band: {
         border: "1px solid #0779e2",
