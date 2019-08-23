@@ -144,61 +144,41 @@ export const UIEngineDndWrapper = (props: any) => {
   });
 
   // change over background
-  let backgroundColor = "rgba(255, 255, 255)";
+  // let backgroundColor = "rgba(255, 255, 255)";
   let borderStyle = {};
-  let elementLabelStyle = {};
+  let overClass;
+
   if (isOverCurrent) {
-    // backgroundColor = "rgba(24, 144, 255, 0.2)";
     borderStyle = border;
-    elementLabelStyle = { background: "#f00", color: "#fff" };
+    overClass = "wrapper-over";
   }
 
   drag(drop(ref));
 
   // callbacks to add hoverstyle
-  const defaultHoverStyle = { container: {}, band: {} };
-  const [hoverStyle, setHoverStyle] = useState(defaultHoverStyle);
-  const mouseEnter = useCallback((e: any) => {
+  const [hoverClassNames, setHoverClassNames] = useState("");
+  const mouseOver = useCallback((e: any) => {
     e.stopPropagation();
-    setHoverStyle({
-      container: {
-        border: "1px solid #0779e2",
-        background: "#0779e2",
-        color: "#fff",
-        boxShadow: "#0779e2 0px 3px 10px"
-      },
-      band: {
-        border: "1px solid #0779e2",
-        background: "#0a386b",
-        color: "#fff",
-        zIndex: 201
-      }
-    });
+    setHoverClassNames("wrapper-hover");
   }, []);
 
-  const mouseLeave = useCallback(
-    (e: any) => {
-      e.stopPropagation();
-      setHoverStyle(defaultHoverStyle);
-    },
-    [defaultHoverStyle]
-  );
+  const mouseOut = useCallback((e: any) => {
+    e.stopPropagation();
+    setHoverClassNames("wrapper-out");
+  }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
+
   return (
     <div
       ref={ref}
-      onMouseOver={mouseEnter}
-      onMouseOut={mouseLeave}
-      style={{ backgroundColor, ...borderStyle, ...hoverStyle.container }}
-      className="wrapper"
+      onMouseOver={mouseOver}
+      onMouseOut={mouseOut}
+      style={{ ...borderStyle }}
+      className={`wrapper ${overClass} ${hoverClassNames}`}
     >
       <ActionMenu uinode={uinode}>
-        <div
-          className="component-action"
-          style={{ ...elementLabelStyle, ...hoverStyle.band }}
-          title={dataSource}
-        >
+        <div className="component-action" title={dataSource}>
           {uinode.schema.component}
           {dataSource ? `(${dataSource})` : ""}
           <Icon type="more" />

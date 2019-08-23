@@ -14,3 +14,7 @@ cd examples/ide
 npm i
 npm start
 ```
+
+## TO DO
+
+whole block drag in , just as a single object

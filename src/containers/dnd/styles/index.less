@@ -18,7 +18,7 @@
 }
 
 .wrapper {
-  // border: 1px dashed rgba(0, 0, 0, 0.45);
+  // border: 1px dashed rgba(0; 0, 0, 0.45);
   background: #fafafa;
   padding: 5px;
   margin: 5px;
@@ -27,6 +27,57 @@
   flex: 1;
   min-height: 50px;
   box-shadow: #6591c1 0px 3px 10px;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95, 0.95);
+    opacity: 0.3;
+  }
+}
+
+.wrapper-hover {
+  border: 1px solid #0779e2;
+  background: #0779e2;
+  color: #fff;
+  .wrapper {
+    animation: scaleIn 8s 1 forwards;
+    box-shadow: #0779e2 0px 3px 10px;
+  }
+
+  > .component-action {
+    border: 1px solid #0779e2;
+    background: #0a386b;
+    color: #fff;
+    z-index: 201;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(0.95, 0.95);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+.wrapper-out {
+  // .wrapper {
+  //   animation: scaleOut 1s 1 forwards;
+  // }
+}
+
+.wrapper-over {
+  > .component-action {
+    background: #f00;
+    color: #fff;
+    z-index: 201;
+  }
 }
 
 .ide-wrapper-row {
