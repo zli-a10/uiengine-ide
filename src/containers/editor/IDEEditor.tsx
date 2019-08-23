@@ -1,40 +1,44 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo } from 'react'
 
-// import { _ } from 'lodash';
-import { Icon, Switch } from "antd";
-import { Manager, PropManager, DrawingBoard } from "./";
-import { Context } from "./Context";
+import * as _ from 'lodash'
+import { Icon, Switch } from 'antd'
+import { Manager, PropManager, DrawingBoard } from './'
+import { Context } from './Context'
 // import { useVisibilites } from '../hooks/visibility';
-import { UIEngineDndProvider } from "../dnd";
+import { UIEngineDndProvider } from '../dnd'
 
-import "./styles/index.less";
+import './styles/index.less'
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
-  const [componentsCollapsed, setComponentCollapse] = useState(false);
-  const [propsCollapsed, setPropsCollapse] = useState(true);
-  const [headerCollapsed, setHeaderCollapse] = useState(false);
+  const [componentsCollapsed, setComponentCollapse] = useState(false)
+  const [propsCollapsed, setPropsCollapse] = useState(true)
+  const [headerCollapsed, setHeaderCollapse] = useState(false)
 
   const hideAll = useCallback(() => {
-    setComponentCollapse(true);
-    setPropsCollapse(true);
-    setHeaderCollapse(true);
-  }, [componentsCollapsed, propsCollapsed, headerCollapsed]);
+    setComponentCollapse(true)
+    setPropsCollapse(true)
+    setHeaderCollapse(true)
+  }, [componentsCollapsed, propsCollapsed, headerCollapsed])
 
   const showAll = useCallback(() => {
-    setComponentCollapse(false);
-    setHeaderCollapse(false);
-  }, [componentsCollapsed, propsCollapsed, headerCollapsed]);
+    setComponentCollapse(false)
+    setHeaderCollapse(false)
+  }, [componentsCollapsed, propsCollapsed, headerCollapsed])
 
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState(false)
   const contextValue = useMemo<IIDEContext>(
     () => ({
       preview
     }),
     [preview]
-  );
+  )
   const switchPreview = () => {
-    setPreview(!preview);
-  };
+    setPreview(!preview)
+  }
+
+  const {
+    manangerProps: { getDataSource, expandDataSource } = {} as any
+  } = props
 
   return (
     <Context.Provider value={contextValue}>
@@ -43,7 +47,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           <Icon type="caret-right" />
         </a>
       ) : null}
-      <div className={headerCollapsed ? "ide-header hide" : "ide-header"}>
+      <div className={headerCollapsed ? 'ide-header hide' : 'ide-header'}>
         <div className="left">
           <div className="button-close">
             <Icon type="close" onClick={hideAll} />
@@ -52,7 +56,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             className="button-menu"
             onClick={() => setComponentCollapse(!componentsCollapsed)}
           >
-            <Icon type="menu" /> Editing WAF - Template{" "}
+            <Icon type="menu" /> Editing WAF - Template{' '}
           </a>
           <div className="page-name">
             <em>(last saved: 10:09)</em>
@@ -84,6 +88,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         <div className="ide-editor">
           {componentsCollapsed ? null : (
             <Manager
+              getDataSource={getDataSource}
+              expandDataSource={expandDataSource}
               onClose={() => setComponentCollapse(!componentsCollapsed)}
             />
           )}
@@ -94,5 +100,5 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         </div>
       </UIEngineDndProvider>
     </Context.Provider>
-  );
-};
+  )
+}

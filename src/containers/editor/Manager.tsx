@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Tabs, Icon } from "antd";
-import { PageTree, Libraries } from "./";
+import React, { useState } from 'react'
+import { Tabs, Icon } from 'antd'
+import { PageTree, Libraries } from './'
+import DataSource from './DataSource'
 
-const TabPane = Tabs.TabPane;
+const TabPane = Tabs.TabPane
 
-import { trigger } from "../../core/index";
-import commands from "../../core/messages";
+import { trigger } from '../../core/index'
+import commands from '../../core/messages'
 
 export const Manager: React.FC<IManager> = props => {
   // schemas fetch
@@ -14,8 +15,8 @@ export const Manager: React.FC<IManager> = props => {
     content: {
       // type: 'page'
     }
-  });
-  const [tree, setTree] = useState(treeStructure);
+  })
+  const [tree, setTree] = useState(treeStructure)
 
   // outline fetch
   const outlineStructure = trigger({
@@ -23,8 +24,8 @@ export const Manager: React.FC<IManager> = props => {
     content: {
       // type: 'page'
     }
-  });
-  const [outline, setOutline] = useState(outlineStructure);
+  })
+  const [outline, setOutline] = useState(outlineStructure)
 
   // libraries fetch
   const librariesData = trigger({
@@ -32,8 +33,8 @@ export const Manager: React.FC<IManager> = props => {
     content: {
       // type: 'page'
     }
-  });
-  const [libraries, setLibraries] = useState(librariesData);
+  })
+  const [libraries, setLibraries] = useState(librariesData)
 
   // layouts fetch
   const layoutsData = trigger({
@@ -41,10 +42,10 @@ export const Manager: React.FC<IManager> = props => {
     content: {
       // type: 'page'
     }
-  });
-  const [layouts, setLayouts] = useState(layoutsData);
+  })
+  const [layouts, setLayouts] = useState(layoutsData)
 
-  const { onClose } = props;
+  const { onClose, getDataSource, expandDataSource } = props
 
   return (
     <div className="manager">
@@ -67,11 +68,17 @@ export const Manager: React.FC<IManager> = props => {
           <TabPane tab="Components" key="1">
             <Libraries list={libraries} />
           </TabPane>
-          <TabPane tab="DataSources" key="2">
+          {/* <TabPane tab="DataSources" key="2">
             <Libraries list={layouts} />
+          </TabPane> */}
+          <TabPane tab="DataSources" key="DataSources">
+            <DataSource
+              getDataSource={getDataSource}
+              expandDataSource={expandDataSource}
+            />
           </TabPane>
         </Tabs>
       </div>
     </div>
-  );
-};
+  )
+}
