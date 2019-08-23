@@ -1,11 +1,12 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 
 import * as _ from 'lodash'
-import { Icon, Switch } from 'antd'
+import { Icon, Switch, Tabs } from 'antd'
 import { Manager, PropManager, DrawingBoard } from './'
 import { Context } from './Context'
 // import { useVisibilites } from '../hooks/visibility';
 import { UIEngineDndProvider } from '../dnd'
+const { TabPane } = Tabs
 
 import './styles/index.less'
 
@@ -93,7 +94,15 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
               onClose={() => setComponentCollapse(!componentsCollapsed)}
             />
           )}
-          <DrawingBoard {...props} />
+
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="Drawing Board" key="1">
+              <DrawingBoard {...props} />
+            </TabPane>
+            <TabPane tab="Code Editor" key="2">
+              {/* <CodeEditor /> */}
+            </TabPane>
+          </Tabs>
           {propsCollapsed ? null : (
             <PropManager onClose={() => setPropsCollapse(!propsCollapsed)} />
           )}

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Tabs, Icon } from "antd";
 import Draggable from "react-draggable";
 import { Debugger } from "./Debugger";
@@ -11,6 +11,8 @@ export const PropManager: React.FC<IPropManager> = props => {
   const { onClose } = props;
   const { preview } = useContext(Context);
   let defaultActiveKey = preview ? "2" : "1";
+  const [activeKey, setActiveKey] = useState(defaultActiveKey);
+
   return (
     <Draggable>
       <div className="props">
@@ -18,7 +20,11 @@ export const PropManager: React.FC<IPropManager> = props => {
           <Icon type="close" />
         </a>
 
-        <Tabs defaultActiveKey={defaultActiveKey}>
+        <Tabs
+          defaultActiveKey={defaultActiveKey}
+          activeKey={activeKey}
+          onChange={setActiveKey}
+        >
           <TabPane tab="Props" key="1">
             <Props />
           </TabPane>

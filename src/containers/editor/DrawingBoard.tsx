@@ -17,7 +17,7 @@ export const DrawingBoard: React.FC = (props: any) => {
       await versionControl.undo();
     }
 
-    if (e.ctrlKey && e.code === "KeyY") {
+    if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
       await versionControl.redo();
     }
   };

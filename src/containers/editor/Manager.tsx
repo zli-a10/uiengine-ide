@@ -57,7 +57,7 @@ export const Manager: React.FC<IManager> = props => {
           <TabPane tab="Schemas" key="1">
             <PageTree tree={tree} />
           </TabPane>
-          <TabPane tab="Outline" key="2">
+          <TabPane tab="Plugins" key="2">
             <PageTree tree={outline} />
           </TabPane>
         </Tabs>
