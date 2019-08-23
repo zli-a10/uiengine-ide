@@ -268,6 +268,12 @@ export default class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
+  async useSchema(targetNode: IUINode, schema: ILayoutSchema) {
+    this.selectNode({} as IUINode, targetNode);
+    const newSchema = Object.assign({}, this.targetSchema, schema);
+    await this.replaceSchema(newSchema);
+  }
+
   async cleanLayout(sourceNode?: IUINode) {
     if (!sourceNode) {
       const activeLayout = this.nodeController.activeLayout;

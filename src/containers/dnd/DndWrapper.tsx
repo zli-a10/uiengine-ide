@@ -1,18 +1,30 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useCallback } from "react";
 import { Context } from "../editor/Context";
 import _ from "lodash";
 import { Icon } from "antd";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
+import { DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE } from "./DndTypes";
 
 import DndNodeManager from "./DndNodeManager";
 import RegionDetector from "./RegionDetector";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
+import { IDataSource } from "uiengine/typings";
 
-export const DND_IDE_TYPE = "uiengine-wrapper";
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
+
+const getDataSource = (datasource: IDataSource | string) => {
+  if (!datasource) return "";
+  let source = "";
+  if (_.isObject(datasource)) {
+    source = datasource.source;
+  } else {
+    source = datasource;
+  }
+  return _.last(source.split(":"));
+};
 
 export const UIEngineDndWrapper = (props: any) => {
   const { preview } = useContext(Context);
@@ -21,14 +33,14 @@ export const UIEngineDndWrapper = (props: any) => {
 
   const ref = useRef<HTMLDivElement>(null);
   // define drag source
-  const [, drag] = useDrag({ item: { type: DND_IDE_TYPE, uinode } });
+  const [, drag] = useDrag({ item: { type: DND_IDE_NODE_TYPE, uinode } });
 
   // active style
   const [border, setBorder] = useState({});
 
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
-    accept: DND_IDE_TYPE,
+    accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE],
     hover: async (item: DragItem, monitor: DropTargetMonitor) => {
       if (!ref.current) {
         return;
@@ -41,32 +53,43 @@ export const UIEngineDndWrapper = (props: any) => {
         return;
       }
 
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current!.getBoundingClientRect();
+      let regionStyles;
+      switch (item.type) {
+        case DND_IDE_NODE_TYPE:
+          // Determine rectangle on screen
+          const hoverBoundingRect = ref.current!.getBoundingClientRect();
 
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
+          // Determine mouse position
+          const clientOffset = monitor.getClientOffset();
 
-      // detect update region style
-      const regionName = regionDetector.detectCurrentRegion(
-        clientOffset as XYCoord,
-        hoverBoundingRect
-      );
+          // detect update region style
+          const regionName = regionDetector.detectCurrentRegion(
+            clientOffset as XYCoord,
+            hoverBoundingRect
+          );
 
-      if (regionName) {
-        let regionStyles;
-        if (regionName === "center") {
+          if (regionName) {
+            if (regionName === "center") {
+              regionStyles = {
+                border: "3px solid #f00"
+              };
+            } else {
+              const borderName = `border${_.upperFirst(regionName)}`;
+              regionStyles = {
+                [borderName]: "3px solid #f00"
+              };
+            }
+
+            setBorder(regionStyles);
+          }
+          break;
+        case DND_IDE_SCHEMA_TYPE:
           regionStyles = {
-            border: "3px solid #f00"
+            border: "3px solid #80c35f",
+            backgroundColor: "#def9d1"
           };
-        } else {
-          const borderName = `border${_.upperFirst(regionName)}`;
-          regionStyles = {
-            [borderName]: "3px solid #f00"
-          };
-        }
-
-        setBorder(regionStyles);
+          setBorder(regionStyles);
+          break;
       }
     },
     drop: async (item: DragItem, monitor: DropTargetMonitor) => {
@@ -81,21 +104,30 @@ export const UIEngineDndWrapper = (props: any) => {
         return;
       }
 
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current!.getBoundingClientRect();
+      switch (item.type) {
+        case DND_IDE_NODE_TYPE:
+          // Determine rectangle on screen
+          const hoverBoundingRect = ref.current!.getBoundingClientRect();
 
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
+          // Determine mouse position
+          const clientOffset = monitor.getClientOffset();
 
-      // detect update region style
-      const regionName = regionDetector.detectCurrentRegion(
-        clientOffset as XYCoord,
-        hoverBoundingRect
-      );
+          // detect update region style
+          const regionName = regionDetector.detectCurrentRegion(
+            clientOffset as XYCoord,
+            hoverBoundingRect
+          );
 
-      const insertMethodName = `insert${_.upperFirst(regionName)}`;
-      if (dndNodeManager[insertMethodName]) {
-        dndNodeManager[insertMethodName](draggingNode, hoverNode);
+          const insertMethodName = `insert${_.upperFirst(regionName)}`;
+          if (dndNodeManager[insertMethodName]) {
+            dndNodeManager[insertMethodName](draggingNode, hoverNode);
+          }
+          break;
+        case DND_IDE_SCHEMA_TYPE:
+          if (_.isObject(item.schema)) {
+            dndNodeManager.useSchema(hoverNode, item.schema);
+          }
+          break;
       }
     },
 
@@ -120,7 +152,7 @@ export const UIEngineDndWrapper = (props: any) => {
   // callbacks to add hoverstyle
   const defaultHoverStyle = { container: {}, band: {} };
   const [hoverStyle, setHoverStyle] = useState(defaultHoverStyle);
-  const mouseEnter = (e: any) => {
+  const mouseEnter = useCallback((e: any) => {
     e.stopPropagation();
     setHoverStyle({
       container: {
@@ -135,13 +167,17 @@ export const UIEngineDndWrapper = (props: any) => {
         zIndex: 201
       }
     });
-  };
+  }, []);
 
-  const mouseLeave = (e: any) => {
-    e.stopPropagation();
-    setHoverStyle(defaultHoverStyle);
-  };
+  const mouseLeave = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      setHoverStyle(defaultHoverStyle);
+    },
+    [defaultHoverStyle]
+  );
 
+  const dataSource = getDataSource(uinode.schema.datasource);
   return (
     <div
       ref={ref}
@@ -154,8 +190,10 @@ export const UIEngineDndWrapper = (props: any) => {
         <div
           className="component-action"
           style={{ ...elementLabelStyle, ...hoverStyle.band }}
+          title={dataSource}
         >
           {uinode.schema.component}
+          {dataSource ? `(${dataSource})` : ""}
           <Icon type="more" />
         </div>
       </ActionMenu>

@@ -1,144 +1,148 @@
-declare module '*.json' {
-  const value: any
-  export default value
+import { ILayoutSchema } from "uiengine/typings";
+
+declare module "*.json" {
+  const value: any;
+  export default value;
 }
 
 interface IIDEEditor {
-  children?: ReactNode
-  layouts: [string]
-  config: object
+  children?: ReactNode;
+  layouts: [string];
+  config: object;
   manangerProps: {
-    getDataSource?: () => any
-    expandDataSource?: (uiPath: string) => any
-  }
+    getDataSource?: () => any;
+    expandDataSource?: (uiPath: string) => any;
+  };
 }
 
 interface IPropManager {
-  onClose: () => any
+  onClose: () => any;
 }
 
 interface IManager {
-  onClose: () => any
-  getDataSource?: () => any
-  expandDataSource?: (uiPath: string) => any
+  onClose: () => any;
+  getDataSource?: () => any;
+  expandDataSource?: (uiPath: string) => any;
 }
 
 interface IWidgets {
-  widgets: IWidget[]
+  widgets: IWidget[];
 }
 
 interface ILayoutManager {
-  layout: string
+  layout: string;
 }
 
 interface ITree {
-  tree: any
+  tree: any;
 }
 
 interface ITreeState {
-  expandKeys: string[]
-  date: number
+  expandKeys: string[];
+  date: number;
 }
 
 interface IComponents {
-  list: any
+  list: any;
 }
 
 interface IWidget {
-  widget: any
+  widget: any;
 }
 
 interface IMenuTitle {
-  dataRef: any
+  dataRef: any;
 }
 
 interface IIDEContext {
-  preview: boolean
+  preview: boolean;
 }
 
 interface IConfigWrappers {
-  row: any
-  col: any
+  row: any;
+  col: any;
 }
 
 interface IHistory {
-  version: string
-  schema: ILayoutSchema
+  version: string;
+  schema: ILayoutSchema;
 }
 
 interface IVersionControl {
-  histories: Array<IHistory>
-  push(schema: ILayoutSchema)
-  redo()
-  undo()
+  histories: Array<IHistory>;
+  push(schema: ILayoutSchema);
+  redo();
+  undo();
 }
 
 interface DragItem {
-  uinode: IUINode
-  type: string
+  uinode?: IUINode;
+  type: string;
+  schema?: ILayoutSchema;
 }
 
 interface IDndNodeManager {
-  sourceNode?: IUINode
-  sourceIndex: number = -1
-  sourceSchema: ILayoutSchema = {}
-  sourceChildrenSchema: Array<ILayoutSchema> = []
-  sourceParent?: IUINode
-  sourceParentSchema: ILayoutSchema = {}
-  sourceParentChildrenSchema: Array<ILayoutSchema> = []
+  sourceNode?: IUINode;
+  sourceIndex: number = -1;
+  sourceSchema: ILayoutSchema = {};
+  sourceChildrenSchema: Array<ILayoutSchema> = [];
+  sourceParent?: IUINode;
+  sourceParentSchema: ILayoutSchema = {};
+  sourceParentChildrenSchema: Array<ILayoutSchema> = [];
 
-  targetNode?: IUINode
-  targetIndex: number = -1
-  targetSchema: ILayoutSchema = {}
-  targetChildrenSchema: Array<ILayoutSchema> = []
-  targetParent?: IUINode
-  targetParentSchema: ILayoutSchema = {}
-  targetParentChildrenSchema: Array<ILayoutSchema> = []
+  targetNode?: IUINode;
+  targetIndex: number = -1;
+  targetSchema: ILayoutSchema = {};
+  targetChildrenSchema: Array<ILayoutSchema> = [];
+  targetParent?: IUINode;
+  targetParentSchema: ILayoutSchema = {};
+  targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
-  insertCenter(sourceNode: IUINode, targetNode: IUINode)
+  insertCenter(sourceNode: IUINode, targetNode: IUINode);
 
   insertLeft(
     sourceNode: IUINode,
     targetNode: IUINode,
     wrappers?: IConfigWrappers
-  )
+  );
 
   insertRight(
     sourceNode: IUINode,
     targetNode: IUINode,
     wrappers?: IConfigWrappers
-  )
+  );
 
-  insertTop(sourceNode: IUINode, targetNode: IUINode)
+  insertTop(sourceNode: IUINode, targetNode: IUINode);
 
-  insertBottom(sourceNode: IUINode, targetNode: IUINode)
+  insertBottom(sourceNode: IUINode, targetNode: IUINode);
 
-  delete(sourceNode: IUINode)
-  cleanLayout(sourceNode: IUINode)
+  delete(sourceNode: IUINode);
+  useSchema(targetNode: IUINode, schema: ILayoutSchema);
+  cleanLayout(sourceNode: IUINode);
 }
 
 // component schema for libraries
 interface IComponentInfo {
-  id: string // component name generally
-  title: string //"Widgets",
-  schema: ILayoutSchema
-  url?: string
-  library?: string
-  version?: string
-  preview?: string //'xx.png'
-  icon?: string
+  id: string; // component name generally
+  title: string; //"Widgets",
+  schema: ILayoutSchema;
+  url?: string;
+  library?: string;
+  version?: string;
+  preview?: string; //'xx.png'
+  icon?: string;
 }
 
 interface IComponentInfoGroup {
-  id: string
-  children: Array<IComponentInfo>
-  version?: string
-  title?: string
+  id: string;
+  children: Array<IComponentInfo>;
+  version?: string;
+  title?: string;
 }
 
 interface ICommandOutput {
-  status: number
-  output: any
+  status: number;
+  output: any;
 }
 
 interface IFileLoader {
