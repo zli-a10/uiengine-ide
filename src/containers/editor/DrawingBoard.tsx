@@ -47,17 +47,32 @@ export const DrawingBoard: React.FC = (props: any) => {
   useEffect(() => {
     // Update the document title using the browser API
     document.body.onkeypress = historyAction;
-    const obj = document.getElementById("drawingboard");
+    const drawingboard = document.getElementById("drawingboard");
+    const propManager = document.getElementById("prop-manager");
     let originTop = 30;
-    window.onscroll = () => {
+    window.onscroll = _.debounce(() => {
       const scroll = getScroll();
-      if (obj && obj.children[1] && scroll.top > 0) {
-        if (scroll.top > _.get(obj.children[1], "offsetHeight", 0) - 100) {
+      if (drawingboard && drawingboard.children[1] && scroll.top > 0) {
+        if (
+          scroll.top >
+          _.get(drawingboard.children[1], "offsetHeight", 0) / 3
+        ) {
           originTop = scroll.top;
+        } else {
+          originTop = 20;
         }
-        obj.style.paddingTop = `${originTop}px`;
+        drawingboard.style.paddingTop = `${originTop}px`;
       }
-    };
+
+      if (propManager) {
+        if (scroll.top > 0) {
+          originTop = scroll.top;
+        } else {
+          originTop = 50;
+        }
+        propManager.style.top = `${originTop}px`;
+      }
+    }, 10);
   });
   // console.log(schemas, info);
   return (

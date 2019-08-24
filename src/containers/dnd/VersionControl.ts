@@ -17,6 +17,7 @@ export default class VersionControl implements IVersionControl {
   position: number = -1;
   nodeController: INodeController = NodeController.getInstance();
   private fileLoader: IFileLoader = FileLoader.getInstance();
+  private debounced: any;
 
   private async reloadSchema(schema: ILayoutSchema) {
     const activeLayout = this.nodeController.activeLayout;
@@ -25,10 +26,15 @@ export default class VersionControl implements IVersionControl {
     await uiNode.sendMessage(true);
   }
 
+  // store every 3 seconds
   private cacheSchema(schema: ILayoutSchema) {
-    if (this.fileLoader.editingFile) {
-      this.fileLoader.saveFile(this.fileLoader.editingFile, schema, "schema");
-    }
+    if (this.debounced) this.debounced.cancel();
+    this.debounced = _.debounce(() => {
+      console.log("cached!", schema);
+      if (this.fileLoader.editingFile) {
+        this.fileLoader.saveFile(this.fileLoader.editingFile, schema, "schema");
+      }
+    }, 1000)();
   }
 
   push(schema: ILayoutSchema) {

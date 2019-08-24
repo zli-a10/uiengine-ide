@@ -58,6 +58,7 @@ export class FileLoader implements IFileLoader {
     type: string,
     treeRoot?: IFileTree
   ): boolean {
+    console.log("saving ...", path);
     // store tree
     if (this.isTempStorage() && treeRoot) {
       this.saveTree(treeRoot, type);

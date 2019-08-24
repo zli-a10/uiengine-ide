@@ -15,7 +15,7 @@ export const PropManager: React.FC<IPropManager> = props => {
 
   return (
     <Draggable>
-      <div className="props">
+      <div className="props" id="prop-manager">
         <a className="close-button" onClick={onClose}>
           <Icon type="close" />
         </a>
