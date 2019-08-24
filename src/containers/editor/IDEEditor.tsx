@@ -58,6 +58,14 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     manangerProps: { getDataSource, expandDataSource } = {} as any
   } = props;
 
+  // short cut
+  useEffect(() => {
+    // Update the document title using the browser API
+    document.body.ondblclick = () => {
+      setPropsCollapse(!propsCollapsed);
+    };
+  });
+
   return (
     <Context.Provider value={contextValue}>
       {headerCollapsed ? (
