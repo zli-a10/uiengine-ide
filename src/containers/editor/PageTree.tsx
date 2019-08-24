@@ -163,11 +163,12 @@ export class PageTree extends React.Component<ITree, ITreeState> {
             <Icon type="close" onClick={cancelEdit} />
           </>
         ) : (
-          <Dropdown overlay={menu}>
-            <a className="ant-dropdown-link" href="#">
-              {props.children} <Icon type="more" />
-            </a>
-          </Dropdown>
+          <a className="ant-dropdown-link" href="#">
+            {props.children}{" "}
+            <Dropdown overlay={menu}>
+              <Icon type="more" />
+            </Dropdown>
+          </a>
         )}
       </div>
     );
