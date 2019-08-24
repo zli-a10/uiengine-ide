@@ -8,6 +8,21 @@ import VersionControl from "../dnd/VersionControl";
 import { Context } from "../editor/Context";
 // import { FileLoader } from "../../helpers";
 
+function getScroll() {
+  return {
+    left:
+      window.pageXOffset ||
+      document.documentElement.scrollLeft ||
+      document.body.scrollLeft ||
+      0,
+    top:
+      window.pageYOffset ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0
+  };
+}
+
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
   const { info, updateInfo } = useContext(Context);
@@ -32,10 +47,21 @@ export const DrawingBoard: React.FC = (props: any) => {
   useEffect(() => {
     // Update the document title using the browser API
     document.body.onkeypress = historyAction;
+    const obj = document.getElementById("drawingboard");
+    let originTop = 30;
+    window.onscroll = () => {
+      const scroll = getScroll();
+      if (obj && obj.children[1] && scroll.top > 0) {
+        if (scroll.top > _.get(obj.children[1], "offsetHeight", 0) - 100) {
+          originTop = scroll.top;
+        }
+        obj.style.paddingTop = `${originTop}px`;
+      }
+    };
   });
   // console.log(schemas, info);
   return (
-    <div className="editor">
+    <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}
       <UIEngine layouts={schemas} config={config} />
     </div>
