@@ -1,7 +1,6 @@
 import React from "react";
-import { Tree, Input, Icon } from "antd";
+import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { Context } from "./Context";
-import { DropdownMenu } from "../../components/DropdownMenu";
 import _ from "lodash";
 import { trigger } from "../../core/index";
 import commands from "../../core/messages";
@@ -47,7 +46,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       });
     };
     // const [data, setData] = useState(dataRef);
-    const onClick = (component: any, index: number) => {
+    const onClick = (e: any) => {
       const actionmMap: any = {
         Add: () => {
           const newItem = _.cloneDeep(dataRef);
@@ -90,16 +89,10 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           that.rerender();
         }
       };
-      const actionName = component.props.children;
+      const actionName = e.key;
 
       return actionmMap[actionName].call();
     };
-    const menu = [
-      <div>Add</div>,
-      <div>Delete</div>,
-      <div>Clone</div>,
-      <div>Rename</div>
-    ];
 
     const saveSchema = (e: any) => {
       const title = e.target.value;
@@ -140,6 +133,23 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       that.rerender();
     };
 
+    const menu = (
+      <Menu onClick={onClick}>
+        <Menu.Item key="Add">
+          <a>Add</a>
+        </Menu.Item>
+        <Menu.Item key="Delete">
+          <a>Delete</a>
+        </Menu.Item>
+        <Menu.Item key="Clone">
+          <a>Clone</a>
+        </Menu.Item>
+        <Menu.Item key="Rename">
+          <a>Rename</a>
+        </Menu.Item>
+      </Menu>
+    );
+
     return (
       <div className="node-title">
         {editable ? (
@@ -153,20 +163,11 @@ export class PageTree extends React.Component<ITree, ITreeState> {
             <Icon type="close" onClick={cancelEdit} />
           </>
         ) : (
-          // <DropdownMenu overlay={menu}>
-          //   <a className="ant-dropdown-link" href="#">
-          //     Hover me <Icon type="down" />
-          //   </a>
-          // </DropdownMenu>
-          <DropdownMenu
-            trigger="click"
-            placement="topRight"
-            arrowPointAtCenter={true}
-            title={props.children}
-            menu={menu}
-            onClick={onClick}
-          />
-          // <div>{props.children}</div>
+          <Dropdown overlay={menu}>
+            <a className="ant-dropdown-link" href="#">
+              {props.children} <Icon type="more" />
+            </a>
+          </Dropdown>
         )}
       </div>
     );
@@ -229,6 +230,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     if (selectedKeys.length) {
       const path = _.last(selectedKeys);
       if (path) {
+        this.context.updateInfo({ currentPath: path });
         const schema = fileLoader.loadFile(path, "schema");
         if (_.isObject(schema)) {
           const uiNode = getActiveUINode() as IUINode;
