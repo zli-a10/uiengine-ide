@@ -1,3 +1,4 @@
+import _ from "lodash";
 import * as storages from "./storages";
 
 export class StorageAdapter implements IStorage {
@@ -10,27 +11,32 @@ export class StorageAdapter implements IStorage {
     return StorageAdapter.instance;
   }
 
-  private storage: IStorage = storages[StorageAdapter.type].getInstance();
+  private storage: IStorage;
   path: string = "";
   content: string = "";
+  constructor() {
+    // console.log(storages, StorageAdapter.type);
+    const storageName = `${_.upperFirst(StorageAdapter.type)}Storage`;
+    this.storage = storages[storageName].getInstance();
+  }
 
   private setInfo(path: string, content?: string) {
     if (path) this.path = path;
-    if (content) this.path = content;
+    if (content) this.content = content;
   }
 
-  save(path: string, content: string) {
+  save(path: string, content: any) {
     this.setInfo(path, content);
-    this.storage.save(this.path, this.content);
+    return this.storage.save(this.path, this.content);
   }
 
   remove(path: string) {
     this.setInfo(path);
-    this.storage.remove(this.path);
+    return this.storage.remove(this.path);
   }
 
   get(path: string) {
     this.setInfo(path);
-    this.storage.get(this.path);
+    return this.storage.get(this.path);
   }
 }

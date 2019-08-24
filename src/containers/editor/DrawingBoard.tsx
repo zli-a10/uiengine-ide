@@ -6,10 +6,14 @@ import { UIEngine } from "uiengine";
 import { UIEngineDndWrapper } from "../dnd";
 import VersionControl from "../dnd/VersionControl";
 import { Context } from "../editor/Context";
+// import { FileLoader } from "../../helpers";
 
+// const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
-  const { updateInfo } = useContext(Context);
+  const { info, updateInfo } = useContext(Context);
   const { layouts, config = {} } = props;
+  let schemas = layouts;
+
   _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const historyAction = async (e: any) => {
@@ -29,10 +33,11 @@ export const DrawingBoard: React.FC = (props: any) => {
     // Update the document title using the browser API
     document.body.onkeypress = historyAction;
   });
+  // console.log(schemas, info);
   return (
     <div className="editor">
       {/* <LayoutManager layout={layout} /> */}
-      <UIEngine layouts={layouts} config={config} />
+      <UIEngine layouts={schemas} config={config} />
     </div>
   );
 };

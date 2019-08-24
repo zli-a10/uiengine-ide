@@ -1,5 +1,4 @@
 export class FileStorage implements IStorage {
-  static type: string = "local"; // remote file or session or local storage
   static instance: IStorage;
   static getInstance() {
     if (!FileStorage.instance) {
@@ -11,7 +10,7 @@ export class FileStorage implements IStorage {
   path: string = "";
   content: string = "";
 
-  save(path: string, content: string) {}
+  save(path: string, content: any) {}
 
   remove(path: string) {}
 

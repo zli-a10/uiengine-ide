@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { NodeController } from "uiengine";
+import { IUINode } from "uiengine/typings";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
@@ -15,8 +16,22 @@ export function difference(object: any, base: any) {
   return changes(object, base);
 }
 
-export function getActiveUINode() {
+export function getActiveUINode(schemaOnly: boolean = false) {
   const nodeController = NodeController.getInstance();
   const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
+  if (schemaOnly) {
+    return (uiNode as IUINode).schema;
+  }
   return uiNode;
+}
+
+export function getTreeRoot(treeRoot: any) {
+  let root = null;
+  while (treeRoot) {
+    if (!treeRoot._parent_) {
+      root = treeRoot;
+    }
+    treeRoot = treeRoot._parent_;
+  }
+  return root;
 }

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { StorageAdapter } from "./StorageAdapter";
 
 export class FileLoader implements IFileLoader {
@@ -11,16 +12,86 @@ export class FileLoader implements IFileLoader {
   }
   storage: IStorage;
 
+  private trees = {
+    schema: {},
+    plugins: {}
+  };
+
   constructor() {
     StorageAdapter.type = FileLoader.storageType;
     this.storage = StorageAdapter.getInstance();
   }
 
-  loadFileTree() {}
+  private isTempStorage() {
+    return (
+      FileLoader.storageType === "Local" || FileLoader.storageType === "Session"
+    );
+  }
 
-  loadFile(path: string) {}
+  private clearTree(treeRoot: IFileTree) {
+    let root = treeRoot;
+    const newNode = {} as IFileTree;
+    _.forIn(root, (value: any, key: any) => {
+      if (key[0] !== "_") {
+        newNode[key] = value;
+      }
+    });
 
-  removeFile(path: string) {}
+    if (root.children && root.children.length) {
+      root.children.forEach((node: IFileTree, i: number) => {
+        root.children[i] = this.clearTree(node);
+      });
+    }
+    return newNode;
+  }
 
-  updateFile(path: string, content: string) {}
+  saveTree(treeRoot: IFileTree, type: string) {
+    const clearNodes = this.clearTree(treeRoot);
+    this.storage.save(`file_tree.${type}`, JSON.stringify(clearNodes));
+  }
+
+  saveFile(
+    path: string,
+    content: any,
+    type: string,
+    treeRoot?: IFileTree
+  ): boolean {
+    // store tree
+    if (this.isTempStorage() && treeRoot) {
+      this.saveTree(treeRoot, type);
+    }
+
+    this.storage.save(`${type}/${path}`, JSON.stringify(content));
+    return true;
+  }
+
+  loadFileTree(type: string = "schema"): IFileTree {
+    const fileTreeJson = this.storage.get(`file_tree.${type}`);
+    // console.log(fileTreeJson);
+    if (fileTreeJson) {
+      return JSON.parse(fileTreeJson);
+    } else {
+      return {
+        name: "root",
+        title: "Root Node",
+        children: []
+      };
+    }
+  }
+
+  loadFile(path: string, type?: string) {
+    const content = this.storage.get(`${type}/${path}`);
+    if (type === "schema") {
+      if (content) {
+        return JSON.parse(content);
+      } else {
+        return {};
+      }
+    }
+    return content;
+  }
+
+  removeFile(path: string, type?: string): boolean {
+    return this.storage.remove(`${type}/${path}`);
+  }
 }

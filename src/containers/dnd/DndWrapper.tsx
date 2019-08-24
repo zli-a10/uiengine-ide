@@ -1,4 +1,10 @@
-import React, { useState, useRef, useContext, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useCallback
+  // useMemo
+} from "react";
 import { Context } from "../editor/Context";
 import _ from "lodash";
 import { Icon } from "antd";
@@ -43,9 +49,9 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // active style
   const [border, setBorder] = useState({});
-  // const [dropClass, setDropClass] = useState();
+  const [dropClass, setDropClass] = useState();
   const [overClass, setOverClass] = useState();
-
+  // const dropClassName = useMemo(() => dropClass, [dropClass]);
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE],
@@ -139,6 +145,7 @@ export const UIEngineDndWrapper = (props: any) => {
           }
           break;
       }
+      setDropClass("animated infinite bounce delay-2s");
       updateInfo({ schema: hoverNode.schema });
     },
 
@@ -174,14 +181,14 @@ export const UIEngineDndWrapper = (props: any) => {
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
-
+  // console.log(dropClassName, " drop class name");
   return (
     <div
       ref={ref}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={{ ...borderStyle }}
-      className={`wrapper ${overClassName} ${hoverClassNames}`}
+      className={`wrapper ${overClassName} ${hoverClassNames} `}
     >
       <ActionMenu uinode={uinode}>
         <div className="component-action" title={dataSource}>

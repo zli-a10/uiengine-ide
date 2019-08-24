@@ -2,21 +2,7 @@ import _ from "lodash";
 import { NodeController } from "uiengine";
 import VersionControl from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
-
-const configLayoutWrappers: IConfigWrappers = {
-  row: {
-    component: "div",
-    props: {
-      className: "ide-wrapper-row"
-    }
-  },
-  col: {
-    component: "div",
-    props: {
-      className: "ide-wrapper-col"
-    }
-  }
-};
+import { configLayoutWrappers } from "../../helpers";
 
 // TO Fix: Can't drag element into it's child
 export default class DndNodeManager implements IDndNodeManager {
@@ -140,9 +126,10 @@ export default class DndNodeManager implements IDndNodeManager {
     if (
       this.targetParentSchema.component === this.layoutWrappers.row.component
     ) {
-      // console.log("has same row");
       // has already have a row/col frame, just push
-      if (this.targetSchema.component === this.layoutWrappers.col.component) {
+      if (
+        this.targetParentSchema.component === this.layoutWrappers.col.component
+      ) {
         const sch = {
           ...this.layoutWrappers.col,
           children: [this.sourceSchema]
@@ -154,7 +141,6 @@ export default class DndNodeManager implements IDndNodeManager {
           this.targetParentChildrenSchema.push(sch);
         }
       } else {
-        // console.log("has differnet col");
         this.targetParentChildrenSchema = [
           {
             ...this.layoutWrappers.col,

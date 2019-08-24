@@ -1,6 +1,7 @@
 interface IPropInfo {
   schema?: ILayoutSchema;
   debug?: any;
+  [name: string]: any;
 }
 
 interface IIDEContext {
@@ -47,6 +48,8 @@ interface ITree {
 interface ITreeState {
   expandKeys: string[];
   date: number;
+  autoExpandParent: boolean;
+  [name: string]: any;
 }
 
 interface IComponents {

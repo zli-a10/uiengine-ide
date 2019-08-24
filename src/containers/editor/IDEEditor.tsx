@@ -38,9 +38,10 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       togglePreview: (preview: boolean) => {
         setPreview(preview);
       },
-      info: {},
+      info,
       updateInfo: (schema: ILayoutSchema) => {
-        setInfo(schema);
+        const myInfo = Object.assign({}, info, schema);
+        setInfo(myInfo);
       },
       theme: "default",
       toggleTheme: (theme: string) => {

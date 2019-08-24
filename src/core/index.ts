@@ -1,14 +1,12 @@
-import commands from './commands';
-
-interface ICommand {
-    type: string,
-    to: string, // target
-    content: any
-}
+import _ from "lodash";
+import commands from "./commands";
 
 export function trigger(command: any): any {
-  const { type, content } = command;
-
+  const { type, ...rest } = command;
+  if (_.isFunction(commands[type])) {
+    const fn: any = commands[type];
+    return fn(rest);
+  }
   return commands[type];
 }
 

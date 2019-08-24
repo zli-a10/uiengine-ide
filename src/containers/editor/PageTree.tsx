@@ -1,24 +1,27 @@
 import React from "react";
 import { Tree, Input, Icon } from "antd";
+import { Context } from "./Context";
 import { DropdownMenu } from "../../components/DropdownMenu";
 import _ from "lodash";
 import { trigger } from "../../core/index";
 import commands from "../../core/messages";
+import { getTreeRoot, FileLoader, getActiveUINode } from "../../helpers";
+import { IUINode } from "uiengine/typings";
 
 const { TreeNode } = Tree;
+let defaultExpandedKeys: any = [];
+const fileLoader = FileLoader.getInstance();
 
 export class PageTree extends React.Component<ITree, ITreeState> {
   constructor(props: ITree) {
     super(props);
-    let defaultExpandedKeys = [];
     const items = props.tree.output.children;
-
     if (items.length) {
       defaultExpandedKeys.push(items[0].name);
     }
-    // console.log(defaultExpandedKeys);
     this.state = {
       expandKeys: defaultExpandedKeys,
+      autoExpandParent: true,
       date: new Date().getTime()
     };
   }
@@ -50,7 +53,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           const newItem = _.cloneDeep(dataRef);
 
           delete newItem.children;
-          newItem._key_ = _.uniqueId("node-");
+          newItem._key_ = _.uniqueId("tree-node-");
           // newItem._id_.push(newItem.key);
           newItem.name = "";
           newItem.title = "";
@@ -59,12 +62,12 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           dataRef.children.push(newItem);
           const expandKeys = this.state.expandKeys;
 
-          if (expandKeys.indexOf(dataRef.name) === -1) {
-            expandKeys.push(dataRef.name);
+          if (expandKeys.indexOf(dataRef._key_) === -1) {
+            expandKeys.push(dataRef._key_);
           }
 
-          // console.log(expandKeys);
-          that.rerender();
+          // that.rerender();
+          that.setState({ expandKeys, autoExpandParent: true });
         },
         Delete: () => {
           removeElement();
@@ -74,7 +77,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           const newItem = _.cloneDeep(dataRef);
 
           delete newItem.children;
-          newItem._key_ = _.uniqueId("node-");
+          newItem._key_ = _.uniqueId("tree-node-");
           // newItem._id_.push(newItem.key);
           newItem._editing_ = "clone";
           newItem.title = "Copy From " + newItem.title;
@@ -100,16 +103,29 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
     const saveSchema = (e: any) => {
       const title = e.target.value;
-
+      const oldPath = dataRef._path_;
       dataRef.title = title;
       dataRef.name = _.snakeCase(title);
-      dataRef._editing_ = false;
-      const result = trigger({
-        type: commands.add_schema,
-        content: dataRef
-      });
+      dataRef._path_ = dataRef._parent_
+        ? `${dataRef._parent_.name}/${dataRef.name}`
+        : dataRef.name;
 
-      console.log(result);
+      if (dataRef._editing_ === "add") {
+        trigger({
+          type: commands.add_schema,
+          path: dataRef._path_,
+          root: getTreeRoot(dataRef)
+        });
+      } else if (dataRef._editing_ === "rename") {
+        trigger({
+          type: commands.rename_schema,
+          path: dataRef._path_,
+          root: getTreeRoot(dataRef),
+          oldPath
+        });
+      }
+
+      dataRef._editing_ = false;
       that.rerender();
     };
 
@@ -160,18 +176,10 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     return data.map((item: any) => {
       const title = item.title || item.name;
 
-      item._key_ = "";
-      let id: any = [];
+      item._parent_ = parent;
 
-      if (parent) {
-        id = _.cloneDeep(parent._id_);
-        item._parent_ = parent;
-        item._key_ = `${parent.name}-${item.name}`;
-      } else {
-        item._key_ = item.name;
-      }
-      id.push(item.name);
-      item._id_ = id;
+      item._path_ = parent ? `${parent.name}/${item.name}` : item.name;
+      item._key_ = item._path_;
       // console.log(id);
       if (item.children) {
         return (
@@ -210,14 +218,43 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     });
   }
 
+  onExpand = (expandKeys: string[]) => {
+    this.setState({
+      expandKeys,
+      autoExpandParent: false
+    });
+  };
+
+  onSelect = async (selectedKeys: string[], info: any) => {
+    if (selectedKeys.length) {
+      const path = _.last(selectedKeys);
+      if (path) {
+        const schema = fileLoader.loadFile(path, "schema");
+        if (_.isObject(schema)) {
+          const uiNode = getActiveUINode() as IUINode;
+          uiNode.schema = schema;
+          await uiNode.updateLayout();
+          uiNode.sendMessage(true);
+        }
+      }
+    }
+  };
+
   render() {
     const { tree } = this.props;
-
-    console.log(this.state);
     return (
-      <Tree showLine defaultExpandedKeys={this.state.expandKeys}>
+      <Tree
+        showLine
+        onExpand={this.onExpand}
+        onSelect={this.onSelect}
+        autoExpandParent={this.state.autoExpandParent}
+        defaultExpandedKeys={defaultExpandedKeys}
+        expandedKeys={this.state.expandKeys}
+      >
         {this.renderTreeNodes(tree.output.children)}
       </Tree>
     );
   }
 }
+
+PageTree.contextType = Context;
