@@ -12,6 +12,7 @@ interface IFileTree {
 
 interface IFileLoader {
   storage: IStorage;
+  editingFile: string;
   saveTree(treeRoot: IFileTree, type: string);
   saveFile(
     path: string,

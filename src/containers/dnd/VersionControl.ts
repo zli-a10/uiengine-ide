@@ -2,6 +2,7 @@ import _ from "lodash";
 // import { difference } from "../../utils";
 import { ILayoutSchema, INodeController, IUINode } from "uiengine/typings";
 import { NodeController } from "uiengine";
+import { FileLoader } from "../../helpers";
 
 export default class VersionControl implements IVersionControl {
   static instance: IVersionControl;
@@ -15,12 +16,19 @@ export default class VersionControl implements IVersionControl {
   histories: Array<IHistory> = [];
   position: number = -1;
   nodeController: INodeController = NodeController.getInstance();
+  private fileLoader: IFileLoader = FileLoader.getInstance();
 
   private async reloadSchema(schema: ILayoutSchema) {
     const activeLayout = this.nodeController.activeLayout;
     const uiNode: IUINode = this.nodeController.getUINode(activeLayout, true);
     await uiNode.replaceLayout(_.cloneDeep(schema));
     await uiNode.sendMessage(true);
+  }
+
+  private cacheSchema(schema: ILayoutSchema) {
+    if (this.fileLoader.editingFile) {
+      this.fileLoader.saveFile(this.fileLoader.editingFile, schema, "schema");
+    }
   }
 
   push(schema: ILayoutSchema) {
@@ -33,12 +41,16 @@ export default class VersionControl implements IVersionControl {
     }
 
     // add new
+    const cloneSchema = _.cloneDeep(schema);
     const history: IHistory = {
       version: _.uniqueId(),
-      schema: _.cloneDeep(schema)
+      schema: cloneSchema
     };
     this.histories.push(history);
     this.position = this.histories.length - 1;
+
+    // cache
+    this.cacheSchema(cloneSchema);
   }
 
   async redo() {
@@ -47,6 +59,7 @@ export default class VersionControl implements IVersionControl {
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;
       await this.reloadSchema(schema);
+      this.cacheSchema(schema);
       return schema;
     }
   }
@@ -58,6 +71,7 @@ export default class VersionControl implements IVersionControl {
     if (this.histories[this.position]) {
       const schema = this.histories[this.position].schema;
       await this.reloadSchema(schema);
+      this.cacheSchema(schema);
       return schema;
     }
   }

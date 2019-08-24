@@ -17,6 +17,8 @@ export class FileLoader implements IFileLoader {
     plugins: {}
   };
 
+  editingFile: string = "";
+
   constructor() {
     StorageAdapter.type = FileLoader.storageType;
     this.storage = StorageAdapter.getInstance();

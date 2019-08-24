@@ -231,7 +231,8 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     if (selectedKeys.length) {
       const path = _.last(selectedKeys);
       if (path) {
-        this.context.updateInfo({ currentPath: path });
+        // this.context.updateInfo({ currentPath: path });
+        fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
         if (_.isObject(schema)) {
           const uiNode = getActiveUINode() as IUINode;

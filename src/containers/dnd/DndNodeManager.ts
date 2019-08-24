@@ -2,7 +2,7 @@ import _ from "lodash";
 import { NodeController } from "uiengine";
 import VersionControl from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
-import { configLayoutWrappers } from "../../helpers";
+import { configLayoutWrappers, getActiveUINode } from "../../helpers";
 
 // TO Fix: Can't drag element into it's child
 export default class DndNodeManager implements IDndNodeManager {
@@ -89,16 +89,17 @@ export default class DndNodeManager implements IDndNodeManager {
 
     // initial schema
     if (this.versionControl.histories.length === 0) {
-      const activeLayout = this.nodeController.activeLayout;
-      const uiNode = this.nodeController.getUINode(activeLayout, true);
-      this.versionControl.push(uiNode.schema);
+      // const activeLayout = this.nodeController.activeLayout;
+      const schema = getActiveUINode(true);
+      this.versionControl.push(schema);
     }
   }
 
   private async refresh() {
-    const activeLayout = this.nodeController.activeLayout;
-    const uiNode = this.nodeController.getUINode(activeLayout, true);
-    this.versionControl.push(uiNode.schema);
+    // const activeLayout = this.nodeController.activeLayout;
+    // const uiNode = this.nodeController.getUINode(activeLayout, true);
+    const schema = getActiveUINode(true);
+    this.versionControl.push(schema);
     if (this.sourceParent) {
       await this.sourceParent.updateLayout();
       this.sourceParent.sendMessage(true); // force refresh
