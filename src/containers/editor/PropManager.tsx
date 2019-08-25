@@ -5,7 +5,6 @@ import Draggable from "react-draggable";
 import { Debugger } from "./Debugger";
 import { Props } from "./Props";
 import { Context } from "../editor/Context";
-import "./styles/PropManager.less";
 const TabPane = Tabs.TabPane;
 export const PropManager: React.FC<IPropManager> = props => {
   const { onClose } = props;
