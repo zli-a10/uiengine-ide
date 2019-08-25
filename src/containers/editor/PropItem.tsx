@@ -1,13 +1,13 @@
-import React from 'react';
-import { Input } from 'antd';
+import React from "react";
+import _ from "lodash";
+import { Input, Form } from "antd";
+import { formatTitle } from "../../helpers";
 
-export const PropItem: React.FC = (props: any) => {
+export const PropItem: React.FC<any> = (props: any) => {
+  const { name, schema, type } = props;
   return (
-    <li className="input-item">
-      <label className="input-label">Label</label>{' '}
-      <div className="input">
-        <Input />
-      </div>
-    </li>
+    <Form.Item label={formatTitle(name)}>
+      <Input />
+    </Form.Item>
   );
 };

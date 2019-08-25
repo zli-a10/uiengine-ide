@@ -35,3 +35,8 @@ export function getTreeRoot(treeRoot: any) {
   }
   return root;
 }
+
+export function formatTitle(wording: string) {
+  const words = _.words(wording).map(word => _.upperFirst(word));
+  return words.join(" ");
+}

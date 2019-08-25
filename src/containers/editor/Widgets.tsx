@@ -55,7 +55,7 @@ const WidgetItem = (props: any) => {
         ) : (
           <Icon type={"swap"} style={{ fontSize: "40px" }} />
         )}
-        <span>{title}</span>
+        <span className="title">{title}</span>
       </div>
     </Popover>
   );

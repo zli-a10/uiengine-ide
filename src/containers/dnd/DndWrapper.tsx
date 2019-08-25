@@ -39,7 +39,12 @@ const getDataSource = (
 };
 
 export const UIEngineDndWrapper = (props: any) => {
-  const { preview, updateInfo } = useContext(Context);
+  const {
+    preview,
+    updateInfo,
+    info: { editNode },
+    toggleCollapsed
+  } = useContext(Context);
   const { children, uinode } = props;
   if (preview) return children;
 
@@ -49,7 +54,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // active style
   const [border, setBorder] = useState({});
-  const [dropClass, setDropClass] = useState();
+  const [dropNode, setDropNode] = useState();
   const [overClass, setOverClass] = useState();
   // const dropClassName = useMemo(() => dropClass, [dropClass]);
   // define drop
@@ -145,7 +150,7 @@ export const UIEngineDndWrapper = (props: any) => {
           }
           break;
       }
-      setDropClass("animated infinite bounce delay-2s");
+      setDropNode(draggingNode);
       updateInfo({ schema: hoverNode.schema });
     },
 
@@ -170,6 +175,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // callbacks to add hoverstyle
   const [hoverClassNames, setHoverClassNames] = useState("");
+  // const [editClassNames, setEditClassNames] = useState("");
   const mouseOver = useCallback((e: any) => {
     e.stopPropagation();
     setHoverClassNames("wrapper-hover");
@@ -180,15 +186,28 @@ export const UIEngineDndWrapper = (props: any) => {
     setHoverClassNames("wrapper-out");
   }, []);
 
+  const wrapperClick = useCallback((e: any) => {
+    e.stopPropagation();
+    // setEditClassNames("wrapper-edit");
+    updateInfo({ editNode: uinode });
+    toggleCollapsed(false);
+  }, []);
+
   const dataSource = getDataSource(uinode.schema.datasource);
-  // console.log(dropClassName, " drop class name");
+  const editClassNames = editNode === uinode ? "wrapper-edit" : "";
+  // TO FIX: uinode regernerated
+  const dropClassNames = dropNode === uinode ? "wrapper-dropped" : "";
+  // console.log(dropClassNames, " drop class name");
   return (
     <div
       ref={ref}
+      onClick={wrapperClick}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={{ ...borderStyle }}
-      className={`wrapper ${overClassName} ${hoverClassNames} `}
+      className={`wrapper ${overClassName} ${
+        editClassNames ? editClassNames : hoverClassNames
+      } ${dropClassNames}`}
     >
       <ActionMenu uinode={uinode}>
         <div className="component-action" title={dataSource}>

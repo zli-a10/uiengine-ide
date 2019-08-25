@@ -65,7 +65,7 @@ interface IDndNodeManager {
 
 // component schema for libraries
 interface IComponentInfo {
-  id: string; // component name generally
+  component: string; // component name generally
   title: string; //"Widgets",
   schema: ILayoutSchema;
   url?: string;
