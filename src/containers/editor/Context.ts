@@ -7,5 +7,7 @@ export const Context = React.createContext<IIDEContext>({
   info: {},
   updateInfo: () => {},
   theme: "default",
-  toggleTheme: () => {}
+  toggleTheme: () => {},
+  propsCollapsed: true,
+  toggleCollapsed: (propsCollapsed: boolean) => {}
 });

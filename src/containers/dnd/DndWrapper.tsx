@@ -11,6 +11,7 @@ import { Icon } from "antd";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 import { DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE } from "./DndTypes";
+import classNames from "classnames";
 
 import DndNodeManager from "./DndNodeManager";
 import RegionDetector from "./RegionDetector";
@@ -56,7 +57,6 @@ export const UIEngineDndWrapper = (props: any) => {
   const [border, setBorder] = useState({});
   const [dropNode, setDropNode] = useState();
   const [overClass, setOverClass] = useState();
-  // const dropClassName = useMemo(() => dropClass, [dropClass]);
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE],
@@ -99,7 +99,7 @@ export const UIEngineDndWrapper = (props: any) => {
                 [borderName]: "3px solid #f00"
               };
             }
-            setOverClass("node-wrapper-over");
+            setOverClass("node");
             setBorder(regionStyles);
           }
           break;
@@ -108,7 +108,7 @@ export const UIEngineDndWrapper = (props: any) => {
             border: "3px solid #80c35f",
             backgroundColor: "#def9d1"
           };
-          setOverClass("schema-wrapper-over");
+          setOverClass("schema");
           setBorder(regionStyles);
           break;
       }
@@ -171,33 +171,37 @@ export const UIEngineDndWrapper = (props: any) => {
   }
 
   drag(drop(ref));
-  // console.log(borderStyle, "border style");
 
   // callbacks to add hoverstyle
   const [hoverClassNames, setHoverClassNames] = useState("");
-  // const [editClassNames, setEditClassNames] = useState("");
   const mouseOver = useCallback((e: any) => {
     e.stopPropagation();
-    setHoverClassNames("wrapper-hover");
+    setHoverClassNames("over");
   }, []);
 
   const mouseOut = useCallback((e: any) => {
     e.stopPropagation();
-    setHoverClassNames("wrapper-out");
+    setHoverClassNames("out");
   }, []);
 
   const wrapperClick = useCallback((e: any) => {
     e.stopPropagation();
-    // setEditClassNames("wrapper-edit");
     updateInfo({ editNode: uinode });
     toggleCollapsed(false);
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
-  const editClassNames = editNode === uinode ? "wrapper-edit" : "";
-  // TO FIX: uinode regernerated
-  const dropClassNames = dropNode === uinode ? "wrapper-dropped" : "";
-  // console.log(dropClassNames, " drop class name");
+
+  const cls = classNames({
+    wrapper: true,
+    "with-datasource": _.get(uinode, "schema.datasource[0]") !== "$",
+    "schema-wrapper-over": isOverCurrent && overClass === "schema",
+    "node-wrapper-over": isOverCurrent && overClass === "node",
+    "wrapper-hover": hoverClassNames === "over",
+    // "wrapper-out": hoverClassNames === "out",
+    "wrapper-edit": editNode === uinode,
+    "wrapper-dropped": dropNode === uinode
+  });
   return (
     <div
       ref={ref}
@@ -205,9 +209,7 @@ export const UIEngineDndWrapper = (props: any) => {
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={{ ...borderStyle }}
-      className={`wrapper ${overClassName} ${
-        editClassNames ? editClassNames : hoverClassNames
-      } ${dropClassNames}`}
+      className={cls}
     >
       <ActionMenu uinode={uinode}>
         <div className="component-action" title={dataSource}>

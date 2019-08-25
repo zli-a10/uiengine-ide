@@ -37,16 +37,30 @@ const schemaTidy = (fieldSchema: any): IComponentSchema => {
 };
 
 const FieldComponent = (props: any) => {
-  const { fieldSchema } = props;
+  const { fieldSchema, data } = props;
   const standardSchema = schemaTidy(fieldSchema);
   let { type = "string", ...schema } = standardSchema;
 
   const elementTypes = {
     range: (props: any) => {
-      const { range, ...rest } = props;
-      return <Slider range defaultValue={range} {...rest} />;
+      let { range: dataRange, value, ...rest } = props;
+      if (!_.isArray(dataRange)) return null;
+      const maxValue = 9999999999;
+      if (!_.isArray(value)) value = [0, maxValue];
+      return (
+        <Slider
+          range
+          value={value}
+          min={dataRange[0]}
+          max={dataRange[1] || maxValue}
+          {...rest}
+        />
+      );
     },
     string: (props: any) => {
+      return <Input {...props} />;
+    },
+    component: (props: any) => {
       return <Input {...props} />;
     },
     boolean: (props: any) => {
@@ -55,6 +69,7 @@ const FieldComponent = (props: any) => {
     },
     enum: (props: any) => {
       const { options, ...rest } = props;
+      if (!_.isArray(options)) return null;
       return (
         <Select {...rest}>
           {options.map((option: any, index: number) => (
@@ -99,28 +114,33 @@ const FieldComponent = (props: any) => {
     componentType = type || "string";
   }
   const Com = elementTypes[componentType];
-  // schema.onChange = onChange;
-  // schema.value = value;
 
-  const [value, setValue] = useState(schema.default);
+  const [value, setValue] = useState();
   const onChange = (v: any) => {
     console.log(v);
     setValue(v);
   };
 
   if (Com) {
-    return <Com onChange={onChange} value={value} {...schema} />;
+    return (
+      <Com
+        onChange={onChange}
+        value={value || data || schema.default}
+        {...schema}
+      />
+    );
   } else {
     return null;
   }
 };
 
 export const PropItem: React.FC<any> = (props: any) => {
-  const { name, schema, type } = props;
+  const { name, schema, data, type } = props;
+
   // type : event| prop
   return (
     <Form.Item label={formatTitle(name)}>
-      <FieldComponent fieldSchema={schema} />
+      <FieldComponent fieldSchema={schema} data={data} type={type} />
     </Form.Item>
   );
 };

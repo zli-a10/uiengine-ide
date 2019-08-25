@@ -38,6 +38,7 @@ export const Props: React.FC = (props: any) => {
     }
   };
 
+  console.log("edit node", editNode);
   return (
     <div className="ide-props-events">
       <h3>
@@ -53,25 +54,49 @@ export const Props: React.FC = (props: any) => {
                     name={entry[0]}
                     schema={entry[1]}
                     key={`key=${entry[0]}`}
+                    data={_.get(editNode, `props.${entry[0]}`)}
                   />
                 ))}
               </ul>
             </Panel>
           ) : null}
-          <Panel header="Data Binding" key="2">
-            <PropItem type="datasource" name="Data Source" />
+          <Panel header="Data Source" key="2">
+            <PropItem
+              type="datasource"
+              name="Data Schema"
+              data={_.get(editNode, "schema.datasource.schema")}
+            />
+            <PropItem
+              type="datasource"
+              name="Data Source"
+              data={_.get(editNode, "schema.datasource.source")}
+            />
+            <PropItem
+              type="boolean"
+              name="Autoload"
+              data={_.get(editNode, "schema.datasource.autoload")}
+            />
           </Panel>
           {!_.isEmpty(allEvents) ? (
             <Panel header="Events" key="3">
               <ul className="list">
                 {allEvents.map((name: any) => (
-                  <PropItem name={name} type="event" key={`key=${name}`} />
+                  <PropItem
+                    name={name}
+                    type="event"
+                    key={`key=${name}`}
+                    data={_.find(editNode.$events, { event: name })}
+                  />
                 ))}
               </ul>
             </Panel>
           ) : null}
           <Panel header="Dependency" key="4">
-            <PropItem type="dependencyElement" name="Depend" />
+            <PropItem
+              type="dependencyElement"
+              name="Depend"
+              data={editNode.state}
+            />
           </Panel>
         </Collapse>
       </Form>
