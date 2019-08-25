@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import _ from "lodash";
-import { Collapse, Form } from "antd";
+import { Collapse, Form, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
 import { Context } from "../editor/Context";
 import { IDERegister, formatTitle } from "../../helpers";
@@ -52,7 +52,6 @@ export const Props: React.FC = (props: any) => {
                   <PropItem
                     name={entry[0]}
                     schema={entry[1]}
-                    type="prop"
                     key={`key=${entry[0]}`}
                   />
                 ))}
@@ -60,14 +59,7 @@ export const Props: React.FC = (props: any) => {
             </Panel>
           ) : null}
           <Panel header="Data Binding" key="2">
-            <ul className="list">
-              <PropItem />
-              <PropItem />
-              <PropItem />
-              <PropItem />
-              <PropItem />
-              <PropItem />
-            </ul>
+            <PropItem type="datasource" name="Data Source" />
           </Panel>
           {!_.isEmpty(allEvents) ? (
             <Panel header="Events" key="3">
@@ -78,6 +70,9 @@ export const Props: React.FC = (props: any) => {
               </ul>
             </Panel>
           ) : null}
+          <Panel header="Dependency" key="4">
+            <PropItem type="dependencyElement" name="Depend" />
+          </Panel>
         </Collapse>
       </Form>
     </div>

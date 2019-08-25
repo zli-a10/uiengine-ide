@@ -86,3 +86,12 @@ interface ICommandOutput {
   status: number;
   output: any;
 }
+
+// define component schema for IDE editing
+interface IComponentSchema {
+  type: string;
+  default?: any;
+  options?: Array<number | string>;
+  range?: Array<number>;
+  [name: string]: any;
+}
