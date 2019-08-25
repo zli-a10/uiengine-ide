@@ -1,6 +1,7 @@
 .ide-header {
   width: 100%;
-  height: 36px;
+  height: 60px;
+
   color: #fff;
   background-color: #3570bd;
   // border-bottom: 1px solid #cccccc;
@@ -8,6 +9,7 @@
   display: flex;
   a {
     color: #fff;
+    font-size: 16px;
   }
 
   &.hide {
@@ -24,6 +26,9 @@
       border-right: solid 1px #cbcbcb;
       margin-right: 5px;
       cursor: pointer;
+      .anticon-close {
+        font-size: 16px;
+      }
     }
     .button-menu {
       padding: 0 8px;
@@ -35,7 +40,7 @@
     .page-name {
       em {
         color: #cbcbcb;
-        font-size: 0.8em;
+        font-size: 1.2em;
       }
     }
   }
@@ -44,28 +49,43 @@
     justify-content: flex-end;
     align-items: center;
     display: flex;
+    padding-right: 10px;
     .props {
       border-right: solid 1px #cbcbcb;
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      .settings,
-      .save {
+
+      .settings {
         width: 28px;
         padding: 0 8px;
         margin-right: 10px;
+        font-size: 16px;
+      }
+
+      .settings,
+      .save {
+        width: 28px;
+        padding: 0 10px;
+        font-size: 16px;
       }
       .more {
         width: 28px;
         padding: 0 8px;
+      }
+      .ant-switch-inner {
+        display: inline;
+        font-size: 16px;
+        height: 24px;
         margin-right: 10px;
       }
-    }
-    .brand {
-      width: 100px;
-      text-align: center;
-      font-weight: 400;
-      color: #fff;
+      .brand {
+        width: 100px;
+        text-align: center;
+        font-weight: 400;
+        color: #fff;
+        font-size: 16px;
+      }
     }
   }
 }
