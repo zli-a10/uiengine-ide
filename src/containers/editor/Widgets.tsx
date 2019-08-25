@@ -5,7 +5,6 @@ import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 
 import { DND_IDE_NODE_TYPE } from "../dnd";
-import "./styles/widgets.less";
 const WidgetItem = (props: any) => {
   const {
     id,
