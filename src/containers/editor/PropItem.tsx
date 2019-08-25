@@ -120,13 +120,14 @@ const FieldComponent = (props: any) => {
     console.log(v);
     setValue(v);
   };
-
+  // console.log(props, componentType);
   if (Com) {
     return (
       <Com
         onChange={onChange}
         value={value || data || schema.default}
         {...schema}
+        {...props}
       />
     );
   } else {
@@ -135,12 +136,12 @@ const FieldComponent = (props: any) => {
 };
 
 export const PropItem: React.FC<any> = (props: any) => {
-  const { name, schema, data, type } = props;
+  const { name, schema, ...rest } = props;
 
   // type : event| prop
   return (
     <Form.Item label={formatTitle(name)}>
-      <FieldComponent fieldSchema={schema} data={data} type={type} />
+      <FieldComponent fieldSchema={schema} {...props} />
     </Form.Item>
   );
 };

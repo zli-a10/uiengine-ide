@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import _ from "lodash";
-import { Collapse, Form, TreeSelect } from "antd";
+import { Collapse, Form } from "antd";
 import { PropItem } from "./PropItem";
 import { Context } from "../editor/Context";
 import { IDERegister, formatTitle } from "../../helpers";
+import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;
+const plugins = PluginManager.getPlugins("ui.parser.event");
 
 export const Props: React.FC = (props: any) => {
   const {
@@ -38,7 +40,7 @@ export const Props: React.FC = (props: any) => {
     }
   };
 
-  console.log("edit node", editNode);
+  // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
       <h3>
@@ -79,16 +81,15 @@ export const Props: React.FC = (props: any) => {
           </Panel>
           {!_.isEmpty(allEvents) ? (
             <Panel header="Events" key="3">
-              <ul className="list">
-                {allEvents.map((name: any) => (
-                  <PropItem
-                    name={name}
-                    type="event"
-                    key={`key=${name}`}
-                    data={_.find(editNode.$events, { event: name })}
-                  />
-                ))}
-              </ul>
+              {allEvents.map((name: any) => (
+                <PropItem
+                  name={name}
+                  type="enum"
+                  key={`key-${name}`}
+                  options={_.keys(plugins)}
+                  data={_.find(editNode.$events, { event: name })}
+                />
+              ))}
             </Panel>
           ) : null}
           <Panel header="Dependency" key="4">
