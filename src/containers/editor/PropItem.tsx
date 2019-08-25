@@ -37,7 +37,7 @@ const schemaTidy = (fieldSchema: any): IComponentSchema => {
 };
 
 const FieldComponent = (props: any) => {
-  const { fieldSchema, data } = props;
+  const { fieldSchema, data, ...restProps } = props;
   const standardSchema = schemaTidy(fieldSchema);
   let { type = "string", ...schema } = standardSchema;
 
@@ -127,7 +127,7 @@ const FieldComponent = (props: any) => {
         onChange={onChange}
         value={value || data || schema.default}
         {...schema}
-        {...props}
+        {...restProps}
       />
     );
   } else {

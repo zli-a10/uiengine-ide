@@ -96,7 +96,7 @@ export const Props: React.FC = (props: any) => {
             <PropItem
               type="dependencyElement"
               name="Depend"
-              data={editNode.state}
+              data={_.get(editNode, "state", {})}
             />
           </Panel>
         </Collapse>
