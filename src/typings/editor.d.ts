@@ -11,6 +11,9 @@ interface IIDEContext {
   updateInfo(info: IPropInfo);
   theme: string;
   toggleTheme(theme: string);
+  propsCollapsed;
+  toggleCollapsed(propsCollapsed: boolean);
+  [name]: any;
 }
 
 interface IIDEEditor {

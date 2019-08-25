@@ -46,9 +46,13 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       theme: "default",
       toggleTheme: (theme: string) => {
         setTheme(theme);
+      },
+      propsCollapsed,
+      toggleCollapsed: (propsCollapsed: boolean) => {
+        setPropsCollapse(propsCollapsed);
       }
     }),
-    [preview, theme, info]
+    [preview, theme, info, propsCollapsed]
   );
   const switchPreview = () => {
     setPreview(!preview);
@@ -102,9 +106,9 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             >
               <Icon type="setting" />
             </a>
-            <div className="editor">
-              <Icon type="edit" />
-            </div>
+            <a className="save">
+              <Icon type="save" />
+            </a>
           </div>
           <div className="brand">GUI IDE</div>
         </div>

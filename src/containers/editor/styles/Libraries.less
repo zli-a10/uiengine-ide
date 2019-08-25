@@ -1,3 +1,12 @@
+@keyframes componentOver {
+  from {
+    box-shadow: #888 0 0 0px;
+  }
+  to {
+    box-shadow: #333 0 0 20px;
+  }
+}
+
 .ide-libraries {
   padding: 5px;
   .ant-input-search {
@@ -21,6 +30,15 @@
         width: 80px;
         text-align: center;
         margin: 2px;
+        border-radius: 3px;
+        padding: 5px;
+        .title {
+          font-size: 12px;
+        }
+
+        &:hover {
+          animation: forwards 2s 1 componentOver;
+        }
         .anticon {
           border: 1px solid #eee;
           padding: 5px;

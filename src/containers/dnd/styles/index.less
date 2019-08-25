@@ -1,3 +1,40 @@
+@keyframes scaleIn {
+  from {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95, 0.95);
+    opacity: 0.3;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(0.95, 0.95);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes bouncein {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .component-action {
   position: absolute;
   right: 0;
@@ -27,64 +64,58 @@
   flex: 1;
   min-height: 50px;
   box-shadow: #6591c1 0px 3px 10px;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(1, 1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.95, 0.95);
-    opacity: 0.3;
-  }
-}
-
-.wrapper-hover {
-  border: 1px solid #0779e2;
-  background: #0779e2;
-  color: #fff;
-  .wrapper {
-    animation: scaleIn 8s 1 forwards;
-    box-shadow: #0779e2 0px 3px 10px;
+  &.with-datasource {
+    background: #d2eec4;
   }
 
-  > .component-action {
+  &.wrapper-hover {
     border: 1px solid #0779e2;
-    background: #0a386b;
+    background: #0779e2;
     color: #fff;
-    z-index: 201;
-  }
-}
+    .wrapper {
+      // animation: scaleIn 8s 1 forwards;
+      box-shadow: #0779e2 0px 3px 10px;
+      // animation-delay: 2s;
+    }
 
-@keyframes scaleOut {
-  from {
-    transform: scale(0.95, 0.95);
+    > .component-action {
+      border: 1px solid #0779e2;
+      background: #0a386b;
+      color: #fff;
+      z-index: 201;
+    }
   }
-  to {
-    transform: scale(1, 1);
+
+  &.wrapper-out {
+    // .wrapper {
+    //   animation: scaleOut 1s 1 forwards;
+    // }
   }
-}
 
-.wrapper-out {
-  // .wrapper {
-  //   animation: scaleOut 1s 1 forwards;
-  // }
-}
-
-.node-wrapper-over {
-  > .component-action {
-    background: #f00;
-    color: #fff;
-    z-index: 201;
+  &.wrapper-edit {
+    animation: 1s 1 ease forwards bouncein;
+    background: #52c41a;
+    border: 1px solid #4ab913;
   }
-}
 
-.schema-wrapper-over {
-  > .component-action {
-    background: rgb(26, 82, 1);
-    color: #fff;
-    z-index: 201;
+  &.wrapper-dropped {
+    animation: 1s 1 ease forwards bouncein;
+  }
+
+  &.node-wrapper-over {
+    > .component-action {
+      background: #f00;
+      color: #fff;
+      z-index: 201;
+    }
+  }
+
+  .schema-wrapper-over {
+    > .component-action {
+      background: rgb(26, 82, 1);
+      color: #fff;
+      z-index: 201;
+    }
   }
 }
 

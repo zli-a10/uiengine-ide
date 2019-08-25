@@ -65,7 +65,7 @@ interface IDndNodeManager {
 
 // component schema for libraries
 interface IComponentInfo {
-  id: string; // component name generally
+  component: string; // component name generally
   title: string; //"Widgets",
   schema: ILayoutSchema;
   url?: string;
@@ -85,4 +85,13 @@ interface IComponentInfoGroup {
 interface ICommandOutput {
   status: number;
   output: any;
+}
+
+// define component schema for IDE editing
+interface IComponentSchema {
+  type: string;
+  default?: any;
+  options?: Array<number | string>;
+  range?: Array<number>;
+  [name: string]: any;
 }

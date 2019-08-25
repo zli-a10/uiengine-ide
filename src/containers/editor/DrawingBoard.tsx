@@ -53,10 +53,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     window.onscroll = _.debounce(() => {
       const scroll = getScroll();
       if (drawingboard && drawingboard.children[1] && scroll.top > 0) {
-        if (
-          scroll.top >
-          _.get(drawingboard.children[1], "offsetHeight", 0) / 3
-        ) {
+        if (scroll.top > _.get(drawingboard.children[1], "offsetHeight", 0)) {
           originTop = scroll.top;
         } else {
           originTop = 20;

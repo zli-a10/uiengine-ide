@@ -9,9 +9,17 @@ const Panel = Collapse.Panel;
 
 export const Debugger: React.FC = (props: any) => {
   function callback() {}
-  const { preview, info } = useContext(Context);
-  const uiNode = getActiveUINode();
-  const uiJson = _.get(uiNode, "schema", {});
+  const {
+    preview,
+    info: { editNode }
+  } = useContext(Context);
+  let uiJson: any = {};
+  if (editNode) {
+    uiJson = editNode.schema;
+  } else {
+    const uiNode = getActiveUINode(true);
+    uiJson = _.get(uiNode, "schema", {});
+  }
 
   return (
     <div className="ide-props-events">
@@ -32,7 +40,7 @@ export const Debugger: React.FC = (props: any) => {
                 indentWidth={2}
                 src={uiJson}
                 displayDataTypes={false}
-                collapsed
+                collapsed={false}
                 collapseStringsAfterLength={50}
               />
             </Panel>
@@ -65,7 +73,7 @@ export const Debugger: React.FC = (props: any) => {
                 console.log(d);
               }}
               displayDataTypes={false}
-              collapsed
+              collapsed={3}
               collapseStringsAfterLength={50}
             />
           </Panel>

@@ -2,6 +2,8 @@ import _ from "lodash";
 
 export class IDERegister {
   static componentsLibrary: any = [];
+  // for easier to fetch component schemas
+  static componentsList: any = {};
 
   static registerComponentsInfo(componentInfos: any) {
     if (componentInfos) {
@@ -28,7 +30,7 @@ export class IDERegister {
                 const librariesChildren =
                   IDERegister.componentsLibrary[findedIndex].children;
                 const existIndex = _.findIndex(librariesChildren, {
-                  id: componentInfo.id
+                  component: componentInfo.component
                 });
                 if (!existIndex) {
                   librariesChildren.push(inputComponentInfo);
@@ -41,8 +43,22 @@ export class IDERegister {
           } else {
             IDERegister.componentsLibrary.push(inputComponentInfo);
           }
+
+          // cache list
+          inputComponentInfo.children.forEach(
+            (componentInfo: IComponentInfo) => {
+              const component = componentInfo.component;
+              IDERegister.componentsList[component] = componentInfo;
+            }
+          );
         }
       );
+
+      // console.log(IDERegister.componentsList);
     }
+  }
+
+  static getComponentInfo(componentName: string) {
+    return IDERegister.componentsList[componentName] || {};
   }
 }

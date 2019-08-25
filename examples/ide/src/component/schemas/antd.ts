@@ -4,7 +4,7 @@ export default [
     title: "General",
     children: [
       {
-        component: "antd:Row",
+        component: "antd:Icon",
         title: "Icon",
         schema: {}
       },

@@ -1,11 +1,33 @@
+@keyframes showProps {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  20% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .ide-editor {
   .props {
+    &.showout {
+      animation: showProps 1s ease 1 forwards;
+    }
     z-index: 1000;
     position: absolute;
     right: 10px;
     top: 50px;
     width: 500px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(240, 243, 246, 0.87) !important;
     border: 1px solid #cccccc;
     box-shadow: 3px 3px 12px #000;
     // .refactorAntTabs();
@@ -62,6 +84,22 @@
     .ide-debugger {
       padding: 10px 20px;
       border-top: 1px solid #eee;
+    }
+
+    .ant-form-item {
+      margin-bottom: 5px;
+    }
+
+    .ant-form-item-control {
+      line-height: inherit;
+    }
+
+    .ant-input {
+      height: 24px;
+    }
+
+    .ant-form-item-label {
+      line-height: inherit;
     }
   }
 }
