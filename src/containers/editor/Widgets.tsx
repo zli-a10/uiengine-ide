@@ -5,7 +5,7 @@ import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 
 import { DND_IDE_NODE_TYPE } from "../dnd";
-
+import "./styles/widgets.less";
 const WidgetItem = (props: any) => {
   const {
     id,
@@ -53,7 +53,8 @@ const WidgetItem = (props: any) => {
         ) : preview ? (
           <img src={preview} width="60" height="60" />
         ) : (
-          <Icon type={"swap"} style={{ fontSize: "40px" }} />
+          // <Icon type={"swap"} style={{ fontSize: "40px" }} />
+          <span className="widgets-icon">{title.substr(0, 1)}</span>
         )}
         <span>{title}</span>
       </div>

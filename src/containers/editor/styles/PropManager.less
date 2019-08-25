@@ -8,21 +8,44 @@
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid #cccccc;
     box-shadow: 3px 3px 12px #000;
-    .refactorAntTabs();
-    .closeButton();
-    .collapseOveride();
+    // .refactorAntTabs();
+    // .closeButton();
+    // .collapseOveride();
     h3 {
       text-align: center;
       font-weight: 100;
       color: #aaa;
       margin: 5px;
     }
+    .close-button {
+      background: #e00d0d;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      color: #fff;
+      margin: 15px;
+      text-align: center;
+      float: right;
+      .anticon-close {
+        vertical-align: top;
+        margin-top: 2px;
+      }
+    }
+    .ant-collapse-icon-position-left {
+      margin: 15px;
+      .ant-collapse-header {
+        padding: 9px 16px;
+        padding-left: 40px;
+      }
+    }
 
     .list {
+      padding-left: 15px;
       .input-item {
         display: flex;
         .input-label {
           flex: 0.1;
+          padding-right: 10px;
         }
         .input {
           * {
