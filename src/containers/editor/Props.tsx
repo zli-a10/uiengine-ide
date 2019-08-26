@@ -53,6 +53,7 @@ export const Props: React.FC = (props: any) => {
               <ul className="list">
                 {Object.entries(restSchema).map((entry: any) => (
                   <PropItem
+                    section="prop"
                     name={entry[0]}
                     schema={entry[1]}
                     key={`key=${entry[0]}`}
@@ -64,25 +65,16 @@ export const Props: React.FC = (props: any) => {
           ) : null}
           <Panel header="Data Source" key="2">
             <PropItem
+              section="datasource"
               type="datasource"
-              name="Data Schema"
-              data={_.get(editNode, "schema.datasource.schema")}
-            />
-            <PropItem
-              type="datasource"
-              name="Data Source"
-              data={_.get(editNode, "schema.datasource.source")}
-            />
-            <PropItem
-              type="boolean"
-              name="Autoload"
-              data={_.get(editNode, "schema.datasource.autoload")}
+              data={_.get(editNode, "schema.datasource")}
             />
           </Panel>
           {!_.isEmpty(allEvents) ? (
             <Panel header="Events" key="3">
               {allEvents.map((name: any) => (
                 <PropItem
+                  section="event"
                   name={name}
                   type="enum"
                   key={`key-${name}`}
@@ -94,8 +86,8 @@ export const Props: React.FC = (props: any) => {
           ) : null}
           <Panel header="Dependency" key="4">
             <PropItem
+              section="dependency"
               type="dependencyElement"
-              name="Depend"
               data={_.get(editNode, "state", {})}
             />
           </Panel>

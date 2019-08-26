@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from "react";
 import _ from "lodash";
 import { Input } from "antd";
+import { Form } from "antd";
+import { formatTitle } from "../../../helpers";
 
 export const ComponentComponent = (props: any) => {
   const [inputValue, setInputValue] = useState("");
@@ -16,12 +18,14 @@ export const ComponentComponent = (props: any) => {
     e.stopPropagation();
   }, []);
   return (
-    <Input
-      {...props}
-      value={inputValue}
-      onChange={onChange}
-      onBlur={onBlur}
-      onMouseDown={onMouseDown}
-    />
+    <Form.Item label={formatTitle(props.name)}>
+      <Input
+        {...props}
+        value={inputValue}
+        onChange={onChange}
+        onBlur={onBlur}
+        onMouseDown={onMouseDown}
+      />
+    </Form.Item>
   );
 };
