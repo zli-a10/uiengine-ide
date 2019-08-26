@@ -338,25 +338,33 @@ export const dataSourceJson = () => {
       const { path, multiDataSource } = item
       const node: any = {
         name: key,
-        active: false,
-        toggled: true,
+        // active: false,
+        // toggled: true,
         children: !item.hasOwnProperty('multiDataSource')
           ? process(item, nodePath)
           : null,
-        status: multiDataSource ? 'warning' : 'success',
-        statusTitle: key,
-        uiJsonPath: path
+        // status: multiDataSource ? 'warning' : 'success',
+        // statusTitle: key,
+        // uiJsonPath: path
+        type: 'file',
+        datasource: {
+          source: path
+        }
       }
       if (uiJsonList.includes(nodePath) && node.children) {
         node.children = [
           {
             name: key,
-            active: false,
-            toggled: true,
+            // active: false,
+            // toggled: true,
             children: null,
-            status: 'success',
-            statusTitle: key,
-            uiJsonPath: nodePath
+            // status: 'success',
+            // statusTitle: key,
+            // uiJsonPath: nodePath
+            type: 'file',
+            datasource: {
+              source: path
+            }
           },
           ...(node.children || [])
         ]
