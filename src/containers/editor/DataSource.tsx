@@ -11,15 +11,10 @@ export interface IDataSourceProps {
 }
 
 const WidgetItem = (props: any) => {
-  const { title, component, defaultProps = {}, data } = props
+  const { title, data } = props
 
-  // stimulate a ui node
-  const schema = {
-    datasource: data.datasource
-  }
-  console.log('schema::::', schema)
   const [, drag] = useDrag({
-    item: { type: DND_IDE_SCHEMA_TYPE, schema }
+    item: { type: DND_IDE_SCHEMA_TYPE, schema: data.uiSchema }
   })
 
   return (
@@ -32,14 +27,10 @@ const WidgetItem = (props: any) => {
 const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
   const { getDataSource, expandDataSource } = props
   const [nodes, setNodes] = React.useState([] as any[])
-  if (nodes.length === 0 && getDataSource) {
-    setNodes(getDataSource() || [])
-  }
 
-  const onSearch = (test: string) => {
-    console.log(test)
+  const onSearch = async (test: string) => {
     if (getDataSource) {
-      const newNodes = getDataSource(test)
+      const newNodes = await getDataSource(test)
       setNodes(newNodes)
     }
   }
@@ -63,6 +54,14 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
     }
     onAddFields(dataRef)
   }
+  React.useEffect(() => {
+    const initDataSource = async () => {
+      if (nodes.length === 0 && getDataSource) {
+        setNodes((await getDataSource()) || [])
+      }
+    }
+    initDataSource()
+  }, [nodes, getDataSource])
 
   const renderFieldNode = (item: any) => {
     return (
