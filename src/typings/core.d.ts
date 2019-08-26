@@ -30,3 +30,27 @@ interface IStorage {
   remove(path: string);
   get(path: string);
 }
+
+// generate schema when editing
+interface ISchemaPropManager {
+  errors?: IError;
+  generateSchema(
+    type: string,
+    componentPropSchema: any,
+    value: any,
+    extraInfo?: any
+  );
+
+  applySchema(
+    type: string,
+    componentPropSchema: any,
+    value: any,
+    uiNode: IUINode,
+    extraInfo?: any
+  );
+}
+
+interface IError {
+  code: number;
+  status: string;
+}

@@ -1,16 +1,49 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import _ from "lodash";
-import { Form } from "antd";
-import { formatTitle, PropManager } from "../../helpers";
-import { FieldComponent } from "../prop";
+import { Context } from "../editor/Context";
 
-export const PropItem: React.FC<any> = (props: any) => {
-  const { name, schema, ...rest } = props;
+import { schemaTidy, SchemaPropManager } from "../../helpers";
+import * as propComponents from "./prop";
+const schemaPropManager = SchemaPropManager.getInstance();
 
-  // type : event| prop
-  return (
-    <Form.Item label={formatTitle(name)}>
-      <FieldComponent fieldSchema={schema} {...props} />
-    </Form.Item>
-  );
+export const PropItem = (props: any) => {
+  const {
+    info: { editNode }
+  } = useContext(Context);
+  const { schema, data, name } = props;
+  const standardSchema = schemaTidy(schema);
+  let { type = "string", section = "prop", ...schemaProps } = standardSchema;
+
+  let componentType = props.type;
+  if (!componentType) {
+    componentType = type || "string";
+  }
+  const componentName = `${_.upperFirst(componentType)}Component`;
+  const Com = propComponents[componentName];
+
+  const [value, setValue] = useState();
+
+  const onChange = (v: any) => {
+    setValue(v);
+    schemaPropManager.applySchema(
+      section,
+      { [name]: standardSchema },
+      v,
+      editNode,
+      props
+    );
+  };
+
+  if (Com) {
+    return (
+      <Com
+        onChange={onChange}
+        value={value || data || _.get(standardSchema, "default")}
+        {...schemaProps}
+        {...props}
+      />
+    );
+  } else {
+    return null;
+  }
 };

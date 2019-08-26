@@ -198,7 +198,7 @@ export class DndNodeManager implements IDndNodeManager {
     } else {
       this.targetParentChildrenSchema[insertPos] = newSchema;
     }
-    this.removeSourceNode(removeIndex);
+    if (removeIndex > -1) this.removeSourceNode(removeIndex);
     await this.refresh();
   }
 
@@ -274,8 +274,8 @@ export class DndNodeManager implements IDndNodeManager {
 
   async useSchema(targetNode: IUINode, schema: ILayoutSchema) {
     this.selectNode({} as IUINode, targetNode);
-    const newSchema = Object.assign({}, this.targetSchema, schema);
-    await this.replaceSchema(newSchema);
+    _.merge(this.targetSchema, schema);
+    await this.refresh();
   }
 
   async cleanLayout(sourceNode?: IUINode) {
