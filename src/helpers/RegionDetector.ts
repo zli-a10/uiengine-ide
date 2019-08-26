@@ -6,7 +6,7 @@ interface ClientRectExt extends ClientRect {
   height: number;
 }
 
-export default class RegionDetector {
+export class RegionDetector {
   static instance: RegionDetector;
   static getInstance() {
     if (!RegionDetector.instance) {

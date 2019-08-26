@@ -4,7 +4,7 @@ import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 import { UIEngine } from "uiengine";
 import { UIEngineDndWrapper } from "../dnd";
-import VersionControl from "../dnd/VersionControl";
+import { VersionControl } from "../../helpers";
 import { Context } from "../editor/Context";
 // import { FileLoader } from "../../helpers";
 

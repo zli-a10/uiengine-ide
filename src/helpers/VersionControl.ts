@@ -2,9 +2,9 @@ import _ from "lodash";
 // import { difference } from "../../utils";
 import { ILayoutSchema, INodeController, IUINode } from "uiengine/typings";
 import { NodeController } from "uiengine";
-import { FileLoader } from "../../helpers";
+import { FileLoader } from ".";
 
-export default class VersionControl implements IVersionControl {
+export class VersionControl implements IVersionControl {
   static instance: IVersionControl;
   static getInstance() {
     if (!VersionControl.instance) {

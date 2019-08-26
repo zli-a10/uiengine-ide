@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { Tree } from "antd";
 import { useDrag } from "react-dnd";
 
-import { DND_IDE_SCHEMA_TYPE } from "../dnd";
+import { DND_IDE_SCHEMA_TYPE } from "../../helpers";
 
 export interface IDataSourceProps {
   getDataSource?: () => any;

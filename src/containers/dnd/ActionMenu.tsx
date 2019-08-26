@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { Menu, Dropdown, Icon } from "antd";
-import DndNodeManager from "./DndNodeManager";
+import { DndNodeManager } from "../../helpers";
 const dndNodeManager = DndNodeManager.getInstance();
 import { Context } from "../editor/Context";
 

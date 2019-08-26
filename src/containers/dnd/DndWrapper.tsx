@@ -10,11 +10,14 @@ import _ from "lodash";
 import { Icon } from "antd";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
-import { DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE } from "./DndTypes";
 import classNames from "classnames";
 
-import DndNodeManager from "./DndNodeManager";
-import RegionDetector from "./RegionDetector";
+import {
+  DndNodeManager,
+  RegionDetector,
+  DND_IDE_NODE_TYPE,
+  DND_IDE_SCHEMA_TYPE
+} from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
 import { IDataSource } from "uiengine/typings";

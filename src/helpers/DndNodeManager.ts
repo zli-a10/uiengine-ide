@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { NodeController } from "uiengine";
-import VersionControl from "./VersionControl";
+import { VersionControl } from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
-import { configLayoutWrappers, getActiveUINode } from "../../helpers";
+import { configLayoutWrappers, getActiveUINode } from "./";
 
 // TO Fix: Can't drag element into it's child
-export default class DndNodeManager implements IDndNodeManager {
+export class DndNodeManager implements IDndNodeManager {
   static instance: IDndNodeManager;
   static getInstance() {
     if (!DndNodeManager.instance) {

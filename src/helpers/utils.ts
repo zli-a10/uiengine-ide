@@ -40,3 +40,34 @@ export function formatTitle(wording: string) {
   const words = _.words(wording).map(word => _.upperFirst(word));
   return words.join(" ");
 }
+
+/**
+ * Format arbitary schema to stardard one
+ *
+ * @param fieldSchema
+ * @return
+ */
+export const schemaTidy = (fieldSchema: any): IComponentSchema => {
+  let standardSchema: any = { type: "string" };
+  if (_.isArray(fieldSchema)) {
+    if (_.isNumber(fieldSchema[0])) {
+      standardSchema["range"] = fieldSchema;
+      standardSchema["type"] = "range";
+    } else {
+      standardSchema["options"] = fieldSchema;
+      standardSchema["type"] = "enum";
+    }
+  } else if (_.isString(fieldSchema)) {
+    standardSchema["type"] = fieldSchema;
+  } else if (_.isObject(fieldSchema)) {
+    standardSchema = fieldSchema;
+    if (!_.has(fieldSchema, "type")) {
+      if (_.has(fieldSchema, "options")) {
+        standardSchema["type"] = "enum";
+      } else if (_.has(fieldSchema, "range")) {
+        standardSchema["type"] = "range";
+      }
+    }
+  }
+  return standardSchema;
+};
