@@ -318,10 +318,10 @@ export const dataSource = {
   ]
 } as any
 
-export const dataSourceJson = () => {
+export const dataSourceJson = (searchText: string) => {
   const { 'uijson-list': list } = dataSource
   const uiJsonList: string[] = []
-  const search = ''
+  const search = searchText
   const map = list.reduce((result: any, item: any) => {
     const { path } = item
     if (!search || path.includes(search)) {
@@ -338,25 +338,33 @@ export const dataSourceJson = () => {
       const { path, multiDataSource } = item
       const node: any = {
         name: key,
-        active: false,
-        toggled: true,
+        // active: false,
+        // toggled: true,
         children: !item.hasOwnProperty('multiDataSource')
           ? process(item, nodePath)
           : null,
-        status: multiDataSource ? 'warning' : 'success',
-        statusTitle: key,
-        uiJsonPath: path
+        // status: multiDataSource ? 'warning' : 'success',
+        // statusTitle: key,
+        // uiJsonPath: path
+        type: 'file',
+        datasource: {
+          source: path
+        }
       }
       if (uiJsonList.includes(nodePath) && node.children) {
         node.children = [
           {
             name: key,
-            active: false,
-            toggled: true,
+            // active: false,
+            // toggled: true,
             children: null,
-            status: 'success',
-            statusTitle: key,
-            uiJsonPath: nodePath
+            // status: 'success',
+            // statusTitle: key,
+            // uiJsonPath: nodePath
+            type: 'file',
+            datasource: {
+              source: path
+            }
           },
           ...(node.children || [])
         ]
