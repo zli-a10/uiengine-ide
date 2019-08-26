@@ -318,10 +318,10 @@ export const dataSource = {
   ]
 } as any
 
-export const dataSourceJson = () => {
+export const dataSourceJson = (searchText: string) => {
   const { 'uijson-list': list } = dataSource
   const uiJsonList: string[] = []
-  const search = ''
+  const search = searchText
   const map = list.reduce((result: any, item: any) => {
     const { path } = item
     if (!search || path.includes(search)) {

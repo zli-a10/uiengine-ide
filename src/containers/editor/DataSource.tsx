@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as _ from 'lodash'
-import { Tree } from 'antd'
+import { Tree, Input } from 'antd'
 import { useDrag } from 'react-dnd'
 
 import { DND_IDE_SCHEMA_TYPE } from '../../helpers'
 
 export interface IDataSourceProps {
-  getDataSource?: () => any
+  getDataSource?: (text?: string) => any
   expandDataSource?: (uiPath: string) => any
 }
 
@@ -34,6 +34,14 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
   const [nodes, setNodes] = React.useState([] as any[])
   if (nodes.length === 0 && getDataSource) {
     setNodes(getDataSource() || [])
+  }
+
+  const onSearch = (test: string) => {
+    console.log(test)
+    if (getDataSource) {
+      const newNodes = getDataSource(test)
+      setNodes(newNodes)
+    }
   }
 
   const onAddFields = async (dataRef: any) => {
@@ -99,29 +107,13 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
         return renderFieldNode(item)
       }
       return null
-      // return (
-      //   <Tree.TreeNode
-      //     dataRef={item}
-      //     title={
-      //       <>
-      //         <span className="file-bar">{_.toUpper(item.name)[0]}</span>
-      //         {item.name}
-      //       </>
-      //     }
-      //     key={`${item.name}___${item.uiJsonPath || ''}`}
-      //   >
-      //     {item.type === 'file' && item.children
-      //       ? renderNode(item.children)
-      //       : null}
-      //     {item.type === 'field' && item.children
-      //       ? renderFieldNode(item.children)
-      //       : null}
-      //   </Tree.TreeNode>
-      // )
     })
   }
   return (
     <div className="manager-datasource">
+      <div className="search-bar">
+        <Input.Search onSearch={onSearch} />
+      </div>
       <Tree onSelect={onSelectNode}>{renderNode(nodes)}</Tree>
     </div>
   )
