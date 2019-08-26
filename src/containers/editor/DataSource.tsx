@@ -3,11 +3,11 @@ import * as _ from 'lodash'
 import { Tree, Input } from 'antd'
 import { useDrag } from 'react-dnd'
 
+import { Context } from '../editor/Context'
 import { DND_IDE_SCHEMA_TYPE } from '../../helpers'
 
 export interface IDataSourceProps {
-  getDataSource?: (text?: string) => any
-  expandDataSource?: (uiPath: string) => any
+  onChange?: (value: any) => void
 }
 
 const WidgetItem = (props: any) => {
@@ -25,7 +25,9 @@ const WidgetItem = (props: any) => {
 }
 
 const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
-  const { getDataSource, expandDataSource } = props
+  const { onChange } = props
+  const { dataSourceProps } = React.useContext(Context)
+  const { getDataSource, expandDataSource } = dataSourceProps
   const [nodes, setNodes] = React.useState([] as any[])
 
   const onSearch = async (test: string) => {
@@ -48,7 +50,10 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
 
   const onSelectNode = (selectedKeys: string[], e: any) => {
     const treeNode = e.node
-    const dataRef = treeNode.props.dataRef
+    const dataRef: any = treeNode.props.dataRef
+    if (onChange) {
+      onChange(dataRef)
+    }
     if (dataRef.type === 'field') {
       return
     }
@@ -69,7 +74,7 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
         dataRef={item}
         title={
           <>
-            <span className="field-bar">F</span>
+            <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
             <WidgetItem title={item.name} data={item} />
           </>
         }

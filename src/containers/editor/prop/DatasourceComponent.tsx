@@ -1,43 +1,40 @@
-import React, { useState, useCallback } from "react";
-import _ from "lodash";
-import { TreeSelect, Switch, Form, Input } from "antd";
-const TreeNode = TreeSelect.TreeNode;
+import React, { useState, useCallback, useContext } from 'react'
+import _ from 'lodash'
+import DataSource from '../DataSource'
+import { TreeSelect, Switch, Form, Input, Popover } from 'antd'
+const TreeNode = TreeSelect.TreeNode
 const DatasourceItem = (props: any) => {
+  const [inputValue, setInputValue] = useState('')
+  const onChange = (value: any) => {
+    console.log(value)
+    if (value.type === 'field' && !value.children) {
+      const { uiSchema: { datasource: { source = '' } = {} } = {} } = value
+      setInputValue(source)
+    }
+  }
   return (
     <Form.Item label={props.label}>
-      <TreeSelect
-        showSearch
-        style={{ width: 300 }}
-        dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-        placeholder="Please select"
-        allowClear
-        treeDefaultExpandAll
-        {...props}
+      <Popover
+        placement="bottom"
+        content={
+          <div className="datasource-component-pop-content">
+            <DataSource onChange={onChange} />
+          </div>
+        }
       >
-        <TreeNode value="parent 1" title="parent 1" key="0-1">
-          <TreeNode value="parent 1-0" title="parent 1-0" key="0-1-1">
-            <TreeNode value="leaf1" title="my leaf" key="random" />
-            <TreeNode value="leaf2" title="your leaf" key="random1" />
-          </TreeNode>
-          <TreeNode value="parent 1-1" title="parent 1-1" key="random2">
-            <TreeNode
-              value="sss"
-              title={<b style={{ color: "#08c" }}>sss</b>}
-              key="random3"
-            />
-          </TreeNode>
-        </TreeNode>
-      </TreeSelect>
+        <Input value={inputValue} />
+      </Popover>
     </Form.Item>
-  );
-};
+  )
+}
 
 export const DatasourceComponent = (props: any) => {
-  const { data, ...rest } = props;
+  console.log('dataSource', props)
+  const { data, ...rest } = props
   return (
     <>
-      <DatasourceItem label="Source" {...rest} data={_.get(data, "source")} />
-      <DatasourceItem label="Schema" {...rest} data={_.get(data, "schema")} />
+      <DatasourceItem label="Source" {...rest} data={_.get(data, 'source')} />
+      <DatasourceItem label="Schema" {...rest} data={_.get(data, 'schema')} />
       <Form.Item label="Autoload">
         <Switch />
       </Form.Item>
@@ -45,5 +42,5 @@ export const DatasourceComponent = (props: any) => {
         <Input />
       </Form.Item>
     </>
-  );
-};
+  )
+}
