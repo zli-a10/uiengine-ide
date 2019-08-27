@@ -20,8 +20,12 @@ export const PropManager: React.FC<IPropManager> = props => {
     setAnimatedClass("");
   }, 1000)();
 
+  const onMouseDown = (e: any) => {
+    e.stopPropagation();
+  };
+
   return (
-    <Draggable>
+    <Draggable onMouseDown={onMouseDown}>
       <div className={`props ${animatedClass}`} id="prop-manager">
         <a className="close-button" onClick={onClose}>
           <Icon type="close" />

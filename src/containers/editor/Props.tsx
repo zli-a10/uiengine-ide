@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import _ from "lodash";
-import { Collapse, Form } from "antd";
+import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
 import { Context } from "../editor/Context";
 import { IDERegister, formatTitle } from "../../helpers";
@@ -40,38 +40,88 @@ export const Props: React.FC = (props: any) => {
     }
   };
 
+  const genExtra = () => (
+    <Icon
+      type="plus"
+      onClick={event => {
+        event.stopPropagation();
+      }}
+    />
+  );
+
+  const [treeValue, selectTreeValue] = useState(component);
+  const onTreeChange = (value: any) => {
+    selectTreeValue(value);
+  };
+
+  const treeData = useMemo(
+    () => [
+      {
+        title: "Node1",
+        value: "0-0",
+        key: "0-0",
+        children: [
+          {
+            title: "Child Node1",
+            value: "0-0-1",
+            key: "0-0-1"
+          },
+          {
+            title: "Child Node2",
+            value: "0-0-2",
+            key: "0-0-2"
+          }
+        ]
+      },
+      {
+        title: "Node2",
+        value: "0-1",
+        key: "0-1"
+      }
+    ],
+    []
+  );
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
-      <h3>
-        {formatTitle(title)} <i>({component})</i>
-      </h3>
-      <Form {...formItemLayout}>
-        <Collapse accordion defaultActiveKey={"1"}>
-          {!_.isEmpty(restSchema) ? (
-            <Panel header="Component Props" key="1">
-              <ul className="list">
-                {Object.entries(restSchema).map((entry: any) => (
-                  <PropItem
-                    section="prop"
-                    name={entry[0]}
-                    schema={entry[1]}
-                    key={`key=${entry[0]}`}
-                    data={_.get(editNode, `props.${entry[0]}`)}
-                  />
-                ))}
-              </ul>
-            </Panel>
-          ) : null}
-          <Panel header="Data Source" key="2">
+      <TreeSelect
+        style={{ width: 300 }}
+        value={treeValue}
+        dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+        treeData={treeData}
+        placeholder={formatTitle(title)}
+        treeDefaultExpandAll
+        onChange={onTreeChange}
+      />
+
+      <Collapse accordion defaultActiveKey={"1"}>
+        {!_.isEmpty(restSchema) ? (
+          <Panel header="Component Props" key="1">
+            <Form {...formItemLayout}>
+              {Object.entries(restSchema).map((entry: any) => (
+                <PropItem
+                  section="prop"
+                  name={entry[0]}
+                  schema={entry[1]}
+                  key={`key=${entry[0]}`}
+                  data={_.get(editNode, `props.${entry[0]}`)}
+                />
+              ))}
+            </Form>
+          </Panel>
+        ) : null}
+        <Panel header="Data Source" key="2" extra={genExtra()}>
+          <Form {...formItemLayout}>
             <PropItem
               section="datasource"
               type="datasource"
               data={_.get(editNode, "schema.datasource")}
             />
-          </Panel>
-          {!_.isEmpty(allEvents) ? (
-            <Panel header="Events" key="3">
+          </Form>
+        </Panel>
+        {!_.isEmpty(allEvents) ? (
+          <Panel header="Events" key="3" extra={genExtra()}>
+            <Form {...formItemLayout}>
               {allEvents.map((name: any) => (
                 <PropItem
                   section="event"
@@ -82,17 +132,19 @@ export const Props: React.FC = (props: any) => {
                   data={_.find(editNode.$events, { event: name })}
                 />
               ))}
-            </Panel>
-          ) : null}
-          <Panel header="Dependency" key="4">
+            </Form>
+          </Panel>
+        ) : null}
+        <Panel header="Dependency" key="4">
+          <Form>
             <PropItem
               section="dependency"
-              type="dependencyElement"
+              type="dependency"
               data={_.get(editNode, "state", {})}
             />
-          </Panel>
-        </Collapse>
-      </Form>
+          </Form>
+        </Panel>
+      </Collapse>
     </div>
   );
 };

@@ -202,7 +202,7 @@ export const UIEngineDndWrapper = (props: any) => {
     "node-wrapper-over": isOverCurrent && overClass === "node",
     "wrapper-hover": hoverClassNames === "over",
     // "wrapper-out": hoverClassNames === "out",
-    "wrapper-edit": editNode === uinode,
+    "wrapper-edit": editNode && uinode && editNode.id === uinode.id,
     "wrapper-dropped": dropNode === uinode
   });
   return (
