@@ -30,7 +30,6 @@ export class VersionControl implements IVersionControl {
   private cacheSchema(schema: ILayoutSchema) {
     if (this.debounced) this.debounced.cancel();
     this.debounced = _.debounce(() => {
-      console.log("cached!", schema);
       if (this.fileLoader.editingFile) {
         this.fileLoader.saveFile(this.fileLoader.editingFile, schema, "schema");
       }

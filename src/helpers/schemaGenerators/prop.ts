@@ -6,7 +6,6 @@ export const prop = (
   value: any,
   options?: any
 ) => {
-  console.log(name, componentSchema, value, options);
   // TODO: validate by info
   return {
     props: {

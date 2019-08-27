@@ -85,7 +85,7 @@ export const Props: React.FC = (props: any) => {
   return (
     <div className="ide-props-events">
       <TreeSelect
-        style={{ width: 300 }}
+        className={"component-select"}
         value={treeValue}
         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
         treeData={treeData}

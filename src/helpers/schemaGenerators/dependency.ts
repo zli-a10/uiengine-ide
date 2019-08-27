@@ -8,11 +8,6 @@ export const dependency = (
 ) => {
   // TODO: validate by componentSchema
   return {
-    state: {
-      [name]: {
-        //visible/valid
-        deps: [value]
-      }
-    }
+    state: value
   };
 };
