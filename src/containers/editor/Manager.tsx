@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Tabs, Icon } from 'antd'
 import { PageTree, Libraries } from './'
-import DataSource from './DataSource'
+import { DataSource } from './DataSource'
 
 const TabPane = Tabs.TabPane
 
