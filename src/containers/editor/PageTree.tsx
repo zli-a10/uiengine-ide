@@ -1,10 +1,17 @@
 import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
+import { useDrag } from "react-dnd";
+
 import { Context } from "./Context";
 import _ from "lodash";
 import { trigger } from "../../core/index";
 import commands from "../../core/messages";
-import { getTreeRoot, FileLoader, getActiveUINode } from "../../helpers";
+import {
+  getTreeRoot,
+  FileLoader,
+  getActiveUINode,
+  DND_IDE_NODE_TYPE
+} from "../../helpers";
 import { IUINode } from "uiengine/typings";
 
 const { TreeNode } = Tree;
@@ -150,8 +157,22 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       </Menu>
     );
 
+    // dnd
+    const schema = fileLoader.loadFile(dataRef._path_, "schema");
+    // const templateSchema = {
+    //   $template: `/${dataRef._path_}.json`
+    // };
+    console.log(schema);
+
+    const [, drag] = useDrag({
+      item: {
+        type: DND_IDE_NODE_TYPE,
+        schema
+      }
+    });
+
     return (
-      <div className="node-title">
+      <div className="node-title" ref={drag}>
         {editable ? (
           <>
             <Input
@@ -234,6 +255,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         // this.context.updateInfo({ currentPath: path });
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
+        console.log("selected schema", schema);
         if (_.isObject(schema)) {
           const uiNode = getActiveUINode() as IUINode;
           uiNode.schema = schema;
