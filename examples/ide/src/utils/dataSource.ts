@@ -1,7 +1,9 @@
 import * as _ from 'lodash'
 import { getSchema } from './request'
+import { expandDataSource } from './schema'
 
 export const getDataSourceJson = async (searchText: string) => {
+  const schema = (await expandDataSource('')) || []
   const dataSource = (await getSchema('schema/data/dataSource.json')) || {
     'uijson-list': []
   }
@@ -28,7 +30,7 @@ export const getDataSourceJson = async (searchText: string) => {
         // toggled: true,
         children: !item.hasOwnProperty('multiDataSource')
           ? process(item, nodePath)
-          : null,
+          : _.cloneDeep(schema),
         // status: multiDataSource ? 'warning' : 'success',
         // statusTitle: key,
         // uiJsonPath: path
@@ -37,24 +39,24 @@ export const getDataSourceJson = async (searchText: string) => {
           source: path
         }
       }
-      if (uiJsonList.includes(nodePath) && node.children) {
-        node.children = [
-          {
-            name: key,
-            // active: false,
-            // toggled: true,
-            children: null,
-            // status: 'success',
-            // statusTitle: key,
-            // uiJsonPath: nodePath
-            type: 'file',
-            datasource: {
-              source: path
-            }
-          },
-          ...(node.children || [])
-        ]
-      }
+      // if (uiJsonList.includes(nodePath) && node.children) {
+      //   node.children = [
+      //     {
+      //       name: key,
+      //       // active: false,
+      //       // toggled: true,
+      //       children: schema,
+      //       // status: 'success',
+      //       // statusTitle: key,
+      //       // uiJsonPath: nodePath
+      //       type: 'file',
+      //       datasource: {
+      //         source: path
+      //       }
+      //     },
+      //     ...(node.children || [])
+      //   ]
+      // }
       return node
     })
   }
