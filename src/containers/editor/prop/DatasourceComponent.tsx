@@ -6,12 +6,10 @@ import { Switch, Form, Input, Popover, Icon } from 'antd'
 const DatasourceItem = (props: any) => {
   const { value } = props
   const onChange = (value: any) => {
-    console.log(value)
     const { onChange: onChangeProps } = props
     if (onChangeProps) {
       onChangeProps(value)
     }
-    // onChange(value)
   }
   return (
     <Form.Item label={props.label}>
@@ -34,7 +32,7 @@ export const DatasourceComponent = (props: any) => {
         dataSource.schema = value
       }
       setDataSource(dataSource)
-      onChange(dataSource)
+      onChange({ datasource: dataSource })
     },
     [dataSource, isLock]
   )
@@ -45,7 +43,7 @@ export const DatasourceComponent = (props: any) => {
         dataSource.source = value
       }
       setDataSource(dataSource)
-      onChange(dataSource)
+      onChange({ datasource: dataSource })
     },
     [dataSource, isLock]
   )
@@ -53,13 +51,13 @@ export const DatasourceComponent = (props: any) => {
     (value: boolean) => {
       dataSource.autoload = value
       setDataSource(dataSource)
+      onChange({ datasource: dataSource })
     },
     [dataSource]
   )
 
   const onChangeInput = useCallback(
     e => {
-      console.log(e.target.value)
       dataSource.defaultValue = e.target.value
       setDataSource(dataSource)
     },
@@ -67,7 +65,7 @@ export const DatasourceComponent = (props: any) => {
   )
 
   const onBlurInput = useCallback(() => {
-    onChange(dataSource)
+    onChange({ datasource: dataSource })
   }, [onChange, dataSource])
   const onMouseDownInput = useCallback((e: any) => {
     e.stopPropagation()
