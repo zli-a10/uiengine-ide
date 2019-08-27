@@ -1,6 +1,8 @@
 {
   "version": "3.0.0#Autoform v1.5",
-  "axapi": "slb/server/{name}",
+  "endpoints": {
+    "default": "slb/server/{name}"
+  },
   "cm-branch": "",
   "cm-lineage": "slb.server",
   "cm-object-meta": {

@@ -46,18 +46,29 @@ const SelectorItem = (props: any) => {
     // wrapperCol: { span: 12 }
   };
 
+  const [state, setStateValue] = useState(
+    _.get(data, "state") ? "state" : "data"
+  );
+  const onChangeState = (value: any) => {
+    setStateValue(value);
+  };
   // fetch data
-  const compareRule = _.get(data, "state") ? "state" : "data";
+  // const compareRule = _.get(data, "state") ? "state" : "data";
   const rule = _.get(data, "stateCompareRule");
   const source = _.get(data, "selector.datasource.source");
-  const value = _.get(data, compareRule === "state" ? "state.visible" : "data");
-  // console.log(compareRule, rule, source, value);
+  const value = _.get(data, state === "state" ? "state.visible" : "data");
+  console.log(state);
 
   return (
     <div className="deps-editor">
       <List.Item>
         <Form.Item label="Compare">
-          <Select size="small" defaultValue={"state"} value={compareRule}>
+          <Select
+            size="small"
+            defaultValue={"state"}
+            value={state}
+            onChange={onChangeState}
+          >
             <Select.Option value="state">State</Select.Option>
             <Select.Option value="data">Data</Select.Option>
           </Select>
@@ -68,7 +79,7 @@ const SelectorItem = (props: any) => {
             defaultValue={"is"}
             value={rule}
             onChange={changeValue(
-              compareRule === "data" ? "dataCompareRule" : "stateCompareRule"
+              state === "data" ? "dataCompareRule" : "stateCompareRule"
             )}
           >
             <Select.Option value="is" title="is">
@@ -123,7 +134,7 @@ const SelectorItem = (props: any) => {
             onChange={changeValue("selector.datasource.source")}
           />
         </Form.Item>
-        {compareRule === "data" ? (
+        {state === "data" ? (
           <Form.Item label="Value">
             <Input
               value={value}
