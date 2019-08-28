@@ -14,19 +14,23 @@ import {
 } from "antd";
 // import { formatTitle } from "../../../helpers";
 // const ButtonGroup = Button.Group;
+import { useDrop, DropTargetMonitor } from "react-dnd";
+import classNames from "classnames";
+
+import { DND_IDE_NODE_TYPE } from "../../../helpers";
 
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange } = props;
   const data = _.get(root, `deps[${index}]`);
-  // console.log("data", data);
-  const [inputValue, setInputValue] = useState(data);
+  const [, rerender] = useState();
 
   const changeValue = (path: string) => {
     // setInputValue(e.target.value);
     return (e: any) => {
       const value = e.target ? e.target.value : e;
       _.set(data, path, value);
-      setInputValue(Date.now());
+      rerender(Date.now());
+      onChange(_.cloneDeep(root));
     };
   };
 
@@ -50,13 +54,74 @@ const SelectorItem = (props: any) => {
     _.get(data, "state") ? "state" : "data"
   );
   const onChangeState = (value: any) => {
+    if (value === "state") {
+      delete data.data;
+      delete data.dataCompareRule;
+    } else {
+      delete data.state;
+      delete data.stateCompareRule;
+    }
+    console.log(data, " removing");
     setStateValue(value);
   };
   // fetch data
-  // const compareRule = _.get(data, "state") ? "state" : "data";
-  const rule = _.get(data, "stateCompareRule");
-  const source = _.get(data, "selector.datasource.source");
+  const rule = _.get(
+    data,
+    state === "data" ? "dataCompareRule" : "stateCompareRule"
+  );
   const value = _.get(data, state === "state" ? "state.visible" : "data");
+
+  // drag datasource
+  const [droppedSelector, setDroppedSelector] = useState();
+  const [{ isOver, isOverCurrent }, drop] = useDrop({
+    accept: [DND_IDE_NODE_TYPE],
+    drop: async (item: DragItem, monitor: DropTargetMonitor) => {
+      const draggingNode = item.uinode;
+      const schema = draggingNode.schema;
+      let selector = {};
+      // if (_.has(schema, "datasource.source")) {
+      //   selector["datasource.source"] = _.get(schema, "datasource.source");
+      // }
+
+      // if (_.has(schema, "component")) {
+      //   selector["component"] = _.get(schema, "component");
+      // }
+      // // if (_.isEmpty(selector) && _.has(schema, 'props')) {
+      // //   selector['props.']
+      // // }
+
+      // if (_.has(schema, "id")) {
+      //   selector["id"] = _.get(schema, "id");
+      // }
+
+      if (_.has(schema, "id")) {
+        selector["id"] = _.get(schema, "id");
+      } else {
+        if (_.has(schema, "_id")) {
+          schema.id = `ide-node-${Date.now()}-${_.get(schema, "_id")}`;
+        } else {
+          schema.id = _.uniqueId(`ide-node-${Date.now()}`);
+        }
+        selector["id"] = _.get(schema, "id");
+      }
+
+      console.log("final selector", selector);
+      data.selector = selector;
+      onChange(_.cloneDeep(root));
+      // changeValue("selector")(selector);
+      setDroppedSelector(selector);
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true })
+    })
+  });
+
+  const cls = classNames({
+    "dnd-prop-default": true,
+    "dnd-prop-dropped": droppedSelector,
+    "dnd-prop-over": isOverCurrent
+  });
 
   return (
     <div className="deps-editor">
@@ -125,14 +190,17 @@ const SelectorItem = (props: any) => {
             </Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Source" {...formItemLayout}>
-          <Input
-            value={source}
-            onMouseDown={onMouseDown}
-            {...formItemLayout}
-            onChange={changeValue("selector.datasource.source")}
-          />
-        </Form.Item>
+        <div ref={drop} className={cls}>
+          <Form.Item label="Selector" {...formItemLayout}>
+            <Input
+              readOnly
+              value={droppedSelector && droppedSelector.id}
+              onMouseDown={onMouseDown}
+              {...formItemLayout}
+              // onChange={changeValue("selector.datasource.source")}
+            />
+          </Form.Item>
+        </div>
         {state === "data" ? (
           <Form.Item label="Value">
             <Input
@@ -252,6 +320,7 @@ const DepGroup = (props: any) => {
 
 export const DependencyComponent = (props: any) => {
   const { value, onChange } = props;
+  console.log("dependency initial value", value);
   const finalResult = _.cloneDeep(value || {});
   const onItemChange = (path: string) => {
     return (v: any) => {

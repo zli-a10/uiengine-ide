@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
 import { getSchema } from './request'
 import { expandDataSource } from './schema'
-import { async } from 'q'
 
 export const getDataSourceJson = async (searchText: string) => {
   // const [schema, topUiSchema] = await expandDataSource('')
@@ -45,13 +44,9 @@ export const getDataSourceJson1 = async (searchText: string) => {
         // uiJsonPath: path
         type: 'file',
         component: 'antd:Col',
-        ...(!item.hasOwnProperty('multiDataSource')
-          ? {
-              datasource: {
-                source: path
-              }
-            }
-          : { uiSchema: topUiSchema })
+        datasource: {
+          source: path
+        }
       }
       // if (uiJsonList.includes(nodePath) && node.children) {
       //   node.children = [

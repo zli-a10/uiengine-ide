@@ -21,6 +21,7 @@ import {
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
 import { IDataSource } from "uiengine/typings";
+import { UINode } from "uiengine";
 
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
@@ -206,6 +207,7 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-edit": editNode && uinode && editNode.id === uinode.id,
     "wrapper-dropped": dropNode === uinode
   });
+
   return (
     <div
       ref={ref}
