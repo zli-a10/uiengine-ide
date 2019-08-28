@@ -1,0 +1,11 @@
+{
+  "component": "antd:Layout.Content",
+  "children": [],
+  "props": {
+    "label": "This is UI schema example!"
+  },
+  "datasource": {
+    "source": "",
+    "schema": ""
+  }
+}

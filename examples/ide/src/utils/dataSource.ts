@@ -1,8 +1,16 @@
 import * as _ from 'lodash'
 import { getSchema } from './request'
 import { expandDataSource } from './schema'
+import { async } from 'q'
 
 export const getDataSourceJson = async (searchText: string) => {
+  const [schema, topUiSchema] = await expandDataSource('')
+  console.log(JSON.stringify(schema))
+  console.log(JSON.stringify(topUiSchema))
+  return (await getSchema('schema/json/menu.json')) || []
+}
+
+export const getDataSourceJson1 = async (searchText: string) => {
   const [schema, topUiSchema] = await expandDataSource('')
   const dataSource = (await getSchema('schema/data/dataSource.json')) || {
     'uijson-list': []
@@ -66,6 +74,5 @@ export const getDataSourceJson = async (searchText: string) => {
       return node
     })
   }
-  console.log(process(map))
   return process(map)
 }

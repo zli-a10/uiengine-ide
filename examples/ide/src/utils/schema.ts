@@ -65,7 +65,8 @@ const getDataSource = (field: any) => {
     `:${field.key}`
   )
   return {
-    datasource: source
+    component: getFieldComponent(field),
+    datasource: { source }
   }
 }
 

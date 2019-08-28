@@ -12,20 +12,53 @@ export interface IDataSourceTreeProps {
   onChange?: (value: any) => void
 }
 
+const getChildrenUiSchema = (data: any) => {
+  const { type, children = [] } = data
+  if (type !== 'file') {
+    return []
+  }
+  return children.map((child: any) => {
+    const { type, uiSchema } = child
+    if (type === 'field') {
+      return uiSchema
+    }
+    if (type === 'file') {
+      const { component, props, datasource } = child
+      return {
+        component,
+        props,
+        datasource,
+        children: getChildrenUiSchema(child)
+      }
+    }
+  })
+}
+
 const WidgetItem = (props: any) => {
   const { title, data } = props
-  const dataSchema = data.uiSchema || data
+  // const dataSchema = data.uiSchema || data
 
   let dragObj,
     dragType = ''
-  if (_.has(dataSchema, 'component') && data.type === 'file') {
-    dragObj = { uinode: new UINode(dataSchema) }
+  if (data.type === 'file') {
+    const { component, props, datasource } = data
+    console.log(getChildrenUiSchema(data))
+    dragObj = {
+      uinode: new UINode({
+        component,
+        props,
+        datasource,
+        children: getChildrenUiSchema(data)
+      })
+    }
     dragType = DND_IDE_NODE_TYPE
   } else {
-    dragObj = { schema: dataSchema }
+    const dataSchema = data.uiSchema || {}
+    const { datasource: { source } = {} as any } = dataSchema
+    dragObj = { schema: { datasource: source } }
     dragType = DND_IDE_SCHEMA_TYPE
   }
-  console.log(data.type, dataSchema, { type: dragType, ...dragObj })
+  // console.log(data.type, dataSchema, { type: dragType, ...dragObj })
 
   const [, drag] = useDrag({
     item: { type: dragType, ...dragObj }
