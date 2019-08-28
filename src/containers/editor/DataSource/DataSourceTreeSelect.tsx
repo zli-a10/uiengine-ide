@@ -119,7 +119,7 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
       <TreeSelect.TreeNode
         // dataRef={item}
         title={
-          <div className="manager-datasource">
+          <div className="datasource-select">
             <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
             {item.name}
           </div>
@@ -137,7 +137,7 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
       <TreeSelect.TreeNode
         // dataRef={item}
         title={
-          <div className="manager-datasource">
+          <div className="datasource-select">
             <span className="file-bar">{_.toUpper(item.name)[0]}</span>
             {item.name}
           </div>
@@ -170,14 +170,15 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
   }, [])
   // onTreeExpand={onExpandNode}
   return (
-    <div className="manager-datasource">
+    <div className="datasource-select">
       <TreeSelect
         {...(value ? { value } : {})}
         showSearch={true}
         allowClear={true}
         multiple={true}
         onSelect={onSelect}
-        // size="small"
+        className="xxxxxxxxxx"
+        size="small"
       >
         {renderNode(nodes)}
       </TreeSelect>
