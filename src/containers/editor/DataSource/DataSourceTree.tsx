@@ -42,7 +42,6 @@ const WidgetItem = (props: any) => {
     dragType = ''
   if (data.type === 'file') {
     const { component, props, datasource } = data
-    console.log(getChildrenUiSchema(data))
     dragObj = {
       uinode: new UINode({
         component,
@@ -58,7 +57,6 @@ const WidgetItem = (props: any) => {
     dragObj = { schema: { datasource: source } }
     dragType = DND_IDE_SCHEMA_TYPE
   }
-  // console.log(data.type, dataSchema, { type: dragType, ...dragObj })
 
   const [, drag] = useDrag({
     item: { type: dragType, ...dragObj }

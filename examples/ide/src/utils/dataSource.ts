@@ -5,8 +5,6 @@ import { async } from 'q'
 
 export const getDataSourceJson = async (searchText: string) => {
   const [schema, topUiSchema] = await expandDataSource('')
-  console.log(JSON.stringify(schema))
-  console.log(JSON.stringify(topUiSchema))
   return (await getSchema('schema/json/menu.json')) || []
 }
 
