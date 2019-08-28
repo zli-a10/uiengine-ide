@@ -4,13 +4,14 @@ import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 import { Context } from "./Context";
 import _ from "lodash";
-import { trigger } from "../../core/index";
+// import { trigger } from "../../core/index";
 import commands from "../../core/messages";
 import {
   getTreeRoot,
   FileLoader,
   getActiveUINode,
-  DND_IDE_NODE_TYPE
+  DND_IDE_NODE_TYPE,
+  defaultEmptyLayoutSchema
 } from "../../helpers";
 import { IUINode } from "uiengine/typings";
 
@@ -27,6 +28,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     }
     this.state = {
       expandKeys: defaultExpandedKeys,
+      selectedKeys: defaultExpandedKeys,
       autoExpandParent: true,
       date: new Date().getTime()
     };
@@ -73,11 +75,18 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           }
 
           // that.rerender();
-          that.setState({ expandKeys, autoExpandParent: true });
+          that.setState({
+            expandKeys,
+            selectedKeys: [newItem._key_],
+            autoExpandParent: true
+          });
         },
         Delete: () => {
           removeElement();
-          that.rerender();
+          fileLoader.removeFile(dataRef._path_, "schema", getTreeRoot(dataRef));
+          const selectedKeys = ["root"];
+          // that.setState({ selectedKeys, autoExpandParent: true });
+          that.onSelect(selectedKeys);
         },
         Clone: () => {
           const newItem = _.cloneDeep(dataRef);
@@ -89,7 +98,13 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           newItem.title = "Copy From " + newItem.title;
           dataRef._parent_.children.push(newItem);
           // console.log(expandKeys);
-          that.rerender();
+          const content = fileLoader.loadFile(dataRef._path_);
+          const newName = `${dataRef._path_}_${_.uniqueId("copy_")}`;
+          fileLoader.saveFile(newName, content, "schema", getTreeRoot(dataRef));
+          // that.rerender();
+          const selectedKeys = [name];
+          // that.setState({ selectedKeys, autoExpandParent: true });
+          that.onSelect(selectedKeys);
         },
         Rename: () => {
           dataRef._editing_ = "rename";
@@ -111,22 +126,29 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         : dataRef.name;
 
       if (dataRef._editing_ === "add") {
-        trigger({
-          type: commands.add_schema,
-          path: dataRef._path_,
-          root: getTreeRoot(dataRef)
-        });
+        //TODO: check name first
+        fileLoader.saveFile(
+          dataRef._path_,
+          defaultEmptyLayoutSchema,
+          "schema",
+          getTreeRoot(dataRef)
+        );
       } else if (dataRef._editing_ === "rename") {
-        trigger({
-          type: commands.rename_schema,
-          path: dataRef._path_,
-          root: getTreeRoot(dataRef),
-          oldPath
-        });
+        const content = fileLoader.loadFile(oldPath);
+        fileLoader.removeFile(oldPath);
+        fileLoader.saveFile(
+          dataRef._path_,
+          content || defaultEmptyLayoutSchema,
+          "schema",
+          getTreeRoot(dataRef)
+        );
       }
 
       dataRef._editing_ = false;
-      that.rerender();
+      // that.rerender();
+      const selectedKeys = [dataRef._path_];
+      // that.setState({ selectedKeys, autoExpandParent: true });
+      that.onSelect(selectedKeys);
     };
 
     const cancelEdit = () => {
@@ -247,14 +269,14 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     });
   };
 
-  onSelect = async (selectedKeys: string[], info: any) => {
+  onSelect = async (selectedKeys: string[]) => {
     if (selectedKeys.length) {
       const path = _.last(selectedKeys);
       if (path) {
         // this.context.updateInfo({ currentPath: path });
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
-        console.log("selected schema", schema);
+        // console.log("selected schema", schema);
         if (_.isObject(schema)) {
           const uiNode = getActiveUINode() as IUINode;
           uiNode.schema = schema;
@@ -263,6 +285,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         }
       }
     }
+    this.setState({ selectedKeys });
   };
 
   render() {
@@ -275,6 +298,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         autoExpandParent={this.state.autoExpandParent}
         defaultExpandedKeys={defaultExpandedKeys}
         expandedKeys={this.state.expandKeys}
+        selectedKeys={this.state.selectedKeys}
       >
         {this.renderTreeNodes(tree.output.children)}
       </Tree>

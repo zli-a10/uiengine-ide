@@ -22,7 +22,7 @@ interface IFileLoader {
   ): boolean;
   loadFileTree(type: string): IFileTree;
   loadFile(path: string, type?: string): any;
-  removeFile(path: string, type?: string): boolean;
+  removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean;
 }
 
 interface IStorage {

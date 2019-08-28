@@ -94,7 +94,12 @@ export class FileLoader implements IFileLoader {
     return content;
   }
 
-  removeFile(path: string, type?: string): boolean {
+  removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean {
+    if (type === "schema") {
+      if (this.isTempStorage() && treeRoot) {
+        this.saveTree(treeRoot, type);
+      }
+    }
     return this.storage.remove(`${type}/${path}`);
   }
 }
