@@ -25,11 +25,16 @@ function getScroll() {
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
-  const { info, updateInfo } = useContext(Context);
+  const { preview, updateInfo } = useContext(Context);
   const { layouts, config = {} } = props;
   let schemas = layouts;
 
   _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
+  if (!preview) {
+    _.set(config, `ideMode`, true);
+  } else {
+    _.set(config, `ideMode`, false);
+  }
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const historyAction = async (e: any) => {
     e.stopPropagation();
@@ -71,7 +76,6 @@ export const DrawingBoard: React.FC = (props: any) => {
       }
     }, 10);
   });
-  // console.log(schemas, info);
   return (
     <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}
