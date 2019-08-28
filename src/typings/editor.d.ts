@@ -14,6 +14,8 @@ interface IIDEContext {
   propsCollapsed
   toggleCollapsed(propsCollapsed: boolean)
   dataSourceProps: any
+  focusMode: { isFocus: any; topSchema: any }
+  updateFocusMode: any
   [name]: any
 }
 
