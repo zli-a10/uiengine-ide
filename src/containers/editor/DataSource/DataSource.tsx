@@ -20,7 +20,9 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
       <div className="search-bar">
         <Input.Search onSearch={onSearch} />
       </div>
-      <DataSourceTree searchText={searchText} />
+      <div className="datasource-tree">
+        <DataSourceTree searchText={searchText} />
+      </div>
     </div>
   )
 }

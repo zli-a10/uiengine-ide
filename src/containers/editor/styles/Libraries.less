@@ -8,6 +8,7 @@
 }
 
 .ide-libraries {
+  height: 100%;
   padding: 5px;
   .ant-input-search {
     padding: 10px;
@@ -21,8 +22,16 @@
     }
   }
 
+  .library-panel {
+    overflow: auto;
+    height: calc(100% - 90px);
+  }
+
   .ant-collapse {
     .collapseOveride();
+    .ant-collapse-content-box {
+      padding: 8px;
+    }
     .list {
       display: flex;
       flex-wrap: wrap;

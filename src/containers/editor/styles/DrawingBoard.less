@@ -1,12 +1,18 @@
 .ide-editor {
   .refactorAntTabs();
 
+  .ant-tabs-content {
+    height: 100%;
+  }
+
   .editor {
     // background: #666;
-    min-height: 1500px;
+    // min-height: 1500px;
+    height: ~'calc(100% - 60px)';
     flex: 1;
     padding: 10px;
     background: #161b21;
+    overflow: auto;
 
     // box-shadow: #000 2px 4px 10px;
 
@@ -61,7 +67,8 @@
         }
       }
 
-      .ide-editor-list-slider {}
+      .ide-editor-list-slider {
+      }
     }
   }
 
@@ -69,7 +76,6 @@
     .ant-layout {
       padding: 22px;
     }
-
 
     .with-datasource {
       .ant-layout {

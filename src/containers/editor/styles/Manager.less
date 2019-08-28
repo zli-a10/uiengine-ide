@@ -11,7 +11,8 @@
     // &.deactivate {
     //     animation: antSlideLeftOut 2s;
     // }
-
+    height: 100%;
+    overflow: hidden;
     background: #fff;
     min-width: 300px;
     width: 300px;
@@ -21,6 +22,10 @@
     .refactorAntTabs();
     .widgets {
       clear: both;
+      height: ~'calc(100% - 242px)';
+      .ant-tabs {
+        height: 100%;
+      }
     }
 
     .pages {
@@ -31,6 +36,11 @@
         max-height: 400px;
       }
       .closeButton();
+
+      .pagetree {
+        overflow: auto;
+        height: 200px;
+      }
     }
   }
 }
