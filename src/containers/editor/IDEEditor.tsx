@@ -118,7 +118,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       </div>
 
       <UIEngineDndProvider>
-        <div className="ide-editor">
+        <div className={headerCollapsed ? 'ide-editor show-max' : 'ide-editor'}>
           {componentsCollapsed ? null : (
             <Manager
               onClose={() => setComponentCollapse(!componentsCollapsed)}

@@ -15,7 +15,8 @@ body {
 
 .ide-show {
   width: 12px;
-  height: 31px;
+  height: 42px;
+  line-height: 33px;
   transition: width 0.2s;
   position: absolute;
   top: 0;
@@ -23,8 +24,10 @@ body {
   overflow: hidden;
   text-align: center;
   padding-top: 5px;
+  z-index: 1000;
+  background-color: #ececec;
   &:hover {
-    background: #fff;
+    background: #ececec;
     width: 36px;
   }
 }
@@ -38,11 +41,6 @@ body {
       border-bottom: 3px solid #015478;
     }
   }
-}
-
-.ide-editor {
-  display: flex;
-  height: ~'calc(100% - 60px)';
 }
 
 .node-title {
