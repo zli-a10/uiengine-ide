@@ -70,6 +70,7 @@ export const DatasourceComponent = (props: any) => {
   const onMouseDownInput = useCallback((e: any) => {
     e.stopPropagation()
   }, [])
+  console.log('====', data)
   return (
     <>
       <DatasourceItem

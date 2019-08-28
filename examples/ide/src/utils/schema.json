@@ -1,0 +1,180 @@
+[
+  {
+    "type": "field",
+    "name": "name",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:name" }
+  },
+  {
+    "type": "field",
+    "name": "server-ipv6-addr",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:server-ipv6-addr" }
+  },
+  {
+    "type": "field",
+    "name": "host",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:host" }
+  },
+  {
+    "type": "field",
+    "name": "fqdn-name",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:fqdn-name" }
+  },
+  {
+    "type": "field",
+    "name": "resolve-as",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:resolve-as" }
+  },
+  {
+    "type": "field",
+    "name": "action",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:action" }
+  },
+  {
+    "type": "field",
+    "name": "external-ip",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:external-ip" }
+  },
+  {
+    "type": "field",
+    "name": "ipv6",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:ipv6" }
+  },
+  {
+    "type": "field",
+    "name": "template",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:template" }
+  },
+  {
+    "type": "field",
+    "name": "template-server",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:template-server" }
+  },
+  {
+    "type": "field",
+    "name": "server-health-check",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:server-health-check" }
+  },
+  {
+    "type": "field",
+    "name": "health-check",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:health-check" }
+  },
+  {
+    "type": "field",
+    "name": "p-health-check",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:p-health-check" }
+  },
+  {
+    "type": "field",
+    "name": "shared-partition-health-check",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:shared-partition-health-check" }
+  },
+  {
+    "type": "field",
+    "name": "health-check-shared",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:health-check-shared" }
+  },
+  {
+    "type": "field",
+    "name": "health-check-disable",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:health-check-disable" }
+  },
+  {
+    "type": "field",
+    "name": "conn-limit",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:conn-limit" }
+  },
+  {
+    "type": "field",
+    "name": "no-logging",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:no-logging" }
+  },
+  {
+    "type": "field",
+    "name": "conn-resume",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:conn-resume" }
+  },
+  {
+    "type": "field",
+    "name": "weight",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:weight" }
+  },
+  {
+    "type": "field",
+    "name": "slow-start",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:slow-start" }
+  },
+  {
+    "type": "field",
+    "name": "spoofing-cache",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:spoofing-cache" }
+  },
+  {
+    "type": "field",
+    "name": "stats-data-action",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:stats-data-action" }
+  },
+  {
+    "type": "field",
+    "name": "extended-stats",
+    "children": null,
+    "uiSchema": { "datasource": "slb.server:extended-stats" }
+  },
+  {
+    "type": "field",
+    "name": "alternate-server",
+    "children": [
+      {
+        "type": "field",
+        "name": "alternate",
+        "children": null,
+        "uiSchema": { "datasource": "slb.server:alternate-server.alternate" }
+      },
+      {
+        "type": "field",
+        "name": "alternate-name",
+        "children": null,
+        "uiSchema": {
+          "datasource": "slb.server.alternate-server:alternate-name"
+        }
+      }
+    ],
+    "uiSchema": {
+      "component": "antd:Form.Item",
+      "datasource": { "source": "slb.server:alternate-server" },
+      "props": { "label": "Alternate Server" },
+      "children": [
+        {
+          "component": "antd:Input",
+          "children": [
+            { "datasource": "slb.server:alternate-server.alternate" },
+            { "datasource": "slb.server.alternate-server:alternate-name" }
+          ]
+        }
+      ]
+    }
+  }
+]
