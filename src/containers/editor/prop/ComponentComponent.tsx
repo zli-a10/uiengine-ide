@@ -20,7 +20,6 @@ export const ComponentComponent = (props: any) => {
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Input
-        {...props}
         value={inputValue}
         onChange={onChange}
         onBlur={onBlur}

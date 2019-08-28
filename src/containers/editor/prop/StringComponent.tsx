@@ -19,7 +19,6 @@ export const StringComponent = (props: any) => {
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Input
-        {...props}
         value={inputValue || props.value}
         onChange={onChange}
         onPressEnter={onSave}

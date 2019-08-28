@@ -81,6 +81,7 @@ export const Props: React.FC = (props: any) => {
     ],
     []
   );
+
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
@@ -104,7 +105,8 @@ export const Props: React.FC = (props: any) => {
                   name={entry[0]}
                   schema={entry[1]}
                   key={`key=${entry[0]}`}
-                  data={_.get(editNode, `props.${entry[0]}`)}
+                  uinode={editNode}
+                  data={_.get(editNode, `schema.props.${entry[0]}`)}
                 />
               ))}
             </Form>
@@ -116,6 +118,7 @@ export const Props: React.FC = (props: any) => {
               section="datasource"
               type="datasource"
               data={_.get(editNode, "schema.datasource")}
+              uinode={editNode}
             />
           </Form>
         </Panel>
@@ -129,7 +132,10 @@ export const Props: React.FC = (props: any) => {
                   type="enum"
                   key={`key-${name}`}
                   options={_.keys(plugins)}
-                  data={_.find(editNode.$events, { event: name })}
+                  uinode={editNode}
+                  data={_.find(_.get(editNode, `schema.props.$events`, []), {
+                    event: name
+                  })}
                 />
               ))}
             </Form>
@@ -140,7 +146,8 @@ export const Props: React.FC = (props: any) => {
             <PropItem
               section="dependency"
               type="dependency"
-              data={_.get(editNode, "state", {})}
+              uinode={editNode}
+              data={_.get(editNode, "schema.state", {})}
             />
           </Form>
         </Panel>

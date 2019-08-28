@@ -35,12 +35,6 @@ export const PropItem = (props: any) => {
   };
 
   if (Com) {
-    console.log(
-      value,
-      data,
-      _.get(standardSchema, "default"),
-      "<<<<<<<<< value series"
-    );
     return (
       <Com
         onChange={onChange}

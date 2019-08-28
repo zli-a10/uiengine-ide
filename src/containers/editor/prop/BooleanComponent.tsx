@@ -5,10 +5,10 @@ import { Form } from "antd";
 import { formatTitle } from "../../../helpers";
 
 export const BooleanComponent = (props: any) => {
-  const { value, ...rest } = props;
+  const { value, onChange } = props;
   return (
     <Form.Item label={formatTitle(props.name)}>
-      <Switch checked={value} {...rest} />
+      <Switch checked={value} onChange={onChange} />
     </Form.Item>
   );
 };

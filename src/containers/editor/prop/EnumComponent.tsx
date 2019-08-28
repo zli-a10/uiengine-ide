@@ -6,11 +6,15 @@ import { formatTitle } from "../../../helpers";
 const Option = Select.Option;
 
 export const EnumComponent = (props: any) => {
-  const { options, ...rest } = props;
+  const { options, value, onChange, ...rest } = props;
   if (!_.isArray(options)) return null;
+  let v = value;
+  if (_.isObject(v)) {
+    v = _.get(v, "action", "");
+  }
   return (
     <Form.Item label={formatTitle(props.name)}>
-      <Select {...rest}>
+      <Select value={v} onChange={onChange}>
         {options.map((option: any, index: number) => (
           <Option value={option} key={index}>
             {option}

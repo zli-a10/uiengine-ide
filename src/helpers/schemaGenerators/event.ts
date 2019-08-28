@@ -6,15 +6,16 @@ export const event = (
   options: any = {}
 ) => {
   // TODO: validate by componentSchema
-  return {
+  // console.log(name, componentSchema, value, options);
+  const schema = {
     props: {
       $events: [
         {
-          event: name,
-          action: value,
-          options: options
+          event: options["name"],
+          action: value
         }
       ]
     }
   };
+  return schema;
 };

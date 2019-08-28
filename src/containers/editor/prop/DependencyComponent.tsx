@@ -319,9 +319,9 @@ const DepGroup = (props: any) => {
 };
 
 export const DependencyComponent = (props: any) => {
-  const { value, onChange } = props;
-  console.log("dependency initial value", value);
-  const finalResult = _.cloneDeep(value || {});
+  const { onChange, uinode } = props;
+  const finalResult = _.get(uinode, "schema", {});
+  console.log("dependency initial value", finalResult);
   const onItemChange = (path: string) => {
     return (v: any) => {
       _.set(finalResult, path, v);

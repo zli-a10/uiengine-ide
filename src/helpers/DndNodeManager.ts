@@ -275,8 +275,15 @@ export class DndNodeManager implements IDndNodeManager {
 
   async useSchema(targetNode: IUINode, schema: ILayoutSchema) {
     this.selectNode({} as IUINode, targetNode);
-    _.merge(this.targetSchema, schema);
-    // console.log(_.cloneDeep(this.targetSchema), "target schema");
+    function customizer(objValue: any, srcValue: any) {
+      if (_.isArray(objValue)) {
+        return objValue.concat(srcValue);
+      }
+    }
+    console.log(_.cloneDeep(this.targetSchema), "before change");
+    _.mergeWith(this.targetSchema, schema, customizer);
+    console.log(_.cloneDeep(targetNode.schema), "after change");
+
     await this.refresh();
   }
 

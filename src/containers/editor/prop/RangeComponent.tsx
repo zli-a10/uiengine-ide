@@ -16,7 +16,6 @@ export const RangeComponent = (props: any) => {
         value={value}
         min={dataRange[0]}
         max={dataRange[1] || maxValue}
-        {...rest}
       />
     </Form.Item>
   );
