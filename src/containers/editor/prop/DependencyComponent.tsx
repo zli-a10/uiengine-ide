@@ -22,14 +22,14 @@ import { DND_IDE_NODE_TYPE } from "../../../helpers";
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange } = props;
   const data = _.get(root, `deps[${index}]`);
-  const [inputValue, setInputValue] = useState(data);
+  const [, rerender] = useState();
 
   const changeValue = (path: string) => {
     // setInputValue(e.target.value);
     return (e: any) => {
       const value = e.target ? e.target.value : e;
       _.set(data, path, value);
-      setInputValue(Date.now());
+      rerender(Date.now());
       onChange(_.cloneDeep(root));
     };
   };
@@ -55,18 +55,20 @@ const SelectorItem = (props: any) => {
   );
   const onChangeState = (value: any) => {
     if (value === "state") {
-      _.remove(data, "state");
-      _.remove(data, "stateCompareRule");
+      delete data.data;
+      delete data.dataCompareRule;
     } else {
-      _.remove(data, "data");
-      _.remove(data, "dataCompareRule");
+      delete data.state;
+      delete data.stateCompareRule;
     }
+    console.log(data, " removing");
     setStateValue(value);
   };
   // fetch data
-  // const compareRule = _.get(data, "state") ? "state" : "data";
-  const rule = _.get(data, "stateCompareRule");
-  // const source = _.get(data, "selector.datasource.source");
+  const rule = _.get(
+    data,
+    state === "data" ? "dataCompareRule" : "stateCompareRule"
+  );
   const value = _.get(data, state === "state" ? "state.visible" : "data");
 
   // drag datasource
