@@ -1,7 +1,7 @@
 import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
-
+import { UINode } from "uiengine";
 import { Context } from "./Context";
 import _ from "lodash";
 import { trigger } from "../../core/index";
@@ -162,12 +162,11 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     // const templateSchema = {
     //   $template: `/${dataRef._path_}.json`
     // };
-    console.log(schema);
-
+    const uinode = new UINode(schema);
     const [, drag] = useDrag({
       item: {
         type: DND_IDE_NODE_TYPE,
-        schema
+        uinode
       }
     });
 

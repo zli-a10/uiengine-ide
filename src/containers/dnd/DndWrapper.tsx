@@ -36,6 +36,7 @@ const getDataSource = (
   } else {
     source = datasource;
   }
+  if (!source) return "";
   if (full) {
     return source;
   }
