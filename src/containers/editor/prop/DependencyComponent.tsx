@@ -16,7 +16,9 @@ import {
 // const ButtonGroup = Button.Group;
 
 const SelectorItem = (props: any) => {
-  const { data, index, root, setListValue } = props;
+  const { index, root, setListValue, onChange } = props;
+  const data = _.get(root, `deps[${index}]`);
+  // console.log("data", data);
   const [inputValue, setInputValue] = useState(data);
 
   const changeValue = (path: string) => {
@@ -24,7 +26,6 @@ const SelectorItem = (props: any) => {
     return (e: any) => {
       const value = e.target ? e.target.value : e;
       _.set(data, path, value);
-      console.log("update new data", data);
       setInputValue(Date.now());
     };
   };
@@ -35,10 +36,9 @@ const SelectorItem = (props: any) => {
 
   const onDeleteItem = useCallback((e: any) => {
     e.stopPropagation();
-    // console.log(_.cloneDeep(root));
-    root.splice(index, 1);
-    // console.log(_.cloneDeep(root));
-    setListValue(_.cloneDeep(root));
+    data.splice(index, 1);
+    setListValue(_.clone(data));
+    // setInputValue(Date.now());
   }, []);
 
   const formItemLayout = {
@@ -57,7 +57,6 @@ const SelectorItem = (props: any) => {
   const rule = _.get(data, "stateCompareRule");
   const source = _.get(data, "selector.datasource.source");
   const value = _.get(data, state === "state" ? "state.visible" : "data");
-  console.log(state);
 
   return (
     <div className="deps-editor">
@@ -168,10 +167,10 @@ const SelectorItem = (props: any) => {
 };
 
 const DepGroup = (props: any) => {
-  const { value, group, name, onChange } = props;
+  const { value, group, onChange } = props;
   const [groupValue, setGroupValue] = useState(!_.isEmpty(value));
   // const [logicValue, setLogicValue] = useState(1);
-  const data = _.get(value, `${name}.deps`, []);
+  const data = _.get(value, `deps`, []);
   // const data = [["name1", "value1"], ["name2", "value2"], ["name3", "value3"]];
   const [listValue, setListValue] = useState(data);
 
@@ -179,11 +178,9 @@ const DepGroup = (props: any) => {
     setGroupValue(checked);
   };
 
-  const [logicValue, setLogicValue] = useState(
-    _.get(value, `${name}.strategy`, "and")
-  );
+  const [logicValue, setLogicValue] = useState(_.get(value, `strategy`, "and"));
   const onDataChange = (e: any) => {
-    _.set(value, `${name}.strategy`, e.target.value);
+    _.set(value, `strategy`, e.target.value);
     setLogicValue(e.target.value);
   };
 
@@ -193,16 +190,17 @@ const DepGroup = (props: any) => {
       state: { visible: true },
       stateCompareRule: "is"
     });
+
     const newData = _.clone(data);
-    _.set(value, `${name}.deps`, newData);
+    _.set(value, `deps`, newData);
     setListValue(newData);
+    onChange(value);
   };
 
-  const onSave = () => {
-    if (groupValue && !_.isEmpty(listValue)) onChange(value);
-  };
+  // const onSave = () => {
+  //   if (groupValue && !_.isEmpty(listValue)) onChange(value);
+  // };
 
-  // console.log(value, listValue, ".data");
   return (
     <>
       <Form.Item label={group}>
@@ -228,10 +226,7 @@ const DepGroup = (props: any) => {
                 }}
               >
                 Add Rule{" "}
-                <Button.Group>
-                  <Button icon="plus" size="small" onClick={onAddItems} />
-                  <Button icon="save" size="small" onClick={onSave} />
-                </Button.Group>
+                <Button icon="plus" size="small" onClick={onAddItems} />
               </Form.Item>
             </Col>
           </Row>
@@ -241,9 +236,8 @@ const DepGroup = (props: any) => {
             dataSource={listValue}
             renderItem={(item: any, index: number) => (
               <SelectorItem
-                data={item}
                 index={index}
-                root={listValue}
+                root={value}
                 group={props.group}
                 setListValue={setListValue}
                 onChange={onChange}
@@ -259,11 +253,9 @@ const DepGroup = (props: any) => {
 export const DependencyComponent = (props: any) => {
   const { value, onChange } = props;
   const finalResult = _.cloneDeep(value || {});
-
   const onItemChange = (path: string) => {
     return (v: any) => {
       _.set(finalResult, path, v);
-      console.log(finalResult, "final result", path, v);
       onChange(finalResult);
     };
   };
@@ -272,16 +264,14 @@ export const DependencyComponent = (props: any) => {
       <DepGroup
         {...props}
         group="Visible"
-        name="visible"
         onChange={onItemChange("state.visible")}
-        value={_.get(finalResult, "visible", {})}
+        value={_.get(finalResult, "state.visible", {})}
       />
       <DepGroup
         {...props}
         group="Valid"
-        name="valid"
         onChange={onItemChange("state.valid")}
-        value={_.get(finalResult, "valid", {})}
+        value={_.get(finalResult, "state.valid", {})}
       />
     </>
   );

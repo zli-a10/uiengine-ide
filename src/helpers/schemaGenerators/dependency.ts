@@ -7,7 +7,5 @@ export const dependency = (
   options: any = {}
 ) => {
   // TODO: validate by componentSchema
-  return {
-    state: value
-  };
+  return value;
 };
