@@ -235,6 +235,7 @@ export class DndNodeManager implements IDndNodeManager {
     this.targetSchema.children = this.targetChildrenSchema;
     // remove from source
     this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
+
     await this.refresh();
   }
 

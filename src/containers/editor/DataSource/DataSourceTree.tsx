@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import * as _ from "lodash";
 import { useDrag } from "react-dnd";
 import { Tree } from "antd";
+import { UINode } from "uiengine";
 
 import { Context } from "../Context";
 import { DND_IDE_SCHEMA_TYPE, DND_IDE_NODE_TYPE } from "../../../helpers";
@@ -14,11 +15,19 @@ export interface IDataSourceTreeProps {
 const WidgetItem = (props: any) => {
   const { title, data } = props;
   const dataSchema = data.uiSchema || data;
-  const dragType = _.has(dataSchema, "component")
-    ? DND_IDE_NODE_TYPE
-    : DND_IDE_SCHEMA_TYPE;
+
+  let dragObj,
+    dragType = "";
+  if (_.has(dataSchema, "component")) {
+    dragObj = { uinode: new UINode(dataSchema) };
+    dragType = DND_IDE_NODE_TYPE;
+  } else {
+    dragObj = { schema: dataSchema };
+    dragType = DND_IDE_SCHEMA_TYPE;
+  }
+
   const [, drag] = useDrag({
-    item: { type: dragType, schema: dataSchema }
+    item: { type: dragType, ...dragObj }
   });
 
   return (
