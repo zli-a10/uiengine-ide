@@ -4,8 +4,6 @@ import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 import { Context } from "./Context";
 import _ from "lodash";
-// import { trigger } from "../../core/index";
-import commands from "../../core/messages";
 import {
   getTreeRoot,
   FileLoader,
@@ -22,7 +20,7 @@ const fileLoader = FileLoader.getInstance();
 export class PageTree extends React.Component<ITree, ITreeState> {
   constructor(props: ITree) {
     super(props);
-    const items = props.tree.output.children;
+    const items = props.tree.children;
     if (items.length) {
       defaultExpandedKeys.push(items[0].name);
     }
@@ -45,7 +43,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       let newElements = null;
 
       if (!parent) {
-        newElements = props.tree.output.children;
+        newElements = props.tree.children;
       } else {
         newElements = parent.children;
       }
@@ -300,7 +298,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         expandedKeys={this.state.expandKeys}
         selectedKeys={this.state.selectedKeys}
       >
-        {this.renderTreeNodes(tree.output.children)}
+        {this.renderTreeNodes(tree.children)}
       </Tree>
     );
   }

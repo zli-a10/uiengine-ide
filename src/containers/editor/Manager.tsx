@@ -1,51 +1,25 @@
-import React, { useState, useContext } from 'react'
-import { Tabs, Icon } from 'antd'
-import { PageTree, Libraries } from './'
-import { DataSource } from './DataSource'
-
-const TabPane = Tabs.TabPane
-
-import { trigger } from '../../core/index'
-import commands from '../../core/messages'
+import React, { useState, useContext } from "react";
+import { Tabs, Icon } from "antd";
+import { PageTree, Libraries } from "./";
+import { DataSource } from "./DataSource";
+import { FileLoader, IDERegister } from "./../../helpers";
+const TabPane = Tabs.TabPane;
+const fileLoader = FileLoader.getInstance();
 
 export const Manager: React.FC<IManager> = props => {
   // schemas fetch
-  const treeStructure = trigger({
-    type: commands.get_schemas,
-    content: {
-      // type: 'page'
-    }
-  })
-  const [tree, setTree] = useState(treeStructure)
-
-  // outline fetch
-  const outlineStructure = trigger({
-    type: commands.get_schema_outline,
-    content: {
-      // type: 'page'
-    }
-  })
-  const [outline, setOutline] = useState(outlineStructure)
+  const treeStructure = {
+    name: "root",
+    title: "Start Up",
+    children: [fileLoader.loadFileTree("schema")]
+  };
+  // const [tree, setTree] = useState(treeStructure)
 
   // libraries fetch
-  const librariesData = trigger({
-    type: commands.get_components,
-    content: {
-      // type: 'page'
-    }
-  })
-  const [libraries, setLibraries] = useState(librariesData)
+  const librariesData = IDERegister.componentsLibrary;
+  // const [libraries, setLibraries] = useState(librariesData)
 
-  // layouts fetch
-  const layoutsData = trigger({
-    type: commands.get_layouts,
-    content: {
-      // type: 'page'
-    }
-  })
-  const [layouts, setLayouts] = useState(layoutsData)
-
-  const { onClose } = props
+  const { onClose } = props;
 
   return (
     <div className="manager">
@@ -55,10 +29,10 @@ export const Manager: React.FC<IManager> = props => {
         </a>
         <Tabs defaultActiveKey="1">
           <TabPane tab="Schemas" key="1">
-            <PageTree tree={tree} />
+            <PageTree tree={treeStructure} />
           </TabPane>
           <TabPane tab="Plugins" key="2">
-            <PageTree tree={outline} />
+            <PageTree tree={treeStructure} />
           </TabPane>
         </Tabs>
       </div>
@@ -66,7 +40,7 @@ export const Manager: React.FC<IManager> = props => {
       <div className="widgets">
         <Tabs defaultActiveKey="1">
           <TabPane tab="Components" key="1">
-            <Libraries list={libraries} />
+            <Libraries list={librariesData} />
           </TabPane>
           {/* <TabPane tab="DataSources" key="2">
             <Libraries list={layouts} />
@@ -77,5 +51,5 @@ export const Manager: React.FC<IManager> = props => {
         </Tabs>
       </div>
     </div>
-  )
-}
+  );
+};
