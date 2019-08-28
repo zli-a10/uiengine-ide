@@ -28,23 +28,28 @@ const getUiSchema = (field: any) => {
     `:${field.key}`
   )
   return {
-    component: 'antd:Form.Item',
+    type: 'field',
+    name: field.key,
     datasource: { source },
-    props: {
-      label: field.label
-    },
-    children: [
-      {
-        component: getFieldComponent(field),
-        ...(Array.isArray(field.fields)
-          ? {
-              children: field.fields.map((subField: any) => {
-                return getUiSchema(subField)
-              })
-            }
-          : {})
-      }
-    ]
+    uiSchema: {
+      component: 'antd:Form.Item',
+      datasource: { source },
+      props: {
+        label: field.label
+      },
+      children: [
+        {
+          component: getFieldComponent(field),
+          ...(Array.isArray(field.fields)
+            ? {
+                children: field.fields.map((subField: any) => {
+                  return getUiSchema(subField)
+                })
+              }
+            : {})
+        }
+      ]
+    }
   }
 }
 

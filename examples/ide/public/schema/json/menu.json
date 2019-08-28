@@ -11,251 +11,316 @@
               {
                 "type": "field",
                 "name": "name",
-                "children": null,
+                "datasource": { "source": "slb.server:name" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:name" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:name" },
+                  "props": { "label": "Name" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "server-ipv6-addr",
-                "children": null,
+                "datasource": { "source": "slb.server:server-ipv6-addr" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:server-ipv6-addr" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:server-ipv6-addr" },
+                  "props": { "label": "Server IPv6 Address" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "host",
-                "children": null,
+                "datasource": { "source": "slb.server:host" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:host" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:host" },
+                  "props": { "label": "Host" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "fqdn-name",
-                "children": null,
+                "datasource": { "source": "slb.server:fqdn-name" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:fqdn-name" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:fqdn-name" },
+                  "props": { "label": "FQDN Name" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "resolve-as",
-                "children": null,
+                "datasource": { "source": "slb.server:resolve-as" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:resolve-as" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:resolve-as" },
+                  "props": { "label": "Resolve As" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "action",
-                "children": null,
+                "datasource": { "source": "slb.server:action" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:action" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:action" },
+                  "props": { "label": "Action" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "external-ip",
-                "children": null,
+                "datasource": { "source": "slb.server:external-ip" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:external-ip" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:external-ip" },
+                  "props": { "label": "External IP" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "ipv6",
-                "children": null,
+                "datasource": { "source": "slb.server:ipv6" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:ipv6" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:ipv6" },
+                  "props": { "label": "IPv6" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "template",
-                "children": null,
+                "datasource": { "source": "slb.server:template" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:template" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:template" },
+                  "props": { "label": "Template" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "template-server",
-                "children": null,
+                "datasource": { "source": "slb.server:template-server" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:template-server" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:template-server" },
+                  "props": { "label": "Template Server" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "server-health-check",
-                "children": null,
+                "datasource": { "source": "slb.server:server-health-check" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:server-health-check" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:server-health-check" },
+                  "props": { "label": "Server Health Check" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "health-check",
-                "children": null,
+                "datasource": { "source": "slb.server:health-check" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:health-check" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:health-check" },
+                  "props": { "label": "Health Check" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "p-health-check",
-                "children": null,
+                "datasource": { "source": "slb.server:p-health-check" },
                 "uiSchema": {
-                  "component": "antd:Input",
-                  "datasource": { "source": "slb.server:p-health-check" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:p-health-check" },
+                  "props": { "label": "P Health Check" },
+                  "children": [{ "component": "antd:Input" }]
                 }
               },
               {
                 "type": "field",
                 "name": "shared-partition-health-check",
-                "children": null,
+                "datasource": {
+                  "source": "slb.server:shared-partition-health-check"
+                },
                 "uiSchema": {
-                  "component": "antd:Switch",
+                  "component": "antd:Form.Item",
                   "datasource": {
                     "source": "slb.server:shared-partition-health-check"
-                  }
+                  },
+                  "props": { "label": "Shared Partition Health Check" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "health-check-shared",
-                "children": null,
+                "datasource": { "source": "slb.server:health-check-shared" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:health-check-shared" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:health-check-shared" },
+                  "props": { "label": "Health Check Shared" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "health-check-disable",
-                "children": null,
+                "datasource": { "source": "slb.server:health-check-disable" },
                 "uiSchema": {
-                  "component": "antd:Switch",
-                  "datasource": { "source": "slb.server:health-check-disable" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:health-check-disable" },
+                  "props": { "label": "Health Check Disable" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "conn-limit",
-                "children": null,
+                "datasource": { "source": "slb.server:conn-limit" },
                 "uiSchema": {
-                  "component": "antd:InputNumber",
-                  "datasource": { "source": "slb.server:conn-limit" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:conn-limit" },
+                  "props": { "label": "Connection Limit" },
+                  "children": [{ "component": "antd:InputNumber" }]
                 }
               },
               {
                 "type": "field",
                 "name": "no-logging",
-                "children": null,
+                "datasource": { "source": "slb.server:no-logging" },
                 "uiSchema": {
-                  "component": "antd:Switch",
-                  "datasource": { "source": "slb.server:no-logging" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:no-logging" },
+                  "props": { "label": "No Logging" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "conn-resume",
-                "children": null,
+                "datasource": { "source": "slb.server:conn-resume" },
                 "uiSchema": {
-                  "component": "antd:InputNumber",
-                  "datasource": { "source": "slb.server:conn-resume" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:conn-resume" },
+                  "props": { "label": "Connection Resume" },
+                  "children": [{ "component": "antd:InputNumber" }]
                 }
               },
               {
                 "type": "field",
                 "name": "weight",
-                "children": null,
+                "datasource": { "source": "slb.server:weight" },
                 "uiSchema": {
-                  "component": "antd:InputNumber",
-                  "datasource": { "source": "slb.server:weight" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:weight" },
+                  "props": { "label": "Weight" },
+                  "children": [{ "component": "antd:InputNumber" }]
                 }
               },
               {
                 "type": "field",
                 "name": "slow-start",
-                "children": null,
+                "datasource": { "source": "slb.server:slow-start" },
                 "uiSchema": {
-                  "component": "antd:Switch",
-                  "datasource": { "source": "slb.server:slow-start" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:slow-start" },
+                  "props": { "label": "Slow Start" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "spoofing-cache",
-                "children": null,
+                "datasource": { "source": "slb.server:spoofing-cache" },
                 "uiSchema": {
-                  "component": "antd:Switch",
-                  "datasource": { "source": "slb.server:spoofing-cache" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:spoofing-cache" },
+                  "props": { "label": "Spoofing Cache" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "stats-data-action",
-                "children": null,
+                "datasource": { "source": "slb.server:stats-data-action" },
                 "uiSchema": {
-                  "component": "antd:Select",
-                  "datasource": { "source": "slb.server:stats-data-action" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:stats-data-action" },
+                  "props": { "label": "Stats Data Action" },
+                  "children": [{ "component": "antd:Select" }]
                 }
               },
               {
                 "type": "field",
                 "name": "extended-stats",
-                "children": null,
+                "datasource": { "source": "slb.server:extended-stats" },
                 "uiSchema": {
-                  "component": "antd:Switch",
-                  "datasource": { "source": "slb.server:extended-stats" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:extended-stats" },
+                  "props": { "label": "Extended Stats" },
+                  "children": [{ "component": "antd:Switch" }]
                 }
               },
               {
                 "type": "field",
                 "name": "alternate-server",
-                "children": [
-                  {
-                    "type": "field",
-                    "name": "alternate",
-                    "children": null,
-                    "uiSchema": {
-                      "component": "antd:InputNumber",
-                      "datasource": {
-                        "source": "slb.server:alternate-server.alternate"
-                      }
-                    }
-                  },
-                  {
-                    "type": "field",
-                    "name": "alternate-name",
-                    "children": null,
-                    "uiSchema": {
-                      "component": "antd:Select",
-                      "datasource": {
-                        "source": "slb.server.alternate-server:alternate-name"
-                      }
-                    }
-                  }
-                ],
+                "datasource": { "source": "slb.server:alternate-server" },
                 "uiSchema": {
-                  "component": "antd:Col",
-                  "datasource": { "source": "slb.server:alternate-server" }
+                  "component": "antd:Form.Item",
+                  "datasource": { "source": "slb.server:alternate-server" },
+                  "props": { "label": "Alternate Server" },
+                  "children": [
+                    {
+                      "component": "antd:Col",
+                      "children": [
+                        {
+                          "type": "field",
+                          "name": "alternate",
+                          "datasource": {
+                            "source": "slb.server:alternate-server.alternate"
+                          },
+                          "uiSchema": {
+                            "component": "antd:Form.Item",
+                            "datasource": {
+                              "source": "slb.server:alternate-server.alternate"
+                            },
+                            "props": { "label": "Alternate" },
+                            "children": [{ "component": "antd:InputNumber" }]
+                          }
+                        },
+                        {
+                          "type": "field",
+                          "name": "alternate-name",
+                          "datasource": {
+                            "source": "slb.server.alternate-server:alternate-name"
+                          },
+                          "uiSchema": {
+                            "component": "antd:Form.Item",
+                            "datasource": {
+                              "source": "slb.server.alternate-server:alternate-name"
+                            },
+                            "props": { "label": "Alternate Name" },
+                            "children": [{ "component": "antd:Select" }]
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               }
             ],
