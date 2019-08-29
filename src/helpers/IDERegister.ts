@@ -14,6 +14,11 @@ export class IDERegister {
       componentInfos.forEach(
         (inputComponentInfo: IComponentInfoGroup, key: number) => {
           let findedIndex = -1;
+          inputComponentInfo.key = _.uniqueId(
+            `${inputComponentInfo.id}-${Date.now()}-`
+          );
+          inputComponentInfo.value = _.uniqueId("component-category-");
+          inputComponentInfo.selectable = false;
           IDERegister.componentsLibrary.forEach(
             (componentInfo: IComponentInfoGroup, index: number) => {
               if (inputComponentInfo.id === componentInfo.id) {
@@ -32,6 +37,7 @@ export class IDERegister {
                 const existIndex = _.findIndex(librariesChildren, {
                   component: componentInfo.component
                 });
+
                 if (!existIndex) {
                   librariesChildren.push(inputComponentInfo);
                 } else {
@@ -48,6 +54,12 @@ export class IDERegister {
           inputComponentInfo.children.forEach(
             (componentInfo: IComponentInfo) => {
               const component = componentInfo.component;
+              // for tree selector
+              componentInfo.key = _.uniqueId(
+                `${componentInfo.component}-${Date.now()}-`
+              );
+              componentInfo.value = componentInfo.component;
+              // assign to cache
               IDERegister.componentsList[component] = componentInfo;
             }
           );

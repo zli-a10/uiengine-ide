@@ -28,9 +28,16 @@ export const PropManager: React.FC<IPropManager> = props => {
   return (
     <Draggable onMouseDown={onMouseDown}>
       <div className={`props ${animatedClass}`} id="prop-manager">
-        <a className="close-button" onClick={onClose}>
-          <Icon type="close" />
-        </a>
+        <h3 className="prop-title">
+          {_.get(
+            editNode,
+            "schema.datasource.source",
+            _.get(editNode, "schema.datasource")
+          )}
+          <a className="close-button" onClick={onClose}>
+            <Icon type="close" />
+          </a>
+        </h3>
 
         <Tabs
           defaultActiveKey={defaultActiveKey}

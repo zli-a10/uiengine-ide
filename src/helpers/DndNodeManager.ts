@@ -95,11 +95,15 @@ export class DndNodeManager implements IDndNodeManager {
     }
   }
 
+  pushVersion() {
+    const schema = getActiveUINode(true);
+    this.versionControl.push(schema);
+  }
+
   private async refresh() {
     // const activeLayout = this.nodeController.activeLayout;
     // const uiNode = this.nodeController.getUINode(activeLayout, true);
-    const schema = getActiveUINode(true);
-    this.versionControl.push(schema);
+    this.pushVersion();
     if (this.sourceParent) {
       await this.sourceParent.updateLayout();
       this.sourceParent.sendMessage(true); // force refresh
@@ -280,10 +284,7 @@ export class DndNodeManager implements IDndNodeManager {
         return objValue.concat(srcValue);
       }
     }
-    console.log(_.cloneDeep(this.targetSchema), "before change");
     _.mergeWith(this.targetSchema, schema, customizer);
-    console.log(_.cloneDeep(targetNode.schema), "after change");
-
     await this.refresh();
   }
 

@@ -1,3 +1,5 @@
+import { any } from "prop-types";
+
 interface IConfigWrappers {
   row: any;
   col: any;
@@ -38,6 +40,7 @@ interface IDndNodeManager {
   targetParentSchema: ILayoutSchema = {};
   targetParentChildrenSchema: Array<ILayoutSchema> = [];
 
+  pushVersion();
   canDrop(sourceNode: IUINode, targetNode: IUINode);
   insertCenter(sourceNode: IUINode, targetNode: IUINode);
 
@@ -73,6 +76,7 @@ interface IComponentInfo {
   version?: string;
   preview?: string; //'xx.png'
   icon?: string;
+  [name: string]: any;
 }
 
 interface IComponentInfoGroup {
@@ -80,6 +84,7 @@ interface IComponentInfoGroup {
   children: Array<IComponentInfo>;
   version?: string;
   title?: string;
+  [name: string]: any;
 }
 
 interface ICommandOutput {

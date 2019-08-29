@@ -1,9 +1,9 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
 import { Context } from "../editor/Context";
-import { IDERegister, formatTitle } from "../../helpers";
+import { IDERegister, formatTitle, DndNodeManager } from "../../helpers";
 import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;
@@ -51,41 +51,26 @@ export const Props: React.FC = (props: any) => {
 
   const [treeValue, selectTreeValue] = useState(component);
   const onTreeChange = (value: any) => {
-    selectTreeValue(value);
+    if (value && value.indexOf("component-category-") === -1) {
+      editNode.schema.component = value;
+      selectTreeValue(value);
+      const dndNodeManager = DndNodeManager.getInstance();
+      dndNodeManager.pushVersion();
+      editNode.sendMessage(true);
+    }
   };
 
-  const treeData = useMemo(
-    () => [
-      {
-        title: "Node1",
-        value: "0-0",
-        key: "0-0",
-        children: [
-          {
-            title: "Child Node1",
-            value: "0-0-1",
-            key: "0-0-1"
-          },
-          {
-            title: "Child Node2",
-            value: "0-0-2",
-            key: "0-0-2"
-          }
-        ]
-      },
-      {
-        title: "Node2",
-        value: "0-1",
-        key: "0-1"
-      }
-    ],
-    []
-  );
+  useEffect(() => {
+    selectTreeValue(component);
+  }, [component]);
+
+  const treeData = useMemo(() => IDERegister.componentsLibrary, []);
 
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
       <TreeSelect
+        showSearch
         className={"component-select"}
         value={treeValue}
         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
