@@ -19,9 +19,21 @@ const DatasourceItem = (props: any) => {
 };
 
 export const DatasourceComponent = (props: any) => {
-  const { value: data, onChange, uinode, ...rest } = props;
+  const { onChange, uinode, ...rest } = props;
   const [isLock, setLock] = useState(true);
-  const [dataSource, setDataSource] = useState({} as any);
+  let dataSource = _.get(uinode, "schema.datasource") as any;
+  if (_.isString(dataSource)) {
+    dataSource = {
+      source: dataSource
+    };
+  }
+
+  const [data, updateData] = useState({});
+  const setDataSource = (dataSource: any) => {
+    updateData(dataSource);
+    onChange({ datasource: dataSource });
+  };
+
   const onClickLock = useCallback(() => {
     setLock(!isLock);
   }, [isLock]);
@@ -32,7 +44,6 @@ export const DatasourceComponent = (props: any) => {
         dataSource.schema = value;
       }
       setDataSource(dataSource);
-      onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
   );
@@ -43,7 +54,6 @@ export const DatasourceComponent = (props: any) => {
         dataSource.source = value;
       }
       setDataSource(dataSource);
-      onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
   );
@@ -51,7 +61,6 @@ export const DatasourceComponent = (props: any) => {
     (value: boolean) => {
       dataSource.autoload = value;
       setDataSource(dataSource);
-      onChange({ datasource: dataSource });
     },
     [dataSource]
   );
@@ -59,31 +68,32 @@ export const DatasourceComponent = (props: any) => {
   const onChangeInput = useCallback(
     e => {
       dataSource.defaultValue = e.target.value;
-      setDataSource(dataSource);
+      // force update
+      updateData(_.clone(dataSource));
     },
     [dataSource]
   );
 
   const onBlurInput = useCallback(() => {
-    onChange({ datasource: dataSource });
+    setDataSource(dataSource);
   }, [onChange, dataSource]);
   const onMouseDownInput = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
-  console.log("====", props);
+
   return (
     <>
       <DatasourceItem
         label="Source"
         {...rest}
         onChange={onChangeSource}
-        value={_.get(uinode, "schema.datasource.source")}
+        value={_.get(dataSource, "source")}
       />
       <DatasourceItem
         label="Schema"
         {...rest}
         onChange={onChangeSchema}
-        value={_.get(uinode, "schema.datasource.schema")}
+        value={_.get(dataSource, "schema")}
       />
       <div style={{ position: "relative" }}>
         <div style={{ position: "absolute", right: "22px", top: "-52px" }}>
@@ -101,17 +111,15 @@ export const DatasourceComponent = (props: any) => {
       <Form.Item label="Autoload">
         <Switch
           onChange={onChangeAutoLoad}
-          checked={_.get(uinode, "schema.datasource.autoload", false)}
+          checked={_.get(dataSource, "autoload", false)}
         />
       </Form.Item>
       <Form.Item label="DefaultValue">
         <Input
-          // defaultValue={dataSource.defaultValue}
-          value={
-            _.get(uinode, "schema.datasource.defaultValue") ||
-            dataSource.defaultValue
-          }
+          defaultValue={dataSource.defaultValue}
+          value={_.get(dataSource, "defaultValue")}
           onChange={onChangeInput}
+          onPressEnter={onChangeInput}
           onBlur={onBlurInput}
           onMouseDown={onMouseDownInput}
         />

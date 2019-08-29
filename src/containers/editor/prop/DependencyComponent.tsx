@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import {
   Select,
@@ -21,6 +21,7 @@ import { DND_IDE_NODE_TYPE } from "../../../helpers";
 
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange } = props;
+
   const data = _.get(root, `deps[${index}]`);
   const [, rerender] = useState();
 
@@ -40,15 +41,10 @@ const SelectorItem = (props: any) => {
 
   const onDeleteItem = useCallback((e: any) => {
     e.stopPropagation();
-    data.splice(index, 1);
-    setListValue(_.clone(data));
+    root.deps.splice(index, 1);
+    setListValue(_.clone(root.deps));
     // setInputValue(Date.now());
   }, []);
-
-  const formItemLayout = {
-    // labelCol: { span: 7 },
-    // wrapperCol: { span: 12 }
-  };
 
   const [state, setStateValue] = useState(
     _.get(data, "state") ? "state" : "data"
@@ -61,7 +57,6 @@ const SelectorItem = (props: any) => {
       delete data.state;
       delete data.stateCompareRule;
     }
-    console.log(data, " removing");
     setStateValue(value);
   };
   // fetch data
@@ -79,21 +74,6 @@ const SelectorItem = (props: any) => {
       const draggingNode = item.uinode;
       const schema = draggingNode.schema;
       let selector = {};
-      // if (_.has(schema, "datasource.source")) {
-      //   selector["datasource.source"] = _.get(schema, "datasource.source");
-      // }
-
-      // if (_.has(schema, "component")) {
-      //   selector["component"] = _.get(schema, "component");
-      // }
-      // // if (_.isEmpty(selector) && _.has(schema, 'props')) {
-      // //   selector['props.']
-      // // }
-
-      // if (_.has(schema, "id")) {
-      //   selector["id"] = _.get(schema, "id");
-      // }
-
       if (_.has(schema, "id")) {
         selector["id"] = _.get(schema, "id");
       } else {
@@ -105,10 +85,8 @@ const SelectorItem = (props: any) => {
         selector["id"] = _.get(schema, "id");
       }
 
-      console.log("final selector", selector);
       data.selector = selector;
       onChange(_.cloneDeep(root));
-      // changeValue("selector")(selector);
       setDroppedSelector(selector);
     },
     collect: monitor => ({
@@ -191,13 +169,14 @@ const SelectorItem = (props: any) => {
           </Select>
         </Form.Item>
         <div ref={drop} className={cls}>
-          <Form.Item label="Selector" {...formItemLayout}>
+          <Form.Item label="Selector">
             <Input
               readOnly
-              value={droppedSelector && droppedSelector.id}
+              value={
+                (droppedSelector && droppedSelector.id) ||
+                _.get(data, "selector.id")
+              }
               onMouseDown={onMouseDown}
-              {...formItemLayout}
-              // onChange={changeValue("selector.datasource.source")}
             />
           </Form.Item>
         </div>
@@ -236,20 +215,29 @@ const SelectorItem = (props: any) => {
 
 const DepGroup = (props: any) => {
   const { value, group, onChange } = props;
-  const [groupValue, setGroupValue] = useState(!_.isEmpty(value));
-  // const [logicValue, setLogicValue] = useState(1);
+  let groupChecked = !_.isEmpty(value);
+  const [showGroup, setShowGroup] = useState(groupChecked);
   const data = _.get(value, `deps`, []);
-  // const data = [["name1", "value1"], ["name2", "value2"], ["name3", "value3"]];
   const [listValue, setListValue] = useState(data);
 
+  useEffect(() => {
+    setShowGroup(groupChecked);
+  }, [groupChecked]);
+
   const onGroupChange = (checked: any) => {
-    setGroupValue(checked);
+    if (!checked) {
+      onChange({});
+    } else {
+      onChange(value);
+    }
+    setShowGroup(checked);
   };
 
   const [logicValue, setLogicValue] = useState(_.get(value, `strategy`, "and"));
   const onDataChange = (e: any) => {
     _.set(value, `strategy`, e.target.value);
     setLogicValue(e.target.value);
+    onChange(value);
   };
 
   const onAddItems = () => {
@@ -265,16 +253,12 @@ const DepGroup = (props: any) => {
     onChange(value);
   };
 
-  // const onSave = () => {
-  //   if (groupValue && !_.isEmpty(listValue)) onChange(value);
-  // };
-
   return (
     <>
       <Form.Item label={group}>
-        <Switch checked={groupValue} onChange={onGroupChange} />
+        <Switch checked={showGroup} onChange={onGroupChange} />
       </Form.Item>
-      {groupValue ? (
+      {showGroup ? (
         <>
           <Row type="flex" justify="space-around">
             <Col span={16}>
@@ -321,11 +305,9 @@ const DepGroup = (props: any) => {
 export const DependencyComponent = (props: any) => {
   const { onChange, uinode } = props;
   const finalResult = _.get(uinode, "schema", {});
-  console.log("dependency initial value", finalResult);
   const onItemChange = (path: string) => {
     return (v: any) => {
       _.set(finalResult, path, v);
-      onChange(finalResult);
     };
   };
   return (
