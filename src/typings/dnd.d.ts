@@ -1,5 +1,3 @@
-import { any } from "prop-types";
-
 interface IConfigWrappers {
   row: any;
   col: any;
@@ -82,9 +80,9 @@ interface IComponentInfo {
 interface IComponentInfoGroup {
   id: string;
   children: Array<IComponentInfo>;
+  [name: string]: any;
   version?: string;
   title?: string;
-  [name: string]: any;
 }
 
 interface ICommandOutput {
@@ -95,8 +93,8 @@ interface ICommandOutput {
 // define component schema for IDE editing
 interface IComponentSchema {
   type: string;
+  [name: string]: any;
   default?: any;
   options?: Array<number | string>;
   range?: Array<number>;
-  [name: string]: any;
 }

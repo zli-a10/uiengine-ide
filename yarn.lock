@@ -5367,6 +5367,11 @@ moment@2.x, moment@^2.24.0:
   resolved "https://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha1-DQVdU/UFKqZTyfbraLtdEr9cK1s=
 
+monaco-editor@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.npm.taobao.org/monaco-editor/download/monaco-editor-0.17.1.tgz#8fbe96ca54bfa75262706e044f8f780e904aa45c"
+  integrity sha1-j76WylS/p1JicG4ET494DpBKpFw=
+
 moo@^0.4.3:
   version "0.4.3"
   resolved "https://registry.npm.taobao.org/moo/download/moo-0.4.3.tgz#3f847a26f31cf625a956a87f2b10fbc013bfd10e"
