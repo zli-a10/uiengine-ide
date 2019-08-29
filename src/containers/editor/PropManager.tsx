@@ -3,6 +3,7 @@ import _ from "lodash";
 import { Tabs, Icon } from "antd";
 import Draggable from "react-draggable";
 import { Debugger } from "./Debugger";
+import { Release } from "./Release";
 import { Props } from "./Props";
 import { Context } from "../editor/Context";
 
@@ -44,11 +45,14 @@ export const PropManager: React.FC<IPropManager> = props => {
           activeKey={activeKey}
           onChange={setActiveKey}
         >
-          <TabPane tab="Props" key="1">
+          <TabPane tab="Design" key="1">
             <Props />
           </TabPane>
           <TabPane tab="Debug" key="2">
             <Debugger />
+          </TabPane>
+          <TabPane tab="Release" key="3">
+            <Release />
           </TabPane>
         </Tabs>
       </div>

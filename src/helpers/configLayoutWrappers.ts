@@ -14,11 +14,17 @@ export const configLayoutWrappers: IConfigWrappers = {
 };
 
 export const defaultEmptyLayoutSchema = {
-  component: "antd:Layout",
-  children: [
-    {
-      component: "antd:Layout.Content",
-      children: []
-    }
-  ]
+  component: "div",
+  props: {
+    className: "uiengine-container",
+    id: "uiengine-container"
+  },
+  children: []
+
+  // children: [
+  //   {
+  //     component: "antd:Layout.Content",
+  //     children: []
+  //   }
+  // ]
 };

@@ -138,11 +138,6 @@ export default [
         schema: {}
       },
       {
-        component: "antd:Menu.SubMenu",
-        title: "M.SubMenu",
-        schema: {}
-      },
-      {
         component: "antd:Menu.Divider",
         title: "M.Divider",
         schema: {}
@@ -421,11 +416,6 @@ export default [
       {
         component: "antd:Message",
         title: "Message",
-        schema: {}
-      },
-      {
-        component: "antd:Table",
-        title: "Table",
         schema: {}
       },
       {

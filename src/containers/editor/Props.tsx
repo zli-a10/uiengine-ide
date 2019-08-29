@@ -40,9 +40,9 @@ export const Props: React.FC = (props: any) => {
     }
   };
 
-  const genExtra = () => (
+  const genExtra = (icons: string = "plus") => (
     <Icon
-      type="plus"
+      type={icons}
       onClick={event => {
         event.stopPropagation();
       }}
@@ -80,9 +80,9 @@ export const Props: React.FC = (props: any) => {
         onChange={onTreeChange}
       />
 
-      <Collapse accordion defaultActiveKey={"1"}>
+      <Collapse accordion defaultActiveKey={"props"}>
         {!_.isEmpty(restSchema) ? (
-          <Panel header="Component Props" key="1">
+          <Panel header="Component Props" key="props">
             <Form {...formItemLayout}>
               {Object.entries(restSchema).map((entry: any) => (
                 <PropItem
@@ -97,7 +97,8 @@ export const Props: React.FC = (props: any) => {
             </Form>
           </Panel>
         ) : null}
-        <Panel header="Data Source" key="2" extra={genExtra()}>
+
+        <Panel header="Data Source" key="data-source" extra={genExtra()}>
           <Form {...formItemLayout}>
             <PropItem
               section="datasource"
@@ -108,13 +109,13 @@ export const Props: React.FC = (props: any) => {
           </Form>
         </Panel>
         {!_.isEmpty(allEvents) ? (
-          <Panel header="Events" key="3" extra={genExtra()}>
+          <Panel header="Events" key="events" extra={genExtra()}>
             <Form {...formItemLayout}>
               {allEvents.map((name: any) => (
                 <PropItem
                   section="event"
                   name={name}
-                  type="enum"
+                  type="event"
                   key={`key-${name}`}
                   options={_.keys(plugins)}
                   uinode={editNode}
@@ -126,13 +127,23 @@ export const Props: React.FC = (props: any) => {
             </Form>
           </Panel>
         ) : null}
-        <Panel header="Dependency" key="4">
+        <Panel header="Dependency" key="dependency">
           <Form>
             <PropItem
               section="dependency"
               type="dependency"
               uinode={editNode}
               data={_.get(editNode, "schema.state", {})}
+            />
+          </Form>
+        </Panel>
+        <Panel header="Table Define" key="2-dim" extra={genExtra("eye")}>
+          <Form {...formItemLayout}>
+            <PropItem
+              section="children"
+              type="children"
+              data={_.get(editNode, "schema.$children")}
+              uinode={editNode}
             />
           </Form>
         </Panel>

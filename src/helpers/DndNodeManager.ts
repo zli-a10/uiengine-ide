@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { NodeController } from "uiengine";
+import { NodeController, UINode } from "uiengine";
 import { VersionControl } from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
 import { configLayoutWrappers, getActiveUINode } from "./";
@@ -104,15 +104,15 @@ export class DndNodeManager implements IDndNodeManager {
     // const activeLayout = this.nodeController.activeLayout;
     // const uiNode = this.nodeController.getUINode(activeLayout, true);
     this.pushVersion();
-    if (this.sourceParent) {
-      await this.sourceParent.updateLayout();
-      this.sourceParent.sendMessage(true); // force refresh
-    }
+    let sourceNode =
+      (this.sourceParent as UINode) || (this.sourceNode as UINode);
+    await sourceNode.updateLayout();
+    sourceNode.sendMessage(true); // force refresh
 
-    if (this.targetParent) {
-      await this.targetParent.updateLayout();
-      this.targetParent.sendMessage(true); // force refresh}
-    }
+    let targetNode =
+      (this.targetParent as UINode) || (this.targetNode as UINode);
+    await targetNode.updateLayout();
+    targetNode.sendMessage(true); // force refresh
   }
 
   private removeSourceNode(index?: number) {

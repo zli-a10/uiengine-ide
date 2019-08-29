@@ -20,7 +20,6 @@ export const PropItem = (props: any) => {
   }
   const componentName = `${_.upperFirst(componentType)}Component`;
   const Com = propComponents[componentName];
-
   const [value, setValue] = useState();
 
   const onChange = (v: any) => {

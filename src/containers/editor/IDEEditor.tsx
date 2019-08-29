@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useEffect,
+  useContext
+} from "react";
 
 import * as _ from "lodash";
 import { Icon, Switch, Tabs } from "antd";
@@ -8,11 +14,13 @@ import { Context } from "./Context";
 import { UIEngineDndProvider } from "../dnd";
 import { CodeEditor } from "./CodeEditor";
 const { TabPane } = Tabs;
+import { getActiveUINode } from "../../helpers";
 
 import "./styles/index.less";
 // import "animate.css";
 
 import { ILayoutSchema } from "uiengine/typings";
+import { UINode } from "uiengine";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [componentsCollapsed, setComponentCollapse] = useState(false);
@@ -38,8 +46,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
   const contextValue = useMemo<IIDEContext>(
     () => ({
       preview,
-      togglePreview: (preview: boolean) => {
-        setPreview(preview);
+      togglePreview: async () => {
+        await switchPreview();
       },
       info,
       updateInfo: (schema: ILayoutSchema) => {
@@ -60,7 +68,10 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     }),
     [preview, theme, info, propsCollapsed, focusMode]
   );
-  const switchPreview = () => {
+  const switchPreview = async () => {
+    const rootNode = getActiveUINode() as UINode;
+    await rootNode.updateLayout();
+    rootNode.sendMessage(true);
     setPreview(!preview);
   };
 

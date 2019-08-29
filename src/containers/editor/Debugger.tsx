@@ -23,28 +23,34 @@ export const Debugger: React.FC = (props: any) => {
 
   return (
     <div className="ide-props-events">
-      <h3>(Input)</h3>
-      {preview ? (
-        <>
-          <div className="ide-debugger">
-            <h4>Set Debug Host:</h4>
-            <Input
-              size={"default"}
-              placeholder={"192.168.x.x"}
-              addonAfter={<a>Send</a>}
-            />
-          </div>
-          <Collapse onChange={callback} accordion defaultActiveKey={"1"}>
-            <Panel header="Response" key="1">
+      <Collapse
+        onChange={callback}
+        accordion
+        defaultActiveKey={"running-params"}
+      >
+        <Panel header="Running Params" key="running-params"></Panel>
+
+        {preview ? (
+          <>
+            <div className="ide-debugger">
+              <h4>Set Debug Host:</h4>
+              <Input
+                size={"default"}
+                placeholder={"192.168.x.x"}
+                addonAfter={<a>Send</a>}
+              />
+            </div>
+
+            <Panel header="Response Data" key="reponse-data">
               <ReactJson
                 indentWidth={2}
-                src={uiJson}
+                src={[]}
                 displayDataTypes={false}
                 collapsed={false}
                 collapseStringsAfterLength={50}
               />
             </Panel>
-            <Panel header="Data Posted" key="2">
+            <Panel header="Request Data" key="request-data">
               <ReactJson
                 indentWidth={2}
                 collapsed
@@ -56,16 +62,14 @@ export const Debugger: React.FC = (props: any) => {
                 ]}
               />
             </Panel>
-            <Panel header="Plugins" key="3" />
-            <Panel header="Data Node" key="4" />
-            <Panel header="UI Node" key="5" />
-            <Panel header="State Node" key="6" />
-            <Panel header="Data Pool" key="7" />
-          </Collapse>
-        </>
-      ) : (
-        <Collapse onChange={callback} accordion defaultActiveKey={"1"}>
-          <Panel header="UI JSON" key="1">
+            <Panel header="Plugins" key="plugins" />
+            <Panel header="Data Node" key="data-node" />
+            <Panel header="UI Node" key="ui-node" />
+            <Panel header="State Node" key="state-node" />
+            <Panel header="Data Pool" key="data-pool" />
+          </>
+        ) : (
+          <Panel header="UI JSON" key="ui-node-json">
             <ReactJson
               indentWidth={2}
               src={uiJson}
@@ -77,8 +81,8 @@ export const Debugger: React.FC = (props: any) => {
               collapseStringsAfterLength={50}
             />
           </Panel>
-        </Collapse>
-      )}
+        )}
+      </Collapse>
     </div>
   );
 };

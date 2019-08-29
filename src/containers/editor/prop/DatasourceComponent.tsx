@@ -1,22 +1,7 @@
 import React, { useState, useCallback, useContext } from "react";
 import _ from "lodash";
-import { DataSourceTreeSelect } from "../DataSource";
+import { DataSourceSelector } from "../DataSource";
 import { Switch, Form, Input, Popover, Icon } from "antd";
-
-const DatasourceItem = (props: any) => {
-  const { value } = props;
-  const onChange = (value: any) => {
-    const { onChange: onChangeProps } = props;
-    if (onChangeProps) {
-      onChangeProps(value);
-    }
-  };
-  return (
-    <Form.Item label={props.label}>
-      <DataSourceTreeSelect onChange={onChange} value={value} />
-    </Form.Item>
-  );
-};
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, uinode, ...rest } = props;
@@ -83,13 +68,13 @@ export const DatasourceComponent = (props: any) => {
 
   return (
     <>
-      <DatasourceItem
+      <DataSourceSelector
         label="Source"
         {...rest}
         onChange={onChangeSource}
         value={_.get(dataSource, "source")}
       />
-      <DatasourceItem
+      <DataSourceSelector
         label="Schema"
         {...rest}
         onChange={onChangeSchema}

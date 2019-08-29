@@ -5,5 +5,6 @@ export * from "./RangeComponent";
 export * from "./StringComponent";
 // complex component
 export * from "./DependencyComponent";
-// export * from "./EventComponent";
+export * from "./EventComponent";
 export * from "./DatasourceComponent";
+export * from "./ChildrenComponent";

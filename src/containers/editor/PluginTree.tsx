@@ -17,7 +17,7 @@ const { TreeNode } = Tree;
 let defaultExpandedKeys: any = [];
 const fileLoader = FileLoader.getInstance();
 
-export class PageTree extends React.Component<ITree, ITreeState> {
+export class PluginTree extends React.Component<ITree, ITreeState> {
   constructor(props: ITree) {
     super(props);
     const items = props.tree.children;
@@ -308,4 +308,4 @@ export class PageTree extends React.Component<ITree, ITreeState> {
   }
 }
 
-PageTree.contextType = Context;
+PluginTree.contextType = Context;
