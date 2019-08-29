@@ -11,22 +11,16 @@ export const EventComponent = (props: any) => {
   if (_.isObject(v)) {
     v = _.get(v, "action", "");
   }
+  console.log(props);
   return (
-    <Row>
-      <Col span={22}>
-        <Form.Item label={formatTitle(props.name)}>
-          <Select value={v} onChange={onChange}>
-            {options.map((option: any, index: number) => (
-              <Option value={option} key={index}>
-                {option}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Col>
-      <Col>
-        <Button icon="setting" />
-      </Col>
-    </Row>
+    <Form.Item label={formatTitle(props.name)}>
+      <Select value={v} onChange={onChange}>
+        {options.map((option: any, index: number) => (
+          <Option value={option} key={index}>
+            {option}
+          </Option>
+        ))}
+      </Select>
+    </Form.Item>
   );
 };
