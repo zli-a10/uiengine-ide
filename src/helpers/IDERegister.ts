@@ -59,6 +59,9 @@ export class IDERegister {
                 `${componentInfo.component}-${Date.now()}-`
               );
               componentInfo.value = componentInfo.component;
+
+              if (componentInfo.isContainer === undefined)
+                componentInfo.isContainer = false;
               // assign to cache
               IDERegister.componentsList[component] = componentInfo;
             }

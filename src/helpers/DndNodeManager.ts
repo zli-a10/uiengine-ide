@@ -3,6 +3,7 @@ import { NodeController, UINode } from "uiengine";
 import { VersionControl } from "./VersionControl";
 import { IUINode, ILayoutSchema, INodeController } from "uiengine/typings";
 import { configLayoutWrappers, getActiveUINode } from "./";
+import { IDERegister } from "../helpers";
 
 // TO Fix: Can't drag element into it's child
 export class DndNodeManager implements IDndNodeManager {
@@ -235,9 +236,18 @@ export class DndNodeManager implements IDndNodeManager {
     return result;
   }
 
+  canDropInCenter(targetNode: IUINode) {
+    const targetComponent = _.get(targetNode, "schema.component");
+    const componentInfo = IDERegister.getComponentInfo(targetComponent);
+    return componentInfo.isContainer === undefined || componentInfo.isContainer;
+  }
+
   async insertCenter(sourceNode: IUINode, targetNode: IUINode) {
     // this.selectNode(sourceNode, targetNode);
     if (!this.canDrop(sourceNode, targetNode)) return;
+
+    // it's not a container
+    if (!this.canDropInCenter(targetNode)) return;
 
     // empty target, just push
     this.targetChildrenSchema.push(this.sourceSchema);

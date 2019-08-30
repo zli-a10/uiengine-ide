@@ -15,6 +15,7 @@ import classNames from "classnames";
 import {
   DndNodeManager,
   RegionDetector,
+  IDERegister,
   DND_IDE_NODE_TYPE,
   DND_IDE_SCHEMA_TYPE
 } from "../../helpers";
@@ -92,6 +93,15 @@ export const UIEngineDndWrapper = (props: any) => {
             clientOffset as XYCoord,
             hoverBoundingRect
           );
+
+          // judge center
+          // it's not a container
+          if (
+            regionName === "center" &&
+            !dndNodeManager.canDropInCenter(hoverNode)
+          ) {
+            return false;
+          }
 
           if (regionName) {
             if (regionName === "center") {

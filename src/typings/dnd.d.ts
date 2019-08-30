@@ -41,6 +41,7 @@ interface IDndNodeManager {
 
   pushVersion();
   canDrop(sourceNode: IUINode, targetNode: IUINode);
+  canDropInCenter(targetNode: IUINode);
   insertCenter(sourceNode: IUINode, targetNode: IUINode);
 
   insertLeft(
