@@ -60,10 +60,8 @@ const SelectorItem = (props: any) => {
     setStateValue(value);
   };
   // fetch data
-  const rule = _.get(
-    data,
-    state === "data" ? "dataCompareRule" : "stateCompareRule"
-  );
+  const compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
+  const rule = _.get(data, compareRule);
   const value = _.get(data, state === "state" ? "state.visible" : "data");
 
   // drag datasource
@@ -119,10 +117,8 @@ const SelectorItem = (props: any) => {
           <Select
             size="small"
             defaultValue={"is"}
-            value={rule}
-            onChange={changeValue(
-              state === "data" ? "dataCompareRule" : "stateCompareRule"
-            )}
+            value={rule || "is"}
+            onChange={changeValue(compareRule)}
           >
             <Select.Option value="is" title="is">
               is
@@ -220,10 +216,6 @@ const DepGroup = (props: any) => {
   const data = _.get(value, `deps`, []);
   const [listValue, setListValue] = useState(data);
 
-  useEffect(() => {
-    setShowGroup(groupChecked);
-  }, [groupChecked]);
-
   const onGroupChange = (checked: any) => {
     if (!checked) {
       onChange({});
@@ -252,6 +244,14 @@ const DepGroup = (props: any) => {
     setListValue(newData);
     onChange(value);
   };
+
+  useEffect(() => {
+    setShowGroup(groupChecked);
+  }, [groupChecked]);
+
+  useEffect(() => {
+    setListValue(data);
+  }, [data]);
 
   return (
     <>

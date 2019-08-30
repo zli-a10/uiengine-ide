@@ -97,15 +97,23 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           <div className="button-close">
             <Icon type="close" onClick={hideAll} />
           </div>
-          <a
-            className="button-menu"
-            onClick={() => setComponentCollapse(!componentsCollapsed)}
-          >
-            <Icon type="menu" /> Editing WAF - Template{" "}
-          </a>
-          <div className="page-name">
-            <em>(last saved: 10:09)</em>
-          </div>
+          <Context.Consumer>
+            {({ info: { currentPath } }) => (
+              <>
+                <a
+                  className="button-menu"
+                  onClick={() => setComponentCollapse(!componentsCollapsed)}
+                >
+                  <Icon type="menu" /> Editing {currentPath}
+                </a>
+                {sessionStorage.savedTime ? (
+                  <div className="page-name">
+                    <em>(Last Saved: {sessionStorage.savedTime})</em>
+                  </div>
+                ) : null}
+              </>
+            )}
+          </Context.Consumer>
         </div>
         <div className="right">
           <div className="props">

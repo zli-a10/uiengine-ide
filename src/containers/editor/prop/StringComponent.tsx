@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import { Input, Form } from "antd";
 import { formatTitle } from "../../../helpers";
 
 export const StringComponent = (props: any) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(props.value);
   const onChange = (e: any) => {
     setInputValue(e.target.value);
   };
@@ -16,10 +16,15 @@ export const StringComponent = (props: any) => {
   const onMouseDown = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
+
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value]);
+
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Input
-        value={inputValue || props.value}
+        value={inputValue}
         onChange={onChange}
         onPressEnter={onSave}
         onBlur={onSave}

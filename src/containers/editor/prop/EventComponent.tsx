@@ -11,7 +11,7 @@ export const EventComponent = (props: any) => {
   if (_.isObject(v)) {
     v = _.get(v, "action", "");
   }
-  console.log(props);
+  // console.log(props);
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Select value={v} onChange={onChange}>

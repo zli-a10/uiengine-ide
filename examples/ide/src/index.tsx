@@ -1,30 +1,30 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import * as _ from 'lodash'
-import './index.less'
+import React from "react";
+import ReactDOM from "react-dom";
+import * as _ from "lodash";
+import "./index.less";
 // import App from "./App";
-import config from './config'
-import { UIEngineRegister } from 'uiengine'
+import config from "./config";
+import { UIEngineRegister } from "uiengine";
 
-import { IDEEditor } from 'uiengine-ide'
-import * as serviceWorker from './serviceWorker'
-import components from './component'
-import plugins from './plugins'
-import { getDataSourceJson } from './utils/dataSource'
-import { expandDataSource } from './utils/schema'
-UIEngineRegister.registerComponents(components)
-UIEngineRegister.registerPlugins(plugins)
+import { IDEEditor } from "uiengine-ide";
+import * as serviceWorker from "./serviceWorker";
+import components from "./component";
+import * as plugins from "./plugins";
+import { getDataSourceJson } from "./utils/dataSource";
+import { expandDataSource } from "./utils/schema";
+UIEngineRegister.registerComponents(components);
+UIEngineRegister.registerPlugins(plugins);
 
 ReactDOM.render(
   <IDEEditor
-    layouts={['schema/ui/simple.json']}
+    layouts={["schema/ui/simple.json"]}
     config={config}
     manangerProps={{
       getDataSource: getDataSourceJson,
       expandDataSource
     }}
   />,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);
 
-serviceWorker.unregister()
+serviceWorker.unregister();

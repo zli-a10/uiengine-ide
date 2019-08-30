@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import _ from "lodash";
 import { DataSourceSelector } from "../DataSource";
 import { Switch, Form, Input, Popover, Icon } from "antd";
@@ -13,12 +13,6 @@ export const DatasourceComponent = (props: any) => {
     };
   }
 
-  const [data, updateData] = useState({});
-  const setDataSource = (dataSource: any) => {
-    updateData(dataSource);
-    onChange({ datasource: dataSource });
-  };
-
   const onClickLock = useCallback(() => {
     setLock(!isLock);
   }, [isLock]);
@@ -28,40 +22,40 @@ export const DatasourceComponent = (props: any) => {
       if (isLock) {
         dataSource.schema = value;
       }
-      setDataSource(dataSource);
     },
     [dataSource, isLock]
   );
+
   const onChangeSchema = useCallback(
     value => {
       dataSource.schema = value;
       if (isLock) {
         dataSource.source = value;
       }
-      setDataSource(dataSource);
     },
     [dataSource, isLock]
   );
+
   const onChangeAutoLoad = useCallback(
     (value: boolean) => {
       dataSource.autoload = value;
-      setDataSource(dataSource);
     },
     [dataSource]
   );
 
-  const onChangeInput = useCallback(
-    e => {
-      dataSource.defaultValue = e.target.value;
-      // force update
-      updateData(_.clone(dataSource));
-    },
-    [dataSource]
+  const [defaultValue, changeDefaultValue] = useState(
+    _.get(dataSource, "defaultValue")
   );
+  const onChangeInput = (e: any) => {
+    dataSource.defaultValue = e.target.value;
+    changeDefaultValue(e.target.value);
+  };
 
-  const onBlurInput = useCallback(() => {
-    setDataSource(dataSource);
-  }, [onChange, dataSource]);
+  useEffect(() => {
+    onChange({ datasource: dataSource });
+    changeDefaultValue(_.get(dataSource, "defaultValue"));
+  }, [dataSource]);
+
   const onMouseDownInput = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
@@ -101,11 +95,9 @@ export const DatasourceComponent = (props: any) => {
       </Form.Item>
       <Form.Item label="DefaultValue">
         <Input
-          defaultValue={dataSource.defaultValue}
-          value={_.get(dataSource, "defaultValue")}
+          value={defaultValue}
           onChange={onChangeInput}
           onPressEnter={onChangeInput}
-          onBlur={onBlurInput}
           onMouseDown={onMouseDownInput}
         />
       </Form.Item>

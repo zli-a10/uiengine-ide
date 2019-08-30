@@ -222,7 +222,7 @@ export class PluginTree extends React.Component<ITree, ITreeState> {
           item._parent_ = parent;
 
           item._path_ = parent ? `${parent.name}/${item.name}` : item.name;
-          item._key_ = item._path_;
+          item._key_ = item.key || item._path_;
           // console.log(id);
           if (item.children) {
             return (

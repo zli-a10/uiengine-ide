@@ -9,7 +9,8 @@ import {
   FileLoader,
   getActiveUINode,
   DND_IDE_NODE_TYPE,
-  defaultEmptyLayoutSchema
+  defaultEmptyLayoutSchema,
+  VersionControl
 } from "../../helpers";
 import { IUINode } from "uiengine/typings";
 
@@ -222,7 +223,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           item._parent_ = parent;
 
           item._path_ = parent ? `${parent.name}/${item.name}` : item.name;
-          item._key_ = item._path_;
+          item._key_ = item.key || item._path_;
           // console.log(id);
           if (item.children) {
             return (
@@ -269,11 +270,19 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     });
   };
 
-  onSelect = async (selectedKeys: string[]) => {
+  onSelect = async (selectedKeys: string[], treeNode?: any) => {
+    // console.log(treeNode.node.props.dataRef.title);
     if (selectedKeys.length) {
       const path = _.last(selectedKeys);
+      const versionControl = VersionControl.getInstance();
       if (path) {
-        // this.context.updateInfo({ currentPath: path });
+        versionControl.clearHistories();
+        // TO Fix: when add one item, because the context will change cause rerendering
+        // if (!_.get(treeNode, "node.props.dataRef._editing_")) {
+        //   this.context.updateInfo({
+        //     currentPath: _.get(treeNode, "node.props.dataRef.title", "Schema")
+        //   });
+        // }
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
         // console.log("selected schema", schema);

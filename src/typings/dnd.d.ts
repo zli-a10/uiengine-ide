@@ -13,6 +13,7 @@ interface IVersionControl {
   push(schema: ILayoutSchema);
   redo();
   undo();
+  clearHistories();
 }
 
 interface DragItem {

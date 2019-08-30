@@ -32,6 +32,7 @@ export class VersionControl implements IVersionControl {
     this.debounced = _.debounce(() => {
       if (this.fileLoader.editingFile) {
         this.fileLoader.saveFile(this.fileLoader.editingFile, schema, "schema");
+        sessionStorage.savedTime = new Date().toLocaleTimeString();
       }
     }, 1000)();
   }
@@ -79,5 +80,10 @@ export class VersionControl implements IVersionControl {
       this.cacheSchema(schema);
       return schema;
     }
+  }
+
+  clearHistories() {
+    this.histories = [];
+    this.position = -1;
   }
 }

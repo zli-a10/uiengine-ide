@@ -1,16 +1,12 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import _ from "lodash";
-import { Context } from "../editor/Context";
 
 import { schemaTidy, SchemaPropManager } from "../../helpers";
 import * as propComponents from "./prop";
 const schemaPropManager = SchemaPropManager.getInstance();
 
 export const PropItem = (props: any) => {
-  const {
-    info: { editNode }
-  } = useContext(Context);
-  const { schema, data, name, section = "prop" } = props;
+  const { schema, data, name, uinode, section = "prop" } = props;
   const standardSchema = schemaTidy(schema);
   let { type = "string", ...schemaProps } = standardSchema;
 
@@ -20,7 +16,7 @@ export const PropItem = (props: any) => {
   }
   const componentName = `${_.upperFirst(componentType)}Component`;
   const Com = propComponents[componentName];
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(data);
 
   const onChange = (v: any) => {
     setValue(v);
@@ -28,16 +24,22 @@ export const PropItem = (props: any) => {
       section,
       section === "prop" ? { [name]: standardSchema } : standardSchema,
       v,
-      editNode,
+      uinode,
       props
     );
   };
+
+  useEffect(() => {
+    setValue(data);
+  }, [data]);
 
   if (Com) {
     return (
       <Com
         onChange={onChange}
-        value={value || data || _.get(standardSchema, "default")}
+        defaultValue={_.get(standardSchema, "default")}
+        value={value}
+        uinode={uinode}
         {...schemaProps}
         {...props}
       />

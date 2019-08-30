@@ -23,7 +23,7 @@ const getPluginTree = (plugins: any) => {
           const p = plugin[k];
           children.push(getPluginSubTree(k, p));
         }
-        result = { name: key, title: key, children };
+        result = { key: _.uniqueId(key), name: key, title: key, children };
       }
     }
     if (!_.isEmpty(result)) results.push(result);
@@ -32,8 +32,8 @@ const getPluginTree = (plugins: any) => {
 };
 
 const getPluginSubTree = (key: string, plugins: any) => {
-  const result: any = { name: key, title: key };
-  if (_.isObject(plugins)) {
+  const result: any = { key: _.uniqueId(key), name: key, title: key };
+  if (!plugins.type) {
     const children = getPluginTree(plugins);
     if (!_.isEmpty(children)) result.children = children;
   }
