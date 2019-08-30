@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
-import { InputNumber } from "antd";
+import { Slider } from "antd";
 import { Form } from "antd";
 import { formatTitle } from "../../../helpers";
 
-export const RangeComponent = (props: any) => {
-  let { range: dataRange, onChange, value } = props;
+export const SliderComponent = (props: any) => {
+  let { range: dataRange, onChange, value, ...rest } = props;
   if (!_.isArray(dataRange)) return null;
+  const maxValue = 9999999999;
+  if (!_.isArray(value)) value = [0, maxValue];
 
-  const [inputValue, setInputValue] = useState(dataRange[0]);
+  const [inputValue, setInputValue] = useState(value);
   const onChangeValue = (value: any) => {
+    // console.log(value, "...........");
     onChange(value);
     setInputValue(value);
   };
@@ -18,18 +21,14 @@ export const RangeComponent = (props: any) => {
   //   setInputValue(value);
   // }, [value]);
 
-  const onMouseDown = useCallback((e: any) => {
-    e.stopPropagation();
-  }, []);
-
   return (
     <Form.Item label={formatTitle(props.name)}>
-      <InputNumber
+      <Slider
+        range
         value={inputValue}
         onChange={onChangeValue}
-        onMouseDown={onMouseDown}
         min={dataRange[0]}
-        max={dataRange[1]}
+        max={dataRange[1] || maxValue}
       />
     </Form.Item>
   );

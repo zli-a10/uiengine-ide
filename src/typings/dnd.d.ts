@@ -55,9 +55,9 @@ interface IDndNodeManager {
     wrappers?: IConfigWrappers
   );
 
-  insertTop(sourceNode: IUINode, targetNode: IUINode);
+  insertUp(sourceNode: IUINode, targetNode: IUINode);
 
-  insertBottom(sourceNode: IUINode, targetNode: IUINode);
+  insertDown(sourceNode: IUINode, targetNode: IUINode);
 
   delete(sourceNode: IUINode);
   useSchema(targetNode: IUINode, schema: ILayoutSchema);

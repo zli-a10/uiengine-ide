@@ -1,15 +1,30 @@
+// export const configLayoutWrappers: IConfigWrappers = {
+//   row: {
+//     component: "div",
+//     props: {
+//       className: "ide-wrapper-row"
+//     }
+//   },
+//   col: {
+//     component: "div",
+//     props: {
+//       className: "ide-wrapper-col"
+//     }
+//   }
+// };
+
 export const configLayoutWrappers: IConfigWrappers = {
   row: {
-    component: "div",
+    component: "antd:Row",
     props: {
-      className: "ide-wrapper-row"
+      gutter: 16,
+      type: "flex",
+      align: "top"
     }
   },
   col: {
-    component: "div",
-    props: {
-      className: "ide-wrapper-col"
-    }
+    component: "antd:Col",
+    props: {}
   }
 };
 

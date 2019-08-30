@@ -5,7 +5,6 @@ import { Switch, Form, Input, Popover, Icon } from "antd";
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, uinode, ...rest } = props;
-  const [isLock, setLock] = useState(true);
   let dataSource = _.get(uinode, "schema.datasource") as any;
   if (_.isString(dataSource)) {
     dataSource = {
@@ -13,8 +12,11 @@ export const DatasourceComponent = (props: any) => {
     };
   }
 
+  let changed = false;
+  const [isLock, setLock] = useState(true);
   const onClickLock = useCallback(() => {
     setLock(!isLock);
+    changed = true;
   }, [isLock]);
   const onChangeSource = useCallback(
     value => {
@@ -22,6 +24,8 @@ export const DatasourceComponent = (props: any) => {
       if (isLock) {
         dataSource.schema = value;
       }
+      changed = true;
+      onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
   );
@@ -32,33 +36,43 @@ export const DatasourceComponent = (props: any) => {
       if (isLock) {
         dataSource.source = value;
       }
+      changed = true;
+      onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
   );
 
   const onChangeAutoLoad = useCallback(
     (value: boolean) => {
+      // console.log("changing auto load", value);
       dataSource.autoload = value;
+      changed = true;
+      onChange({ datasource: dataSource });
     },
     [dataSource]
   );
 
-  const [defaultValue, changeDefaultValue] = useState(
-    _.get(dataSource, "defaultValue")
-  );
+  // const [defaultValue, changeDefaultValue] = useState(
+  //   _.get(dataSource, "defaultValue")
+  // );
   const onChangeInput = (e: any) => {
     dataSource.defaultValue = e.target.value;
-    changeDefaultValue(e.target.value);
+    // changeDefaultValue(e.target.value);
+    changed = true;
+    onChange({ datasource: dataSource });
   };
 
-  useEffect(() => {
-    onChange({ datasource: dataSource });
-    changeDefaultValue(_.get(dataSource, "defaultValue"));
-  }, [dataSource]);
+  let ds = dataSource;
 
-  const onMouseDownInput = useCallback((e: any) => {
-    e.stopPropagation();
-  }, []);
+  // const [ds, changeDs] = useState(dataSource);
+  // useEffect(() => {
+  //   console.log(dataSource, " data source changed");
+  //   // onChange({ datasource: dataSource });
+
+  //   // onChangeAutoLoad(_.get(dataSource, "autoload"));
+  //   // onChangeSchema(_.get(dataSource, "schema"));
+  //   // onChangeSource(_.get(dataSource, "source"));
+  // }, [dataSource]);
 
   return (
     <>
@@ -66,13 +80,13 @@ export const DatasourceComponent = (props: any) => {
         label="Source"
         {...rest}
         onChange={onChangeSource}
-        value={_.get(dataSource, "source")}
+        value={_.get(ds, "source")}
       />
       <DataSourceSelector
         label="Schema"
         {...rest}
         onChange={onChangeSchema}
-        value={_.get(dataSource, "schema")}
+        value={_.get(ds, "schema")}
       />
       <div style={{ position: "relative" }}>
         <div style={{ position: "absolute", right: "22px", top: "-52px" }}>
@@ -90,16 +104,11 @@ export const DatasourceComponent = (props: any) => {
       <Form.Item label="Autoload">
         <Switch
           onChange={onChangeAutoLoad}
-          checked={_.get(dataSource, "autoload", false)}
+          checked={_.get(ds, "autoload", false)}
         />
       </Form.Item>
       <Form.Item label="DefaultValue">
-        <Input
-          value={defaultValue}
-          onChange={onChangeInput}
-          onPressEnter={onChangeInput}
-          onMouseDown={onMouseDownInput}
-        />
+        <Input value={_.get(ds, "defaultValue")} onChange={onChangeInput} />
       </Form.Item>
     </>
   );

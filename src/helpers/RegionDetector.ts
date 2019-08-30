@@ -51,7 +51,7 @@ export class RegionDetector {
       width: 0
     },
 
-    top: {
+    up: {
       top: 0,
       bottom: 0,
       left: 0,
@@ -60,7 +60,7 @@ export class RegionDetector {
       width: 0
     },
 
-    bottom: {
+    down: {
       top: 0,
       bottom: 0,
       left: 0,
@@ -70,7 +70,7 @@ export class RegionDetector {
     }
   };
 
-  // Region: top, left, bottom, right, center
+  // Region: up, left, down, right, center
   setRegionInfo(clientOffset: XYCoord, clientRect: ClientRect) {
     this.clientOffset = clientOffset;
     this.clientRect = clientRect;
@@ -99,16 +99,16 @@ export class RegionDetector {
     this.rects.right.right = clientRect.right;
 
     // top Rect
-    this.rects.top.top = clientRect.top;
-    this.rects.top.bottom = this.rects.center.top - 1;
-    this.rects.top.left = clientRect.left;
-    this.rects.top.right = clientRect.right;
+    this.rects.up.top = clientRect.top;
+    this.rects.up.bottom = this.rects.center.top - 1;
+    this.rects.up.left = clientRect.left;
+    this.rects.up.right = clientRect.right;
 
     // bottom Rect
-    this.rects.bottom.top = this.rects.center.bottom + 1;
-    this.rects.bottom.bottom = clientRect.bottom;
-    this.rects.bottom.left = clientRect.left;
-    this.rects.bottom.right = clientRect.right;
+    this.rects.down.top = this.rects.center.bottom + 1;
+    this.rects.down.bottom = clientRect.bottom;
+    this.rects.down.left = clientRect.left;
+    this.rects.down.right = clientRect.right;
   }
 
   /**

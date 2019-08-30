@@ -132,47 +132,48 @@ export class DndNodeManager implements IDndNodeManager {
   }
 
   private async replaceInlineSchema(insertLeft: boolean = true) {
+    let sourceNewSchema = this.sourceSchema;
+    if (this.targetSchema.component !== this.layoutWrappers.col.component) {
+      sourceNewSchema = {
+        ...this.layoutWrappers.col,
+        children: [this.sourceSchema]
+      };
+    }
+
     if (
       this.targetParentSchema.component === this.layoutWrappers.row.component
     ) {
       // has already have a row/col frame, just push
-      if (
-        this.targetParentSchema.component === this.layoutWrappers.col.component
-      ) {
-        const sch = {
-          ...this.layoutWrappers.col,
-          children: [this.sourceSchema]
-        };
-
+      if (this.targetSchema.component === this.layoutWrappers.col.component) {
         if (insertLeft) {
-          this.targetParentChildrenSchema.unshift(sch);
+          this.targetParentChildrenSchema.splice(
+            this.targetIndex,
+            0,
+            sourceNewSchema
+          );
         } else {
-          this.targetParentChildrenSchema.push(sch);
+          this.targetParentChildrenSchema.splice(
+            this.targetIndex + 1,
+            0,
+            sourceNewSchema
+          );
         }
       } else {
         this.targetParentChildrenSchema = [
-          {
-            ...this.layoutWrappers.col,
-            children: [this.sourceSchema]
-          },
+          sourceNewSchema,
           {
             ...this.layoutWrappers.col,
             children: [this.targetSchema]
           }
         ];
       }
-      // newSchema = this.targetSchema;
-      // this.targetParentChildrenSchema[insertPos] = newSchema;
       this.removeSourceNode();
       await this.refresh();
     } else {
       let newSchema = {
         ...this.layoutWrappers.row,
         children: [
-          {
-            ...this.layoutWrappers.col,
-            children: [this.sourceSchema]
-          },
+          sourceNewSchema,
           {
             ...this.layoutWrappers.col,
             children: [this.targetSchema]
@@ -263,13 +264,13 @@ export class DndNodeManager implements IDndNodeManager {
     await this.replaceInlineSchema(false);
   }
 
-  async insertTop(sourceNode: IUINode, targetNode: IUINode) {
+  async insertUp(sourceNode: IUINode, targetNode: IUINode) {
     // this.selectNode(sourceNode, targetNode);
     if (!this.canDrop(sourceNode, targetNode)) return;
     await this.replaceSchema(this.sourceSchema, false, true);
   }
 
-  async insertBottom(sourceNode: IUINode, targetNode: IUINode) {
+  async insertDown(sourceNode: IUINode, targetNode: IUINode) {
     // this.selectNode(sourceNode, targetNode);
     if (!this.canDrop(sourceNode, targetNode)) return;
     await this.replaceSchema(this.sourceSchema, true, true);

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Tabs, Icon } from "antd";
 import Draggable from "react-draggable";
@@ -26,8 +26,12 @@ export const PropManager: React.FC<IPropManager> = props => {
     e.stopPropagation();
   };
 
+  useEffect(() => {
+    setActiveKey(defaultActiveKey);
+  }, [preview]);
+
   return (
-    <Draggable onMouseDown={onMouseDown}>
+    <Draggable onMouseDown={onMouseDown} cancel=".ant-tabs-content">
       <div className={`props ${animatedClass}`} id="prop-manager">
         <h3 className="prop-title">
           {_.get(
@@ -45,9 +49,11 @@ export const PropManager: React.FC<IPropManager> = props => {
           activeKey={activeKey}
           onChange={setActiveKey}
         >
-          <TabPane tab="Design" key="1">
-            <Props />
-          </TabPane>
+          {preview ? null : (
+            <TabPane tab="Design" key="1">
+              <Props />
+            </TabPane>
+          )}
           <TabPane tab="Debug" key="2">
             <Debugger />
           </TabPane>

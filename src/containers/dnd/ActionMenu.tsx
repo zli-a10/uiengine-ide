@@ -63,6 +63,31 @@ const ActionMenu = (props: any) => {
     },
     [uinode]
   );
+
+  const cloneSchemaDeep = (schema: any) => {
+    _.forIn(schema, (s: any, k: string) => {
+      if (k === "_id" || k === "id") {
+        delete schema[k];
+      }
+    });
+    if (_.isArray(schema.children)) {
+      schema.children.forEach((child: any) => cloneSchemaDeep(child));
+    }
+    return schema;
+  };
+
+  const cloneNode = useCallback(
+    (pos: string) => {
+      return async (e: any) => {
+        e.domEvent.stopPropagation();
+        const clonedSchema = cloneSchemaDeep(_.cloneDeep(uinode.schema));
+        const copiedNode = new UINode(clonedSchema, uinode.request);
+        const method = `insert${_.upperFirst(pos)}`;
+        await dndNodeManager[method](copiedNode, uinode);
+      };
+    },
+    [uinode]
+  );
   const menu = (
     <Menu>
       <Menu.Item key="unit-focus" onClick={focusCurrent}>
@@ -102,6 +127,36 @@ const ActionMenu = (props: any) => {
           <Icon type="delete" /> Delete
         </a>
       </Menu.Item>
+      <Menu.SubMenu
+        key="clone-to-pos"
+        title={
+          <span>
+            <Icon type="copy" />
+            <span>Clone</span>
+          </span>
+        }
+      >
+        <Menu.Item key="unit-clone-left" onClick={cloneNode("left")}>
+          <a target="_blank">
+            <Icon type="left" /> Clone to Left
+          </a>
+        </Menu.Item>
+        <Menu.Item key="unit-clone-right" onClick={cloneNode("right")}>
+          <a target="_blank">
+            <Icon type="right" /> Clone to Right
+          </a>
+        </Menu.Item>
+        <Menu.Item key="unit-clone-up" onClick={cloneNode("up")}>
+          <a target="_blank">
+            <Icon type="up" /> Clone to Up
+          </a>
+        </Menu.Item>
+        <Menu.Item key="unit-clone-down" onClick={cloneNode("down")}>
+          <a target="_blank">
+            <Icon type="down" /> Clone to Down
+          </a>
+        </Menu.Item>
+      </Menu.SubMenu>
     </Menu>
   );
 

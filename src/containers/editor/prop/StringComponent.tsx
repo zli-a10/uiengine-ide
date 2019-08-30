@@ -13,13 +13,9 @@ export const StringComponent = (props: any) => {
     if (inputValue) onChangeProps(inputValue);
   };
 
-  const onMouseDown = useCallback((e: any) => {
-    e.stopPropagation();
-  }, []);
-
-  useEffect(() => {
-    setInputValue(props.value);
-  }, [props.value]);
+  // useEffect(() => {
+  //   setInputValue(props.value);
+  // }, [props.value]);
 
   return (
     <Form.Item label={formatTitle(props.name)}>
@@ -28,7 +24,6 @@ export const StringComponent = (props: any) => {
         onChange={onChange}
         onPressEnter={onSave}
         onBlur={onSave}
-        onMouseDown={onMouseDown}
       />
     </Form.Item>
   );

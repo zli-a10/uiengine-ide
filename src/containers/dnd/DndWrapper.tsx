@@ -99,7 +99,13 @@ export const UIEngineDndWrapper = (props: any) => {
                 border: "3px solid #f00"
               };
             } else {
-              const borderName = `border${_.upperFirst(regionName)}`;
+              const mapBorder = {
+                up: "top",
+                down: "bottom",
+                left: "left",
+                right: "right"
+              };
+              const borderName = `border${_.upperFirst(mapBorder[regionName])}`;
               regionStyles = {
                 [borderName]: "3px solid #f00"
               };
