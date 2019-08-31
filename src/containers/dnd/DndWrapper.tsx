@@ -47,10 +47,9 @@ const getDataSource = (
 
 export const UIEngineDndWrapper = (props: any) => {
   const { preview, togglePropsCollapsed } = useContext(GlobalContext);
-
   const { editNode, chooseEditNode } = useContext(IDEEditorContext);
-
   const { schema, updateSchema } = useContext(SchemasContext);
+
   const { children, uinode } = props;
   if (preview) return children;
 

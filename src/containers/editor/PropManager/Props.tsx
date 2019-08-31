@@ -2,8 +2,8 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
-import { IDEEditorContext } from "../Context";
-import { IDERegister, formatTitle, DndNodeManager } from "../../helpers";
+import { IDEEditorContext } from "../../Context";
+import { IDERegister, formatTitle, DndNodeManager } from "../../../helpers";
 import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;

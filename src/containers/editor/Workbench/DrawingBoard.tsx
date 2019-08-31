@@ -3,9 +3,9 @@ import React, { useState, useEffect, useContext } from "react";
 // import { LayoutManager } from "./LayoutManager";
 import _ from "lodash";
 import { UIEngine } from "uiengine";
-import { UIEngineDndWrapper } from "../dnd";
-import { VersionControl } from "../../helpers";
-import { GlobalContext, SchemasContext } from "../Context";
+import { UIEngineDndWrapper } from "../../dnd";
+import { VersionControl } from "../../../helpers";
+import { GlobalContext, SchemasContext } from "../../Context";
 // import { FileLoader } from "../../helpers";
 
 // function getScroll() {

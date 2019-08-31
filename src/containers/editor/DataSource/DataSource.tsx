@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import * as _ from "lodash";
 import { Tree, Input, Row, Col, Button } from "antd";
-
+import { GlobalContext } from "../../Context";
 import DataSourceTree from "./DataSourceTree";
 
 const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
+  const { datasource } = useContext(GlobalContext);
   const [searchText, setSearchText] = React.useState("");
 
   const onSearch = useCallback((text: string) => {
@@ -27,7 +28,7 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
         <DataSourceTree
           value={{}}
           searchText={searchText}
-          datasource={props.datasource}
+          datasource={datasource}
         />
       </div>
     </div>

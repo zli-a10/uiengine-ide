@@ -8,10 +8,12 @@ import React, {
 
 import { Switch, Icon } from "antd";
 import { UINode } from "uiengine";
-import { GlobalContext, SchemasContext } from "../Context";
-import { getActiveUINode } from "../../helpers";
+import { GlobalContext, SchemasContext } from "../../Context";
+import { getActiveUINode } from "../../../helpers";
 
-export const Header = (props: any) => {
+export const Main = (props: any) => {
+  const { datasource } = props;
+
   // header collpase state
   const [headerCollapsed, setHeaderCollapse] = useState(
     localStorage.ideHeaderCollapse === "true"
@@ -22,7 +24,7 @@ export const Header = (props: any) => {
   }, []);
 
   // component collapse state
-  const [componentsCollapsed, setComponentCollapse] = useState(
+  const [componentCollapsed, setComponentCollapse] = useState(
     localStorage.ideComponentCollapse === "true"
   );
 
@@ -51,27 +53,28 @@ export const Header = (props: any) => {
 
   const contextValue = useMemo<IGlobalContext>(
     () => ({
-      preview: false,
+      preview,
       togglePreview: (preview: boolean) => {
         switchPreview(preview);
       },
       saved: false,
       theme: "",
       toggleTheme: (theme: string) => {},
-      propsCollapsed: false,
+      propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
       },
-      headerCollapsed: false,
+      headerCollapsed,
       toggleHeaderCollapsed: (collapsed: boolean) => {
         toggleHeaderCollapse(collapsed);
       },
-      componentCollapsed: false,
+      componentCollapsed,
       toggleComponentCollapsed: (collapsed: boolean) => {
         toggleComponentCollapse(collapsed);
-      }
+      },
+      datasource
     }),
-    [headerCollapsed]
+    [headerCollapsed, propsCollapsed, componentCollapsed, preview, datasource]
   );
 
   const hideAll = useCallback(() => {
@@ -103,7 +106,7 @@ export const Header = (props: any) => {
               <>
                 <a
                   className="button-menu"
-                  onClick={() => toggleComponentCollapse(!componentsCollapsed)}
+                  onClick={() => toggleComponentCollapse(!componentCollapsed)}
                 >
                   <Icon type="menu" /> Editing {current}
                 </a>
@@ -138,6 +141,7 @@ export const Header = (props: any) => {
           <div className="brand">GUI IDE</div>
         </div>
       </div>
+      {props.children}
     </GlobalContext.Provider>
   );
 };

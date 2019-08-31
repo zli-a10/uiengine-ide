@@ -4,7 +4,7 @@ import { Icon, Popover, List } from "antd";
 import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 
-import { DND_IDE_NODE_TYPE } from "../../helpers";
+import { DND_IDE_NODE_TYPE } from "../../../helpers";
 const WidgetItem = (props: any) => {
   const {
     id,

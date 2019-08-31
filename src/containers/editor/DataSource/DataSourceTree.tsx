@@ -1,10 +1,10 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
 import { useDrag } from "react-dnd";
 import { Tree } from "antd";
 import { UINode } from "uiengine";
 
-// import { DataSourceContext } from "../../Context";
+import { GlobalContext } from "../../Context";
 import { DND_IDE_SCHEMA_TYPE, DND_IDE_NODE_TYPE } from "../../../helpers";
 
 const getChildrenUiSchema = (data: any) => {
@@ -67,7 +67,9 @@ const WidgetItem = (props: any) => {
 const DataSourceTree: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
-  const { datasource: { getDataSource, expandDataSource } = {} as any } = props;
+  const {
+    datasource: { getDataSource, expandDataSource } = {} as any
+  } = useContext(GlobalContext);
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
   const { onChange, searchText } = props;

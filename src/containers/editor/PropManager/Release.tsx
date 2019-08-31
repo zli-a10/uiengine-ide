@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import _ from "lodash";
 import { Collapse, Button } from "antd";
-import { IDEEditorContext, GlobalContext } from "../Context";
-import { getActiveUINode } from "../../helpers";
+import { IDEEditorContext, GlobalContext } from "../../Context";
+import { getActiveUINode } from "../../../helpers";
 
 const Panel = Collapse.Panel;
 

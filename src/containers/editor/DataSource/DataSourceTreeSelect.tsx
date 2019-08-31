@@ -1,20 +1,17 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
-import { useDrag } from "react-dnd";
 import { TreeSelect } from "antd";
 
-// import { Context } from "../Context";
-import { DND_IDE_SCHEMA_TYPE } from "../../../helpers";
+import { GlobalContext } from "../../Context";
 
 const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
+  const { onChange, searchText, value } = props;
   const {
-    datasource: { getDataSource, expandDataSource } = {} as any,
-    onChange,
-    searchText,
-    value
-  } = props;
+    datasource: { getDataSource, expandDataSource } = {} as any
+  } = useContext(GlobalContext);
+
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
 

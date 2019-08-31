@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import _ from "lodash";
 import { Collapse, Input, Form, Button, Select, TreeSelect } from "antd";
-import { IDEEditorContext, GlobalContext } from "../Context";
+import { IDEEditorContext, GlobalContext } from "../../Context";
 import ReactJson from "react-json-view";
-import { getActiveUINode } from "../../helpers";
+import { getActiveUINode } from "../../../helpers";
 
 const Panel = Collapse.Panel;
 const TreeNode = TreeSelect.TreeNode;

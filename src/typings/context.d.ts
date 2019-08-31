@@ -10,6 +10,7 @@ interface IGlobalContext {
   toggleHeaderCollapsed: (collapsed: boolean) => any;
   componentCollapsed: boolean;
   toggleComponentCollapsed: (collapsed: boolean) => any;
+  datasource: any;
 }
 
 interface ISchemasContext {

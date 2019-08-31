@@ -2,23 +2,22 @@ import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
-import { SchemasContext } from "../Context";
+import { SchemasContext } from "../../Context";
 import _ from "lodash";
 import {
   getTreeRoot,
   FileLoader,
   getActiveUINode,
   DND_IDE_NODE_TYPE,
-  defaultEmptyLayoutSchema,
-  VersionControl
-} from "../../helpers";
+  defaultEmptyLayoutSchema
+} from "../../../helpers";
 import { IUINode } from "uiengine/typings";
 
 const { TreeNode } = Tree;
 let defaultExpandedKeys: any = [];
 const fileLoader = FileLoader.getInstance();
 
-export class PageTree extends React.Component<ITree, ITreeState> {
+export class PluginTree extends React.Component<ITree, ITreeState> {
   constructor(props: ITree) {
     super(props);
     const items = props.tree.children;
@@ -270,19 +269,11 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     });
   };
 
-  onSelect = async (selectedKeys: string[], treeNode?: any) => {
-    // console.log(treeNode.node.props.dataRef.title);
+  onSelect = async (selectedKeys: string[]) => {
     if (selectedKeys.length) {
       const path = _.last(selectedKeys);
-      const versionControl = VersionControl.getInstance();
       if (path) {
-        versionControl.clearHistories();
-        // TO Fix: when add one item, because the context will change cause rerendering
-        // if (!_.get(treeNode, "node.props.dataRef._editing_")) {
-        //   this.context.updateInfo({
-        //     currentPath: _.get(treeNode, "node.props.dataRef.title", "Schema")
-        //   });
-        // }
+        // this.context.updateInfo({ currentPath: path });
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
         // console.log("selected schema", schema);
@@ -317,4 +308,4 @@ export class PageTree extends React.Component<ITree, ITreeState> {
   }
 }
 
-PageTree.contextType = SchemasContext;
+PluginTree.contextType = SchemasContext;

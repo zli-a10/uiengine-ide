@@ -4,7 +4,7 @@ import _ from "lodash";
 const Search = Input.Search;
 const Panel = Collapse.Panel;
 
-import { Widgets } from "./";
+import { Widgets } from "..";
 
 export const Libraries: React.FC<IComponents> = props => {
   const { list } = props;

@@ -1,13 +1,5 @@
 export * from "./IDEEditor";
-export * from "./DesignManager";
-export * from "./PageTree";
-export * from "./PluginTree";
+export * from "./Designer";
 export * from "./PropManager";
-export * from "./Props";
-export * from "./PropItem";
-export * from "./DrawingBoard";
-export * from "./Libraries";
-export * from "./Widgets";
-export * from "./CodeEditor";
-export * from "./Header";
+export * from "./Workbench";
 // export * from "./Release";

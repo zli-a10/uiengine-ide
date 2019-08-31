@@ -1,4 +1,5 @@
 import React from "react";
+import { any } from "prop-types";
 
 export const GlobalContext = React.createContext<IGlobalContext>({
   preview: false,
@@ -11,5 +12,6 @@ export const GlobalContext = React.createContext<IGlobalContext>({
   headerCollapsed: false,
   toggleHeaderCollapsed: (collapsed: boolean) => {},
   componentCollapsed: false,
-  toggleComponentCollapsed: (collapsed: boolean) => {}
+  toggleComponentCollapsed: (collapsed: boolean) => {},
+  datasource: {}
 });

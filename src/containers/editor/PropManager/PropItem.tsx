@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import _ from "lodash";
 
-import { schemaTidy, SchemaPropManager } from "../../helpers";
-import * as propComponents from "./prop";
+import { schemaTidy, SchemaPropManager } from "../../../helpers";
+import * as propComponents from "../PropItems";
 const schemaPropManager = SchemaPropManager.getInstance();
 
 export const PropItem = (props: any) => {

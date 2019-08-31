@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import * as _ from "lodash";
 import "./index.less";
 // import App from "./App";
 import config from "./config";
@@ -19,7 +18,7 @@ ReactDOM.render(
   <IDEEditor
     layouts={["schema/ui/simple.json"]}
     config={config}
-    manangerProps={{
+    datasource={{
       getDataSource: getDataSourceJson,
       expandDataSource
     }}
