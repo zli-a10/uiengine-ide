@@ -3,24 +3,20 @@ import * as _ from "lodash";
 import { useDrag } from "react-dnd";
 import { TreeSelect } from "antd";
 
-import { Context } from "../Context";
+// import { Context } from "../Context";
 import { DND_IDE_SCHEMA_TYPE } from "../../../helpers";
 
-export interface IDataSourceTreeProps {
-  searchText?: string;
-  value?: string;
-  onChange?: (value: any) => void;
-}
-
-const DataSourceTree: React.FC<IDataSourceTreeProps> = (
+const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
   const {
-    dataSourceProps: { getDataSource, expandDataSource } = {} as any
-  } = React.useContext(Context);
+    datasource: { getDataSource, expandDataSource } = {} as any,
+    onChange,
+    searchText,
+    value
+  } = props;
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
-  const { onChange, searchText, value } = props;
 
   const covertNodes = (nodes: any[], nodeKeys: string[] = []) => {
     return nodes.map((node: any) => {
@@ -185,4 +181,4 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
   );
 };
 
-export default DataSourceTree;
+export default DataSourceTreeSelector;

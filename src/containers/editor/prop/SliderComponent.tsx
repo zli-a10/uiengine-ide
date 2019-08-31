@@ -5,7 +5,7 @@ import { Form } from "antd";
 import { formatTitle } from "../../../helpers";
 
 export const SliderComponent = (props: any) => {
-  let { range: dataRange, onChange, value, ...rest } = props;
+  let { range: dataRange, onChange, value, uinode, ...rest } = props;
   if (!_.isArray(dataRange)) return null;
   const maxValue = 9999999999;
   if (!_.isArray(value)) value = [0, maxValue];
@@ -17,9 +17,9 @@ export const SliderComponent = (props: any) => {
     setInputValue(value);
   };
 
-  // useEffect(() => {
-  //   setInputValue(value);
-  // }, [value]);
+  useEffect(() => {
+    setInputValue(value);
+  }, [value, uinode]);
 
   return (
     <Form.Item label={formatTitle(props.name)}>

@@ -43,7 +43,7 @@ export const Libraries: React.FC<IComponents> = props => {
           <Col span={20}>
             <Input.Search onSearch={search} />
           </Col>
-          <Col>
+          <Col span={4}>
             <Button type="primary" icon="plus" shape="circle" />
           </Col>
         </Row>

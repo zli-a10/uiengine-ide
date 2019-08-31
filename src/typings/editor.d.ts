@@ -4,37 +4,20 @@ interface IPropInfo {
   [name: string]: any;
 }
 
-interface IIDEContext {
-  preview: boolean;
-  togglePreview();
-  info: IPropInfo;
-  updateInfo(info: IPropInfo);
-  theme: string;
-  toggleTheme(theme: string);
-  propsCollapsed;
-  toggleCollapsed(propsCollapsed: boolean);
-  dataSourceProps: any;
-  focusMode: { isFocus: any; topSchema: any };
-  updateFocusMode: any;
-  [name]: any;
-}
-
 interface IIDEEditor {
   children?: ReactNode;
   layouts: [string];
   config: object;
-  manangerProps: {
+  datasource: {
     getDataSource?: () => any;
     expandDataSource?: (uiPath: string) => any;
   };
 }
 
-interface IPropManager {
-  onClose: () => any;
-}
+interface IPropManager {}
 
-interface IManager {
-  onClose: () => any;
+interface IDesignManager {
+  datasource: any;
 }
 
 interface IWidgets {

@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
-import { Context } from "../editor/Context";
+import { IDEEditorContext } from "../Context";
 import { IDERegister, formatTitle, DndNodeManager } from "../../helpers";
 import { PluginManager } from "uiengine";
 
@@ -10,9 +10,7 @@ const Panel = Collapse.Panel;
 const plugins = PluginManager.getPlugins("ui.parser.event");
 
 export const Props: React.FC = (props: any) => {
-  const {
-    info: { editNode }
-  } = useContext(Context);
+  const { editNode } = useContext(IDEEditorContext);
   let componentInfo: IComponentInfo = {} as IComponentInfo;
   if (editNode) {
     componentInfo = IDERegister.getComponentInfo(editNode.schema.component);

@@ -5,7 +5,7 @@ import React, {
   useCallback
   // useMemo
 } from "react";
-import { Context } from "../editor/Context";
+import { SchemasContext, GlobalContext, IDEEditorContext } from "../Context";
 import _ from "lodash";
 import { Icon } from "antd";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
@@ -15,14 +15,14 @@ import classNames from "classnames";
 import {
   DndNodeManager,
   RegionDetector,
-  IDERegister,
   DND_IDE_NODE_TYPE,
   DND_IDE_SCHEMA_TYPE
 } from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
 import { IDataSource } from "uiengine/typings";
-import { UINode } from "uiengine";
+// import { UINode } from "uiengine";
+// import { IDEEditor } from "../editor";
 
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
@@ -46,12 +46,11 @@ const getDataSource = (
 };
 
 export const UIEngineDndWrapper = (props: any) => {
-  const {
-    preview,
-    updateInfo,
-    info: { editNode },
-    toggleCollapsed
-  } = useContext(Context);
+  const { preview, togglePropsCollapsed } = useContext(GlobalContext);
+
+  const { editNode, chooseEditNode } = useContext(IDEEditorContext);
+
+  const { schema, updateSchema } = useContext(SchemasContext);
   const { children, uinode } = props;
   if (preview) return children;
 
@@ -172,7 +171,7 @@ export const UIEngineDndWrapper = (props: any) => {
           break;
       }
       setDropNode(draggingNode);
-      updateInfo({ schema: hoverNode.schema });
+      updateSchema(hoverNode.schema);
     },
 
     collect: monitor => ({
@@ -207,8 +206,8 @@ export const UIEngineDndWrapper = (props: any) => {
 
   const wrapperClick = useCallback((e: any) => {
     e.stopPropagation();
-    updateInfo({ editNode: uinode });
-    toggleCollapsed(false);
+    chooseEditNode(uinode);
+    togglePropsCollapsed(false);
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);

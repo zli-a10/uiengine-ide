@@ -2,7 +2,7 @@ import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
-import { Context } from "./Context";
+import { SchemasContext } from "../Context";
 import _ from "lodash";
 import {
   getTreeRoot,
@@ -308,4 +308,4 @@ export class PluginTree extends React.Component<ITree, ITreeState> {
   }
 }
 
-PluginTree.contextType = Context;
+PluginTree.contextType = SchemasContext;

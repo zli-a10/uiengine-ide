@@ -3,13 +3,15 @@ import _ from "lodash";
 import { Menu, Dropdown, Icon } from "antd";
 import { DndNodeManager, getActiveUINode } from "../../helpers";
 const dndNodeManager = DndNodeManager.getInstance();
-import { Context } from "../editor/Context";
+import { SchemasContext, IDEEditorContext } from "../Context";
 import { UINode } from "uiengine";
 
 const ActionMenu = (props: any) => {
-  const { updateInfo, focusMode = {} as any, updateFocusMode } = useContext(
-    Context
+  const { updateSchema } = useContext(SchemasContext);
+  const { focusMode = {} as any, updateFocusMode } = useContext(
+    IDEEditorContext
   );
+
   const { children, uinode } = props;
   // const [isFocus, setFocus] = useState(false)
   const { isFocus, topSchema } = focusMode;
@@ -18,7 +20,7 @@ const ActionMenu = (props: any) => {
     async (e: any) => {
       e.domEvent.stopPropagation();
       await dndNodeManager.delete(uinode);
-      updateInfo({ schema: uinode.schema });
+      updateSchema(uinode.schema);
     },
     [uinode]
   );
@@ -27,7 +29,7 @@ const ActionMenu = (props: any) => {
     async (e: any) => {
       e.domEvent.stopPropagation();
       await dndNodeManager.removeWrappers(uinode);
-      updateInfo({ schema: uinode.schema });
+      updateSchema(uinode.schema);
     },
     [uinode]
   );
@@ -35,10 +37,10 @@ const ActionMenu = (props: any) => {
   const focusCurrent = async (e: any) => {
     const currentIsFocus = !isFocus;
     // setFocus(currentIsFocus)
-    updateFocusMode({
-      isFocus: currentIsFocus,
-      topSchema: currentIsFocus ? _.cloneDeep(getActiveUINode(true)) : undefined
-    });
+    // updateFocusMode({
+    //   isFocus: currentIsFocus,
+    //   topSchema: currentIsFocus ? _.cloneDeep(getActiveUINode(true)) : undefined
+    // });
     e.domEvent.stopPropagation();
     const rootNode = getActiveUINode();
     if (rootNode instanceof UINode) {

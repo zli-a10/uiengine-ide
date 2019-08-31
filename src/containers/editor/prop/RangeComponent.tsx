@@ -5,7 +5,7 @@ import { Form } from "antd";
 import { formatTitle } from "../../../helpers";
 
 export const RangeComponent = (props: any) => {
-  let { range: dataRange, onChange, value } = props;
+  let { range: dataRange, onChange, value, uinode } = props;
   if (!_.isArray(dataRange)) return null;
 
   const [inputValue, setInputValue] = useState(dataRange[0]);
@@ -14,9 +14,9 @@ export const RangeComponent = (props: any) => {
     setInputValue(value);
   };
 
-  // useEffect(() => {
-  //   setInputValue(value);
-  // }, [value]);
+  useEffect(() => {
+    setInputValue(value);
+  }, [value, uinode]);
 
   const onMouseDown = useCallback((e: any) => {
     e.stopPropagation();

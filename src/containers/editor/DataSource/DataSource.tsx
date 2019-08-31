@@ -4,10 +4,6 @@ import { Tree, Input, Row, Col, Button } from "antd";
 
 import DataSourceTree from "./DataSourceTree";
 
-export interface IDataSourceProps {
-  onChange?: (value: any) => void;
-}
-
 const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
   const [searchText, setSearchText] = React.useState("");
 
@@ -22,13 +18,17 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
           <Col span={20}>
             <Input.Search onSearch={onSearch} />
           </Col>
-          <Col>
+          <Col span={4}>
             <Button type="primary" icon="plus" shape="circle" />
           </Col>
         </Row>
       </div>
       <div className="datasource-tree">
-        <DataSourceTree searchText={searchText} />
+        <DataSourceTree
+          value={{}}
+          searchText={searchText}
+          datasource={props.datasource}
+        />
       </div>
     </div>
   );

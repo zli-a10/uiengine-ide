@@ -2,9 +2,11 @@ import React, { useState, useContext } from "react";
 import { Tabs, Icon } from "antd";
 import { PluginManager } from "uiengine";
 import _ from "lodash";
-import { PageTree, PluginTree, Libraries } from "./";
+
+import { GlobalContext } from "../Context";
+import { PageTree, PluginTree, Libraries } from ".";
 import { DataSource } from "./DataSource";
-import { FileLoader, IDERegister } from "./../../helpers";
+import { FileLoader, IDERegister } from "../../helpers";
 const TabPane = Tabs.TabPane;
 
 const getPluginTree = (plugins: any) => {
@@ -40,7 +42,7 @@ const getPluginSubTree = (key: string, plugins: any) => {
   return result;
 };
 
-export const Manager: React.FC<IManager> = props => {
+export const DesignManager: React.FC<IDesignManager> = props => {
   // schemas fetch
   const fileLoader = FileLoader.getInstance();
   const schemaTree = {
@@ -49,7 +51,6 @@ export const Manager: React.FC<IManager> = props => {
     children: [fileLoader.loadFileTree("schema")]
   };
   // const [tree, setTree] = useState(treeStructure)
-
   const pluginTree = {
     name: "root",
     title: "Start Up",
@@ -58,39 +59,45 @@ export const Manager: React.FC<IManager> = props => {
 
   // libraries fetch
   const librariesData = IDERegister.componentsLibrary;
-  // const [libraries, setLibraries] = useState(librariesData)
-
-  const { onClose } = props;
 
   return (
-    <div className="manager">
-      <div className="pages">
-        <a className="close-button" onClick={onClose}>
-          <Icon type="close" />
-        </a>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Schemas" key="1">
-            <PageTree tree={schemaTree} />
-          </TabPane>
-          <TabPane tab="Plugins" key="2">
-            <PluginTree tree={pluginTree} />
-          </TabPane>
-        </Tabs>
-      </div>
+    <GlobalContext.Consumer>
+      {({ componentCollapsed, toggleComponentCollapsed }) =>
+        componentCollapsed ? (
+          <>
+            <div className="manager">
+              <div className="pages">
+                <a
+                  className="close-button"
+                  onClick={() => toggleComponentCollapsed(true)}
+                >
+                  <Icon type="close" />
+                </a>
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab="Schemas" key="1">
+                    <PageTree tree={schemaTree} />
+                  </TabPane>
+                  <TabPane tab="Plugins" key="2">
+                    <PluginTree tree={pluginTree} />
+                  </TabPane>
+                </Tabs>
+              </div>
 
-      <div className="widgets">
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Components" key="1">
-            <Libraries list={librariesData} />
-          </TabPane>
-          {/* <TabPane tab="DataSources" key="2">
-            <Libraries list={layouts} />
-          </TabPane> */}
-          <TabPane tab="DataSources" key="DataSources">
-            <DataSource />
-          </TabPane>
-        </Tabs>
-      </div>
-    </div>
+              <div className="widgets">
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab="Components" key="1">
+                    <Libraries list={librariesData} />
+                  </TabPane>
+
+                  <TabPane tab="DataSources" key="DataSources">
+                    <DataSource datasource={props.datasource} />
+                  </TabPane>
+                </Tabs>
+              </div>
+            </div>
+          </>
+        ) : null
+      }
+    </GlobalContext.Consumer>
   );
 };

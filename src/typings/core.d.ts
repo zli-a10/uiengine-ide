@@ -54,3 +54,15 @@ interface IError {
   code: number;
   status: string;
 }
+
+interface IDataSourceProps {
+  datasource: any;
+  onChange?: (value: any) => void;
+}
+
+interface IDataSourceTreeProps {
+  value?: any;
+  datasource?: any;
+  searchText?: string;
+  onChange?: (value: any) => void;
+}

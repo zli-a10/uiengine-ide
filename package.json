@@ -94,6 +94,7 @@
     "less-loader": "^5.0.0",
     "lodash": "^4.17.11",
     "monaco-editor": "^0.17.1",
+    "re-resizable": "^6.0.0",
     "react": "^16.8.6",
     "react-dnd": "^9.3.4",
     "react-dnd-html5-backend": "^9.3.4",

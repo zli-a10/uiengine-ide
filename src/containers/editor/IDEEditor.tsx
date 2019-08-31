@@ -7,143 +7,158 @@ import React, {
 } from "react";
 
 import * as _ from "lodash";
-import { Icon, Switch, Tabs } from "antd";
-import { Manager, PropManager, DrawingBoard } from "./";
-import { Context } from "./Context";
+import { Tabs } from "antd";
+import {
+  Header,
+  DesignManager,
+  PropManager,
+  DrawingBoard,
+  CodeEditor
+} from "./";
+import { IDEEditorContext } from "../Context";
 // import { useVisibilites } from '../hooks/visibility';
 import { UIEngineDndProvider } from "../dnd";
-import { CodeEditor } from "./CodeEditor";
+// import { CodeEditor } from "./CodeEditor";
 const { TabPane } = Tabs;
-import { getActiveUINode } from "../../helpers";
+// import { getActiveUINode } from "../../helpers";
 
 import "./styles/index.less";
 // import "animate.css";
 
-import { ILayoutSchema } from "uiengine/typings";
-import { UINode } from "uiengine";
+// import { ILayoutSchema } from "uiengine/typings";
+import { IUINode } from "uiengine/typings";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
-  const [componentsCollapsed, setComponentCollapse] = useState(false);
-  const [propsCollapsed, setPropsCollapse] = useState(true);
-  const [headerCollapsed, setHeaderCollapse] = useState(false);
+  // const { preview, togglePreview } = useContext(Context.GlobalContext);
+  // const [componentsCollapsed, setComponentCollapse] = useState(
+  //   localStorage.ideComponentCollapse === "true"
+  // );
+  // const [propsCollapsed, setPropsCollapse] = useState(
+  //   localStorage.idePropsCollapse === "true"
+  // );
+  // const [headerCollapsed, setHeaderCollapse] = useState(
+  //   localStorage.ideHeaderCollapse === "true"
+  // );
 
-  const hideAll = useCallback(() => {
-    setComponentCollapse(true);
-    setPropsCollapse(true);
-    setHeaderCollapse(true);
-  }, [componentsCollapsed, propsCollapsed, headerCollapsed]);
+  // const toggleComponentCollapse = useCallback((status: boolean) => {
+  //   setComponentCollapse(status);
+  //   localStorage.ideComponentCollapse = status;
+  // }, []);
 
-  const showAll = useCallback(() => {
-    setComponentCollapse(false);
-    setHeaderCollapse(false);
-  }, [componentsCollapsed, propsCollapsed, headerCollapsed]);
+  // const togglePropsCollapse = useCallback((status: boolean) => {
+  //   setPropsCollapse(status);
+  //   localStorage.idePropsCollapse = status;
+  // }, []);
 
-  const { manangerProps } = props;
-  const [preview, setPreview] = useState(false);
-  const [theme, setTheme] = useState("default");
-  const [info, setInfo] = useState({});
-  const [focusMode, updateFocusMode] = useState({} as any);
-  const contextValue = useMemo<IIDEContext>(
-    () => ({
-      preview,
-      togglePreview: async () => {
-        await switchPreview();
-      },
-      info,
-      updateInfo: (schema: ILayoutSchema) => {
-        const myInfo = Object.assign({}, info, schema);
-        setInfo(myInfo);
-      },
-      theme: "default",
-      toggleTheme: (theme: string) => {
-        setTheme(theme);
-      },
-      propsCollapsed,
-      toggleCollapsed: (propsCollapsed: boolean) => {
-        setPropsCollapse(propsCollapsed);
-      },
-      dataSourceProps: manangerProps,
-      focusMode,
-      updateFocusMode
-    }),
-    [preview, theme, info, propsCollapsed, focusMode]
-  );
-  const switchPreview = async () => {
-    const rootNode = getActiveUINode() as UINode;
-    await rootNode.updateLayout();
-    rootNode.sendMessage(true);
-    setPreview(!preview);
-  };
+  // const toggleHeaderCollapse = useCallback((status: boolean) => {
+  //   setHeaderCollapse(status);
+  //   localStorage.ideHeaderCollapse = status;
+  // }, []);
+
+  // const hideAll = useCallback(() => {
+  //   toggleComponentCollapse(true);
+  //   togglePropsCollapse(true);
+  //   toggleHeaderCollapse(true);
+  // }, []);
+
+  // const showAll = useCallback(() => {
+  //   toggleComponentCollapse(false);
+  //   togglePropsCollapse(false);
+  //   toggleHeaderCollapse(false);
+  // }, []);
+
+  // const { manangerProps } = props;
+  // const [preview, setPreview] = useState(false);
+  // const [theme, setTheme] = useState("default");
+  // const [info, setInfo] = useState({});
+  // const [focusMode, updateFocusMode] = useState({} as any);
+  // const contextValue = useMemo<DrawingBoardContext>(
+  //   () => ({
+  //     preview,
+  //     togglePreview: async () => {
+  //       await switchPreview();
+  //     },
+  //     info,
+  //     updateInfo: (schema: ILayoutSchema) => {
+  //       const myInfo = Object.assign({}, info, schema);
+  //       setInfo(myInfo);
+  //     },
+  //     theme: "default",
+  //     toggleTheme: (theme: string) => {
+  //       setTheme(theme);
+  //     },
+  //     propsCollapsed,
+  //     toggleCollapsed: (propsCollapsed: boolean) => {
+  //       togglePropsCollapse(propsCollapsed);
+  //     },
+  //     dataSourceProps: manangerProps,
+  //     focusMode,
+  //     updateFocusMode
+  //   }),
+  //   [preview, theme, info, propsCollapsed, focusMode]
+  // );
+  // const contextValue = useMemo<IDrawingBoardContext>(
+  //   () => ({
+  //     showTab: "",
+  //     activeTab: (tab: string) => {},
+  //     layout: "",
+  //     setLayout: (path: string) => {},
+  //     focusMode: { isFocus: false, topSchema: {} },
+  //     updateFocusMode: false,
+  //     help: "",
+  //     setHelp: (help: string) => {},
+  //     refresh: "",
+  //     toggleRefresh: (refresh: string) => {}
+  //   }),
+  //   [focusMode]
+  // );
+
+  // const switchPreview = async () => {
+  //   const rootNode = getActiveUINode() as UINode;
+  //   await rootNode.updateLayout();
+  //   rootNode.sendMessage(true);
+  //   togglePreview();
+  // };
 
   // short cut
-  useEffect(() => {
-    const element = document.getElementById("drawingboard");
-    if (element)
-      element.ondblclick = e => {
-        e.stopPropagation();
-        setPropsCollapse(!propsCollapsed);
-      };
-  });
+  // useEffect(() => {
+  //   const element = document.getElementById("drawingboard");
+  //   if (element)
+  //     element.ondblclick = e => {
+  //       e.stopPropagation();
+  //       togglePropsCollapse(!propsCollapsed);
+  //     };
+  // }, [propsCollapsed]);
+  const [editNode, setEditNode] = useState();
+  const contextValue = useMemo<IIDEEditorContext>(
+    () => ({
+      showTab: "",
+      activeTab: (tab: string) => {},
+      layout: "",
+      setLayout: (path: string) => {},
+      focusMode: { isFocus: false, topSchema: {} },
+      updateFocusMode: false,
+      help: "",
+      setHelp: (help: string) => {},
+      refresh: "",
+      toggleRefresh: (refresh: string) => {},
+      editNode,
+      chooseEditNode: (editNode: IUINode) => {
+        // console.log(editNode);
+        setEditNode(editNode);
+      }
+    }),
+    []
+  );
 
   return (
-    <Context.Provider value={contextValue}>
-      {headerCollapsed ? (
-        <a className="ide-show" onClick={showAll}>
-          <Icon type="caret-right" />
-        </a>
-      ) : null}
-      <div className={headerCollapsed ? "ide-header hide" : "ide-header"}>
-        <div className="left">
-          <div className="button-close">
-            <Icon type="close" onClick={hideAll} />
-          </div>
-          <Context.Consumer>
-            {({ info: { currentPath } }) => (
-              <>
-                <a
-                  className="button-menu"
-                  onClick={() => setComponentCollapse(!componentsCollapsed)}
-                >
-                  <Icon type="menu" /> Editing {currentPath}
-                </a>
-                {sessionStorage.savedTime ? (
-                  <div className="page-name">
-                    <em>(Last Saved: {sessionStorage.savedTime})</em>
-                  </div>
-                ) : null}
-              </>
-            )}
-          </Context.Consumer>
-        </div>
-        <div className="right">
-          <div className="props">
-            <Switch
-              checked={preview}
-              checkedChildren="Preview"
-              unCheckedChildren="Edit"
-              onChange={switchPreview}
-            />
-            <a
-              className="settings"
-              onClick={() => setPropsCollapse(!propsCollapsed)}
-            >
-              <Icon type="setting" />
-            </a>
-            <a className="save">
-              <Icon type="save" />
-            </a>
-          </div>
-          <div className="brand">GUI IDE</div>
-        </div>
-      </div>
-
+    // <Context.DrawingBoardContext.Provider value={contextValue}>
+    <IDEEditorContext.Provider value={contextValue}>
       <UIEngineDndProvider>
-        <div className={headerCollapsed ? "ide-editor show-max" : "ide-editor"}>
-          {componentsCollapsed ? null : (
-            <Manager
-              onClose={() => setComponentCollapse(!componentsCollapsed)}
-            />
-          )}
+        <Header />
+
+        <div className="ide-editor">
+          <DesignManager datasource={props.datasource} />
 
           <Tabs defaultActiveKey="1">
             <TabPane tab="Drawing Board" key="1">
@@ -153,11 +168,9 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
               <CodeEditor />
             </TabPane>
           </Tabs>
-          {propsCollapsed ? null : (
-            <PropManager onClose={() => setPropsCollapse(!propsCollapsed)} />
-          )}
+          <PropManager />
         </div>
       </UIEngineDndProvider>
-    </Context.Provider>
+    </IDEEditorContext.Provider>
   );
 };

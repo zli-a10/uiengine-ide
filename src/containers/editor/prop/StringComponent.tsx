@@ -13,10 +13,9 @@ export const StringComponent = (props: any) => {
     if (inputValue) onChangeProps(inputValue);
   };
 
-  // useEffect(() => {
-  //   setInputValue(props.value);
-  // }, [props.value]);
-
+  useEffect(() => {
+    setInputValue(props.value);
+  }, [props.value, props.uinode]);
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Input

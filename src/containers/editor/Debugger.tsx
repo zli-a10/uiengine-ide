@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import _ from "lodash";
 import { Collapse, Input, Form, Button, Select, TreeSelect } from "antd";
-import { Context } from "./Context";
+import { IDEEditorContext, GlobalContext } from "../Context";
 import ReactJson from "react-json-view";
 import { getActiveUINode } from "../../helpers";
 
@@ -9,10 +9,9 @@ const Panel = Collapse.Panel;
 const TreeNode = TreeSelect.TreeNode;
 
 export const Debugger: React.FC = (props: any) => {
-  const {
-    preview,
-    info: { editNode }
-  } = useContext(Context);
+  const { editNode } = useContext(IDEEditorContext);
+
+  const { preview } = useContext(GlobalContext);
 
   // layout
   const formItemLayout = {
