@@ -7,13 +7,14 @@ import { IDEEditorContext } from "../Context";
 import { UIEngineDndProvider } from "../dnd";
 const { TabPane } = Tabs;
 import * as Providers from "./Providers";
-
+import { IDE_ID } from "../../helpers";
 import "./styles/index.less";
 
 import { IUINode } from "uiengine/typings";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
+  const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
     () => ({
       showTab: "",
@@ -30,9 +31,24 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       chooseEditNode: (editNode: IUINode) => {
         // console.log(editNode);
         setEditNode(editNode);
+      },
+      collapsedNodes,
+      setCollapsedNode: (uiNode: IUINode) => {
+        let id = _.get(uiNode.schema, IDE_ID, _.uniqueId(IDE_ID));
+        const index = collapsedNodes.indexOf(id);
+
+        if (index === -1) {
+          _.set(uiNode.schema, IDE_ID, id);
+          collapsedNodes.push(id);
+        } else {
+          _.unset(uiNode.schema, IDE_ID);
+          collapsedNodes.splice(index, 1);
+        }
+        // console.log("collapsedNodes", collapsedNodes);
+        setCollapsedNodes(_.clone(collapsedNodes));
       }
     }),
-    [editNode]
+    [editNode, collapsedNodes]
   );
 
   return (

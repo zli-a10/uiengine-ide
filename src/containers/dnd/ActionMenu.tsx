@@ -1,16 +1,19 @@
 import React, { useCallback, useContext } from "react";
 import _ from "lodash";
 import { Menu, Dropdown, Icon } from "antd";
-import { DndNodeManager, getActiveUINode } from "../../helpers";
+import { DndNodeManager, getActiveUINode, cloneUINode } from "../../helpers";
 const dndNodeManager = DndNodeManager.getInstance();
 import { SchemasContext, IDEEditorContext } from "../Context";
 import { UINode } from "uiengine";
+import { IDE_ID } from "../../helpers";
 
 const ActionMenu = (props: any) => {
   const { updateSchema } = useContext(SchemasContext);
-  const { focusMode = {} as any, updateFocusMode } = useContext(
-    IDEEditorContext
-  );
+  const {
+    focusMode = {} as any,
+    collapsedNodes,
+    setCollapsedNode
+  } = useContext(IDEEditorContext);
 
   const { children, uinode } = props;
   // const [isFocus, setFocus] = useState(false)
@@ -62,37 +65,23 @@ const ActionMenu = (props: any) => {
   const collapseItems = useCallback(
     async (e: any) => {
       e.domEvent.stopPropagation();
+      setCollapsedNode(uinode);
     },
     [uinode]
   );
-
-  const cloneSchemaDeep = (schema: any) => {
-    _.forIn(schema, (s: any, k: string) => {
-      if (k === "_id" || k === "id") {
-        delete schema[k];
-      }
-    });
-    if (_.isArray(schema.children)) {
-      schema.children.forEach((child: any) => cloneSchemaDeep(child));
-    }
-    return schema;
-  };
 
   const cloneNode = useCallback(
     (pos: string) => {
       return async (e: any) => {
         e.domEvent.stopPropagation();
-        const clonedSchema = cloneSchemaDeep(_.cloneDeep(uinode.schema));
-        const copiedNode = new UINode(clonedSchema, uinode.request);
-        const method = `insert${_.upperFirst(pos)}`;
-        await dndNodeManager[method](copiedNode, uinode);
+        await cloneUINode(uinode, pos);
       };
     },
     [uinode]
   );
   const menu = (
     <Menu>
-      <Menu.Item key="unit-focus" onClick={focusCurrent}>
+      {/* <Menu.Item key="unit-focus" onClick={focusCurrent}>
         {isFocus ? (
           <a target="_blank">
             <Icon type="border-outer" />
@@ -104,13 +93,18 @@ const ActionMenu = (props: any) => {
             Focus
           </a>
         )}
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item key="unit-collapse" onClick={collapseItems}>
-        <a target="_blank">
-          <Icon type="fullscreen" />
-          {/* <Icon type="fullscreen-exit" /> */}
-          Collaspe Items
-        </a>
+        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) >
+        -1 ? (
+          <a target="_blank">
+            <Icon type="fullscreen" /> Expand Items
+          </a>
+        ) : (
+          <a target="_blank">
+            <Icon type="fullscreen-exit" /> Collapse Items
+          </a>
+        )}
       </Menu.Item>
       <Menu.Item key="unit-save-as-template" onClick={saveTemplate}>
         <a target="_blank">
@@ -120,8 +114,7 @@ const ActionMenu = (props: any) => {
       <Menu.Divider />
       <Menu.Item key="unit-unwrapper" onClick={unWrapNode}>
         <a target="_blank">
-          <Icon type="menu-fold" />
-          Remove Layout Wrappers
+          <Icon type="menu-fold" /> Remove Layout Wrappers
         </a>
       </Menu.Item>
       <Menu.Item key="unit-delete" onClick={deleteNode}>
@@ -140,22 +133,22 @@ const ActionMenu = (props: any) => {
       >
         <Menu.Item key="unit-clone-left" onClick={cloneNode("left")}>
           <a target="_blank">
-            <Icon type="left" /> Clone to Left
+            <Icon type="left" /> Clone to Left [^L]
           </a>
         </Menu.Item>
         <Menu.Item key="unit-clone-right" onClick={cloneNode("right")}>
           <a target="_blank">
-            <Icon type="right" /> Clone to Right
+            <Icon type="right" /> Clone to Right [^R]
           </a>
         </Menu.Item>
         <Menu.Item key="unit-clone-up" onClick={cloneNode("up")}>
           <a target="_blank">
-            <Icon type="up" /> Clone to Up
+            <Icon type="up" /> Clone to Up [^U]
           </a>
         </Menu.Item>
         <Menu.Item key="unit-clone-down" onClick={cloneNode("down")}>
           <a target="_blank">
-            <Icon type="down" /> Clone to Down
+            <Icon type="down" /> Clone to Down [^D]
           </a>
         </Menu.Item>
       </Menu.SubMenu>

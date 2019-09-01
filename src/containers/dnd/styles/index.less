@@ -96,6 +96,12 @@
     animation: 1s 1 ease forwards bouncein;
     background: #21ad57c4;
     border: 3px solid #087e2687;
+    > .component-action {
+      border: 1px solid #087e2687;
+      background: #087e2687;
+      color: #fff;
+      z-index: 201;
+    }
   }
 
   &.wrapper-dropped {
@@ -107,6 +113,14 @@
       background: #f00;
       color: #fff;
       z-index: 201;
+    }
+  }
+
+  &.wrapper-collapsed {
+    height: 10px;
+    background: #0a386b;
+    .wrapper {
+      display: none;
     }
   }
 

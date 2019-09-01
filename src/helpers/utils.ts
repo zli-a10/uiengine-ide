@@ -1,6 +1,7 @@
 import _ from "lodash";
-import { NodeController } from "uiengine";
+import { NodeController, UINode } from "uiengine";
 import { IUINode } from "uiengine/typings";
+import { DndNodeManager } from ".";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
@@ -84,4 +85,25 @@ export const formatTree = (data: any, parent?: any) => {
     }
   }
   return data;
+};
+
+// clone schema, remove _id & id
+export const cloneSchemaDeep = (schema: any) => {
+  _.forIn(schema, (s: any, k: string) => {
+    if (k === "_id" || k === "id") {
+      delete schema[k];
+    }
+  });
+  if (_.isArray(schema.children)) {
+    schema.children.forEach((child: any) => cloneSchemaDeep(child));
+  }
+  return schema;
+};
+
+export const cloneUINode = async (sourceNode: any, pos: string) => {
+  const dndNodeManager = DndNodeManager.getInstance();
+  const clonedSchema = cloneSchemaDeep(_.cloneDeep(sourceNode.schema));
+  const copiedNode = new UINode(clonedSchema, sourceNode.request);
+  const method = `insert${_.upperFirst(pos)}`;
+  await dndNodeManager[method](copiedNode, sourceNode);
 };

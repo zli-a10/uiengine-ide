@@ -5,23 +5,8 @@ import _ from "lodash";
 import { UIEngine } from "uiengine";
 import { UIEngineDndWrapper } from "../../dnd";
 import { VersionControl } from "../../../helpers";
-import { GlobalContext, SchemasContext } from "../../Context";
-// import { FileLoader } from "../../helpers";
-
-// function getScroll() {
-//   return {
-//     left:
-//       window.pageXOffset ||
-//       document.documentElement.scrollLeft ||
-//       document.body.scrollLeft ||
-//       0,
-//     top:
-//       window.pageYOffset ||
-//       document.documentElement.scrollTop ||
-//       document.body.scrollTop ||
-//       0
-//   }
-// }
+import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
+import { cloneUINode } from "../../../helpers";
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
@@ -29,6 +14,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     GlobalContext
   );
   const { updateSchema } = useContext(SchemasContext);
+  const { editNode } = useContext(IDEEditorContext);
   const { layouts, config = {} } = props;
   let schemas = layouts;
 
@@ -51,6 +37,19 @@ export const DrawingBoard: React.FC = (props: any) => {
       const schema = await versionControl.redo();
       updateSchema({ schema });
     }
+
+    // duplicate
+    const keyMap = {
+      KeyD: "down",
+      KeyU: "up",
+      KeyL: "left",
+      KeyR: "right"
+    };
+    if (editNode) {
+      if (e.ctrlKey && keyMap[e.code] && editNode) {
+        cloneUINode(editNode, keyMap[e.code]);
+      }
+    }
   };
   useEffect(() => {
     // Update the document title using the browser API
@@ -58,28 +57,6 @@ export const DrawingBoard: React.FC = (props: any) => {
     const drawingboard = document.getElementById("drawingboard");
     if (drawingboard)
       drawingboard.ondblclick = () => togglePropsCollapsed(!propsCollapsed);
-    // const propManager = document.getElementById("prop-manager");
-    // let originTop = 30;
-    // window.onscroll = _.debounce(() => {
-    //   const scroll = getScroll();
-    //   if (drawingboard && drawingboard.children[1] && scroll.top > 0) {
-    //     if (scroll.top > _.get(drawingboard.children[1], "offsetHeight", 0)) {
-    //       originTop = scroll.top;
-    //     } else {
-    //       originTop = 20;
-    //     }
-    //     drawingboard.style.paddingTop = `${originTop}px`;
-    //   }
-
-    //   if (propManager) {
-    //     if (scroll.top > 0) {
-    //       originTop = scroll.top;
-    //     } else {
-    //       originTop = 50;
-    //     }
-    //     propManager.style.top = `${originTop}px`;
-    //   }
-    // }, 10);
   });
   return (
     <div className="editor" id="drawingboard">

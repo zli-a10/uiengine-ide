@@ -21,6 +21,8 @@ import {
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
 import { IDataSource } from "uiengine/typings";
+import { IDE_ID } from "../../helpers";
+
 // import { UINode } from "uiengine";
 // import { IDEEditor } from "../editor";
 
@@ -47,7 +49,9 @@ const getDataSource = (
 
 export const UIEngineDndWrapper = (props: any) => {
   const { preview, togglePropsCollapsed } = useContext(GlobalContext);
-  const { editNode, chooseEditNode } = useContext(IDEEditorContext);
+  const { editNode, chooseEditNode, collapsedNodes } = useContext(
+    IDEEditorContext
+  );
   const { schema, updateSchema } = useContext(SchemasContext);
 
   const { children, uinode } = props;
@@ -219,7 +223,9 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-hover": hoverClassNames === "over",
     // "wrapper-out": hoverClassNames === "out",
     "wrapper-edit": editNode && uinode && editNode.id === uinode.id,
-    "wrapper-dropped": dropNode === uinode
+    "wrapper-dropped": dropNode === uinode,
+    "wrapper-collapsed":
+      collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) > -1
   });
 
   return (

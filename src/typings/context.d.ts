@@ -53,6 +53,8 @@ interface IIDEEditorContext {
   toggleRefresh: (refresh: string) => any;
   editNode: IUINode;
   chooseEditNode: (editNode: IUINode) => any;
+  collapsedNodes: Array<string>;
+  setCollapsedNode: (uiNode: IUINode) => any;
 }
 
 interface IPropsContext {
