@@ -1,40 +1,3 @@
-@keyframes scaleIn {
-  from {
-    transform: scale(1, 1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.95, 0.95);
-    opacity: 0.3;
-  }
-}
-
-@keyframes scaleOut {
-  from {
-    transform: scale(0.95, 0.95);
-  }
-  to {
-    transform: scale(1, 1);
-  }
-}
-
-@keyframes bouncein {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 .component-action {
   position: absolute;
   right: 0;
@@ -93,7 +56,6 @@
   }
 
   &.wrapper-edit {
-    animation: 1s 1 ease forwards bouncein;
     background: #21ad57c4;
     border: 3px solid #087e2687;
     > .component-action {
@@ -102,6 +64,9 @@
       color: #fff;
       z-index: 201;
     }
+  }
+  &.wrapper-edit-animation {
+    animation: 1s 1 ease forwards bouncein;
   }
 
   &.wrapper-dropped {
@@ -117,11 +82,18 @@
   }
 
   &.wrapper-collapsed {
+    // background: #0a386b;
     height: 10px;
-    background: #0a386b;
+    background: #e6f7ff;
+    border: 3px solid #e6f7ff;
+    // animation: 1s 1 ease forwards slideUp;
     .wrapper {
       display: none;
     }
+  }
+
+  &.wrapper-down {
+    animation: 1s 1 ease forwards slideDown;
   }
 
   .schema-wrapper-over {

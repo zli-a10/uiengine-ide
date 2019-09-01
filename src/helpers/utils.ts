@@ -106,4 +106,5 @@ export const cloneUINode = async (sourceNode: any, pos: string) => {
   const copiedNode = new UINode(clonedSchema, sourceNode.request);
   const method = `insert${_.upperFirst(pos)}`;
   await dndNodeManager[method](copiedNode, sourceNode);
+  return copiedNode;
 };

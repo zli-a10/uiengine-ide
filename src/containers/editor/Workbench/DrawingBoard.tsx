@@ -14,7 +14,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     GlobalContext
   );
   const { updateSchema } = useContext(SchemasContext);
-  const { editNode } = useContext(IDEEditorContext);
+  const { editNode, chooseEditNode } = useContext(IDEEditorContext);
   const { layouts, config = {} } = props;
   let schemas = layouts;
 
@@ -25,7 +25,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     _.set(config, `ideMode`, false);
   }
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
-  const historyAction = async (e: any) => {
+  const keyPressActions = async (e: any) => {
     e.stopPropagation();
     const versionControl = VersionControl.getInstance();
     if (e.ctrlKey && e.code === "KeyZ") {
@@ -47,17 +47,24 @@ export const DrawingBoard: React.FC = (props: any) => {
     };
     if (editNode) {
       if (e.ctrlKey && keyMap[e.code] && editNode) {
-        cloneUINode(editNode, keyMap[e.code]);
+        const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
+        chooseEditNode(newUiNode);
       }
     }
   };
   useEffect(() => {
     // Update the document title using the browser API
-    document.body.onkeypress = historyAction;
+    document.body.onkeypress = keyPressActions;
     const drawingboard = document.getElementById("drawingboard");
-    if (drawingboard)
+    if (drawingboard) {
       drawingboard.ondblclick = () => togglePropsCollapsed(!propsCollapsed);
-  });
+    }
+    // const propManager = document.getElementsByClassName('manager');
+    // if (propManager.length) {
+    //   propManager[0].ondblclick = () => togglePropsCollapsed(!propsCollapsed);
+    // }
+    // const header = document.getElementsByClassName('ide-header')[0];
+  }, [editNode]);
   return (
     <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}

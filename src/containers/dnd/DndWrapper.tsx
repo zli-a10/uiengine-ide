@@ -2,7 +2,8 @@ import React, {
   useState,
   useRef,
   useContext,
-  useCallback
+  useCallback,
+  useEffect
   // useMemo
 } from "react";
 import { SchemasContext, GlobalContext, IDEEditorContext } from "../Context";
@@ -49,9 +50,12 @@ const getDataSource = (
 
 export const UIEngineDndWrapper = (props: any) => {
   const { preview, togglePropsCollapsed } = useContext(GlobalContext);
-  const { editNode, chooseEditNode, collapsedNodes } = useContext(
-    IDEEditorContext
-  );
+  const {
+    editNode,
+    chooseEditNode,
+    collapsedNodes,
+    setCollapsedNode
+  } = useContext(IDEEditorContext);
   const { schema, updateSchema } = useContext(SchemasContext);
 
   const { children, uinode } = props;
@@ -65,6 +69,11 @@ export const UIEngineDndWrapper = (props: any) => {
   const [border, setBorder] = useState({});
   const [dropNode, setDropNode] = useState();
   const [overClass, setOverClass] = useState();
+
+  // id isCollapsed
+  const isCollapsed =
+    collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) > -1;
+
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE],
@@ -95,6 +104,9 @@ export const UIEngineDndWrapper = (props: any) => {
             clientOffset as XYCoord,
             hoverBoundingRect
           );
+
+          // if center, and collapsed, don't go on insert
+          if (regionName === "center" && isCollapsed) return;
 
           // judge center
           // it's not a container
@@ -162,6 +174,9 @@ export const UIEngineDndWrapper = (props: any) => {
             hoverBoundingRect
           );
 
+          // if center, and collapsed, don't go on insert
+          if (regionName === "center" && isCollapsed) return;
+
           const insertMethodName = `insert${_.upperFirst(regionName)}`;
           if (dndNodeManager[insertMethodName]) {
             dndNodeManager[insertMethodName](draggingNode, hoverNode);
@@ -186,11 +201,9 @@ export const UIEngineDndWrapper = (props: any) => {
   // change over background
   // let backgroundColor = "rgba(255, 255, 255)";
   let borderStyle = {};
-  let overClassName = "";
 
   if (isOverCurrent) {
     borderStyle = border;
-    overClassName = overClass;
   }
 
   drag(drop(ref));
@@ -207,14 +220,32 @@ export const UIEngineDndWrapper = (props: any) => {
     setHoverClassNames("out");
   }, []);
 
+  // let singleClicked: any;
   const wrapperClick = useCallback((e: any) => {
     e.stopPropagation();
+    // stop dblclick t
+    // singleClicked = _.debounce(() => {
     chooseEditNode(uinode);
-    togglePropsCollapsed(false);
+    // togglePropsCollapsed(false);
+    // }, 300)();
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
 
+  // double click
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.ondblclick = (e: any) => {
+        e.stopPropagation();
+        // if (singleClicked) singleClicked.cancel();
+        setCollapsedNode(uinode);
+      };
+    }
+  }, [uinode, ref]);
+
+  // const [editing, setEditing] = useState(
+  //   editNode && uinode && editNode.id === uinode.id
+  // );
   const cls = classNames({
     wrapper: true,
     "with-datasource": _.get(uinode, "schema.datasource[0]") !== "$",
@@ -223,10 +254,16 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-hover": hoverClassNames === "over",
     // "wrapper-out": hoverClassNames === "out",
     "wrapper-edit": editNode && uinode && editNode.id === uinode.id,
+    // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
-    "wrapper-collapsed":
-      collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) > -1
+    "wrapper-collapsed": isCollapsed
   });
+
+  // if (editing) {
+  //   _.debounce(() => {
+  //     setEditing(false);
+  //   }, 2000)();
+  // }
 
   return (
     <div
