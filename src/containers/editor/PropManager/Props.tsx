@@ -135,13 +135,14 @@ export const Props: React.FC = (props: any) => {
             />
           </Form>
         </Panel>
-        <Panel header="Table Define" key="2-dim" extra={genExtra("eye")}>
+        <Panel header="Table Define" key="2-dim">
           <Form {...formItemLayout}>
             <PropItem
               section="children"
               type="children"
-              data={_.get(editNode, "schema.$children")}
+              data={_.get(editNode, "schema.$$children")}
               uinode={editNode}
+              config={props.config}
             />
           </Form>
         </Panel>

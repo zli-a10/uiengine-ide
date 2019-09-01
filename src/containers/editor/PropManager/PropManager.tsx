@@ -26,10 +26,10 @@ export const PropManager: React.FC<IPropManager> = props => {
   const [animatedClassName, setAnimatedClassName] = useState("showout");
   useEffect(() => {
     setAnimatedClassName("showout");
+    _.debounce(() => {
+      setAnimatedClassName("");
+    }, 1200)();
   }, [editNode]);
-  _.debounce(() => {
-    setAnimatedClassName("");
-  }, 1000)();
 
   return !propsCollapsed ? (
     <Draggable onMouseDown={onMouseDown} cancel=".ant-tabs-content">
@@ -44,6 +44,7 @@ export const PropManager: React.FC<IPropManager> = props => {
             className="close-button"
             onClick={() => {
               togglePropsCollapsed(true);
+              setAnimatedClassName("");
             }}
           >
             <Icon type="close" />
@@ -57,7 +58,7 @@ export const PropManager: React.FC<IPropManager> = props => {
         >
           {preview ? null : (
             <TabPane tab="Design" key="1">
-              <Props />
+              <Props {...props} />
             </TabPane>
           )}
           <TabPane tab="Debug" key="2">

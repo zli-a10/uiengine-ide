@@ -52,7 +52,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                       <CodeEditor />
                     </TabPane>
                   </Tabs>
-                  <PropManager />
+                  <PropManager {...props} />
                 </div>
               </Main>
             </Providers.Components>

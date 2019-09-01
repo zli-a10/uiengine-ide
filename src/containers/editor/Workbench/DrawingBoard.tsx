@@ -25,7 +25,9 @@ import { GlobalContext, SchemasContext } from "../../Context";
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
-  const { preview } = useContext(GlobalContext);
+  const { preview, propsCollapsed, togglePropsCollapsed } = useContext(
+    GlobalContext
+  );
   const { updateSchema } = useContext(SchemasContext);
   const { layouts, config = {} } = props;
   let schemas = layouts;
@@ -53,7 +55,9 @@ export const DrawingBoard: React.FC = (props: any) => {
   useEffect(() => {
     // Update the document title using the browser API
     document.body.onkeypress = historyAction;
-    // const drawingboard = document.getElementById("drawingboard");
+    const drawingboard = document.getElementById("drawingboard");
+    if (drawingboard)
+      drawingboard.ondblclick = () => togglePropsCollapsed(!propsCollapsed);
     // const propManager = document.getElementById("prop-manager");
     // let originTop = 30;
     // window.onscroll = _.debounce(() => {

@@ -71,3 +71,17 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
   }
   return standardSchema;
 };
+
+// format tree, add key and item
+export const formatTree = (data: any, parent?: any) => {
+  if (data) {
+    data.value = parent ? `${parent.name}/${data.name}` : data.name;
+    data.key = _.uniqueId(`key-of-${data.path}`);
+    if (data.children) {
+      data.children.forEach((item: any) => {
+        formatTree(item, data);
+      });
+    }
+  }
+  return data;
+};
