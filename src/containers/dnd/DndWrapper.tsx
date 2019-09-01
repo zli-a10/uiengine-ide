@@ -265,6 +265,12 @@ export const UIEngineDndWrapper = (props: any) => {
   //   }, 2000)();
   // }
 
+  const onClickMenuBar = (e: any) => {
+    e.stopPropagation();
+    togglePropsCollapsed(false);
+    chooseEditNode(uinode);
+  };
+
   return (
     <div
       ref={ref}
@@ -275,7 +281,11 @@ export const UIEngineDndWrapper = (props: any) => {
       className={cls}
     >
       <ActionMenu uinode={uinode}>
-        <div className="component-action" title={dataSource}>
+        <div
+          className="component-action"
+          title={dataSource}
+          onClick={onClickMenuBar}
+        >
           {uinode.schema.component}
           {dataSource ? `(${dataSource})` : ""}
           <Icon type="more" />
