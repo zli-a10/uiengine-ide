@@ -1,0 +1,431 @@
+{
+  "version": "3.0.0#Autoform v1.5",
+  "endpoints": {
+    "default": "slb/server/{name}"
+  },
+  "cm-branch": "",
+  "cm-lineage": "slb.server",
+  "cm-object-meta": {
+    "obj-occurences": "multi"
+  },
+  "fields": [
+    {
+      "key": "name",
+      "label": "Name",
+      "type": "input",
+      "cm-lineage": "slb.server.name",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mvm",
+        "gui-section": "Basic",
+        "object-key": true,
+        "range": "1-127",
+        "help": "Server Name"
+      }
+    },
+    {
+      "key": "server-ipv6-addr",
+      "label": "Server IPv6 Address",
+      "type": "input",
+      "cm-lineage": "slb.server.server-ipv6-addr",
+      "cm-meta": {
+        "format": "ipv6-address",
+        "flags": "ovi",
+        "condition": "name",
+        "modify-ineligible": true,
+        "help": "IPV6 address",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "host",
+      "label": "Host",
+      "type": "input",
+      "cm-lineage": "slb.server.host",
+      "cm-meta": {
+        "format": "ipv4-address",
+        "flags": "ovi",
+        "condition": "name",
+        "modify-ineligible": true,
+        "help": "IP Address",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "fqdn-name",
+      "label": "FQDN Name",
+      "type": "input",
+      "cm-lineage": "slb.server.fqdn-name",
+      "cm-meta": {
+        "format": "string",
+        "flags": "ovi",
+        "range": "1-63",
+        "condition": "name",
+        "modify-ineligible": true,
+        "help": "Server hostname",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "resolve-as",
+      "label": "Resolve As",
+      "type": "select",
+      "cm-lineage": "slb.server.resolve-as",
+      "cm-meta": {
+        "format": "string",
+        "flags": "ovy",
+        "condition": "fqdn-name",
+        "allowed": [
+          {
+            "label": "Resolve To IPv4",
+            "value": "resolve-to-ipv4",
+            "help": "Use A Query only to resolve FQDN"
+          },
+          {
+            "label": "Resolve To IPv6",
+            "value": "resolve-to-ipv6",
+            "help": "Use AAAA Query only to resolve FQDN"
+          },
+          {
+            "label": "Resolve To IPv4 And IPv6",
+            "value": "resolve-to-ipv4-and-ipv6",
+            "help": "Use A as well as AAAA Query to resolve FQDN"
+          }
+        ],
+        "default": "resolve-to-ipv4",
+        "range": "1-128",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "action",
+      "label": "Action",
+      "type": "select",
+      "cm-lineage": "slb.server.action",
+      "cm-meta": {
+        "format": "string",
+        "flags": "ovy",
+        "gui-section": "Basic",
+        "allowed": [
+          {
+            "label": "Enable",
+            "value": "enable",
+            "help": "Enable this Real Server"
+          },
+          {
+            "label": "Disable",
+            "value": "disable",
+            "help": "Disable this Real Server"
+          },
+          {
+            "label": "Disable With Health Check",
+            "value": "disable-with-health-check",
+            "help": "disable real server, but health check work"
+          }
+        ],
+        "default": "enable",
+        "cm-rba-field-oper": true,
+        "range": "1-128"
+      }
+    },
+    {
+      "key": "external-ip",
+      "label": "External IP",
+      "type": "input",
+      "cm-lineage": "slb.server.external-ip",
+      "cm-meta": {
+        "format": "ipv4-address",
+        "flags": "ob",
+        "gui-section": "Advanced",
+        "help": "External IP address for NAT of GSLB"
+      }
+    },
+    {
+      "key": "ipv6",
+      "label": "IPv6",
+      "type": "input",
+      "cm-lineage": "slb.server.ipv6",
+      "cm-meta": {
+        "format": "ipv6-address",
+        "flags": "ob",
+        "gui-section": "Advanced",
+        "help": "IPv6 address Mapping of GSLB"
+      }
+    },
+    {
+      "key": "template",
+      "label": "Template",
+      "type": "dummy",
+      "cm-lineage": "slb.server.template",
+      "cm-meta": {
+        "format": "dummy",
+        "flags": "ok",
+        "gui-section": "Template",
+        "help": "Apply template to server"
+      }
+    },
+    {
+      "key": "template-server",
+      "label": "Template Server",
+      "type": "select",
+      "cm-lineage": "slb.server.template-server",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mb",
+        "range": "1-127",
+        "condition": "template",
+        "obj-association": ["slb.template.server"],
+        "help": "Server template",
+        "gui-section": "Template"
+      }
+    },
+    {
+      "key": "server-health-check",
+      "label": "Server Health Check",
+      "type": "dummy",
+      "cm-lineage": "slb.server.server-health-check",
+      "cm-meta": {
+        "format": "dummy",
+        "flags": "mk",
+        "gui-section": "Basic",
+        "help": "Health Check Monitor",
+        "range": "1-63",
+        "obj-association": ["health.monitor"]
+      }
+    },
+    {
+      "key": "health-check",
+      "label": "Health Check",
+      "type": "select",
+      "cm-lineage": "slb.server.health-check",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mv",
+        "gui-section": "Basic",
+        "condition": "server-health-check",
+        "help": "Health Check Monitor",
+        "range": "1-63",
+        "obj-association": ["health.monitor"],
+        "m-exclusion": ["shared-partition-health-check", "health-check-disable"]
+      }
+    },
+    {
+      "key": "p-health-check",
+      "label": "P Health Check",
+      "type": "dummy",
+      "cm-lineage": "slb.server.p-health-check",
+      "cm-meta": {
+        "format": "dummy",
+        "flags": "okpS",
+        "condition": "server-health-check",
+        "help": "Reference a health-check from shared partition",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "shared-partition-health-check",
+      "label": "Shared Partition Health Check",
+      "type": "switch",
+      "cm-lineage": "slb.server.shared-partition-health-check",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "mk",
+        "condition": "p-health-check",
+        "m-exclusion": ["health-check", "health-check-disable"],
+        "help": "Reference a health-check from shared partition",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "health-check-shared",
+      "label": "Health Check Shared",
+      "type": "select",
+      "cm-lineage": "slb.server.health-check-shared",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mv",
+        "gui-section": "Basic",
+        "condition": "shared-partition-health-check",
+        "help": "Health Check Monitor",
+        "range": "1-63",
+        "obj-association": ["health.monitor"],
+        "m-exclusion": ["health-check-disable"]
+      }
+    },
+    {
+      "key": "health-check-disable",
+      "label": "Health Check Disable",
+      "type": "switch",
+      "cm-lineage": "slb.server.health-check-disable",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Basic",
+        "m-exclusion": [
+          "health-check",
+          "health-check-shared",
+          "shared-partition-health-check"
+        ],
+        "help": "Disable configured health check configuration"
+      }
+    },
+    {
+      "key": "conn-limit",
+      "label": "Connection Limit",
+      "type": "input-number",
+      "cm-lineage": "slb.server.conn-limit",
+      "cm-meta": {
+        "format": "number",
+        "flags": "oby",
+        "gui-section": "Basic",
+        "range": "1-64000000",
+        "default": "64000000",
+        "help": "Connection Limit"
+      }
+    },
+    {
+      "key": "no-logging",
+      "label": "No Logging",
+      "type": "switch",
+      "cm-lineage": "slb.server.no-logging",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "condition": "conn-limit",
+        "help": "Do not log connection over limit event",
+        "gui-section": "Basic"
+      }
+    },
+    {
+      "key": "conn-resume",
+      "label": "Connection Resume",
+      "type": "input-number",
+      "cm-lineage": "slb.server.conn-resume",
+      "cm-meta": {
+        "format": "number",
+        "flags": "obr",
+        "gui-section": "Advanced",
+        "range": "1-1000000",
+        "help": "Connection Resume"
+      }
+    },
+    {
+      "key": "weight",
+      "label": "Weight",
+      "type": "input-number",
+      "cm-lineage": "slb.server.weight",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "gui-section": "Advanced",
+        "range": "1-1000",
+        "default": "1",
+        "help": "Weight for this Real Server"
+      }
+    },
+    {
+      "key": "slow-start",
+      "label": "Slow Start",
+      "type": "switch",
+      "cm-lineage": "slb.server.slow-start",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "Slowly ramp up the connection number after server is up (start from 128, then double every 10 sec till 4096)"
+      }
+    },
+    {
+      "key": "spoofing-cache",
+      "label": "Spoofing Cache",
+      "type": "switch",
+      "cm-lineage": "slb.server.spoofing-cache",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "This server is a spoofing cache"
+      }
+    },
+    {
+      "key": "stats-data-action",
+      "label": "Stats Data Action",
+      "type": "select",
+      "cm-lineage": "slb.server.stats-data-action",
+      "cm-meta": {
+        "format": "string",
+        "flags": "ovy",
+        "gui-section": "Advanced",
+        "allowed": [
+          {
+            "label": "Stats Data Enable",
+            "value": "stats-data-enable",
+            "help": "Enable statistical data collection for real server"
+          },
+          {
+            "label": "Stats Data Disable",
+            "value": "stats-data-disable",
+            "help": "Disable statistical data collection for real server"
+          }
+        ],
+        "default": "stats-data-enable",
+        "help": "Stats data action",
+        "range": "1-128"
+      }
+    },
+    {
+      "key": "extended-stats",
+      "label": "Extended Stats",
+      "type": "switch",
+      "cm-lineage": "slb.server.extended-stats",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "Enable extended statistics on real server"
+      }
+    },
+    {
+      "key": "alternate-server",
+      "label": "Alternate Server",
+      "type": "table",
+      "cm-lineage": "slb.server.alternate-server",
+      "cm-meta": {
+        "format": "fields",
+        "start": true,
+        "multi": true,
+        "gui-section": "Advanced"
+      },
+      "fields": [
+        {
+          "key": "alternate",
+          "label": "Alternate",
+          "type": "input-number",
+          "cm-lineage": "slb.server.alternate-server.alternate",
+          "cm-meta": {
+            "format": "number",
+            "flags": "ob",
+            "multi-field-key": true,
+            "range": "1-16",
+            "max-elements": "16",
+            "help": "Alternate Server"
+          }
+        },
+        {
+          "key": "alternate-name",
+          "label": "Alternate Name",
+          "type": "select",
+          "cm-lineage": "slb.server.alternate-server.alternate-name",
+          "cm-meta": {
+            "format": "long-string-rlx",
+            "flags": "mv",
+            "range": "1-127",
+            "condition": "alternate",
+            "obj-association": ["slb.server"],
+            "help": "Alternate Name"
+          }
+        }
+      ]
+    }
+  ]
+}

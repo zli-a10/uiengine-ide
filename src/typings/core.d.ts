@@ -66,3 +66,14 @@ interface IDataSourceTreeProps {
   searchText?: string;
   onChange?: (value: any) => void;
 }
+
+interface IMockTemplates {
+  [name: string]: any;
+}
+
+interface IDataMocker {
+  schemaCoverter(schema: any); // client register this
+  enable: boolean;
+  mockTemplates: IMockTemplates; // see mockjs definiation
+  generate(schema: any);
+}

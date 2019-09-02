@@ -8,3 +8,4 @@ export * from "./RegionDetector";
 export * from "./VersionControl";
 export * from "./configLayoutWrappers";
 export * from "./schemaKeys";
+export * from "./DataMocker";
