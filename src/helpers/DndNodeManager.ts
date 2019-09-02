@@ -107,14 +107,14 @@ export class DndNodeManager implements IDndNodeManager {
     this.pushVersion();
     let sourceNode =
       (this.sourceParent as UINode) || (this.sourceNode as UINode);
-    if (_.has(sourceNode, "updateLayout")) {
+    if (sourceNode && sourceNode.updateLayout) {
       await sourceNode.updateLayout();
       sourceNode.sendMessage(true); // force refresh
     }
 
     let targetNode =
       (this.targetParent as UINode) || (this.targetNode as UINode);
-    if (_.has(targetNode, "updateLayout")) {
+    if (targetNode && targetNode.updateLayout) {
       await targetNode.updateLayout();
       targetNode.sendMessage(true); // force refresh
     }

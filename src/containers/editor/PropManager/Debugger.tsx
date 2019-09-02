@@ -157,7 +157,7 @@ export const Debugger: React.FC = (props: any) => {
           <Panel header="Data Pool" key="data-pool" />
         </Collapse>
       ) : (
-        <Collapse accordion defaultActiveKey={"running-params"}>
+        <Collapse accordion defaultActiveKey={"ui-node-json"}>
           <Panel header="UI JSON" key="ui-node-json">
             <ReactJson
               indentWidth={2}
