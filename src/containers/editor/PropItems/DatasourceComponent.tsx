@@ -12,11 +12,9 @@ export const DatasourceComponent = (props: any) => {
     };
   }
 
-  let changed = false;
   const [isLock, setLock] = useState(true);
   const onClickLock = useCallback(() => {
     setLock(!isLock);
-    changed = true;
   }, [isLock]);
   const onChangeSource = useCallback(
     value => {
@@ -24,7 +22,6 @@ export const DatasourceComponent = (props: any) => {
       if (isLock) {
         dataSource.schema = value;
       }
-      changed = true;
       onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
@@ -36,7 +33,6 @@ export const DatasourceComponent = (props: any) => {
       if (isLock) {
         dataSource.source = value;
       }
-      changed = true;
       onChange({ datasource: dataSource });
     },
     [dataSource, isLock]
@@ -46,7 +42,6 @@ export const DatasourceComponent = (props: any) => {
     (value: boolean) => {
       // console.log("changing auto load", value);
       dataSource.autoload = value;
-      changed = true;
       onChange({ datasource: dataSource });
     },
     [dataSource]
@@ -58,7 +53,6 @@ export const DatasourceComponent = (props: any) => {
   const onChangeInput = (e: any) => {
     dataSource.defaultValue = e.target.value;
     // changeDefaultValue(e.target.value);
-    changed = true;
     onChange({ datasource: dataSource });
   };
 

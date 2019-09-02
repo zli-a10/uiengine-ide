@@ -64,7 +64,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     //   propManager[0].ondblclick = () => togglePropsCollapsed(!propsCollapsed);
     // }
     // const header = document.getElementsByClassName('ide-header')[0];
-  }, [editNode]);
+  }, [editNode, propsCollapsed]);
   return (
     <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}

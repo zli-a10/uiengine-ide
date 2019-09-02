@@ -11,7 +11,6 @@ export const Schemas = (props: any) => {
     () => ({
       currentData,
       setCurrentData: (data: any) => {
-        console.log(data, "was set to currentData");
         setCurrentData(data);
       },
       selectedKeys,

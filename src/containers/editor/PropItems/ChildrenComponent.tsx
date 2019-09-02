@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { FileLoader, formatTree } from "../../../helpers";
 // import { UIEngine } from "uiengine";
@@ -64,21 +64,25 @@ export const ChildrenComponent = (props: any) => {
   const tree = fileLoader.loadFileTree("schema");
   const memoTree = useMemo(() => [formatTree(_.cloneDeep(tree))], [tree]);
 
+  // onchange tree item
   const [selectedValue, selectItem] = useState(props.value);
   const onTreeChange = useCallback((value: any) => {
-    // console.log(value);
     if (!value) return;
     selectItem(value);
     const schema = fileLoader.loadFile(value, "schema");
     if (!schema.children || schema.children.length === 0) return;
     // format datasource
     const returnSchema = {
-      $$children: value,
+      $$children: value, ////////////////////////////////////// TOFIX, SHOULD use $children:string to keep track of reference, enhance uiengine
       $children: formatDataSource(schema.children)
     };
-    console.log("choosed path", returnSchema);
     props.onChange(returnSchema);
   }, []);
+
+  // listen editNode
+  useEffect(() => {
+    selectItem(props.value);
+  }, [props.value, props.uinode]);
 
   // console.log(memoTree, selectedValue);
   return (
