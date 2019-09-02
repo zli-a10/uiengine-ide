@@ -20,6 +20,7 @@ export const PropItem = (props: any) => {
 
   const onChange = (v: any) => {
     setValue(v);
+    console.log(v, name, "............");
     schemaPropManager.applySchema(
       section,
       section === "prop" ? { [name]: standardSchema } : standardSchema,
