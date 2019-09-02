@@ -8,6 +8,7 @@ import React, {
 
 import { Switch, Icon } from "antd";
 import { UINode } from "uiengine";
+import _ from "lodash";
 import { GlobalContext, SchemasContext } from "../../Context";
 import { getActiveUINode } from "../../../helpers";
 
@@ -102,13 +103,14 @@ export const Main = (props: any) => {
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
-            {({ current, savedTime }) => (
+            {({ currentData, savedTime }) => (
               <>
                 <a
                   className="button-menu"
                   onClick={() => toggleComponentCollapse(!componentCollapsed)}
                 >
-                  <Icon type="menu" /> Editing {current}
+                  <Icon type="menu" /> Editing{" "}
+                  {_.get(currentData, "title", "...")}
                 </a>
                 {savedTime ? (
                   <div className="page-name">

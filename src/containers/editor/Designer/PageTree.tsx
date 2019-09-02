@@ -76,9 +76,12 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           // that.rerender();
           that.setState({
             expandKeys,
-            selectedKeys: [newItem._key_],
+            // selectedKeys: [newItem._key_],
             autoExpandParent: true
           });
+
+          // this.context.setSelectedKey(newItem._key_);
+          this.onSelect([newItem._key_]);
         },
         Delete: () => {
           removeElement();
@@ -121,7 +124,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       dataRef.title = title;
       dataRef.name = _.snakeCase(title);
       dataRef._path_ = dataRef._parent_
-        ? `${dataRef._parent_.name}/${dataRef.name}`
+        ? `${dataRef._parent_._path_}/${dataRef.name}`
         : dataRef.name;
 
       if (dataRef._editing_ === "add") {
@@ -144,9 +147,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       }
 
       dataRef._editing_ = false;
-      // that.rerender();
       const selectedKeys = [dataRef._path_];
-      // that.setState({ selectedKeys, autoExpandParent: true });
       that.onSelect(selectedKeys);
     };
 
@@ -222,7 +223,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
           item._parent_ = parent;
 
-          item._path_ = parent ? `${parent.name}/${item.name}` : item.name;
+          item._path_ = parent ? `${parent._path_}/${item.name}` : item.name;
           item._key_ = item.key || item._path_;
           // console.log(id);
           if (item.children) {
@@ -271,30 +272,30 @@ export class PageTree extends React.Component<ITree, ITreeState> {
   };
 
   onSelect = async (selectedKeys: string[], treeNode?: any) => {
-    // console.log(treeNode.node.props.dataRef.title);
-    if (selectedKeys.length) {
+    if (
+      selectedKeys.length &&
+      !_.has(treeNode, "node.props.dataRef._editing_")
+    ) {
       const path = _.last(selectedKeys);
       const versionControl = VersionControl.getInstance();
       if (path) {
         versionControl.clearHistories();
-        // TO Fix: when add one item, because the context will change cause rerendering
-        // if (!_.get(treeNode, "node.props.dataRef._editing_")) {
-        //   this.context.updateInfo({
-        //     currentPath: _.get(treeNode, "node.props.dataRef.title", "Schema")
-        //   });
-        // }
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
-        // console.log("selected schema", schema);
         if (_.isObject(schema)) {
           const uiNode = getActiveUINode() as IUINode;
           uiNode.schema = schema;
           await uiNode.updateLayout();
           uiNode.sendMessage(true);
         }
+
+        // set current dataRef
+        if (_.has(treeNode, "node.props.dataRef")) {
+          this.context.setCurrentData(treeNode.node.props.dataRef);
+        }
       }
+      this.context.setSelectedKey(selectedKeys);
     }
-    this.setState({ selectedKeys });
   };
 
   render() {
@@ -308,7 +309,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           autoExpandParent={this.state.autoExpandParent}
           defaultExpandedKeys={defaultExpandedKeys}
           expandedKeys={this.state.expandKeys}
-          selectedKeys={this.state.selectedKeys}
+          selectedKeys={this.context.selectedKeys}
         >
           {this.renderTreeNodes(tree.children)}
         </Tree>

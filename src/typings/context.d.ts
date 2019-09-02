@@ -14,8 +14,10 @@ interface IGlobalContext {
 }
 
 interface ISchemasContext {
-  current: string;
-  setCurrent: (path: string) => any;
+  currentData: any;
+  setCurrentData: (dataRef: any) => any;
+  selectedKeys;
+  setSelectedKey: (key: any) => any;
   savedTime: string;
   setSavedTime: (savedTime: string) => any;
   help: string;

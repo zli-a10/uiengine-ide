@@ -83,6 +83,7 @@ export class FileLoader implements IFileLoader {
   }
 
   loadFile(path: string, type?: string) {
+    console.log(path, type, "on fileloader");
     const content = this.storage.get(`${type}/${path}`);
     if (type === "schema") {
       if (content) {

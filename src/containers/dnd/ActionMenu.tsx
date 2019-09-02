@@ -1,14 +1,21 @@
 import React, { useCallback, useContext } from "react";
 import _ from "lodash";
 import { Menu, Dropdown, Icon } from "antd";
-import { DndNodeManager, getActiveUINode, cloneUINode } from "../../helpers";
+import {
+  DndNodeManager,
+  getActiveUINode,
+  cloneUINode,
+  FileLoader
+} from "../../helpers";
 const dndNodeManager = DndNodeManager.getInstance();
 import { SchemasContext, IDEEditorContext } from "../Context";
 import { UINode } from "uiengine";
-import { IDE_ID } from "../../helpers";
+import { IDE_ID, getTreeRoot } from "../../helpers";
 
 const ActionMenu = (props: any) => {
-  const { updateSchema } = useContext(SchemasContext);
+  const { updateSchema, currentData, setSelectedKey } = useContext(
+    SchemasContext
+  );
   const {
     focusMode = {} as any,
     collapsedNodes,
@@ -56,8 +63,30 @@ const ActionMenu = (props: any) => {
   const saveTemplate = useCallback(
     async (e: any) => {
       e.domEvent.stopPropagation();
-      // await dndNodeManager.removeWrappers(uinode)
-      // updateInfo({ schema: uinode.schema })
+      if (!currentData) return;
+      const fileLoader = FileLoader.getInstance();
+      const schema = uinode.schema;
+
+      // save file
+      const name = _.uniqueId("saved_template_");
+      const newPath = `${_.get(currentData, "_path_")}/${name}`;
+
+      // and update the tree
+      const children = _.get(currentData, "children", []);
+      children.push({
+        _path_: newPath,
+        _key_: newPath,
+        name,
+        title: name,
+        _editing_: true
+      });
+      currentData.children = children;
+      const treeRoot = getTreeRoot(currentData);
+      // console.log(newPath, schema, treeRoot, "...............");
+      fileLoader.saveFile(newPath, schema, "schema", treeRoot);
+
+      // refresh the tree
+      setSelectedKey(newPath);
     },
     [uinode]
   );
@@ -106,11 +135,13 @@ const ActionMenu = (props: any) => {
           </a>
         )}
       </Menu.Item>
-      <Menu.Item key="unit-save-as-template" onClick={saveTemplate}>
-        <a target="_blank">
-          <Icon type="save" /> Save as Template
-        </a>
-      </Menu.Item>
+      {!currentData ? null : (
+        <Menu.Item key="unit-save-as-template" onClick={saveTemplate}>
+          <a target="_blank">
+            <Icon type="save" /> Save as Template
+          </a>
+        </Menu.Item>
+      )}
       <Menu.Divider />
       <Menu.Item key="unit-unwrapper" onClick={unWrapNode}>
         <a target="_blank">
