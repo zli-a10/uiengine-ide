@@ -44,7 +44,6 @@ export const Debugger: React.FC = (props: any) => {
   if (editNode) {
     uiJson = editNode.schema;
     dataJson = editNode.dataNode.schema;
-    console.log(dataJson, "data json");
   } else {
     const uiNode = getActiveUINode(true);
     uiJson = _.get(uiNode, "schema", {});

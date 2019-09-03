@@ -7,18 +7,19 @@ import { DataMocker } from "../DataMocker";
  * @param dataNode
  */
 const callback: IPluginFunc = (dataNode: IDataNode) => {
+  // console.log(dataNode.schema, "schema");
   if (dataNode.schema) {
     const dataMocker = DataMocker.getInstance();
-    let data = dataMocker.generate(_.cloneDeep(dataNode.schema));
+    let data = dataMocker.generate(dataNode.schema);
     dataNode.data = data;
-
-    return data;
+    // console.log(data, "generated");
+    // return data;
   }
 };
 
 export const mockData: IPlugin = {
   type: "data.schema.parser",
-  priority: 99,
+  priority: 101,
   callback,
   name: "mock-data"
 };

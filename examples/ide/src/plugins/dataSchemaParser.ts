@@ -19,13 +19,13 @@ const callback: IPluginFunc = (dataNode: IDataNode) => {
 
   // parse data schema deps
   // result = result.pop();
-  // dataNode.schema = _.cloneDeep(result);
-  return result;
+  dataNode.schema = result;
+  // console.log("schema fetched", result);
 };
 
 export const schemaParser: IPlugin = {
   type: "data.schema.parser",
-  priority: 1000,
+  priority: 100,
   callback,
   name: "parse-schema"
 };

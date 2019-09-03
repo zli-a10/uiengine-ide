@@ -9,7 +9,6 @@ import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
 import { cloneUINode } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 UIEngineRegister.registerPlugins(plugins);
-// console.log(plugins, PluginManager.plugins);
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
