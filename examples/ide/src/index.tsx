@@ -5,14 +5,17 @@ import "./index.less";
 import config from "./config";
 import { UIEngineRegister } from "uiengine";
 
-import { IDEEditor } from "uiengine-ide";
+import { IDEEditor, IDERegister } from "uiengine-ide";
 import * as serviceWorker from "./serviceWorker";
 import components from "./component";
 import * as plugins from "./plugins";
 import { getDataSourceJson } from "./utils/dataSource";
 import { expandDataSource } from "./utils/schema";
+import { MockJSConverter } from "./utils/MockJSConverter";
+
 UIEngineRegister.registerComponents(components);
 UIEngineRegister.registerPlugins(plugins);
+IDERegister.registerSchemaConverter(MockJSConverter);
 
 ReactDOM.render(
   <IDEEditor

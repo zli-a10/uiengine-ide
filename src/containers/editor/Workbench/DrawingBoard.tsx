@@ -2,11 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 // import { Tabs, Icon } from 'antd';
 // import { LayoutManager } from "./LayoutManager";
 import _ from "lodash";
-import { UIEngine } from "uiengine";
+import { UIEngine, UIEngineRegister, PluginManager } from "uiengine";
 import { UIEngineDndWrapper } from "../../dnd";
 import { VersionControl } from "../../../helpers";
 import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
 import { cloneUINode } from "../../../helpers";
+import * as plugins from "../../../helpers/plugins";
+UIEngineRegister.registerPlugins(plugins);
+// console.log(plugins, PluginManager.plugins);
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
@@ -24,6 +27,7 @@ export const DrawingBoard: React.FC = (props: any) => {
   } else {
     _.set(config, `ideMode`, false);
   }
+
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const keyPressActions = async (e: any) => {
     e.stopPropagation();

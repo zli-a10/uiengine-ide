@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { DataMocker } from "./DataMocker";
 
 export class IDERegister {
   static componentsLibrary: any = [];
@@ -75,5 +76,10 @@ export class IDERegister {
 
   static getComponentInfo(componentName: string) {
     return IDERegister.componentsList[componentName] || {};
+  }
+
+  static registerSchemaConverter(converter: ISchemaConverter) {
+    const mocker = DataMocker.getInstance();
+    mocker.schemaCoverter = converter;
   }
 }
