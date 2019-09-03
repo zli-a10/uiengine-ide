@@ -39,9 +39,12 @@ export const Debugger: React.FC = (props: any) => {
   const { preview } = useContext(GlobalContext);
 
   // preview json
-  let uiJson: any = {};
+  let uiJson: any = {},
+    dataJson;
   if (editNode) {
     uiJson = editNode.schema;
+    dataJson = editNode.dataNode.schema;
+    console.log(dataJson, "data json");
   } else {
     const uiNode = getActiveUINode(true);
     uiJson = _.get(uiNode, "schema", {});
@@ -85,7 +88,12 @@ export const Debugger: React.FC = (props: any) => {
               tailFormItemLayout={tailFormItemLayout}
             ></Panels.RunningParams>
           </Panel>
-
+          <Panel header="Request Params" key="request-params">
+            <Panels.RequestParams
+              formItemLayout={formItemLayout}
+              tailFormItemLayout={tailFormItemLayout}
+            ></Panels.RequestParams>
+          </Panel>
           <Panel header="UI JSON" key="ui-node-json">
             <ReactJson
               indentWidth={2}
@@ -98,6 +106,20 @@ export const Debugger: React.FC = (props: any) => {
               collapseStringsAfterLength={50}
             />
           </Panel>
+          {dataJson ? (
+            <Panel header="Data JSON" key="ui-data-json">
+              <ReactJson
+                indentWidth={2}
+                src={dataJson}
+                onEdit={(d: any) => {
+                  console.log(d);
+                }}
+                displayDataTypes={false}
+                collapsed={3}
+                collapseStringsAfterLength={50}
+              />
+            </Panel>
+          ) : null}
         </Collapse>
       )}
     </div>

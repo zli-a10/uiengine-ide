@@ -72,13 +72,14 @@ interface IMockTemplates {
 }
 
 interface ISchemaConverter {
-  (schema: IDataSchema): any;
+  (schema: IDataSchema, mode: string = ""): any;
 }
 
 interface IDataMocker {
   schemaCoverter: ISchemaConverter; // client register this, to generate mockjs template
   enable: boolean;
+  mode: string = "";
   noCache: boolean;
   dataCached: any[];
-  generate(schema: any);
+  generate(schema: any); // called on plugin
 }

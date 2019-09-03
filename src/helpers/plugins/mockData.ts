@@ -9,8 +9,9 @@ import { DataMocker } from "../DataMocker";
 const callback: IPluginFunc = (dataNode: IDataNode) => {
   if (dataNode.schema) {
     const dataMocker = DataMocker.getInstance();
-    let data = dataMocker.generate(dataNode.schema);
+    let data = dataMocker.generate(_.cloneDeep(dataNode.schema));
     dataNode.data = data;
+
     return data;
   }
 };

@@ -13,19 +13,19 @@ const callback: IPluginFunc = (dataNode: IDataNode) => {
   const regex = /\[\d+\]/;
   name = name.replace(regex, "");
   // console.log(_.cloneDeep(rootSchema), name);
-  let result = _.get(rootSchema, `fields`, []).filter((schema: any) => {
+  let result = _.get(rootSchema, `fields`, []).find((schema: any) => {
     return schema["cm-lineage"] === name;
   });
 
   // parse data schema deps
-  result = result.pop();
-  dataNode.schema = result;
+  // result = result.pop();
+  // dataNode.schema = _.cloneDeep(result);
   return result;
 };
 
 export const schemaParser: IPlugin = {
   type: "data.schema.parser",
-  priority: 99,
+  priority: 1000,
   callback,
   name: "parse-schema"
 };

@@ -1,5 +1,6 @@
 import Mock from "mockjs";
 import _ from "lodash";
+import { EMPTY_DATA } from "../helpers";
 
 export class DataMocker implements IDataMocker {
   static instance: IDataMocker;
@@ -14,16 +15,18 @@ export class DataMocker implements IDataMocker {
    * Should convert data schema rules to mockjs definiation
    * @param schema data schema
    */
-  schemaCoverter(schema: any) {
+  schemaCoverter(schema: any, mode: string = "") {
     return schema;
   }
 
   enable: boolean = true;
+  mode: string = "normal";
   noCache: boolean = false;
   dataCached: any = {}; // see mockjs definiation
   generate(schema: any) {
+    if (this.mode === EMPTY_DATA) return;
     if (!this.enable) return;
-    const templates = this.schemaCoverter(schema);
+    const templates = this.schemaCoverter(schema, this.mode);
     const key = Object.keys(templates)[0];
 
     if (!key) return;
