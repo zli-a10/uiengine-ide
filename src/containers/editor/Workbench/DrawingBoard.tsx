@@ -30,8 +30,6 @@ export const DrawingBoard: React.FC = (props: any) => {
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const keyPressActions = useCallback(
     async (e: any) => {
-      e.preventDefault();
-      console.log("pressed key", e);
       const versionControl = VersionControl.getInstance();
       if (e.ctrlKey && e.code === "KeyZ") {
         const schema = await versionControl.undo();
@@ -50,7 +48,8 @@ export const DrawingBoard: React.FC = (props: any) => {
         KeyL: "left",
         KeyR: "right"
       };
-      if (editNode) {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
         // dup
         if (e.ctrlKey && keyMap[e.code] && editNode) {
           const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
@@ -63,8 +62,8 @@ export const DrawingBoard: React.FC = (props: any) => {
           // to show schema corret on prop window
           updateSchema(editNode.schema);
         }
+        return false;
       }
-      return false;
     },
     [editNode]
   );
