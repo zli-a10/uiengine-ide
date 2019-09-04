@@ -4,7 +4,7 @@ import { Icon, Popover, List } from "antd";
 import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
 
-import { DND_IDE_NODE_TYPE } from "../../../helpers";
+import { DND_IDE_NODE_TYPE, IDE_ID } from "../../../helpers";
 const WidgetItem = (props: any) => {
   const {
     id,
@@ -25,9 +25,17 @@ const WidgetItem = (props: any) => {
     content: defaultProps.content,
     props: defaultProps
   };
-  const uinode = new UINode(tempSchema);
-  // console.log(props);
-  const [, drag] = useDrag({ item: { type: DND_IDE_NODE_TYPE, uinode } });
+  const [, drag] = useDrag({
+    item: { type: DND_IDE_NODE_TYPE },
+    begin: (monitor: any) => {
+      tempSchema[IDE_ID] = _.uniqueId(IDE_ID);
+      const uinode = new UINode(tempSchema);
+      return {
+        type: DND_IDE_NODE_TYPE,
+        uinode
+      };
+    }
+  });
 
   const data = [
     component ? <h5>component: {component}</h5> : <></>,

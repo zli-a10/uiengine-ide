@@ -184,13 +184,16 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     // const templateSchema = {
     //   $template: `/${dataRef._path_}.json`
     // };
-    const uinode = new UINode(schema);
-    const [, drag] = useDrag({
-      item: {
-        type: DND_IDE_NODE_TYPE,
-        uinode
-      }
-    });
+    let drag;
+    if (!_.isEmpty(schema)) {
+      const uinode = new UINode(schema);
+      [, drag] = useDrag({
+        item: {
+          type: DND_IDE_NODE_TYPE,
+          uinode
+        }
+      });
+    }
 
     return (
       <div className="node-title" ref={drag}>

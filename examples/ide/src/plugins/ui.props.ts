@@ -39,7 +39,6 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
     // assign props to uiNode
     result = { ...rest, ...result };
   }
-
   uiNode.props = result;
   return result;
 };

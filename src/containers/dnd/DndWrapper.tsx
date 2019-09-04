@@ -253,7 +253,8 @@ export const UIEngineDndWrapper = (props: any) => {
     "node-wrapper-over": isOverCurrent && overClass === "node",
     "wrapper-hover": hoverClassNames === "over",
     // "wrapper-out": hoverClassNames === "out",
-    "wrapper-edit": editNode && uinode && editNode.id === uinode.id,
+    "wrapper-edit":
+      editNode && uinode && editNode.schema[IDE_ID] === uinode.schema[IDE_ID],
     // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
     "wrapper-collapsed": isCollapsed
