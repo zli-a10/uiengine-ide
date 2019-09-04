@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
-import { TreeSelect } from "antd";
+import { TreeSelect, Icon, Input } from "antd";
 
 import { GlobalContext } from "../../Context";
 
@@ -93,6 +93,11 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
     [onChange]
   );
 
+  const [showInput, setShowInput] = useState(false);
+  const switchEdit = useCallback(() => {
+    setShowInput(!showInput);
+  }, [showInput]);
+
   useEffect(() => {
     const initDataSource = async () => {
       if (
@@ -164,16 +169,25 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   // onTreeExpand={onExpandNode}
   return (
     <div className="datasource-select">
-      <TreeSelect
-        {...(value ? { value } : {})}
-        showSearch
-        allowClear
-        onSelect={onSelect}
-        className="xxxxxxxxxx"
-        size="small"
-      >
-        {renderNode(nodes)}
-      </TreeSelect>
+      {showInput ? (
+        <Input
+          {...(value ? { value } : {})}
+          onChange={(e: any) => {
+            onChange && onChange(e.target.value);
+          }}
+          addonAfter={<Icon type="search" onClick={switchEdit} />}
+        />
+      ) : (
+        <TreeSelect
+          {...(value ? { value } : {})}
+          showSearch
+          onSelect={onSelect}
+          size="small"
+          suffixIcon={() => <Icon type="edit" onClick={switchEdit} />}
+        >
+          {renderNode(nodes)}
+        </TreeSelect>
+      )}
     </div>
   );
 };

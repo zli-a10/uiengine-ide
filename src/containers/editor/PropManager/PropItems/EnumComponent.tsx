@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import _ from "lodash";
 import { Select } from "antd";
 import { Form } from "antd";
-import { formatTitle } from "../../../helpers";
+import { formatTitle } from "../../../../helpers";
 const Option = Select.Option;
 
 export const EnumComponent = (props: any) => {

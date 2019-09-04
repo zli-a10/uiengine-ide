@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import { Input, Form } from "antd";
-import { formatTitle } from "../../../helpers";
+import { formatTitle } from "../../../../helpers";
 
 export const StringComponent = (props: any) => {
   const [inputValue, setInputValue] = useState(props.value);

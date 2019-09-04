@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import _ from "lodash";
-import { DataSourceSelector } from "../DataSource";
+import { DataSourceSelector } from "../../DataSource";
 import { Switch, Form, Input, Popover, Icon } from "antd";
 
 export const DatasourceComponent = (props: any) => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { Slider } from "antd";
 import { Form } from "antd";
-import { formatTitle } from "../../../helpers";
+import { formatTitle } from "../../../../helpers";
 
 export const SliderComponent = (props: any) => {
   let { range: dataRange, onChange, value, uinode, ...rest } = props;

@@ -17,7 +17,7 @@ import {
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
 
-import { DND_IDE_NODE_TYPE, DndNodeManager } from "../../../helpers";
+import { DND_IDE_NODE_TYPE, DndNodeManager } from "../../../../helpers";
 
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange } = props;

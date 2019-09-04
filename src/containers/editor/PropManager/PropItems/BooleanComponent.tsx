@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import _ from "lodash";
 import { Switch } from "antd";
 import { Form } from "antd";
-import { formatTitle } from "../../../helpers";
+import { formatTitle } from "../../../../helpers";
 
 export const BooleanComponent = (props: any) => {
   const { value, onChange } = props;

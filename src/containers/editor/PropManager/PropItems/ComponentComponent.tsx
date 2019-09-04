@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import _ from "lodash";
 import { Input } from "antd";
 import { Form } from "antd";
-import { formatTitle } from "../../../helpers";
+import { formatTitle } from "../../../../helpers";
 
 export const ComponentComponent = (props: any) => {
   const [inputValue, setInputValue] = useState("");
