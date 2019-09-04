@@ -20,7 +20,7 @@ export class DataMocker implements IDataMocker {
   }
 
   enable: boolean = true;
-  mode: string = "normal";
+  mode: string = "empty";
   noCache: boolean = false;
   dataCached: any = {}; // see mockjs definiation
   generate(schema: any) {
