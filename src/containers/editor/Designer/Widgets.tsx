@@ -28,7 +28,7 @@ const WidgetItem = (props: any) => {
   const [, drag] = useDrag({
     item: { type: DND_IDE_NODE_TYPE },
     begin: (monitor: any) => {
-      tempSchema[IDE_ID] = _.uniqueId(IDE_ID);
+      tempSchema[IDE_ID] = _.uniqueId(`${IDE_ID}-new-`);
       const uinode = new UINode(tempSchema);
       return {
         type: DND_IDE_NODE_TYPE,

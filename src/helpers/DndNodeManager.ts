@@ -96,6 +96,23 @@ export class DndNodeManager implements IDndNodeManager {
     }
   }
 
+  private initial() {
+    this.sourceNode = {} as IUINode;
+    this.sourceIndex = -1;
+    this.sourceSchema = {};
+    this.sourceChildrenSchema = [];
+    this.sourceParent = {} as IUINode;
+    this.sourceParentSchema = {};
+    this.sourceParentChildrenSchema = [];
+    this.targetNode = {} as IUINode;
+    this.targetIndex = -1;
+    this.targetSchema = {};
+    this.targetChildrenSchema = [];
+    this.targetParent = {} as IUINode;
+    this.targetParentSchema = {};
+    this.targetParentChildrenSchema = [];
+  }
+
   pushVersion() {
     const schema = getActiveUINode(true);
     this.versionControl.push(schema);
@@ -105,12 +122,6 @@ export class DndNodeManager implements IDndNodeManager {
     // const activeLayout = this.nodeController.activeLayout;
     // const uiNode = this.nodeController.getUINode(activeLayout, true);
     this.pushVersion();
-    let sourceNode =
-      (this.sourceParent as UINode) || (this.sourceNode as UINode);
-    if (sourceNode && sourceNode.updateLayout) {
-      await sourceNode.updateLayout();
-      sourceNode.sendMessage(true); // force refresh
-    }
 
     let targetNode =
       (this.targetParent as UINode) || (this.targetNode as UINode);
@@ -118,6 +129,19 @@ export class DndNodeManager implements IDndNodeManager {
       await targetNode.updateLayout();
       targetNode.sendMessage(true); // force refresh
     }
+
+    let sourceNode =
+      (this.sourceParent as UINode) || (this.sourceNode as UINode);
+
+    if (sourceNode && sourceNode.updateLayout) {
+      // if (!this.inChild(sourceNode, targetNode)) {
+      await sourceNode.updateLayout();
+      sourceNode.sendMessage(true); // force refresh
+      // }
+    }
+
+    // singleton, need remove all stored values
+    this.initial();
   }
 
   private removeSourceNode(index?: number) {
@@ -212,27 +236,26 @@ export class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
+  private inChild(source: IUINode, target: IUINode) {
+    if (source) {
+      if (source.children.indexOf(target) > -1) {
+        return true;
+      } else {
+        for (let i in source.children) {
+          if (this.inChild(source.children[i], target)) return true;
+        }
+      }
+    }
+    return false;
+  }
+
   canDrop(sourceNode: IUINode, targetNode: IUINode) {
     this.selectNode(sourceNode, targetNode);
     if (!this.sourceParent) return true;
     if (!this.targetParent) return false;
     if (this.sourceNode === this.targetNode) return false;
 
-    // can't drop inside
-    const inChild = (source: IUINode) => {
-      if (source) {
-        if (source.children.indexOf(targetNode) > -1) {
-          return true;
-        } else {
-          for (let i in source.children) {
-            if (inChild(source.children[i])) return true;
-          }
-        }
-      }
-      return false;
-    };
-
-    const result = !inChild(sourceNode);
+    const result = !this.inChild(sourceNode, targetNode);
     return result;
   }
 
@@ -250,7 +273,8 @@ export class DndNodeManager implements IDndNodeManager {
     if (!this.canDropInCenter(targetNode)) return;
 
     // empty target, just push
-    this.targetChildrenSchema.push(this.sourceSchema);
+    // if don't clone, will cause dead loop
+    this.targetChildrenSchema.push(_.cloneDeep(this.sourceSchema));
     this.targetSchema.children = this.targetChildrenSchema;
     // remove from source
     this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
@@ -303,48 +327,11 @@ export class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
-  async cleanLayout(sourceNode?: IUINode) {
-    if (!sourceNode) {
-      const activeLayout = this.nodeController.activeLayout;
-      sourceNode = this.nodeController.getUINode(activeLayout, true);
-    }
-
-    if (sourceNode) {
-      this.selectNode(sourceNode, {} as IUINode);
-      // TO FIX: remove the col if no elements inside
-      // console.log(this.sourceChildrenSchema);
-      // // remove col
-      // if (!this.sourceParentChildrenSchema.length) {
-      //   console.log(
-      //     "this.sourceParentChildrenSchema",
-      //     this.sourceParentChildrenSchema
-      //   );
-      //   // parent is wrapper component?
-      //   const parentComponent = _.get(this.sourceParentSchema, "component");
-      //   const layoutWrappersColComponent = _.get(
-      //     this.layoutWrappers,
-      //     "col.component"
-      //   );
-      //   // const layoutWrappersRowComponent = _.get(this.layoutWrappers, 'row.component');
-      //   if (parentComponent === layoutWrappersColComponent && this.sourceParent) {
-      //     console.log(" it is the right element to remove");
-      //     // if only one element in row,
-      //     const parentSchemaChildren = _.get(
-      //       this.sourceParent,
-      //       "parent.schema.children",
-      //       []
-      //     );
-      //     if (this.sourceParent.parent && parentSchemaChildren.length) {
-      //       const parentIndex = this.sourceParent.parent.children.indexOf(
-      //         this.sourceParent.parent
-      //       );
-      //       console.log("remove index", parentIndex);
-
-      //       parentSchemaChildren.splice(parentIndex, 1);
-      //     }
-      //   }
-      // }
-    }
+  // clear children
+  async cleanLayout(sourceNode: IUINode) {
+    this.selectNode(sourceNode, {} as IUINode);
+    this.sourceSchema.children = [];
+    await this.refresh();
   }
 
   async removeWrappers(sourceNode: IUINode) {

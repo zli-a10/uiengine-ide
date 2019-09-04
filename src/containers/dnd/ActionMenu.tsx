@@ -30,6 +30,7 @@ const ActionMenu = (props: any) => {
     async (e: any) => {
       e.domEvent.stopPropagation();
       await dndNodeManager.delete(uinode);
+      // to show schema corret on prop window
       updateSchema(uinode.schema);
     },
     [uinode]
@@ -39,6 +40,15 @@ const ActionMenu = (props: any) => {
     async (e: any) => {
       e.domEvent.stopPropagation();
       await dndNodeManager.removeWrappers(uinode);
+      updateSchema(uinode.schema);
+    },
+    [uinode]
+  );
+
+  const removeChildren = useCallback(
+    async (e: any) => {
+      e.domEvent.stopPropagation();
+      await dndNodeManager.cleanLayout(uinode);
       updateSchema(uinode.schema);
     },
     [uinode]
@@ -143,6 +153,11 @@ const ActionMenu = (props: any) => {
         </Menu.Item>
       )}
       <Menu.Divider />
+      <Menu.Item key="unit-remove-all" onClick={removeChildren}>
+        <a target="_blank">
+          <Icon type="stop" /> Clear Layout
+        </a>
+      </Menu.Item>
       <Menu.Item key="unit-unwrapper" onClick={unWrapNode}>
         <a target="_blank">
           <Icon type="menu-fold" /> Remove Layout Wrappers

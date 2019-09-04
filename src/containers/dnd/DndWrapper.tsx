@@ -59,6 +59,8 @@ export const UIEngineDndWrapper = (props: any) => {
   const { schema, updateSchema } = useContext(SchemasContext);
 
   const { children, uinode } = props;
+  // add a wrapper ID
+  if (!uinode.schema[IDE_ID]) uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
   if (preview) return children;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -154,7 +156,6 @@ export const UIEngineDndWrapper = (props: any) => {
       }
       const draggingNode = item.uinode;
       const hoverNode = uinode;
-
       // Don't replace items with themselves
       if (draggingNode === hoverNode || !isOverCurrent) {
         return;
@@ -254,7 +255,10 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-hover": hoverClassNames === "over",
     // "wrapper-out": hoverClassNames === "out",
     "wrapper-edit":
-      editNode && uinode && editNode.schema[IDE_ID] === uinode.schema[IDE_ID],
+      editNode &&
+      uinode &&
+      editNode.schema[IDE_ID] !== undefined &&
+      editNode.schema[IDE_ID] === uinode.schema[IDE_ID],
     // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
     "wrapper-collapsed": isCollapsed

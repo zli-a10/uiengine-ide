@@ -26,7 +26,7 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
   const errorInfo = uiNode.dataNode.errorInfo;
   // assign all default props
   let result = {
-    key: uiNode.id,
+    // key: uiNode.id,
     value,
     error: errorInfo,
     ...eventFuncs

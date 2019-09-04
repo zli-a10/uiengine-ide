@@ -101,7 +101,7 @@ export const Debugger: React.FC = (props: any) => {
                 console.log(d);
               }}
               displayDataTypes={false}
-              collapsed={3}
+              collapsed={2}
               collapseStringsAfterLength={50}
             />
           </Panel>
@@ -114,7 +114,7 @@ export const Debugger: React.FC = (props: any) => {
                   console.log(d);
                 }}
                 displayDataTypes={false}
-                collapsed={3}
+                collapsed={2}
                 collapseStringsAfterLength={50}
               />
             </Panel>
