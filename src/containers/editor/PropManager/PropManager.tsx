@@ -56,7 +56,7 @@ export const PropManager: React.FC<IPropManager> = props => {
           activeKey={activeKey}
           onChange={setActiveKey}
         >
-          {preview ? null : (
+          {preview || !editNode ? null : (
             <TabPane tab="Design" key="1">
               <Props {...props} />
             </TabPane>

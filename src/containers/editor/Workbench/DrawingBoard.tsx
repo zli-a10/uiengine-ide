@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useCallback, useEffect, useContext } from "react";
 // import { Tabs, Icon } from 'antd';
 // import { LayoutManager } from "./LayoutManager";
 import _ from "lodash";
 import { UIEngine, UIEngineRegister, PluginManager } from "uiengine";
 import { UIEngineDndWrapper } from "../../dnd";
-import { VersionControl } from "../../../helpers";
 import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
-import { cloneUINode } from "../../../helpers";
+import { cloneUINode, DndNodeManager, VersionControl } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 UIEngineRegister.registerPlugins(plugins);
 // console.log(plugins, PluginManager.plugins);
@@ -29,36 +28,49 @@ export const DrawingBoard: React.FC = (props: any) => {
   }
 
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
-  const keyPressActions = async (e: any) => {
-    e.stopPropagation();
-    const versionControl = VersionControl.getInstance();
-    if (e.ctrlKey && e.code === "KeyZ") {
-      const schema = await versionControl.undo();
-      updateSchema({ schema });
-    }
-
-    if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
-      const schema = await versionControl.redo();
-      updateSchema({ schema });
-    }
-
-    // duplicate
-    const keyMap = {
-      KeyD: "down",
-      KeyU: "up",
-      KeyL: "left",
-      KeyR: "right"
-    };
-    if (editNode) {
-      if (e.ctrlKey && keyMap[e.code] && editNode) {
-        const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
-        chooseEditNode(newUiNode);
+  const keyPressActions = useCallback(
+    async (e: any) => {
+      e.preventDefault();
+      console.log("pressed key", e);
+      const versionControl = VersionControl.getInstance();
+      if (e.ctrlKey && e.code === "KeyZ") {
+        const schema = await versionControl.undo();
+        updateSchema({ schema });
       }
-    }
-  };
+
+      if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
+        const schema = await versionControl.redo();
+        updateSchema({ schema });
+      }
+
+      // duplicate | delete
+      const keyMap = {
+        KeyD: "down",
+        KeyU: "up",
+        KeyL: "left",
+        KeyR: "right"
+      };
+      if (editNode) {
+        // dup
+        if (e.ctrlKey && keyMap[e.code] && editNode) {
+          const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
+          chooseEditNode(newUiNode);
+        }
+        // delete
+        if (e.key === "Delete" || (e.code === "KeyD" && !preview)) {
+          const dndNodeManager = DndNodeManager.getInstance();
+          await dndNodeManager.delete(editNode);
+          // to show schema corret on prop window
+          updateSchema(editNode.schema);
+        }
+      }
+      return false;
+    },
+    [editNode]
+  );
   useEffect(() => {
     // Update the document title using the browser API
-    document.body.onkeypress = keyPressActions;
+    window.onkeydown = keyPressActions;
     const drawingboard = document.getElementById("drawingboard");
     if (drawingboard) {
       drawingboard.ondblclick = () => togglePropsCollapsed(!propsCollapsed);

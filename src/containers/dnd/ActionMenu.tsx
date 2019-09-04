@@ -165,7 +165,7 @@ const ActionMenu = (props: any) => {
       </Menu.Item>
       <Menu.Item key="unit-delete" onClick={deleteNode}>
         <a target="_blank">
-          <Icon type="delete" /> Delete
+          <Icon type="delete" /> Delete [D|Delete]
         </a>
       </Menu.Item>
       <Menu.SubMenu
