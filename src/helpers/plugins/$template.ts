@@ -16,7 +16,6 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
     _.set(uiNode.schema, "$$template", path);
     const schema = fileLoader.loadFile(path, "schema");
     _.merge(uiNode.schema, schema);
-    console.log("$template triggler", _.cloneDeep(uiNode.schema));
     await uiNode.updateLayout();
   }
 };

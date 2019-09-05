@@ -66,7 +66,7 @@ export const ChildrenComponent = (props: any) => {
 
   const { onChange, value, uinode, disabled } = props;
   // onchange tree item
-  const [selectedValue, selectItem] = useState(props.value);
+  const [selectedValue, selectItem] = useState(value);
   const onTreeChange = useCallback((value: any) => {
     if (!value) return;
     selectItem(value);

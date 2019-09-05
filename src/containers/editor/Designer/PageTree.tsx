@@ -285,7 +285,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         versionControl.clearHistories();
         fileLoader.editingFile = path;
         const schema = fileLoader.loadFile(path, "schema");
-        if (_.isObject(schema)) {
+        if (_.isObject(schema) && !_.isEmpty(schema)) {
           const uiNode = getActiveUINode() as IUINode;
           uiNode.schema = schema;
           await uiNode.updateLayout();

@@ -16,6 +16,8 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
     const schema = fileLoader.loadFile(path, "schema");
     if (!schema.children || schema.children.length === 0) return;
     _.set(uiNode, "schema.$children", schema.children);
+    _.unset(uiNode, "schema.$$children");
+    await uiNode.updateLayout();
   }
 };
 

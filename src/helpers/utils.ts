@@ -27,16 +27,13 @@ export function cleanSchema(schema: any, exporting: boolean = false) {
     // remove $$children && $$template
     if (_.has(schema, "$$children")) {
       const childrenTemplate = _.get(schema, "$$children");
-      _.forIn(schema, (value: any, key: any) => {
-        _.unset(schema, key);
-      });
       schema.$children = childrenTemplate;
     }
     if (_.has(schema, "$$template")) {
       const childrenTemplate = _.get(schema, "$$template");
-      _.forIn(schema, (value: any, key: any) => {
-        _.unset(schema, key);
-      });
+      // _.forIn(schema, (value: any, key: any) => {
+      //   _.unset(schema, key);
+      // });
       schema.$template = childrenTemplate;
     }
 
@@ -179,6 +176,18 @@ export const getDataSource = (
     return source;
   }
   return _.last(source.replace(":", ".").split("."));
+};
+
+export const getDataSchema = (datasource: IDataSource | string) => {
+  if (!datasource) return "";
+  let schema;
+  if (_.isString(datasource)) {
+    schema = datasource;
+  } else {
+    schema = _.get(datasource, "schema", _.get(datasource, "source"));
+    console.log("..............", schema);
+  }
+  return schema;
 };
 
 export const droppable = (uiNode: IUINode) => {
