@@ -18,11 +18,44 @@ export function difference(object: any, base: any) {
   return changes(object, base);
 }
 
+export function cleanSchema(schema: any) {
+  if (_.isArray(schema)) {
+    schema.forEach((child: any) => {
+      cleanSchema(child);
+    });
+  } else {
+    // remove $$children && $$template
+    if (_.has(schema, "$$children")) {
+      const childrenTemplate = _.get(schema, "$$children");
+      _.forIn(schema, (value: any, key: any) => {
+        _.unset(schema, key);
+      });
+      schema.$children = childrenTemplate;
+    }
+    if (_.has(schema, "$$template")) {
+      const childrenTemplate = _.get(schema, "$$template");
+      _.forIn(schema, (value: any, key: any) => {
+        _.unset(schema, key);
+      });
+      schema.$template = childrenTemplate;
+    }
+
+    // remove IDE_ID
+    _.unset(schema, IDE_ID);
+    _.unset(schema, "_id");
+
+    if (_.has(schema, "children")) {
+      cleanSchema(schema.children);
+    }
+  }
+  return schema;
+}
+
 export function getActiveUINode(schemaOnly: boolean = false) {
   const nodeController = NodeController.getInstance();
   const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
   if (schemaOnly) {
-    return (uiNode as IUINode).schema;
+    return cleanSchema((uiNode as IUINode).schema);
   }
   return uiNode;
 }

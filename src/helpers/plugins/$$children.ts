@@ -21,7 +21,7 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 
 export const $$children: IPlugin = {
   type: "ui.parser",
-  priority: 1000,
+  priority: 201,
   callback,
   name: "$$children"
 };
