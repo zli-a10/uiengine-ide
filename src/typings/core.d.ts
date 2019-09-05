@@ -61,6 +61,7 @@ interface IDataSourceProps {
 }
 
 interface IDataSourceTreeProps {
+  disabled?: boolean;
   value?: any;
   datasource?: any;
   searchText?: string;

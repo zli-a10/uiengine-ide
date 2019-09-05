@@ -5,7 +5,7 @@ import { Form } from "antd";
 import { formatTitle } from "../../../../helpers";
 
 export const SliderComponent = (props: any) => {
-  let { range: dataRange, onChange, value, uinode, ...rest } = props;
+  let { range: dataRange, onChange, value, uinode, disabled, ...rest } = props;
   if (!_.isArray(dataRange)) return null;
   const maxValue = 9999999999;
   if (!_.isArray(value)) value = [0, maxValue];
@@ -24,6 +24,7 @@ export const SliderComponent = (props: any) => {
   return (
     <Form.Item label={formatTitle(props.name)}>
       <Slider
+        disabled={disabled}
         range
         value={inputValue}
         onChange={onChangeValue}

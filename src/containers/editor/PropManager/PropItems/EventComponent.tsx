@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import _ from "lodash";
-import { Select, Form, Row, Col, Button } from "antd";
+import { Select, Form } from "antd";
 import { formatTitle } from "../../../../helpers";
 const Option = Select.Option;
 
 export const EventComponent = (props: any) => {
-  const { options, value, onChange, ...rest } = props;
+  const { options, value, onChange, disabled } = props;
   if (!_.isArray(options)) return null;
   let v = value;
   if (_.isObject(v)) {
@@ -14,7 +14,7 @@ export const EventComponent = (props: any) => {
   // console.log(props);
   return (
     <Form.Item label={formatTitle(props.name)}>
-      <Select value={v} onChange={onChange}>
+      <Select value={v} onChange={onChange} disabled={disabled}>
         {options.map((option: any, index: number) => (
           <Option value={option} key={index}>
             {option}

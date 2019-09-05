@@ -21,32 +21,13 @@ import {
 } from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
-import { IDataSource } from "uiengine/typings";
-import { IDE_ID } from "../../helpers";
+import { IDE_ID, getDataSource, droppable } from "../../helpers";
 
 // import { UINode } from "uiengine";
 // import { IDEEditor } from "../editor";
 
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
-
-const getDataSource = (
-  datasource: IDataSource | string,
-  full: boolean = false
-) => {
-  if (!datasource) return "";
-  let source = "";
-  if (_.isObject(datasource)) {
-    source = datasource.source;
-  } else {
-    source = datasource;
-  }
-  if (!source) return "";
-  if (full) {
-    return source;
-  }
-  return _.last(source.replace(":", ".").split("."));
-};
 
 export const UIEngineDndWrapper = (props: any) => {
   const { preview, togglePropsCollapsed } = useContext(GlobalContext);
@@ -63,9 +44,10 @@ export const UIEngineDndWrapper = (props: any) => {
   if (!uinode.schema[IDE_ID]) uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
   if (preview) return children;
 
+  // is it a template
+  const isDroppable = droppable(uinode);
+
   const ref = useRef<HTMLDivElement>(null);
-  // define drag source
-  const [, drag] = useDrag({ item: { type: DND_IDE_NODE_TYPE, uinode } });
 
   // active style
   const [border, setBorder] = useState({});
@@ -207,6 +189,8 @@ export const UIEngineDndWrapper = (props: any) => {
     borderStyle = border;
   }
 
+  // define drag source
+  const [, drag] = useDrag({ item: { type: DND_IDE_NODE_TYPE, uinode } });
   drag(drop(ref));
 
   // callbacks to add hoverstyle
@@ -224,11 +208,7 @@ export const UIEngineDndWrapper = (props: any) => {
   // let singleClicked: any;
   const wrapperClick = useCallback((e: any) => {
     e.stopPropagation();
-    // stop dblclick t
-    // singleClicked = _.debounce(() => {
     chooseEditNode(uinode);
-    // togglePropsCollapsed(false);
-    // }, 300)();
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
@@ -238,15 +218,11 @@ export const UIEngineDndWrapper = (props: any) => {
     if (ref.current) {
       ref.current.ondblclick = (e: any) => {
         e.stopPropagation();
-        // if (singleClicked) singleClicked.cancel();
         setCollapsedNode(uinode);
       };
     }
   }, [uinode, ref]);
 
-  // const [editing, setEditing] = useState(
-  //   editNode && uinode && editNode.id === uinode.id
-  // );
   const cls = classNames({
     wrapper: true,
     "with-datasource": _.get(uinode, "schema.datasource[0]") !== "$",
@@ -261,14 +237,9 @@ export const UIEngineDndWrapper = (props: any) => {
       editNode.schema[IDE_ID] === uinode.schema[IDE_ID],
     // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
-    "wrapper-collapsed": isCollapsed
+    "wrapper-collapsed": isCollapsed,
+    "wrapper-drop-disabled": !isDroppable
   });
-
-  // if (editing) {
-  //   _.debounce(() => {
-  //     setEditing(false);
-  //   }, 2000)();
-  // }
 
   const onClickMenuBar = (e: any) => {
     e.stopPropagation();
@@ -278,7 +249,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   return (
     <div
-      ref={ref}
+      ref={isDroppable ? ref : null}
       onClick={wrapperClick}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}

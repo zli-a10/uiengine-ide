@@ -4,7 +4,7 @@ import { DataSourceSelector } from "../../DataSource";
 import { Switch, Form, Input, Popover, Icon } from "antd";
 
 export const DatasourceComponent = (props: any) => {
-  const { onChange, uinode, ...rest } = props;
+  const { onChange, uinode, disabled, ...rest } = props;
   let dataSource = _.get(uinode, "schema.datasource") as any;
   if (_.isString(dataSource)) {
     dataSource = {
@@ -73,12 +73,14 @@ export const DatasourceComponent = (props: any) => {
       <DataSourceSelector
         label="Source"
         {...rest}
+        disabled={disabled}
         onChange={onChangeSource}
         value={_.get(ds, "source")}
       />
       <DataSourceSelector
         label="Schema"
         {...rest}
+        disabled={disabled}
         onChange={onChangeSchema}
         value={_.get(ds, "schema")}
       />
@@ -97,12 +99,17 @@ export const DatasourceComponent = (props: any) => {
       </div>
       <Form.Item label="Autoload">
         <Switch
+          disabled={disabled}
           onChange={onChangeAutoLoad}
           checked={_.get(ds, "autoload", false)}
         />
       </Form.Item>
       <Form.Item label="DefaultValue">
-        <Input value={_.get(ds, "defaultValue")} onChange={onChangeInput} />
+        <Input
+          value={_.get(ds, "defaultValue")}
+          onChange={onChangeInput}
+          disabled={disabled}
+        />
       </Form.Item>
     </>
   );

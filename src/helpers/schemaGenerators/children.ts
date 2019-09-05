@@ -7,5 +7,5 @@ export const children = (
   options: any = {}
 ) => {
   // TODO: validate by componentSchema
-  return value;
+  return { $$children: value };
 };

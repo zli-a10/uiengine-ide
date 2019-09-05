@@ -5,12 +5,12 @@ import { Form } from "antd";
 import { formatTitle } from "../../../../helpers";
 
 export const ComponentComponent = (props: any) => {
+  const { name, disabled, onChange: onChangeProps } = props;
   const [inputValue, setInputValue] = useState("");
   const onChange = (e: any) => {
     setInputValue(e.target.value);
   };
   const onBlur = () => {
-    const { onChange: onChangeProps } = props;
     onChangeProps(inputValue);
   };
 
@@ -18,8 +18,9 @@ export const ComponentComponent = (props: any) => {
     e.stopPropagation();
   }, []);
   return (
-    <Form.Item label={formatTitle(props.name)}>
+    <Form.Item label={formatTitle(name)}>
       <Input
+        disabled={disabled}
         value={inputValue}
         onChange={onChange}
         onBlur={onBlur}

@@ -20,7 +20,7 @@ import classNames from "classnames";
 import { DND_IDE_NODE_TYPE, DndNodeManager } from "../../../../helpers";
 
 const SelectorItem = (props: any) => {
-  const { index, root, setListValue, onChange } = props;
+  const { index, root, setListValue, onChange, disabled } = props;
 
   const data = _.get(root, `deps[${index}]`);
   const [, rerender] = useState();
@@ -99,6 +99,23 @@ const SelectorItem = (props: any) => {
     "dnd-prop-over": isOverCurrent
   });
 
+  const ruleOptions = [
+    ["is", "Is"],
+    ["not", "Not"],
+    ["above", "Above"],
+    ["below", "Below"],
+    ["include", "Include"],
+    ["exclude", "Exclude"],
+    ["matchOne", "MatchOne"],
+    ["matchAll", "MatchAll"],
+    ["dismatchOne", "DismatchOne"],
+    ["dismatchAll", "DismatchAll"],
+    ["empty", "Empty"],
+    ["notEmpty", "NotEmpty"],
+    ["regexp", "Reg Expression"],
+    ["is", "IS"]
+  ];
+
   return (
     <div className="deps-editor">
       <List.Item>
@@ -108,6 +125,7 @@ const SelectorItem = (props: any) => {
             defaultValue={"state"}
             value={state}
             onChange={onChangeState}
+            disabled={disabled}
           >
             <Select.Option value="state">State</Select.Option>
             <Select.Option value="data">Data</Select.Option>
@@ -119,55 +137,24 @@ const SelectorItem = (props: any) => {
             defaultValue={"is"}
             value={rule || "is"}
             onChange={changeValue(compareRule)}
+            disabled={disabled}
           >
-            <Select.Option value="is" title="is">
-              is
-            </Select.Option>
-            <Select.Option value="not" title="not">
-              not
-            </Select.Option>
-            <Select.Option value="above" title="above">
-              above
-            </Select.Option>
-            <Select.Option value="below" title="below">
-              below
-            </Select.Option>
-            <Select.Option value="include" title="include">
-              include
-            </Select.Option>
-            <Select.Option value="exclude" title="exclude">
-              exclude
-            </Select.Option>
-            <Select.Option value="matchOne" title="matchOne">
-              matchOne
-            </Select.Option>
-            <Select.Option value="matchAll" title="matchAll">
-              matchAll
-            </Select.Option>
-            <Select.Option value="dismatchOne" title="dismatchOne">
-              dismatchOne
-            </Select.Option>
-            <Select.Option value="dismatchAll" title="dismatchAll">
-              dismatchAll
-            </Select.Option>
-            <Select.Option value="empty" title="empty">
-              empty
-            </Select.Option>
-            <Select.Option value="notEmpty" title="notEmpty">
-              notEmpty
-            </Select.Option>
-            <Select.Option value="or" title="or">
-              or
-            </Select.Option>
-            <Select.Option value="regexp" title="regexp">
-              regexp
-            </Select.Option>
+            {ruleOptions.map((rule: any) => (
+              <Select.Option
+                value={rule[0]}
+                title={rule[1]}
+                disabled={disabled}
+              >
+                {rule[1]}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
         <div ref={drop} className={cls}>
           <Form.Item label="Selector">
             <Input
               readOnly
+              disabled={disabled}
               value={
                 (droppedSelector && droppedSelector.id) ||
                 _.get(data, "selector.id")
@@ -179,6 +166,7 @@ const SelectorItem = (props: any) => {
         {state === "data" ? (
           <Form.Item label="Value">
             <Input
+              disabled={disabled}
               value={value}
               onChange={changeValue("data")}
               onMouseDown={onMouseDown}
@@ -187,6 +175,7 @@ const SelectorItem = (props: any) => {
         ) : (
           <Form.Item label="State">
             <Select
+              disabled={disabled}
               size="small"
               value={value ? 1 : 0}
               onChange={changeValue("state.visible")}
@@ -198,6 +187,7 @@ const SelectorItem = (props: any) => {
         )}
         <Form.Item label="Add">
           <Button
+            disabled={disabled}
             type="danger"
             icon="delete"
             size="small"
@@ -210,7 +200,7 @@ const SelectorItem = (props: any) => {
 };
 
 const DepGroup = (props: any) => {
-  const { value, group, onChange } = props;
+  const { value, group, onChange, disabled } = props;
   let groupChecked = !_.isEmpty(value);
   const [showGroup, setShowGroup] = useState(groupChecked);
   const data = _.get(value, `deps`, []);
@@ -263,7 +253,11 @@ const DepGroup = (props: any) => {
           <Row type="flex" justify="space-around">
             <Col span={16}>
               <Form.Item label="Logic Strategy">
-                <Radio.Group onChange={onDataChange} value={logicValue}>
+                <Radio.Group
+                  onChange={onDataChange}
+                  value={logicValue}
+                  disabled={disabled}
+                >
                   <Radio value={"and"}>And</Radio>
                   <Radio value={"or"}>Or</Radio>
                 </Radio.Group>
@@ -278,7 +272,12 @@ const DepGroup = (props: any) => {
                 }}
               >
                 Add Rule{" "}
-                <Button icon="plus" size="small" onClick={onAddItems} />
+                <Button
+                  icon="plus"
+                  size="small"
+                  onClick={onAddItems}
+                  disabled={disabled}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -293,6 +292,7 @@ const DepGroup = (props: any) => {
                 group={props.group}
                 setListValue={setListValue}
                 onChange={onChange}
+                disabled={disabled}
               />
             )}
           />

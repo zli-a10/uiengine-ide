@@ -34,7 +34,7 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 
   // assign user defined props;
   if (props) {
-    let { $events, ...rest } = props as any;
+    let { $events, ide_droppable, ...rest } = props as any;
 
     // assign props to uiNode
     result = { ...rest, ...result };
@@ -45,7 +45,7 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 
 export const setExampleProps: IPlugin = {
   type: "ui.parser",
-  priority: 100,
+  priority: 200,
   callback,
   name: "set-example-props"
 };

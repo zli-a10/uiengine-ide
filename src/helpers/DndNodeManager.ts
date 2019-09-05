@@ -184,7 +184,7 @@ export class DndNodeManager implements IDndNodeManager {
           );
         }
       } else {
-        this.targetParentChildrenSchema = [
+        this.targetParentSchema.children = [
           sourceNewSchema,
           {
             ...this.layoutWrappers.col,
@@ -192,6 +192,7 @@ export class DndNodeManager implements IDndNodeManager {
           }
         ];
       }
+
       this.removeSourceNode();
       await this.refresh();
     } else {
@@ -262,7 +263,15 @@ export class DndNodeManager implements IDndNodeManager {
   canDropInCenter(targetNode: IUINode) {
     const targetComponent = _.get(targetNode, "schema.component");
     const componentInfo = IDERegister.getComponentInfo(targetComponent);
-    return componentInfo.isContainer === undefined || componentInfo.isContainer;
+    let result =
+      componentInfo.isContainer === undefined || componentInfo.isContainer;
+    if (result) {
+      // is it a template or children
+      const isTemplateOrChildrenTemplate =
+        _.get(targetNode, "props.ide_droppable") === undefined;
+      return result && isTemplateOrChildrenTemplate;
+    }
+    return result;
   }
 
   async insertCenter(sourceNode: IUINode, targetNode: IUINode) {

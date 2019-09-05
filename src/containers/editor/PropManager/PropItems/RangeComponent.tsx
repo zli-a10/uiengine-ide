@@ -5,7 +5,7 @@ import { Form } from "antd";
 import { formatTitle } from "../../../../helpers";
 
 export const RangeComponent = (props: any) => {
-  let { range: dataRange, onChange, value, uinode } = props;
+  let { range: dataRange, onChange, value, uinode, disabled } = props;
   if (!_.isArray(dataRange)) return null;
 
   const [inputValue, setInputValue] = useState(dataRange[0]);
@@ -25,6 +25,7 @@ export const RangeComponent = (props: any) => {
   return (
     <Form.Item label={formatTitle(props.name)}>
       <InputNumber
+        disabled={disabled}
         value={inputValue}
         onChange={onChangeValue}
         onMouseDown={onMouseDown}

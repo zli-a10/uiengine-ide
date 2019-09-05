@@ -7,7 +7,7 @@ import { GlobalContext } from "../../Context";
 const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
-  const { onChange, searchText, value } = props;
+  const { onChange, searchText, value, disabled } = props;
   const {
     datasource: { getDataSource, expandDataSource } = {} as any
   } = useContext(GlobalContext);
@@ -172,6 +172,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
       {showInput ? (
         <Input
           {...(value ? { value } : {})}
+          disabled={disabled}
           onChange={(e: any) => {
             onChange && onChange(e.target.value);
           }}
@@ -179,6 +180,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         />
       ) : (
         <TreeSelect
+          disabled={disabled}
           {...(value ? { value } : {})}
           showSearch
           onSelect={onSelect}

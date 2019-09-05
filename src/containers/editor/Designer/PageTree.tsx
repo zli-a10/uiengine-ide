@@ -180,13 +180,13 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     );
 
     // dnd
-    const schema = fileLoader.loadFile(dataRef._path_, "schema");
-    // const templateSchema = {
-    //   $template: `/${dataRef._path_}.json`
-    // };
+    // const schema = fileLoader.loadFile(dataRef._path_, "schema");
+    const templateSchema = {
+      $template: dataRef._path_ // this will be parsed on ide's template parser
+    };
     let drag;
-    if (!_.isEmpty(schema)) {
-      const uinode = new UINode(schema);
+    if (!_.isEmpty(templateSchema)) {
+      const uinode = new UINode(templateSchema);
       [, drag] = useDrag({
         item: {
           type: DND_IDE_NODE_TYPE,

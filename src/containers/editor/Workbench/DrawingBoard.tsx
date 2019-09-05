@@ -50,7 +50,7 @@ export const DrawingBoard: React.FC = (props: any) => {
       };
       if (editNode && e.target.localName === "body") {
         e.preventDefault();
-        // dup
+        // dup: Bug: ^D  will recover downwards elements
         if (e.ctrlKey && keyMap[e.code] && editNode) {
           const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
           chooseEditNode(newUiNode);

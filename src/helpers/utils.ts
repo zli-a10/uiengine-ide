@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { NodeController, UINode } from "uiengine";
-import { IUINode } from "uiengine/typings";
+import { IUINode, IDataSource } from "uiengine/typings";
 import { DndNodeManager } from ".";
+import { IDE_ID } from "../helpers/consts";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
@@ -95,11 +96,14 @@ export const formatTree = (data: any, parent?: any) => {
 
 // clone schema, remove _id & id
 export const cloneSchemaDeep = (schema: any) => {
+  const toRemoveKeys = ["id", "_id"];
   _.forIn(schema, (s: any, k: string) => {
-    if (k === "_id" || k === "id") {
+    if (toRemoveKeys.indexOf(k) > -1) {
       delete schema[k];
     }
   });
+  // generate ide key
+  schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
   if (_.isArray(schema.children)) {
     schema.children.forEach((child: any) => cloneSchemaDeep(child));
   }
@@ -113,4 +117,58 @@ export const cloneUINode = async (sourceNode: any, pos: string) => {
   const method = `insert${_.upperFirst(pos)}`;
   await dndNodeManager[method](copiedNode, sourceNode);
   return copiedNode;
+};
+
+export const getDataSource = (
+  datasource: IDataSource | string,
+  full: boolean = false
+) => {
+  if (!datasource) return "";
+  let source = "";
+  if (_.isObject(datasource)) {
+    source = datasource.source;
+  } else {
+    source = datasource;
+  }
+  if (!source) return "";
+  if (full) {
+    return source;
+  }
+  return _.last(source.replace(":", ".").split("."));
+};
+
+export const droppable = (uiNode: IUINode) => {
+  // if $$children and $template, then don't dnd
+  const templateKeywords = "$$template";
+  const templateName = _.get(uiNode, `schema.${templateKeywords}`);
+
+  const childrenKeywords = "$$children";
+  const childrenTemplateName = _.get(uiNode, `schema.${childrenKeywords}`);
+  if (childrenTemplateName || templateName) {
+    _.set(uiNode, `props.ide_droppable`, 1);
+  }
+
+  if (_.get(uiNode, "parent.props.ide_droppable") !== undefined) {
+    _.set(uiNode, `props.ide_droppable`, 2);
+    return false;
+  }
+
+  return true;
+};
+
+export const fillWithKeywords = (
+  node: IUINode[] | IUINode,
+  keywords: string,
+  value: boolean = true
+) => {
+  if (_.isArray(node)) {
+    node.forEach((child: IUINode) => {
+      fillWithKeywords(child, keywords, value);
+    });
+  } else if (_.isObject(node)) {
+    _.set(node, keywords, value);
+    if (_.has(node, "children")) {
+      fillWithKeywords(node.children, keywords, value);
+    }
+  }
 };

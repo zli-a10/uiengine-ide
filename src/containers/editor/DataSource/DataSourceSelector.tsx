@@ -3,7 +3,7 @@ import DataSourceTreeSelect from "./DataSourceTreeSelect";
 import { Form } from "antd";
 
 export const DataSourceSelector = (props: any) => {
-  const { value } = props;
+  const { value, disabled } = props;
   const onChange = (value: any) => {
     const { onChange: onChangeProps } = props;
     if (onChangeProps) {
@@ -12,7 +12,11 @@ export const DataSourceSelector = (props: any) => {
   };
   return (
     <Form.Item label={props.label}>
-      <DataSourceTreeSelect onChange={onChange} value={value} />
+      <DataSourceTreeSelect
+        onChange={onChange}
+        value={value}
+        disabled={disabled}
+      />
     </Form.Item>
   );
 };

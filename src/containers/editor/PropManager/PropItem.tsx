@@ -33,6 +33,9 @@ export const PropItem = (props: any) => {
     setValue(data);
   }, [data]);
 
+  // disable the element if it's template
+  const disabled = _.has(uinode, "props.ide_droppable");
+  console.log(disabled, "is disabled");
   if (Com) {
     return (
       <Com
@@ -40,6 +43,7 @@ export const PropItem = (props: any) => {
         defaultValue={_.get(standardSchema, "default")}
         value={value}
         uinode={uinode}
+        disabled={disabled}
         {...schemaProps}
         {...props}
       />

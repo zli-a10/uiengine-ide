@@ -4,7 +4,8 @@ import { Input, Form } from "antd";
 import { formatTitle } from "../../../../helpers";
 
 export const StringComponent = (props: any) => {
-  const [inputValue, setInputValue] = useState(props.value);
+  const { value, uinode, name, onChange: onChangeProps, disabled } = props;
+  const [inputValue, setInputValue] = useState(value);
   const onChange = (e: any) => {
     setInputValue(e.target.value);
   };
@@ -14,11 +15,12 @@ export const StringComponent = (props: any) => {
   };
 
   useEffect(() => {
-    setInputValue(props.value);
-  }, [props.value, props.uinode]);
+    setInputValue(value);
+  }, [value, uinode]);
   return (
-    <Form.Item label={formatTitle(props.name)}>
+    <Form.Item label={formatTitle(name)}>
       <Input
+        disabled={disabled}
         value={inputValue}
         onChange={onChange}
         onPressEnter={onSave}

@@ -64,31 +64,26 @@ export const ChildrenComponent = (props: any) => {
   const tree = fileLoader.loadFileTree("schema");
   const memoTree = useMemo(() => [formatTree(_.cloneDeep(tree))], [tree]);
 
+  const { onChange, value, uinode, disabled } = props;
   // onchange tree item
   const [selectedValue, selectItem] = useState(props.value);
   const onTreeChange = useCallback((value: any) => {
     if (!value) return;
     selectItem(value);
-    const schema = fileLoader.loadFile(value, "schema");
-    if (!schema.children || schema.children.length === 0) return;
-    // format datasource
-    const returnSchema = {
-      $$children: value, ////////////////////////////////////// TOFIX, SHOULD use $children:string to keep track of reference, enhance uiengine
-      $children: formatDataSource(schema.children)
-    };
-    props.onChange(returnSchema);
+    onChange(value);
   }, []);
 
   // listen editNode
   useEffect(() => {
-    selectItem(props.value);
-  }, [props.value, props.uinode]);
+    selectItem(value);
+  }, [value, uinode]);
 
   // console.log(memoTree, selectedValue);
   return (
     <div className="children-setting">
       <Form.Item label="Template">
         <TreeSelect
+          disabled={disabled}
           showSearch
           style={{ height: 22 }}
           value={selectedValue}
