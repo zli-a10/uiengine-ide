@@ -18,10 +18,10 @@ export function difference(object: any, base: any) {
   return changes(object, base);
 }
 
-export function cleanSchema(schema: any) {
+export function cleanSchema(schema: any, exporting: boolean = false) {
   if (_.isArray(schema)) {
     schema.forEach((child: any) => {
-      cleanSchema(child);
+      cleanSchema(child, exporting);
     });
   } else {
     // remove $$children && $$template
@@ -41,21 +41,32 @@ export function cleanSchema(schema: any) {
     }
 
     // remove IDE_ID
-    _.unset(schema, IDE_ID);
-    _.unset(schema, "_id");
+    if (exporting) {
+      _.unset(schema, IDE_ID);
+      _.unset(schema, "_id");
+    }
 
     if (_.has(schema, "children")) {
-      cleanSchema(schema.children);
+      cleanSchema(schema.children, exporting);
     }
   }
   return schema;
 }
 
-export function getActiveUINode(schemaOnly: boolean = false) {
+export function getActiveUINode(
+  schemaOnly: boolean = false,
+  returnOrigin: boolean = false
+) {
   const nodeController = NodeController.getInstance();
   const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
   if (schemaOnly) {
-    return cleanSchema((uiNode as IUINode).schema);
+    let result = (uiNode as IUINode).schema;
+    if (!returnOrigin) {
+      // if don't clone the schema, once the schema has $$template or $$children
+      // that area will be removed when refresh other target parent
+      result = _.cloneDeep(result);
+    }
+    return cleanSchema(result);
   }
   return uiNode;
 }

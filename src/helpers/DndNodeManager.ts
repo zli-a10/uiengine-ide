@@ -139,7 +139,10 @@ export class DndNodeManager implements IDndNodeManager {
       sourceNode.sendMessage(true); // force refresh
       // }
     }
-
+    // global refresh, otherwise the $template & $Children can't be refreshed
+    // const rootNode = getActiveUINode() as IUINode;
+    // await rootNode.updateLayout();
+    // rootNode.sendMessage(true); // force refresh
     // singleton, need remove all stored values
     this.initial();
   }
@@ -161,7 +164,7 @@ export class DndNodeManager implements IDndNodeManager {
     if (this.targetSchema.component !== this.layoutWrappers.col.component) {
       sourceNewSchema = {
         ...this.layoutWrappers.col,
-        children: [this.sourceSchema]
+        children: [_.cloneDeep(this.sourceSchema)]
       };
     }
 
@@ -188,7 +191,7 @@ export class DndNodeManager implements IDndNodeManager {
           sourceNewSchema,
           {
             ...this.layoutWrappers.col,
-            children: [this.targetSchema]
+            children: [_.cloneDeep(this.targetSchema)]
           }
         ];
       }
@@ -202,7 +205,7 @@ export class DndNodeManager implements IDndNodeManager {
           sourceNewSchema,
           {
             ...this.layoutWrappers.col,
-            children: [this.targetSchema]
+            children: [_.cloneDeep(this.targetSchema)]
           }
         ]
       };
@@ -221,8 +224,9 @@ export class DndNodeManager implements IDndNodeManager {
     if (insertBottom) {
       ++insertPos;
     }
+    let clonedSchema = _.cloneDeep(newSchema);
     if (verticalSwitch) {
-      this.targetParentChildrenSchema.splice(insertPos, 0, newSchema);
+      this.targetParentChildrenSchema.splice(insertPos, 0, clonedSchema);
       // target index larger than source index, the length added one;
       if (
         this.sourceParent === this.targetParent &&
@@ -231,7 +235,7 @@ export class DndNodeManager implements IDndNodeManager {
         removeIndex++;
       }
     } else {
-      this.targetParentChildrenSchema[insertPos] = newSchema;
+      this.targetParentChildrenSchema[insertPos] = clonedSchema;
     }
     if (removeIndex > -1) this.removeSourceNode(removeIndex);
     await this.refresh();

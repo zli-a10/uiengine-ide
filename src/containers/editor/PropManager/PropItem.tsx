@@ -35,7 +35,6 @@ export const PropItem = (props: any) => {
 
   // disable the element if it's template
   const disabled = _.has(uinode, "props.ide_droppable");
-  console.log(disabled, "is disabled");
   if (Com) {
     return (
       <Com
