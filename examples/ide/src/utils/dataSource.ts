@@ -2,11 +2,11 @@ import * as _ from "lodash";
 import { getSchema } from "./request";
 import { expandDataSource } from "./schema";
 
-export const getDataSourceJson = async (searchText: string) => {
+export const getDataSourceJson = async () => {
   // const [schema, topUiSchema] = await expandDataSource('')
   // console.log(JSON.stringify(schema))
   // console.log(JSON.stringify(topUiSchema))
-  return (await getSchema("schema/json/menu.json")) || [];
+  return (await getSchema("json/menu.json")) || [];
 };
 
 export const getDataSourceJson1 = async (searchText: string) => {

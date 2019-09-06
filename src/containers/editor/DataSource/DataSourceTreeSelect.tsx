@@ -18,11 +18,16 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   const covertNodes = (nodes: any[], nodeKeys: string[] = []) => {
     return nodes.map((node: any) => {
       const newNodeKeys = _.cloneDeep(nodeKeys);
-      if (node.type === "field") {
-        node.value = `${newNodeKeys.join(".")}:${node.name}`;
-      } else {
-        node.value = `${newNodeKeys.join(".")}.${node.name}`;
+      // if (node.type === "field") {
+      // node.value = `${newNodeKeys.join(".")}:${node.name}`;
+      // } else {
+      //   node.value = `${newNodeKeys.join(".")}.${node.name}`;
+      // }
+      let value = _.get(node, "children[0].datasource.source");
+      if (!value) {
+        value = `${newNodeKeys.join(".")}.${node.name}`;
       }
+      node.value = value;
       newNodeKeys.push(node.name);
       node.key = newNodeKeys.join(".");
       if (node.children) {
@@ -32,57 +37,57 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
     });
   };
 
-  const onAddFields = useCallback(
-    async (dataRef: any) => {
-      if (dataRef.type === "file" && !dataRef.children) {
-        const path: string = dataRef.uiJsonPath;
-        if (expandDataSource) {
-          const source = await expandDataSource(path);
-          dataRef.children = source;
-          setNodes([...covertNodes(nodes)]);
-        }
-      }
-    },
-    [nodes, expandDataSource]
-  );
+  // const onAddFields = useCallback(
+  //   async (dataRef: any) => {
+  //     if (dataRef.type === "file" && !dataRef.children) {
+  //       const path: string = dataRef.uiJsonPath;
+  //       if (expandDataSource) {
+  //         const source = await expandDataSource(path);
+  //         dataRef.children = source;
+  //         setNodes([...covertNodes(nodes)]);
+  //       }
+  //     }
+  //   },
+  //   [nodes, expandDataSource]
+  // );
 
-  const getExpandNode = useCallback(
-    (expandedKeys: string[] = []) => {
-      const getSelectedNode = (nodeList: any[], key: string) => {
-        const selectedNode = nodeList.filter((node: any) => {
-          return node.key === key;
-        });
-        return _.first(selectedNode);
-      };
-      let checknodes = nodes;
-      let selectNode = undefined;
-      expandedKeys.map((key: string) => {
-        const node = getSelectedNode(checknodes, key);
-        if (node) {
-          if (node.children) {
-            checknodes = node.children;
-          }
-          selectNode = node;
-        }
-      });
-      return selectNode;
-    },
-    [nodes]
-  );
+  // const getExpandNode = useCallback(
+  //   (expandedKeys: string[] = []) => {
+  //     const getSelectedNode = (nodeList: any[], key: string) => {
+  //       const selectedNode = nodeList.filter((node: any) => {
+  //         return node.key === key;
+  //       });
+  //       return _.first(selectedNode);
+  //     };
+  //     let checknodes = nodes;
+  //     let selectNode = undefined;
+  //     expandedKeys.map((key: string) => {
+  //       const node = getSelectedNode(checknodes, key);
+  //       if (node) {
+  //         if (node.children) {
+  //           checknodes = node.children;
+  //         }
+  //         selectNode = node;
+  //       }
+  //     });
+  //     return selectNode;
+  //   },
+  //   [nodes]
+  // );
 
-  const onExpandNode = useCallback(
-    (expandedKeys: string[]) => {
-      const dataRef = getExpandNode(expandedKeys) || ({} as any);
-      if (onChange) {
-        onChange(dataRef);
-      }
-      if (dataRef.type === "field") {
-        return;
-      }
-      onAddFields(dataRef);
-    },
-    [onChange, onAddFields, getExpandNode]
-  );
+  // const onExpandNode = useCallback(
+  //   (expandedKeys: string[]) => {
+  //     const dataRef = getExpandNode(expandedKeys) || ({} as any);
+  //     if (onChange) {
+  //       onChange(dataRef);
+  //     }
+  //     if (dataRef.type === "field") {
+  //       return;
+  //     }
+  //     onAddFields(dataRef);
+  //   },
+  //   [onChange, onAddFields, getExpandNode]
+  // );
 
   const onSelect = useCallback(
     (value: string) => {
@@ -167,6 +172,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
     });
   }, []);
   // onTreeExpand={onExpandNode}
+
   return (
     <div className="datasource-select">
       {showInput ? (
@@ -182,8 +188,8 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         <TreeSelect
           disabled={disabled}
           {...(value ? { value } : {})}
-          showSearch
           onSelect={onSelect}
+          showSearch
           size="small"
           suffixIcon={() => <Icon type="edit" onClick={switchEdit} />}
         >

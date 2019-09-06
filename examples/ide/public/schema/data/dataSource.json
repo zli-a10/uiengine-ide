@@ -1,8 +1,0 @@
-{
-  "uijson-list": [
-    { "multiDataSource": true, "path": "adc/slb/servers" },
-    { "multiDataSource": false, "path": "adc/slb/service-groups.member" },
-    { "multiDataSource": true, "path": "adc/slb/service-groups" },
-    { "multiDataSource": false, "path": "adc/slb/session-filter" }
-  ]
-}

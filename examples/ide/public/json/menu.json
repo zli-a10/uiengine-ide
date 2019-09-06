@@ -11,383 +11,377 @@
               {
                 "type": "field",
                 "name": "name",
-                "datasource": { "source": "slb.server:name" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:name" },
-                  "props": { "label": "Name" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Name" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:name" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "server-ipv6-addr",
-                "datasource": { "source": "slb.server:server-ipv6-addr" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:server-ipv6-addr" },
-                  "props": { "label": "Server IPv6 Address" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Server IPv6 Address" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:server-ipv6-addr" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "host",
-                "datasource": { "source": "slb.server:host" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:host" },
-                  "props": { "label": "Host" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Host" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:host" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "fqdn-name",
-                "datasource": { "source": "slb.server:fqdn-name" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:fqdn-name" },
-                  "props": { "label": "FQDN Name" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "FQDN Name" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:fqdn-name" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "resolve-as",
-                "datasource": { "source": "slb.server:resolve-as" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:resolve-as" },
-                  "props": { "label": "Resolve As" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Resolve As" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:resolve-as" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "action",
-                "datasource": { "source": "slb.server:action" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:action" },
-                  "props": { "label": "Action" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Action" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:action" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "external-ip",
-                "datasource": { "source": "slb.server:external-ip" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:external-ip" },
-                  "props": { "label": "External IP" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "External IP" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:external-ip" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "ipv6",
-                "datasource": { "source": "slb.server:ipv6" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:ipv6" },
-                  "props": { "label": "IPv6" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "IPv6" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:ipv6" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "template",
-                "datasource": { "source": "slb.server:template" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:template" },
-                  "props": { "label": "Template" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Template" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:template" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "template-server",
-                "datasource": { "source": "slb.server:template-server" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:template-server" },
-                  "props": { "label": "Template Server" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Template Server" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:template-server" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "server-health-check",
-                "datasource": { "source": "slb.server:server-health-check" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:server-health-check" },
-                  "props": { "label": "Server Health Check" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Server Health Check" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:server-health-check" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "health-check",
-                "datasource": { "source": "slb.server:health-check" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:health-check" },
-                  "props": { "label": "Health Check" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Health Check" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:health-check" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "p-health-check",
-                "datasource": { "source": "slb.server:p-health-check" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:p-health-check" },
-                  "props": { "label": "P Health Check" },
-                  "children": [{ "component": "antd:Input" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "P Health Check" },
+                "children": [
+                  {
+                    "component": "antd:Input",
+                    "datasource": { "source": "slb.server:p-health-check" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "shared-partition-health-check",
-                "datasource": {
-                  "source": "slb.server:shared-partition-health-check"
-                },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": {
-                    "source": "slb.server:shared-partition-health-check"
-                  },
-                  "props": { "label": "Shared Partition Health Check" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Shared Partition Health Check" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": {
+                      "source": "slb.server:shared-partition-health-check"
+                    }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "health-check-shared",
-                "datasource": { "source": "slb.server:health-check-shared" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:health-check-shared" },
-                  "props": { "label": "Health Check Shared" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Health Check Shared" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:health-check-shared" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "health-check-disable",
-                "datasource": { "source": "slb.server:health-check-disable" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:health-check-disable" },
-                  "props": { "label": "Health Check Disable" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Health Check Disable" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": {
+                      "source": "slb.server:health-check-disable"
+                    }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "conn-limit",
-                "datasource": { "source": "slb.server:conn-limit" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:conn-limit" },
-                  "props": { "label": "Connection Limit" },
-                  "children": [{ "component": "antd:InputNumber" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Connection Limit" },
+                "children": [
+                  {
+                    "component": "antd:InputNumber",
+                    "datasource": { "source": "slb.server:conn-limit" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "no-logging",
-                "datasource": { "source": "slb.server:no-logging" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:no-logging" },
-                  "props": { "label": "No Logging" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "No Logging" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": { "source": "slb.server:no-logging" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "conn-resume",
-                "datasource": { "source": "slb.server:conn-resume" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:conn-resume" },
-                  "props": { "label": "Connection Resume" },
-                  "children": [{ "component": "antd:InputNumber" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Connection Resume" },
+                "children": [
+                  {
+                    "component": "antd:InputNumber",
+                    "datasource": { "source": "slb.server:conn-resume" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "weight",
-                "datasource": { "source": "slb.server:weight" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:weight" },
-                  "props": { "label": "Weight" },
-                  "children": [{ "component": "antd:InputNumber" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Weight" },
+                "children": [
+                  {
+                    "component": "antd:InputNumber",
+                    "datasource": { "source": "slb.server:weight" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "slow-start",
-                "datasource": { "source": "slb.server:slow-start" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:slow-start" },
-                  "props": { "label": "Slow Start" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Slow Start" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": { "source": "slb.server:slow-start" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "spoofing-cache",
-                "datasource": { "source": "slb.server:spoofing-cache" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:spoofing-cache" },
-                  "props": { "label": "Spoofing Cache" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Spoofing Cache" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": { "source": "slb.server:spoofing-cache" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "stats-data-action",
-                "datasource": { "source": "slb.server:stats-data-action" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:stats-data-action" },
-                  "props": { "label": "Stats Data Action" },
-                  "children": [{ "component": "antd:Select" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Stats Data Action" },
+                "children": [
+                  {
+                    "component": "antd:Select",
+                    "datasource": { "source": "slb.server:stats-data-action" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "extended-stats",
-                "datasource": { "source": "slb.server:extended-stats" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:extended-stats" },
-                  "props": { "label": "Extended Stats" },
-                  "children": [{ "component": "antd:Switch" }]
-                }
+                "component": "antd:Form.Item",
+                "props": { "label": "Extended Stats" },
+                "children": [
+                  {
+                    "component": "antd:Switch",
+                    "datasource": { "source": "slb.server:extended-stats" }
+                  }
+                ]
               },
               {
                 "type": "field",
                 "name": "alternate-server",
+                "component": "antd:Form.Item",
                 "datasource": { "source": "slb.server:alternate-server" },
-                "uiSchema": {
-                  "component": "antd:Form.Item",
-                  "datasource": { "source": "slb.server:alternate-server" },
-                  "props": { "label": "Alternate Server" },
-                  "children": [
-                    {
-                      "component": "antd:Col",
-                      "children": [
-                        {
-                          "type": "field",
-                          "name": "alternate",
-                          "datasource": {
-                            "source": "slb.server:alternate-server.alternate"
-                          },
-                          "uiSchema": {
-                            "component": "antd:Form.Item",
-                            "datasource": {
-                              "source": "slb.server:alternate-server.alternate"
-                            },
-                            "props": { "label": "Alternate" },
-                            "children": [{ "component": "antd:InputNumber" }]
-                          }
+                "props": { "label": "Alternate Server" },
+                "children": [
+                  {
+                    "component": "antd:Col",
+                    "children": [
+                      {
+                        "type": "field",
+                        "name": "alternate",
+                        "component": "antd:Form.Item",
+                        "datasource": {
+                          "source": "slb.server:alternate-server.alternate"
                         },
-                        {
-                          "type": "field",
-                          "name": "alternate-name",
-                          "datasource": {
-                            "source": "slb.server.alternate-server:alternate-name"
-                          },
-                          "uiSchema": {
-                            "component": "antd:Form.Item",
+                        "props": { "label": "Alternate" },
+                        "children": [{ "component": "antd:InputNumber" }]
+                      },
+                      {
+                        "type": "field",
+                        "name": "alternate-name",
+                        "component": "antd:Form.Item",
+
+                        "props": { "label": "Alternate Name" },
+                        "children": [
+                          {
+                            "component": "antd:Select",
                             "datasource": {
                               "source": "slb.server.alternate-server:alternate-name"
-                            },
-                            "props": { "label": "Alternate Name" },
-                            "children": [{ "component": "antd:Select" }]
+                            }
                           }
-                        }
-                      ]
-                    }
-                  ]
-                }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/servers"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "global",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/global"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "policy-limits",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/policy-limits"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "service-groups",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/service-groups"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "session-filter",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/session-filter"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "virtual-servers",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/virtual-servers"
-            }
+            "component": "antd:Col"
           },
           {
             "name": "virtual-services",
             "children": [],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {
-              "source": "adc/slb/virtual-services"
-            }
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "health",
@@ -412,8 +406,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "ip-source-nat",
@@ -444,8 +437,7 @@
                   }
                 ],
                 "type": "file",
-                "component": "antd:Col",
-                "datasource": {}
+                "component": "antd:Col"
               },
               {
                 "name": "ipv6",
@@ -461,13 +453,11 @@
                   }
                 ],
                 "type": "file",
-                "component": "antd:Col",
-                "datasource": {}
+                "component": "antd:Col"
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "groups",
@@ -492,8 +482,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "ipv4-pools",
@@ -554,8 +543,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "nat-range",
@@ -586,8 +574,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "ssl-management",
@@ -603,8 +590,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "templates",
@@ -641,8 +627,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "general",
@@ -667,8 +652,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "l4-protocols",
@@ -693,8 +677,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "l7-protocols",
@@ -827,8 +810,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "persistence",
@@ -871,8 +853,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "slb",
@@ -915,8 +896,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "ssl",
@@ -950,8 +930,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "waf",
@@ -964,13 +943,11 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "aam",
@@ -989,8 +966,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "auth-clients",
@@ -1063,8 +1039,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "saml",
@@ -1089,13 +1064,11 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "auth-relays",
@@ -1138,8 +1111,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "auth-servers",
@@ -1182,8 +1154,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "log-settings",
@@ -1199,8 +1170,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "policies-and-templates",
@@ -1234,8 +1204,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "service-groups",
@@ -1248,8 +1217,7 @@
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "cgn",
@@ -1289,8 +1257,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "virtual-servers",
@@ -1303,8 +1270,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "ds-lite",
@@ -1329,8 +1295,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "fixed-nat",
@@ -1376,8 +1341,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "ip-lists",
@@ -1390,8 +1354,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "lsn",
@@ -1455,8 +1418,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "lsn-lid",
@@ -1553,13 +1515,11 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "lw-4over6",
@@ -1575,8 +1535,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "nat64",
@@ -1619,8 +1578,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "services",
@@ -1645,8 +1603,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "session",
@@ -1662,8 +1619,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "six-rd",
@@ -1697,8 +1653,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "static-nat",
@@ -1723,13 +1678,11 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "gslb",
@@ -1754,8 +1707,7 @@
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "network",
@@ -1792,8 +1744,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "bpdu-fwd-groups",
@@ -1881,8 +1832,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "lacp",
@@ -1898,8 +1848,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "mldb",
@@ -1915,8 +1864,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "routes",
@@ -1944,8 +1892,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "ipv6-static-routes",
@@ -1991,8 +1938,7 @@
                   }
                 ],
                 "type": "file",
-                "component": "antd:Col",
-                "datasource": {}
+                "component": "antd:Col"
               },
               {
                 "name": "ipv6-rib",
@@ -2005,13 +1951,11 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "vlan",
@@ -2045,13 +1989,11 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "security",
@@ -2073,8 +2015,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "servers",
@@ -2135,13 +2076,11 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "shared-objects",
@@ -2160,8 +2099,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "object",
@@ -2174,8 +2112,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "ssli",
@@ -2191,13 +2128,11 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   },
   {
     "name": "system",
@@ -2240,8 +2175,7 @@
                   }
                 ],
                 "type": "file",
-                "component": "antd:Col",
-                "datasource": {}
+                "component": "antd:Col"
               },
               {
                 "name": "radius",
@@ -2275,8 +2209,7 @@
                   }
                 ],
                 "type": "file",
-                "component": "antd:Col",
-                "datasource": {}
+                "component": "antd:Col"
               },
               {
                 "name": "settings",
@@ -2307,8 +2240,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "lockout",
@@ -2339,8 +2271,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "avcs",
@@ -2374,8 +2305,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "maintenance",
@@ -2421,13 +2351,11 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "monitoring",
@@ -2461,8 +2389,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "settings",
@@ -2532,8 +2459,7 @@
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       },
       {
         "name": "vrrpa",
@@ -2561,8 +2487,7 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           },
           {
             "name": "settings",
@@ -2587,17 +2512,14 @@
               }
             ],
             "type": "file",
-            "component": "antd:Col",
-            "datasource": {}
+            "component": "antd:Col"
           }
         ],
         "type": "file",
-        "component": "antd:Col",
-        "datasource": {}
+        "component": "antd:Col"
       }
     ],
     "type": "file",
-    "component": "antd:Col",
-    "datasource": {}
+    "component": "antd:Col"
   }
 ]

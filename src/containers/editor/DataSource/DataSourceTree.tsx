@@ -13,7 +13,7 @@ const getChildrenUiSchema = (data: any) => {
     return [];
   }
   return children.map((child: any) => {
-    const { type, uiSchema } = child;
+    const { type, ...uiSchema } = child;
     if (type === "field") {
       return uiSchema;
     }
@@ -34,23 +34,24 @@ const WidgetItem = (props: any) => {
   // const dataSchema = data.uiSchema || data
 
   let dragObj,
-    dragType = "";
+    dragType = DND_IDE_NODE_TYPE;
   if (data.type === "file") {
-    const { component, props, datasource } = data;
+    const { component, props } = data;
     dragObj = {
       uinode: new UINode({
         component,
         props,
-        datasource,
         children: getChildrenUiSchema(data)
       })
     };
-    dragType = DND_IDE_NODE_TYPE;
+    // dragType = DND_IDE_NODE_TYPE;
   } else {
-    const dataSchema = data.uiSchema || {};
-    const { datasource: { source } = {} as any } = dataSchema;
-    dragObj = { schema: { datasource: source } };
-    dragType = DND_IDE_SCHEMA_TYPE;
+    dragObj = {
+      uinode: new UINode(data)
+    };
+    // const { datasource: { source } = {} as any } = data;
+    // dragObj = { schema: { datasource: source } };
+    // dragType = DND_IDE_SCHEMA_TYPE;
   }
 
   const [, drag] = useDrag({
