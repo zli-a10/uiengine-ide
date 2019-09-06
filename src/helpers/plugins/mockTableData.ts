@@ -8,18 +8,15 @@ const dataMocker = DataMocker.getInstance();
  *
  * @param dataNode
  */
-const callback: IPluginFunc = async (dataNode: IDataNode) => {
+const callback: IPluginFunc = (dataNode: IDataNode) => {
   if (_.has(dataNode, `uiNode.schema.$children`)) {
-    let data = await dataMocker.generateTableData(
-      dataNode.uiNode.schema.$children,
-      10
-    );
-    _.forIn(data, (d: any, path: string) => {
-      dataNode.dataPool.set(d, path);
-    });
-    console.log(dataNode.dataPool.data);
-
-    return data;
+    if (_.isArray(_.get(dataNode, `uiNode.schema.$children`))) {
+      const result = dataMocker.generateTableData(dataNode.uiNode, 10);
+      console.log(result);
+      dataNode.data = result;
+      console.log(dataNode.dataPool.data);
+      return result;
+    }
   }
 };
 

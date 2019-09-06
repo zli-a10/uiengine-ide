@@ -140,7 +140,7 @@ export const Props: React.FC = (props: any) => {
             <PropItem
               section="children"
               type="children"
-              data={_.get(editNode, "schema.$$children")}
+              data={_.get(editNode, "schema.$_children")} // converted $$children to $_children on plugin
               uinode={editNode}
               config={props.config}
             />

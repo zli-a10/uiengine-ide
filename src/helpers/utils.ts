@@ -195,7 +195,7 @@ export const droppable = (uiNode: IUINode) => {
   const templateKeywords = "$$template";
   const templateName = _.get(uiNode, `schema.${templateKeywords}`);
 
-  const childrenKeywords = "$$children";
+  const childrenKeywords = "$_children";
   const childrenTemplateName = _.get(uiNode, `schema.${childrenKeywords}`);
   if (childrenTemplateName || templateName) {
     _.set(uiNode, `props.ide_droppable`, 1);

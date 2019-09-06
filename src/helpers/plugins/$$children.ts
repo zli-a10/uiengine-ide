@@ -11,11 +11,13 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
   const fileLoader = FileLoader.getInstance();
 
   // parse $$children
-  if (_.has(uiNode.schema, "$$children")) {
-    const path = _.get(uiNode.schema, "$$children");
-    const schema = fileLoader.loadFile(path, "schema");
+  const $$children = _.get(uiNode.schema, "$$children");
+  // const $children = _.get(uiNode.schema, "$children");
+  if ($$children) {
+    const schema = fileLoader.loadFile($$children, "schema");
     if (!schema.children || schema.children.length === 0) return;
     _.set(uiNode, "schema.$children", schema.children);
+    _.set(uiNode, "schema.$_children", $$children);
     _.unset(uiNode, "schema.$$children");
     await uiNode.updateLayout();
   }

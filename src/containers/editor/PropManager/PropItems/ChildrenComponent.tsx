@@ -83,7 +83,6 @@ export const ChildrenComponent = (props: any) => {
     <div className="children-setting">
       <Form.Item label="Template">
         <TreeSelect
-          disabled={disabled}
           showSearch
           style={{ height: 22 }}
           value={selectedValue}
