@@ -22,6 +22,7 @@ export class DataMocker implements IDataMocker {
     return schema;
   }
 
+  maxRow: number = 5;
   enable: boolean = true;
   mode: string = "normal";
   noCache: boolean = true;
@@ -111,10 +112,12 @@ export class DataMocker implements IDataMocker {
   //   return result;
   // }
 
-  generateTableData(uiNode: IUINode, lines: number = 15) {
-    const result = [];
+  generateTableData(uiNode: IUINode) {
+    const result: any = [];
+    if (this.mode === EMPTY_DATA) return result;
+    if (!this.enable) return result;
     const children = _.get(uiNode, "schema.$children", []);
-    for (let i = 0; i <= lines; i++) {
+    for (let i = 0; i < this.maxRow; i++) {
       const r = children.map(() => ({}));
       result.push(r);
     }

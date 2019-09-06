@@ -68,7 +68,7 @@ export const ChildrenComponent = (props: any) => {
   // onchange tree item
   const [selectedValue, selectItem] = useState(value);
   const onTreeChange = useCallback((value: any) => {
-    if (!value) return;
+    // if (!value) return;
     selectItem(value);
     onChange(value);
   }, []);
@@ -78,7 +78,6 @@ export const ChildrenComponent = (props: any) => {
     selectItem(value);
   }, [value, uinode]);
 
-  // console.log(memoTree, selectedValue);
   return (
     <div className="children-setting">
       <Form.Item label="Template">
@@ -97,6 +96,7 @@ export const ChildrenComponent = (props: any) => {
               onClick={onViewCode(selectedValue)}
             />
           )}
+          allowClear
           onChange={onTreeChange}
           treeData={memoTree}
         />

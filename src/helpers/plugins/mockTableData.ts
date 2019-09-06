@@ -11,10 +11,8 @@ const dataMocker = DataMocker.getInstance();
 const callback: IPluginFunc = (dataNode: IDataNode) => {
   if (_.has(dataNode, `uiNode.schema.$children`)) {
     if (_.isArray(_.get(dataNode, `uiNode.schema.$children`))) {
-      const result = dataMocker.generateTableData(dataNode.uiNode, 10);
-      console.log(result);
+      const result = dataMocker.generateTableData(dataNode.uiNode);
       dataNode.data = result;
-      console.log(dataNode.dataPool.data);
       return result;
     }
   }

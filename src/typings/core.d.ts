@@ -82,6 +82,7 @@ interface IDataMocker {
   mode: string = "";
   noCache: boolean;
   dataCached: any[];
+  maxRow: number = 5;
   generate(schema: any); // called on plugin
-  generateTableData(childrenNode: IUINode, lines: number = 15);
+  generateTableData(childrenNode: IUINode);
 }

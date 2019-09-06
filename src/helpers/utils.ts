@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { NodeController, UINode } from "uiengine";
 import { IUINode, IDataSource } from "uiengine/typings";
-import { DndNodeManager } from ".";
+import { DndNodeManager, FileLoader } from ".";
 import { IDE_ID } from "../helpers/consts";
 
 export function difference(object: any, base: any) {
@@ -27,7 +27,11 @@ export function cleanSchema(schema: any, exporting: boolean = false) {
     // remove $$children && $$template
     if (_.has(schema, "$$children")) {
       const childrenTemplate = _.get(schema, "$$children");
-      schema.$children = childrenTemplate;
+      const fileLoader = FileLoader.getInstance();
+      const data = fileLoader.loadFile(childrenTemplate, "schema");
+      if (_.isArray(data.children)) {
+        schema.$children = data.children;
+      }
     }
     if (_.has(schema, "$$template")) {
       const childrenTemplate = _.get(schema, "$$template");
@@ -185,7 +189,6 @@ export const getDataSchema = (datasource: IDataSource | string) => {
     schema = datasource;
   } else {
     schema = _.get(datasource, "schema", _.get(datasource, "source"));
-    console.log("..............", schema);
   }
   return schema;
 };
