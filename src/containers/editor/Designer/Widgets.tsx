@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 import { Icon, Popover, List } from "antd";
 import { useDrag } from "react-dnd";
 import { UINode } from "uiengine";
+import classnames from "classnames";
 
 import { DND_IDE_NODE_TYPE, IDE_ID } from "../../../helpers";
 const WidgetItem = (props: any) => {
@@ -16,7 +17,8 @@ const WidgetItem = (props: any) => {
     preview,
     icon,
     component,
-    defaultProps = {}
+    defaultProps = {},
+    children = []
   } = props;
 
   // stimulate a ui node
@@ -52,18 +54,41 @@ const WidgetItem = (props: any) => {
     <List dataSource={data} renderItem={item => (item ? item : null)} />
   );
 
+  const [subWidgets, openSubWidgets] = useState(false);
+
+  // states
+  const cls = classnames({
+    component: true,
+    open: subWidgets && children.length
+  });
+
   return (
     <Popover content={content} title={title} key={id} mouseEnterDelay={1}>
-      <div className="component" ref={drag}>
-        {icon ? (
-          <Icon type={icon} style={{ fontSize: "40px" }} />
-        ) : preview ? (
-          <img src={preview} width="60" height="60" />
-        ) : (
-          // <Icon type={"swap"} style={{ fontSize: "40px" }} />
-          <span className="widgets-icon">{title.substr(0, 1)}</span>
-        )}
-        <span className="title">{title}</span>
+      <div
+        className={cls}
+        ref={drag}
+        onClick={() => children.length && openSubWidgets(!subWidgets)}
+      >
+        <div className="body">
+          {icon ? (
+            <Icon type={icon} style={{ fontSize: "40px" }} />
+          ) : preview ? (
+            <img src={preview} width="60" height="60" />
+          ) : (
+            // <Icon type={"swap"} style={{ fontSize: "40px" }} />
+            <span className="widgets-icon">{title.substr(0, 1)}</span>
+          )}
+          <span className="title">{title}</span>
+          {children.length ? (
+            <span className="widget-with-children">
+              <Icon
+                type={subWidgets ? "caret-up" : "caret-down"}
+                style={{ fontSize: "40px" }}
+              />
+            </span>
+          ) : null}
+        </div>
+        {children.length && subWidgets ? <Widgets widgets={children} /> : null}
       </div>
     </Popover>
   );

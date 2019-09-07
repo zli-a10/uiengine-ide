@@ -112,55 +112,67 @@ export default [
         component: "antd:Breadcrumb",
         title: "Breadcrumb",
         isContainer: false,
-        schema: {}
-      },
-      {
-        component: "antd:Breadcrumb.Item",
-        title: "B.Item",
-        isContainer: false,
-        schema: {}
-      },
-      {
-        component: "antd:Breadcrumb.Separator",
-        title: "B.Separator",
-        isContainer: false,
-        schema: {}
+        schema: {},
+        children: [
+          {
+            component: "antd:Breadcrumb.Item",
+            title: "Item",
+            isContainer: false,
+            schema: {}
+          },
+          {
+            component: "antd:Breadcrumb.Separator",
+            title: "Separator",
+            isContainer: false,
+            schema: {}
+          }
+        ]
       },
       {
         component: "antd:Dropdown",
         title: "Dropdown",
         isContainer: false,
-        schema: {}
-      },
-      {
-        component: "antd:Dropdown.Button",
-        title: "D.Button",
-        isContainer: false,
-        schema: {}
+        schema: {},
+        children: [
+          {
+            component: "antd:Dropdown.Button",
+            title: "Button",
+            isContainer: false,
+            schema: {}
+          }
+        ]
       },
       {
         component: "antd:Menu",
-        title: "M.Item",
+        title: "Menu",
         isContainer: true,
-        schema: {}
-      },
-      {
-        component: "antd:Menu.SubMenu",
-        title: "M.SubMenu",
-        isContainer: true,
-        schema: {}
-      },
-      {
-        component: "antd:Menu.ItemGroup",
-        title: "M.ItemGroup",
-        isContainer: false,
-        schema: {}
-      },
-      {
-        component: "antd:Menu.Divider",
-        title: "M.Divider",
-        isContainer: false,
-        schema: {}
+        schema: {},
+        children: [
+          {
+            component: "antd:Menu",
+            title: "Item",
+            isContainer: true,
+            schema: {}
+          },
+          {
+            component: "antd:Menu.SubMenu",
+            title: "SubMenu",
+            isContainer: true,
+            schema: {}
+          },
+          {
+            component: "antd:Menu.ItemGroup",
+            title: "ItemGroup",
+            isContainer: false,
+            schema: {}
+          },
+          {
+            component: "antd:Menu.Divider",
+            title: "Divider",
+            isContainer: false,
+            schema: {}
+          }
+        ]
       },
       {
         component: "antd:Pagination",
@@ -178,13 +190,15 @@ export default [
         component: "antd:Steps",
         title: "Steps",
         isContainer: false,
-        schema: {}
-      },
-      {
-        component: "antd:Steps.Step",
-        title: "Steps.Step",
-        isContainer: false,
-        schema: {}
+        schema: {},
+        children: [
+          {
+            component: "antd:Steps.Step",
+            title: "Steps.Step",
+            isContainer: false,
+            schema: {}
+          }
+        ]
       }
     ]
   },
@@ -207,31 +221,33 @@ export default [
             }
           },
           hideRequiredMark: "boolean"
-        }
-      },
-      {
-        component: "antd:Form.Item",
-        title: "F.Item",
-        isContainer: true,
-        schema: {
-          extra: {
-            help: "string"
-          },
-          label: "string",
-          labelCol: {
-            sm: {
-              span: "number",
-              offset: "number"
-            }
-          },
-          required: "boolean",
-          htmlFor: "string",
-          hasFeedback: "boolean"
         },
-        defaultProps: {
-          label: "Lable Name",
-          required: true
-        }
+        children: [
+          {
+            component: "antd:Form.Item",
+            title: "Item",
+            isContainer: true,
+            schema: {
+              extra: {
+                help: "string"
+              },
+              label: "string",
+              labelCol: {
+                sm: {
+                  span: "number",
+                  offset: "number"
+                }
+              },
+              required: "boolean",
+              htmlFor: "string",
+              hasFeedback: "boolean"
+            },
+            defaultProps: {
+              label: "Lable Name",
+              required: true
+            }
+          }
+        ]
       },
       {
         component: "antd:Input",

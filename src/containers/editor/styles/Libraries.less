@@ -33,27 +33,64 @@
       display: flex;
       flex-wrap: wrap;
       .component {
-        width: 80px;
-        text-align: center;
-        margin: 2px;
-        border-radius: 3px;
-        padding: 5px;
-        .title {
-          font-size: 12px;
+        &.open {
+          background: #fcdb99;
+          border-radius: 5px;
+          .list {
+            display: flex;
+            flex: 1;
+          }
         }
 
-        &:hover {
-          animation: forwards 2s 1 componentOver;
-        }
-        .anticon {
-          border: 1px solid #eee;
+        display: flex;
+        text-align: center;
+        margin: 3px 0;
+        .body {
+          float: 1px;
+          width: 80px;
+          margin: 2px;
+          border-radius: 3px;
           padding: 5px;
-          background: #eee;
-          &:hover {
-            background: #fffab8;
+          position: relative;
+          .title {
+            font-size: 12px;
           }
-          svg {
-            font-size: 60px;
+
+          &:hover {
+            background: #fdf3e0;
+            .anticon {
+              &.anticon-caret-down,
+              &.anticon-caret-up {
+                svg {
+                  color: rgba(24, 144, 255, 0.8);
+                }
+              }
+            }
+
+            // animation: forwards 2s 1 componentOver;
+          }
+          .anticon {
+            border: 1px solid #eee;
+            padding: 5px;
+            background: #eee;
+            &:hover {
+              background: #fffab8;
+            }
+            svg {
+              font-size: 60px;
+            }
+            &.anticon-caret-down,
+            &.anticon-caret-up {
+              background: transparent;
+              border: 0;
+              top: 0;
+              right: 0;
+              position: absolute;
+              svg {
+                font-size: 12px;
+                color: rgba(24, 144, 255, 0.2);
+              }
+            }
           }
         }
 
