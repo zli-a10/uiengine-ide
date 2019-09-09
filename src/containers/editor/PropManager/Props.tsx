@@ -65,7 +65,7 @@ export const Props: React.FC = (props: any) => {
 
   useEffect(() => {
     selectTreeValue(component);
-  }, [component]);
+  }, [editNode]);
 
   const treeData = useMemo(() => IDERegister.componentsLibrary, []);
 

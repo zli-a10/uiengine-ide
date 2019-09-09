@@ -3,8 +3,16 @@ import { DataMocker } from "./DataMocker";
 
 function addCriticalInfo(componentInfos: any) {
   componentInfos.forEach((componentInfo: IComponentInfoGroup, key: number) => {
-    componentInfo.key = _.uniqueId(`${componentInfo.id}-${Date.now()}-`);
+    componentInfo.key = _.uniqueId(`${componentInfo.component}-`);
     componentInfo.value = componentInfo.component;
+    if (componentInfo.isContainer === undefined) {
+      componentInfo.isContainer = false;
+    }
+    // register
+    const component = componentInfo.component;
+    IDERegister.componentsList[component] = componentInfo;
+
+    // recursively add prop for each child
     if (_.isArray(componentInfo.children)) {
       addCriticalInfo(componentInfo.children);
     }
@@ -64,23 +72,13 @@ export class IDERegister {
 
           // add critical info
           addCriticalInfo(inputComponentInfo.children);
-
           // cache list
-          inputComponentInfo.children.forEach(
-            (componentInfo: IComponentInfo) => {
-              const component = componentInfo.component;
-              // for tree selector
-              // componentInfo.key = _.uniqueId(
-              //   `${componentInfo.component}-${Date.now()}-`
-              // );
-              // componentInfo.value = componentInfo.component;
-
-              if (componentInfo.isContainer === undefined)
-                componentInfo.isContainer = false;
-              // assign to cache
-              IDERegister.componentsList[component] = componentInfo;
-            }
-          );
+          // inputComponentInfo.children.forEach(
+          //   (componentInfo: IComponentInfo) => {
+          //     const component = componentInfo.component;
+          //     IDERegister.componentsList[component] = componentInfo;
+          //   }
+          // );
         }
       );
 
