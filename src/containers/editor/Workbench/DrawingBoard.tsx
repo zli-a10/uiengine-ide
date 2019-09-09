@@ -61,6 +61,7 @@ export const DrawingBoard: React.FC = (props: any) => {
           await dndNodeManager.delete(editNode);
           // to show schema corret on prop window
           updateSchema(editNode.schema);
+          chooseEditNode(null);
         }
         return false;
       }

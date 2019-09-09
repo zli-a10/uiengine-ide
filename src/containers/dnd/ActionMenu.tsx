@@ -19,7 +19,8 @@ const ActionMenu = (props: any) => {
   const {
     focusMode = {} as any,
     collapsedNodes,
-    setCollapsedNode
+    setCollapsedNode,
+    chooseEditNode
   } = useContext(IDEEditorContext);
 
   const { children, uinode } = props;
@@ -32,6 +33,7 @@ const ActionMenu = (props: any) => {
       await dndNodeManager.delete(uinode);
       // to show schema corret on prop window
       updateSchema(uinode.schema);
+      chooseEditNode(null);
     },
     [uinode]
   );
