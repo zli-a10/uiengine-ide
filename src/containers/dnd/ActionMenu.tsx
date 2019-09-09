@@ -120,6 +120,9 @@ const ActionMenu = (props: any) => {
     },
     [uinode]
   );
+
+  const disabled = _.has(uinode, "props.ide_droppable");
+
   const menu = (
     <Menu>
       {/* <Menu.Item key="unit-focus" onClick={focusCurrent}>
@@ -154,6 +157,7 @@ const ActionMenu = (props: any) => {
           </a>
         </Menu.Item>
       )}
+
       <Menu.Divider />
       <Menu.Item key="unit-remove-all" onClick={removeChildren}>
         <a target="_blank">

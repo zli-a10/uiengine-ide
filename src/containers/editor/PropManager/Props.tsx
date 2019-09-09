@@ -17,7 +17,11 @@ export const Props: React.FC = (props: any) => {
     // console.log(componentInfo, editNode);
   }
 
-  const { title, component, schema } = componentInfo;
+  const {
+    title,
+    component = _.get(editNode, "schema.component"),
+    schema
+  } = componentInfo;
 
   let allEvents, restSchema;
   if (schema) {
