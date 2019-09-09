@@ -1,14 +1,75 @@
-form.ant-form.ant-form-horizontal {
-  padding: 22px !important;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin: 10px;
-}
-.ant-form-item {
-  padding: 22px;
-  background: #dd0099;
-}
+// form.ant-form.ant-form-horizontal {
+//   padding: 22px !important;
+//   border: 1px solid #ddd;
+//   border-radius: 4px;
+//   margin: 10px;
+// }
 
-.ant-col {
-  flex: 1;
+// // .ant-form-item {
+// //   padding: 22px;
+// // }
+
+// .ant-col {
+//   flex: 1;
+// }
+
+#drawingboard {
+  // .ant-form-horizontal {
+
+
+  //   .ant-row {
+  //     &>.ant-form-item-label {
+  //       float: left
+  //     }
+
+  //     // .ant-col > .ant-form-item-label {
+  //     //   float: left
+  //     // }
+
+  //     // .ant-col.ant-form-item-control-wrapper {
+  //     //   float: left
+  //     // }
+  //   }
+  // }
+
+  #uiengine-container {
+    padding: 25px;
+
+    // TO COMPLETE
+    .ant-row-flex {
+      &>div {
+        margin: 5px;
+        overflow: hidden;
+        box-shadow: #b7babd 0px 0px 2px;
+      }
+
+      &>section {
+        margin: 5px;
+        overflow: hidden;
+        box-shadow: #b7babd 0px 0px 2px;
+      }
+    }
+  }
+
+  .with-datasource {
+    #uiengine-container {
+      padding: 0;
+    }
+  }
+
+  .ant-form-item-children {
+    .ant-input {
+      overflow: hidden;
+
+      white-space: nowrap;
+
+      text-overflow: ellipsis;
+
+
+    }
+  }
+
+  .ant-select-enabled {
+    width: 100%
+  }
 }
