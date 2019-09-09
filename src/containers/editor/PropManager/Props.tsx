@@ -51,6 +51,11 @@ export const Props: React.FC = (props: any) => {
   const onTreeChange = (value: any) => {
     if (value && value.indexOf("component-category-") === -1) {
       editNode.schema.component = value;
+      _.remove(editNode, "schema.props");
+      _.remove(editNode, "schema.children");
+      _.remove(editNode, "schema.$children");
+      _.remove(editNode, "schema.$_children");
+      _.remove(editNode, "schema.$template");
       selectTreeValue(value);
       const dndNodeManager = DndNodeManager.getInstance();
       dndNodeManager.pushVersion();

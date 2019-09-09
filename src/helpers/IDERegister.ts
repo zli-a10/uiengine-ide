@@ -1,6 +1,17 @@
 import _ from "lodash";
 import { DataMocker } from "./DataMocker";
 
+function addCriticalInfo(componentInfos: any) {
+  componentInfos.forEach((componentInfo: IComponentInfoGroup, key: number) => {
+    componentInfo.key = _.uniqueId(`${componentInfo.id}-${Date.now()}-`);
+    componentInfo.value = componentInfo.component;
+    if (_.isArray(componentInfo.children)) {
+      addCriticalInfo(componentInfo.children);
+    }
+  });
+  return componentInfos;
+}
+
 export class IDERegister {
   static componentsLibrary: any = [];
   // for easier to fetch component schemas
@@ -51,15 +62,18 @@ export class IDERegister {
             IDERegister.componentsLibrary.push(inputComponentInfo);
           }
 
+          // add critical info
+          addCriticalInfo(inputComponentInfo.children);
+
           // cache list
           inputComponentInfo.children.forEach(
             (componentInfo: IComponentInfo) => {
               const component = componentInfo.component;
               // for tree selector
-              componentInfo.key = _.uniqueId(
-                `${componentInfo.component}-${Date.now()}-`
-              );
-              componentInfo.value = componentInfo.component;
+              // componentInfo.key = _.uniqueId(
+              //   `${componentInfo.component}-${Date.now()}-`
+              // );
+              // componentInfo.value = componentInfo.component;
 
               if (componentInfo.isContainer === undefined)
                 componentInfo.isContainer = false;

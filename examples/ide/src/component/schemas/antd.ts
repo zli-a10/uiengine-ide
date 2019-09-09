@@ -149,7 +149,7 @@ export default [
         schema: {},
         children: [
           {
-            component: "antd:Menu",
+            component: "antd:Menu.Item",
             title: "Item",
             isContainer: true,
             schema: {}

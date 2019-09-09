@@ -9,10 +9,8 @@ const dataMocker = DataMocker.getInstance();
  * @param dataNode
  */
 const callback: IPluginFunc = async (dataNode: IDataNode) => {
-  console.log(dataNode.schema, "schema");
   if (dataNode.schema) {
     let data = dataMocker.generate(dataNode.schema);
-    console.log(data);
     dataNode.data = data;
   }
 };
