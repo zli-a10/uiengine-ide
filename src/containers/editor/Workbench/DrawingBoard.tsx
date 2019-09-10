@@ -7,8 +7,11 @@ import { UIEngineDndWrapper } from "../../dnd";
 import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
 import { cloneUINode, DndNodeManager, VersionControl } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
+import layoutComponents from "../../../components";
+
 UIEngineRegister.registerPlugins(plugins);
-// console.log(plugins, PluginManager.plugins);
+UIEngineRegister.registerComponents(layoutComponents);
+// console.log(UIEngineRegister.componentsLibrary);
 
 // const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
