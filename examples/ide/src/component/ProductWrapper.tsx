@@ -1,12 +1,11 @@
-import React, {
-  useState,
-  useRef,
-  useContext,
-  useCallback,
-  useEffect
-  // useMemo
-} from "react";
+import React from // useState,
+// useRef,
+// useContext,
+// useCallback,
+// useEffect
+// useMemo
+"react";
 
 export const ProductWrapper = (props: any) => {
-  return <div className="wrapper">{props.children}...</div>;
+  return <div className="product-wrapper">{props.children}</div>;
 };
