@@ -1,12 +1,12 @@
 // export const configLayoutWrappers: IConfigWrappers = {
 //   row: {
-//     component: "div",
+//     component: "ide:Row",
 //     props: {
 //       className: "ide-wrapper-row"
 //     }
 //   },
 //   col: {
-//     component: "div",
+//     component: "ide:Col",
 //     props: {
 //       className: "ide-wrapper-col"
 //     }

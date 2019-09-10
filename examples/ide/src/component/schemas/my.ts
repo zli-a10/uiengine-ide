@@ -1,5 +1,3 @@
-import { number } from "prop-types";
-
 export default [
   {
     id: "general", // prefix

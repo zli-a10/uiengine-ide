@@ -247,13 +247,15 @@ export const UIEngineDndWrapper = (props: any) => {
     chooseEditNode(uinode);
   };
 
+  // get uinode layout to keep same layout with preview
+  const flex = _.get(uinode, "schema.layout.flex", 1);
   return (
     <div
       ref={isDroppable ? ref : null}
       onClick={wrapperClick}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
-      style={{ ...borderStyle }}
+      style={{ ...borderStyle, flex }}
       className={cls}
     >
       <ActionMenu uinode={uinode}>

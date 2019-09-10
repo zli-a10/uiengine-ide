@@ -22,7 +22,7 @@ export const PropItem = (props: any) => {
     setValue(v);
     schemaPropManager.applySchema(
       section,
-      section === "prop" ? { [name]: standardSchema } : standardSchema,
+      name ? { [name]: standardSchema } : standardSchema,
       v,
       uinode,
       props

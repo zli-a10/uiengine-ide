@@ -96,7 +96,7 @@ export const Props: React.FC = (props: any) => {
                   section="prop"
                   name={entry[0]}
                   schema={entry[1]}
-                  key={`key=${entry[0]}`}
+                  key={`key-${entry[0]}`}
                   uinode={editNode}
                   data={_.get(editNode, `schema.props.${entry[0]}`)}
                 />
@@ -104,7 +104,16 @@ export const Props: React.FC = (props: any) => {
             </Form>
           </Panel>
         ) : null}
-
+        <Panel header="Component Layout" key="layout">
+          <Form {...formItemLayout}>
+            <PropItem
+              section="layout"
+              name="flex"
+              uinode={editNode}
+              data={_.get(editNode, `schema.layout.flex`)}
+            />
+          </Form>
+        </Panel>
         <Panel header="Data Source" key="data-source" extra={genExtra()}>
           <Form {...formItemLayout}>
             <PropItem
