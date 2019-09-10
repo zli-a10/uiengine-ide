@@ -161,7 +161,7 @@ export class DndNodeManager implements IDndNodeManager {
 
   private async replaceInlineSchema(insertLeft: boolean = true) {
     let sourceNewSchema = this.sourceSchema;
-    if (this.targetSchema.component !== this.layoutWrappers.col.component) {
+    if (sourceNewSchema.component !== this.layoutWrappers.col.component) {
       sourceNewSchema = {
         ...this.layoutWrappers.col,
         children: [_.cloneDeep(this.sourceSchema)]
@@ -179,12 +179,14 @@ export class DndNodeManager implements IDndNodeManager {
             0,
             sourceNewSchema
           );
+          this.removeSourceNode(this.sourceIndex + 1);
         } else {
           this.targetParentChildrenSchema.splice(
             this.targetIndex + 1,
             0,
             sourceNewSchema
           );
+          this.removeSourceNode();
         }
       } else {
         this.targetParentSchema.children = [
@@ -194,21 +196,35 @@ export class DndNodeManager implements IDndNodeManager {
             children: [_.cloneDeep(this.targetSchema)]
           }
         ];
+        this.removeSourceNode();
       }
 
-      this.removeSourceNode();
       await this.refresh();
     } else {
-      let newSchema = {
-        ...this.layoutWrappers.row,
-        children: [
-          sourceNewSchema,
-          {
-            ...this.layoutWrappers.col,
-            children: [_.cloneDeep(this.targetSchema)]
-          }
-        ]
-      };
+      let newSchema;
+      if (insertLeft) {
+        newSchema = {
+          ...this.layoutWrappers.row,
+          children: [
+            sourceNewSchema,
+            {
+              ...this.layoutWrappers.col,
+              children: [_.cloneDeep(this.targetSchema)]
+            }
+          ]
+        };
+      } else {
+        newSchema = {
+          ...this.layoutWrappers.row,
+          children: [
+            {
+              ...this.layoutWrappers.col,
+              children: [_.cloneDeep(this.targetSchema)]
+            },
+            sourceNewSchema
+          ]
+        };
+      }
       await this.replaceSchema(newSchema);
     }
   }
