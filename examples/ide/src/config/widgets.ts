@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { ProductWrapper } from "../component";
 
 const widgetsConfig = {
   messager: (props: any) => {
@@ -8,7 +9,8 @@ const widgetsConfig = {
       message.success(props.code);
     }
     return null;
-  }
+  },
+  componentWrapper: ProductWrapper
 };
 
 export default widgetsConfig;

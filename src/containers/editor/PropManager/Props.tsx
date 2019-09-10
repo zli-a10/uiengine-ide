@@ -17,7 +17,11 @@ export const Props: React.FC = (props: any) => {
     // console.log(componentInfo, editNode);
   }
 
-  const { title, component, schema } = componentInfo;
+  const {
+    title,
+    component = _.get(editNode, "schema.component"),
+    schema
+  } = componentInfo;
 
   let allEvents, restSchema;
   if (schema) {
@@ -50,6 +54,8 @@ export const Props: React.FC = (props: any) => {
   const [treeValue, selectTreeValue] = useState(component);
   const onTreeChange = (value: any) => {
     if (value && value.indexOf("component-category-") === -1) {
+      const dndNodeManager = DndNodeManager.getInstance();
+      dndNodeManager.pushVersion();
       editNode.schema.component = value;
       _.remove(editNode, "schema.props");
       _.remove(editNode, "schema.children");
@@ -57,15 +63,13 @@ export const Props: React.FC = (props: any) => {
       _.remove(editNode, "schema.$_children");
       _.remove(editNode, "schema.$template");
       selectTreeValue(value);
-      const dndNodeManager = DndNodeManager.getInstance();
-      dndNodeManager.pushVersion();
       editNode.sendMessage(true);
     }
   };
 
   useEffect(() => {
     selectTreeValue(component);
-  }, [component]);
+  }, [editNode]);
 
   const treeData = useMemo(() => IDERegister.componentsLibrary, []);
 

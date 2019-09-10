@@ -19,7 +19,8 @@ const ActionMenu = (props: any) => {
   const {
     focusMode = {} as any,
     collapsedNodes,
-    setCollapsedNode
+    setCollapsedNode,
+    chooseEditNode
   } = useContext(IDEEditorContext);
 
   const { children, uinode } = props;
@@ -32,6 +33,7 @@ const ActionMenu = (props: any) => {
       await dndNodeManager.delete(uinode);
       // to show schema corret on prop window
       updateSchema(uinode.schema);
+      chooseEditNode(null);
     },
     [uinode]
   );
@@ -118,6 +120,9 @@ const ActionMenu = (props: any) => {
     },
     [uinode]
   );
+
+  const disabled = _.has(uinode, "props.ide_droppable");
+
   const menu = (
     <Menu>
       {/* <Menu.Item key="unit-focus" onClick={focusCurrent}>
@@ -152,6 +157,7 @@ const ActionMenu = (props: any) => {
           </a>
         </Menu.Item>
       )}
+
       <Menu.Divider />
       <Menu.Item key="unit-remove-all" onClick={removeChildren}>
         <a target="_blank">

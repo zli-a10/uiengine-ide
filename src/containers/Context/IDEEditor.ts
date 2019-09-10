@@ -13,7 +13,7 @@ export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   refresh: "",
   toggleRefresh: (refresh: string) => {},
   editNode: {} as IUINode,
-  chooseEditNode: (editNode: IUINode) => {},
+  chooseEditNode: (editNode?: IUINode) => {},
   collapsedNodes: [],
   setCollapsedNode: (uiNode: IUINode) => {}
 });

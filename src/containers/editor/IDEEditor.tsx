@@ -28,8 +28,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       refresh: "",
       toggleRefresh: (refresh: string) => {},
       editNode,
-      chooseEditNode: (editNode: IUINode) => {
-        // console.log(editNode);
+      chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode);
       },
       collapsedNodes,
