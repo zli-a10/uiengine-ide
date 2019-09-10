@@ -1,14 +1,18 @@
 .ide-libraries {
   height: 100%;
   padding: 5px;
+
   .search-bar {
     padding: 10px;
+
     .ant-btn {
       margin-left: 10px;
     }
+
     .ant-input-search {
       padding: 0;
       width: 100%;
+
       .ant-input {
         border-radius: 20px;
       }
@@ -21,21 +25,25 @@
 
   .library-panel {
     overflow: auto;
-    height: calc(100% - 90px);
+    height: calc(100% - 190px);
   }
 
   .ant-collapse {
     .collapseOveride();
+
     .ant-collapse-content-box {
       padding: 8px;
     }
+
     .list {
       display: flex;
       flex-wrap: wrap;
+
       .component {
         &.open {
           background: #fcdb99;
           border-radius: 5px;
+
           .list {
             display: flex;
             flex: 1;
@@ -45,6 +53,7 @@
         display: flex;
         text-align: center;
         margin: 3px 0;
+
         .body {
           float: 1px;
           width: 80px;
@@ -52,13 +61,16 @@
           border-radius: 3px;
           padding: 5px;
           position: relative;
+
           .title {
             font-size: 12px;
           }
 
           &:hover {
             background: #fdf3e0;
+
             .anticon {
+
               &.anticon-caret-down,
               &.anticon-caret-up {
                 svg {
@@ -69,16 +81,20 @@
 
             // animation: forwards 2s 1 componentOver;
           }
+
           .anticon {
             border: 1px solid #eee;
             padding: 5px;
             background: #eee;
+
             &:hover {
               background: #fffab8;
             }
+
             svg {
               font-size: 60px;
             }
+
             &.anticon-caret-down,
             &.anticon-caret-up {
               background: transparent;
@@ -86,6 +102,7 @@
               top: 0;
               right: 0;
               position: absolute;
+
               svg {
                 font-size: 12px;
                 color: rgba(24, 144, 255, 0.2);
@@ -100,6 +117,7 @@
           padding: 5px;
           background: #ccc;
           opacity: 0.5;
+
           &:hover {
             opacity: 1;
           }

@@ -1,9 +1,11 @@
 .ide-editor {
   display: flex;
   height: ~'calc(100% - 60px)';
+
   &.show-max {
     height: 100%;
   }
+
   .ant-tabs {
     width: 100%;
   }
@@ -25,9 +27,11 @@
     border-right: 1px solid #ccc;
     // border-bottom: 1px solid #ccc;
     .refactorAntTabs();
+
     .widgets {
       clear: both;
       height: ~'calc(100% - 242px)';
+
       .ant-tabs {
         height: 100%;
       }
@@ -36,15 +40,17 @@
     .pages {
       clear: both;
       position: relative;
+
       .ant-tabs-tabpane {
         min-height: 200px;
         max-height: 400px;
       }
+
       .closeButton();
 
       .pagetree {
         overflow: auto;
-        height: 200px;
+        height: 300px;
       }
     }
   }

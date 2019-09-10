@@ -33,20 +33,16 @@ export class IDERegister {
 
       componentInfos.forEach(
         (inputComponentInfo: IComponentInfoGroup, key: number) => {
-          let findedIndex = -1;
           inputComponentInfo.key = _.uniqueId(
             `${inputComponentInfo.id}-${Date.now()}-`
           );
           inputComponentInfo.value = _.uniqueId("component-category-");
           inputComponentInfo.selectable = false;
-          IDERegister.componentsLibrary.forEach(
-            (componentInfo: IComponentInfoGroup, index: number) => {
-              if (inputComponentInfo.id === componentInfo.id) {
-                findedIndex = index;
-                return;
-              }
-            }
-          );
+
+          // find category exists
+          const findedIndex = _.findIndex(IDERegister.componentsLibrary, {
+            id: inputComponentInfo.id
+          });
 
           // merge
           if (findedIndex > -1) {
@@ -58,11 +54,11 @@ export class IDERegister {
                   component: componentInfo.component
                 });
 
-                if (!existIndex) {
-                  librariesChildren.push(inputComponentInfo);
+                if (existIndex === -1) {
+                  librariesChildren.push(componentInfo);
                 } else {
                   // replace
-                  librariesChildren[existIndex] = inputComponentInfo;
+                  librariesChildren[existIndex] = componentInfo;
                 }
               }
             );
@@ -72,17 +68,8 @@ export class IDERegister {
 
           // add critical info
           addCriticalInfo(inputComponentInfo.children);
-          // cache list
-          // inputComponentInfo.children.forEach(
-          //   (componentInfo: IComponentInfo) => {
-          //     const component = componentInfo.component;
-          //     IDERegister.componentsList[component] = componentInfo;
-          //   }
-          // );
         }
       );
-
-      // console.log(IDERegister.componentsList);
     }
   }
 
