@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useContext } from "react";
+import React, { useCallback, useEffect, useContext, useMemo } from "react";
 // import { Tabs, Icon } from 'antd';
 // import { LayoutManager } from "./LayoutManager";
 import _ from "lodash";
@@ -20,10 +20,15 @@ export const DrawingBoard: React.FC = (props: any) => {
   const { layouts, config = {} } = props;
   let schemas = layouts;
 
-  _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
+  let productWrapper = useMemo(
+    () => _.get(config, `widgetConfig.componentWrapper`),
+    []
+  );
   if (!preview) {
+    _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
     _.set(config, `ideMode`, true);
   } else {
+    _.set(config, `widgetConfig.componentWrapper`, productWrapper);
     _.set(config, `ideMode`, false);
   }
 

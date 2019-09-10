@@ -42,7 +42,7 @@ export const UIEngineDndWrapper = (props: any) => {
   const { children, uinode } = props;
   // add a wrapper ID
   if (!uinode.schema[IDE_ID]) uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
-  if (preview) return children;
+  // if (preview) return children;
 
   // is it a template
   const isDroppable = droppable(uinode);
