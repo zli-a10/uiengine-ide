@@ -5,6 +5,7 @@ import { IPluginFunc, IPlugin, IUINode } from "uiengine/typings";
 const callback: IPluginFunc = async (uiNode: IUINode) => {
   const schema = uiNode.getSchema();
   const props: any = _.get(schema, "props", {});
+  const layout: any = _.get(schema, "layout", {});
 
   // get data value
   const value = uiNode.dataNode.data;
@@ -34,10 +35,10 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 
   // assign user defined props;
   if (props) {
-    let { $events, ide_droppable, ...rest } = props as any;
-
+    let { $events, ide_droppable, style, ...rest } = props as any;
+    style = _.merge(style, layout);
     // assign props to uiNode
-    result = { ...rest, ...result };
+    result = { ...rest, ...result, style };
   }
   uiNode.props = result;
   return result;

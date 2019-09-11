@@ -2,10 +2,11 @@ import React from "react"; // useMemo // useEffect // useCallback, // useContext
 import _ from "lodash";
 export const ProductWrapper = (props: any) => {
   const { uinode, children } = props;
-  const flex = _.get(uinode, "schema.layout.flex", 1);
-  return (
-    <div className="product-wrapper" style={{ flex }}>
-      {children}
-    </div>
-  );
+  return children;
+  // const display = _.get(uinode, "schema.props.style", {});
+  // return (
+  //   <div className="product-wrapper" style={display}>
+  //     {children}
+  //   </div>
+  // );
 };

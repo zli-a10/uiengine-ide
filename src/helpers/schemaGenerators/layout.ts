@@ -6,10 +6,7 @@ export const layout = (
   value: any,
   options?: any
 ) => {
-  // TODO: validate by info
   return {
-    layout: {
-      [name]: value
-    }
+    layout: value
   };
 };
