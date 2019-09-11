@@ -125,7 +125,7 @@ export const Props: React.FC = (props: any) => {
           </Form>
         </Panel>
         {!_.isEmpty(allEvents) ? (
-          <Panel header="Events" key="events" extra={genExtra()}>
+          <Panel header="Events" key="events">
             <Form {...formItemLayout}>
               {allEvents.map((name: any) => (
                 <PropItem
@@ -135,9 +135,12 @@ export const Props: React.FC = (props: any) => {
                   key={`key-${name}`}
                   options={_.keys(plugins)}
                   uinode={editNode}
-                  data={_.find(_.get(editNode, `schema.props.$events`, []), {
-                    event: name
-                  })}
+                  data={_.find(
+                    _.get(editNode, `schema.props.$events.${name}`, {}),
+                    {
+                      event: name
+                    }
+                  )}
                 />
               ))}
             </Form>
