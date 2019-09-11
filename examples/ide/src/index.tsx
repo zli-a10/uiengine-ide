@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.less";
+
 // import App from "./App";
 import config from "./config";
 import { UIEngineRegister } from "uiengine";
@@ -12,7 +12,7 @@ import * as plugins from "./plugins";
 import { getDataSourceJson } from "./utils/dataSource";
 import { expandDataSource } from "./utils/schema";
 import { MockJSConverter } from "./utils/MockJSConverter";
-
+import "./index.less";
 UIEngineRegister.registerComponents(components);
 UIEngineRegister.registerPlugins(plugins);
 IDERegister.registerSchemaConverter(MockJSConverter);
