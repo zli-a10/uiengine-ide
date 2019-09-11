@@ -8,3 +8,4 @@ export * from "./DependencyComponent";
 export * from "./EventComponent";
 export * from "./DatasourceComponent";
 export * from "./ChildrenComponent";
+export * from "./LayoutComponent";

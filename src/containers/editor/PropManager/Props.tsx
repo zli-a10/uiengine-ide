@@ -108,9 +108,9 @@ export const Props: React.FC = (props: any) => {
           <Form {...formItemLayout}>
             <PropItem
               section="layout"
-              name="flex"
+              type="layout"
               uinode={editNode}
-              data={_.get(editNode, `schema.layout.flex`)}
+              data={_.get(editNode, `schema.layout`)}
             />
           </Form>
         </Panel>
