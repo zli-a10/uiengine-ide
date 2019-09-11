@@ -21,7 +21,7 @@ import {
 } from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
-import { IDE_ID, getDataSource, droppable } from "../../helpers";
+import { IDE_ID, getDataSource, droppable, IDERegister } from "../../helpers";
 
 // import { UINode } from "uiengine";
 // import { IDEEditor } from "../editor";
@@ -40,6 +40,10 @@ export const UIEngineDndWrapper = (props: any) => {
   const { schema, updateSchema } = useContext(SchemasContext);
 
   const { children, uinode } = props;
+  let componentInfo = IDERegister.getComponentInfo(
+    _.get(uinode, "schema.component")
+  );
+  //
   // add a wrapper ID
   if (!uinode.schema[IDE_ID]) uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
   // if (preview) return children;
@@ -238,7 +242,8 @@ export const UIEngineDndWrapper = (props: any) => {
     // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
     "wrapper-collapsed": isCollapsed,
-    "wrapper-drop-disabled": !isDroppable
+    "wrapper-drop-disabled": !isDroppable,
+    "wrapper-container": _.get(componentInfo, "isContainer", false)
   });
 
   const onClickMenuBar = (e: any) => {
