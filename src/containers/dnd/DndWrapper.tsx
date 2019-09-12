@@ -176,6 +176,7 @@ export const UIEngineDndWrapper = (props: any) => {
           break;
       }
       setDropNode(draggingNode);
+      chooseEditNode(draggingNode);
       updateSchema(hoverNode.schema);
     },
 

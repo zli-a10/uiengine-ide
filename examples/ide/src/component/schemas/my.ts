@@ -64,7 +64,7 @@ export default [
           hasFeedback: "boolean"
         },
         defaultProps: {
-          label: `My Item ${_.uniqueId()}`
+          // label: `My Item ${_.uniqueId()}`
         }
       }
     ]
