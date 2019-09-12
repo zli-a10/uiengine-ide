@@ -179,14 +179,12 @@ export class DndNodeManager implements IDndNodeManager {
             0,
             sourceNewSchema
           );
-          this.removeSourceNode(this.sourceIndex + 1);
         } else {
           this.targetParentChildrenSchema.splice(
             this.targetIndex + 1,
             0,
             sourceNewSchema
           );
-          this.removeSourceNode();
         }
       } else {
         this.targetParentSchema.children = [
@@ -196,9 +194,12 @@ export class DndNodeManager implements IDndNodeManager {
             children: [_.cloneDeep(this.targetSchema)]
           }
         ];
-        this.removeSourceNode();
       }
-
+      let removeIndex = this.sourceIndex;
+      if (this.targetParent === this.sourceParent) {
+        removeIndex = this.sourceIndex + 1;
+      }
+      this.removeSourceNode(removeIndex);
       await this.refresh();
     } else {
       let newSchema;

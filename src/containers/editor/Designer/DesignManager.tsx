@@ -57,7 +57,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
   const pluginTree = {
     name: "root",
     title: "Start Up",
-    children: getPluginTree(PluginManager.plugins)
+    children: getPluginTree(PluginManager.getInstance().getPlugins("global"))
   };
 
   // libraries fetch

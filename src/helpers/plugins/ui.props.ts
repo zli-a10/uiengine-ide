@@ -1,8 +1,14 @@
 import _ from "lodash";
 import { Event } from "uiengine";
-import { IPluginFunc, IPlugin, IUINode } from "uiengine/typings";
+import {
+  IPlugin,
+  IPluginParam,
+  IUINode,
+  IPluginExecution
+} from "uiengine/typings";
 
-const callback: IPluginFunc = async (uiNode: IUINode) => {
+const execution: IPluginExecution = async (param: IPluginParam) => {
+  const uiNode: IUINode = _.get(param, "uiNode");
   const schema = uiNode.getSchema();
   const props: any = _.get(schema, "props", {});
   const layout: any = _.get(schema, "layout", {});
@@ -45,8 +51,9 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 };
 
 export const setExampleProps: IPlugin = {
-  type: "ui.parser",
+  categories: ["ui.parser"],
+  paramKeys: ["uiNode"],
   priority: 200,
-  callback,
+  execution,
   name: "set-example-props"
 };

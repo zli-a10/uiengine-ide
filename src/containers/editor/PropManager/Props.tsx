@@ -7,7 +7,7 @@ import { IDERegister, formatTitle, DndNodeManager } from "../../../helpers";
 import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;
-const plugins = PluginManager.getPlugins("ui.parser.event");
+const plugins = PluginManager.getInstance().getPlugins("global");
 
 export const Props: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);

@@ -1,5 +1,10 @@
 import _ from "lodash";
-import { IPluginFunc, IPlugin, IDataNode } from "uiengine/typings";
+import {
+  IPlugin,
+  IPluginParam,
+  IDataNode,
+  IPluginExecution
+} from "uiengine/typings";
 import { DataMocker } from "../DataMocker";
 const dataMocker = DataMocker.getInstance();
 
@@ -8,7 +13,9 @@ const dataMocker = DataMocker.getInstance();
  *
  * @param dataNode
  */
-const callback: IPluginFunc = async (dataNode: IDataNode) => {
+const execution: IPluginExecution = async (param: IPluginParam) => {
+  const dataNode: IDataNode = _.get(param, "dataNode");
+
   if (dataNode.schema) {
     let data = dataMocker.generate(dataNode.schema);
     dataNode.data = data;
@@ -16,8 +23,9 @@ const callback: IPluginFunc = async (dataNode: IDataNode) => {
 };
 
 export const mockData: IPlugin = {
-  type: "data.schema.parser",
+  categories: ["data.schema.parser"],
+  paramKeys: ["dataNode"],
   priority: 101,
-  callback,
+  execution,
   name: "mock-data"
 };

@@ -9,7 +9,7 @@ import {
   ComponentWrapper,
   DataPool
 } from "uiengine";
-import { IWorkingMode } from "../../../../../typings";
+import { IWorkingMode } from "uiengine/typings";
 const EditableContext = React.createContext({});
 
 const EditableRow = (props: any) => (

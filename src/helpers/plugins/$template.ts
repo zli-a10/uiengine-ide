@@ -1,5 +1,10 @@
 import _ from "lodash";
-import { IPluginFunc, IPlugin, IUINode } from "uiengine/typings";
+import {
+  IPlugin,
+  IPluginParam,
+  IUINode,
+  IPluginExecution
+} from "uiengine/typings";
 import { FileLoader } from "../FileLoader";
 
 /**
@@ -7,7 +12,9 @@ import { FileLoader } from "../FileLoader";
  *
  * @param uiNode
  */
-const callback: IPluginFunc = async (uiNode: IUINode) => {
+const execution: IPluginExecution = async (param: IPluginParam) => {
+  const uiNode: IUINode = _.get(param, "uiNode");
+
   const fileLoader = FileLoader.getInstance();
   // parse $$template
   if (_.has(uiNode.schema, "$template")) {
@@ -21,8 +28,9 @@ const callback: IPluginFunc = async (uiNode: IUINode) => {
 };
 
 export const template: IPlugin = {
-  type: "ui.parser",
+  categories: ["ui.parser"],
+  paramKeys: ["uiNode"],
   priority: 202,
-  callback,
+  execution,
   name: "template"
 };

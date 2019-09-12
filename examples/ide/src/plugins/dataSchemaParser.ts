@@ -1,12 +1,18 @@
 import _ from "lodash";
-import { IPluginFunc, IPlugin, IDataNode } from "uiengine/typings";
+import {
+  IPlugin,
+  IPluginParam,
+  IDataNode,
+  IPluginExecution
+} from "uiengine/typings";
 
 /**
  * get cm lineage by UI schema
  *
  * @param dataNode
  */
-const callback: IPluginFunc = (dataNode: IDataNode) => {
+const execution: IPluginExecution = (param: IPluginParam) => {
+  const dataNode: IDataNode = _.get(param, "dataNode");
   const rootSchema = dataNode.rootSchema;
   let schemaPath = dataNode.source.schema || dataNode.source.source;
   let name = schemaPath.replace(":", ".");
@@ -24,8 +30,9 @@ const callback: IPluginFunc = (dataNode: IDataNode) => {
 };
 
 export const schemaParser: IPlugin = {
-  type: "data.schema.parser",
+  categories: ["data.schema.parser"],
+  paramKeys: ["dataNode"],
   priority: 100,
-  callback,
+  execution,
   name: "parse-schema"
 };
