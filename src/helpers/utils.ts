@@ -101,8 +101,14 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
       standardSchema["range"] = fieldSchema;
       standardSchema["type"] = "range";
     } else {
-      standardSchema["options"] = fieldSchema;
-      standardSchema["type"] = "enum";
+      if (_.isObject(fieldSchema[0])) {
+        // subobject treated
+        standardSchema["sub"] = fieldSchema;
+        standardSchema["type"] = "sub";
+      } else {
+        standardSchema["options"] = fieldSchema;
+        standardSchema["type"] = "enum";
+      }
     }
   } else if (_.isString(fieldSchema)) {
     standardSchema["type"] = fieldSchema;

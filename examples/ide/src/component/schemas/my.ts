@@ -1,7 +1,8 @@
+import _ from "lodash";
 export default [
   {
-    id: "general", // prefix
-    title: "General",
+    id: "My", // prefix
+    title: "My Project Components",
     children: [
       {
         component: "my:Section",
@@ -21,8 +22,21 @@ export default [
         title: "My DataSelect",
         isContainer: false,
         schema: {
-          active: "boolean",
-          title: "string"
+          datasource: "datasource",
+          optionmap: [{ title: "string" }, { value: "string" }],
+          open: "boolean",
+          events: [
+            "onChange",
+            "onBlur",
+            "onDeselect",
+            "onFocus",
+            "onInputKeyDown",
+            "onMouseEnter",
+            "onMouseLeave",
+            "onSearch",
+            "onSelect",
+            "onDropdownVisibleChange"
+          ]
         },
         defaultProps: {
           active: true,
@@ -32,27 +46,25 @@ export default [
       {
         component: "my:FormItem",
         title: "My FormItem",
-        isContainer: true,
+        isContainer: false,
         schema: {
           type: "string",
-          label: "string"
+          label: "string",
+          extra: {
+            help: "string"
+          },
+          labelCol: {
+            sm: {
+              span: "number",
+              offset: "number"
+            }
+          },
+          required: "boolean",
+          htmlFor: "string",
+          hasFeedback: "boolean"
         },
         defaultProps: {
-          active: true,
-          title: "FormItem 1"
-        }
-      },
-      {
-        component: "my:Modal",
-        title: "My Modal",
-        isContainer: true,
-        schema: {
-          active: "boolean",
-          title: "string"
-        },
-        defaultProps: {
-          active: true,
-          title: "Modal 1"
+          label: `My Item ${_.uniqueId()}`
         }
       }
     ]

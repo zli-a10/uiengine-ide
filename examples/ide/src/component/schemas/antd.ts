@@ -43,17 +43,19 @@ export default [
         title: "Row",
         isContainer: true,
         schema: {
-          gutter: {
-            types: ["xs", "sm", "md"],
-            range: [1, 24]
-          },
-          align: {
-            default: "top",
-            options: ["top", "middle", "bottom"]
-          },
-          justify: {
-            options: ["start", "end", "center", "space-around", "space-between"]
-          }
+          gutter: [{ types: ["xs", "sm", "md"] }, { range: [1, 24] }],
+          align: [{ default: "top" }, { options: ["top", "middle", "bottom"] }],
+          justify: [
+            {
+              options: [
+                "start",
+                "end",
+                "center",
+                "space-around",
+                "space-between"
+              ]
+            }
+          ]
         }
       },
       {
@@ -214,12 +216,7 @@ export default [
         schema: {
           layout: ["horizontal", "vertical", "inline"],
           labelAlign: ["left", "right"],
-          labelCol: {
-            sm: {
-              span: "number",
-              offset: "number"
-            }
-          },
+          labelCol: [{ sm: [{ span: "number" }, { offset: "number" }] }],
           hideRequiredMark: "boolean"
         },
         children: [
@@ -228,16 +225,9 @@ export default [
             title: "Item",
             isContainer: true,
             schema: {
-              extra: {
-                help: "string"
-              },
+              extra: [{ help: "string" }],
               label: "string",
-              labelCol: {
-                sm: {
-                  span: "number",
-                  offset: "number"
-                }
-              },
+              labelCol: [{ sm: [{ span: "number" }, { offset: "number" }] }],
               required: "boolean",
               htmlFor: "string",
               hasFeedback: "boolean"

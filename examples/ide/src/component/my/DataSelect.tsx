@@ -3,24 +3,19 @@ import { Select } from "antd";
 import _ from "lodash";
 
 export const DataSelect = (props: any) => {
-  const {
-    children,
-    uinode,
-    associations,
-    select: {
-      datasource = null,
-      optionmap: { title, value }
-    },
-    ...rest
-  } = props;
+  const { children, uinode, select, ...rest } = props;
   // load data
-  // console.log(uinode, associations);
   const [assocs, setAssocs] = useState([]);
-  console.log('datasource:', datasource)
-  const source = { source: datasource };
-  uinode.dataNode.dataEngine.loadData(source).then((data: any) => {
-    setAssocs(_.get(data, datasource.replace(":", ".")));
-  });
+  const datasource = _.get(select, "datasource");
+  const title = _.get(select, "optionmap.title");
+  const value = _.get(select, "optionmap.value");
+
+  if (datasource) {
+    const source = { source: datasource };
+    uinode.dataNode.dataEngine.loadData(source).then((data: any) => {
+      setAssocs(_.get(data, datasource.replace(":", ".")));
+    });
+  }
   return (
     <Select {...rest}>
       {assocs &&

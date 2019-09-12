@@ -11,7 +11,6 @@ export const FormItem = (props: any) => {
   let element: any = children;
   if (type) {
     if (type.indexOf(":") === -1) type = "antd:" + _.upperFirst(type);
-    console.log('type:', type)
     const InputComponent: any = getComponent(type);
     if (InputComponent) {
       element = <InputComponent {...rest} />;

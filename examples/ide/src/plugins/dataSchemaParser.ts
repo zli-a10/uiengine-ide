@@ -18,21 +18,18 @@ const execution: IPluginExecution = (param: IPluginParam) => {
   let name = schemaPath.replace(":", ".");
   const regex = /\[\d+\]/;
   name = name.replace(regex, "");
-  // console.log(_.cloneDeep(rootSchema), name);
   let result = _.get(rootSchema, `fields`, []).find((schema: any) => {
     return schema["cm-lineage"] === name;
   });
 
-  // parse data schema deps
-  // result = result.pop();
   dataNode.schema = result;
-  // console.log("schema fetched", result);
 };
 
 export const schemaParser: IPlugin = {
   categories: ["data.schema.parser"],
   paramKeys: ["dataNode"],
-  priority: 100,
+  priority: 1,
   execution,
-  name: "parse-schema"
+  name: "parse-schema",
+  debugList: ["dataNode.data"]
 };

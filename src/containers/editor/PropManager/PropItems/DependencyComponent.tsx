@@ -76,9 +76,9 @@ const SelectorItem = (props: any) => {
         selector["id"] = _.get(schema, "id");
       } else {
         if (_.has(schema, "_id")) {
-          schema.id = `ide-node-${Date.now()}-${_.get(schema, "_id")}`;
+          schema.id = _.get(schema, "_id");
         } else {
-          schema.id = _.uniqueId(`ide-node-${Date.now()}`);
+          schema.id = _.uniqueId(`ide-gen-node-`);
         }
         selector["id"] = _.get(schema, "id");
       }
@@ -151,8 +151,9 @@ const SelectorItem = (props: any) => {
           </Select>
         </Form.Item>
         <div ref={drop} className={cls}>
-          <Form.Item label="Selector">
+          <Form.Item label="ID(Drag)">
             <Input
+              title="Drag Any Element Right Here From Drawingboard"
               readOnly
               disabled={disabled}
               value={

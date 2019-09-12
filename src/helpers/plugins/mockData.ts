@@ -25,7 +25,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
 export const mockData: IPlugin = {
   categories: ["data.schema.parser"],
   paramKeys: ["dataNode"],
-  priority: 101,
+  priority: 0,
   execution,
   name: "mock-data"
 };

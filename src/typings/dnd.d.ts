@@ -99,4 +99,5 @@ interface IComponentSchema {
   default?: any;
   options?: Array<number | string>;
   range?: Array<number>;
+  children?: Array<IComponentSchema>;
 }
