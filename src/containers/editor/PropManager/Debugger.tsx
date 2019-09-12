@@ -134,22 +134,10 @@ export const Debugger: React.FC = (props: any) => {
         defaultActiveKey={preview ? "plugin" : "ui-node-json"}
       >
         <Panel header="UI JSON" key="ui-node-json">
-          <ReactJson
-            indentWidth={2}
-            src={uiJson}
-            onEdit={(d: any) => {
-              console.log(d);
-            }}
-            displayDataTypes={false}
-            collapsed={2}
-            collapseStringsAfterLength={50}
-          />
-        </Panel>
-        {dataJson ? (
-          <Panel header="Data JSON" key="ui-data-json">
+          <div className="debugger-tree">
             <ReactJson
               indentWidth={2}
-              src={dataJson}
+              src={uiJson}
               onEdit={(d: any) => {
                 console.log(d);
               }}
@@ -157,78 +145,98 @@ export const Debugger: React.FC = (props: any) => {
               collapsed={2}
               collapseStringsAfterLength={50}
             />
+          </div>
+        </Panel>
+        {dataJson ? (
+          <Panel header="Data JSON" key="ui-data-json">
+            <div className="debugger-tree">
+              <ReactJson
+                indentWidth={2}
+                src={dataJson}
+                onEdit={(d: any) => {
+                  console.log(d);
+                }}
+                displayDataTypes={false}
+                collapsed={2}
+                collapseStringsAfterLength={50}
+              />
+            </div>
           </Panel>
         ) : null}
         <Panel header="Plugin Data" key="plugin">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Category">
-                <Select value={struct} onChange={changeStruct}>
-                  <Select.Option value="category-id-tree">
-                    Category ID Tree
-                  </Select.Option>
-                  <Select.Option value="id-category-tree">
-                    ID Category Tree
-                  </Select.Option>
-                  <Select.Option value="category-tree">
-                    Category Tree
-                  </Select.Option>
-                  <Select.Option value="sequence">Sequence</Select.Option>
-                  <Select.Option value="id-tree">ID Tree</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="Include">
-                <Select value={exclude} onChange={changeExclude}>
-                  <Select.Option value="">All</Select.Option>
-                  <Select.Option value="empty-queue">
-                    With Queue Empty
-                  </Select.Option>
-                  <Select.Option value="non-empty-queue">
-                    Queue Data
-                  </Select.Option>
-                  <Select.Option value="empty-record">
-                    With Record
-                  </Select.Option>
-                  <Select.Option value="non-empty-record">
-                    No Record
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="Component ID (Drag)">
-                <div ref={drop}>
-                  <Input
-                    title="Drag any element right here from drawingboard"
-                    value={componentID}
-                    onChange={changeComponentId}
-                    size="small"
-                    addonAfter={
-                      <Icon
-                        type="border-inner"
-                        title="Use current edit node"
-                        onClick={onClickFetchCurrentId}
-                      />
-                    }
-                  />
-                </div>
-              </Form.Item>
-            </Col>
-          </Row>
+          <div className="plugin-filter">
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item label="Category">
+                  <Select value={struct} onChange={changeStruct}>
+                    <Select.Option value="category-id-tree">
+                      Category ID Tree
+                    </Select.Option>
+                    <Select.Option value="id-category-tree">
+                      ID Category Tree
+                    </Select.Option>
+                    <Select.Option value="category-tree">
+                      Category Tree
+                    </Select.Option>
+                    <Select.Option value="sequence">Sequence</Select.Option>
+                    <Select.Option value="id-tree">ID Tree</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Include">
+                  <Select value={exclude} onChange={changeExclude}>
+                    <Select.Option value="">All</Select.Option>
+                    <Select.Option value="empty-queue">
+                      With Queue Empty
+                    </Select.Option>
+                    <Select.Option value="non-empty-queue">
+                      Queue Data
+                    </Select.Option>
+                    <Select.Option value="empty-record">
+                      With Record
+                    </Select.Option>
+                    <Select.Option value="non-empty-record">
+                      No Record
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="Component ID (Drag)">
+                  <div ref={drop}>
+                    <Input
+                      title="Drag any element right here from drawingboard"
+                      value={componentID}
+                      onChange={changeComponentId}
+                      size="small"
+                      addonAfter={
+                        <Icon
+                          type="border-inner"
+                          title="Use current edit node"
+                          onClick={onClickFetchCurrentId}
+                        />
+                      }
+                    />
+                  </div>
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
           <Row>
             <Col>
               <Form.Item>
-                <ReactJson
-                  indentWidth={2}
-                  src={pluginData}
-                  displayDataTypes={true}
-                  collapsed={1}
-                  collapseStringsAfterLength={50}
-                />
+                <div className="debugger-tree">
+                  <ReactJson
+                    indentWidth={2}
+                    src={pluginData}
+                    displayDataTypes={true}
+                    collapsed={1}
+                    collapseStringsAfterLength={50}
+                  />
+                </div>
               </Form.Item>
             </Col>
           </Row>
