@@ -9,6 +9,10 @@ import {
 const execution: IPluginExecution = async (param: IPluginParam) => {
   const uiNode: IUINode = _.get(param, "uiNode");
   const inputType: string = uiNode.dataNode.getSchema("type");
+  if (!_.get(uiNode, "props.label")) {
+    const label: string = uiNode.dataNode.getSchema("label");
+    _.set(uiNode, "props.label", label);
+  }
   _.set(uiNode, "props.type", inputType);
 };
 
