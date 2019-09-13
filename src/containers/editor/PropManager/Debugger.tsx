@@ -1,16 +1,7 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import ReactJson from "react-json-view";
-import {
-  Collapse,
-  TreeSelect,
-  Row,
-  Col,
-  Input,
-  Select,
-  Form,
-  Icon
-} from "antd";
+import { Collapse, Row, Col, Input, Select, Form, Icon } from "antd";
 import { IDEEditorContext, GlobalContext } from "../../Context";
 import * as Panels from "./Panels";
 import { getActiveUINode } from "../../../helpers";
@@ -19,7 +10,6 @@ import { DND_IDE_NODE_TYPE } from "../../../helpers";
 import { useDrop } from "react-dnd";
 
 const Panel = Collapse.Panel;
-const TreeNode = TreeSelect.TreeNode;
 // layout
 const formItemLayout = {
   colon: false,
@@ -62,7 +52,7 @@ export const Debugger: React.FC = (props: any) => {
   }
 
   const [struct, setStruct] = useState<any>("category-id-tree");
-  const [exclude, setExclude] = useState<any>("non-empty-queue");
+  const [exclude, setExclude] = useState<any>("empty-record");
   const [componentID, setComponentID] = useState<any>();
 
   let pluginData = PluginManager.getInstance().exportHistoryRecords({
@@ -106,10 +96,19 @@ export const Debugger: React.FC = (props: any) => {
     }
   });
 
+  useEffect(() => {
+    changeComponentId(editNode.props.id);
+  }, [editNode]);
+
+  const [time, setTime] = useState(Date.now());
+  const onRefresh = useCallback(() => {
+    setTime(Date.now());
+  }, []);
+
   return (
     <div className="ide-props-events">
-      <Collapse accordion defaultActiveKey={"request-params"}>
-        <Panel header="Networking " key="request-params">
+      <Collapse accordion>
+        <Panel header="Test Toolkits " key="request-params">
           <Panels.RequestParams
             formItemLayout={formItemLayout}
             tailFormItemLayout={tailFormItemLayout}
@@ -166,7 +165,7 @@ export const Debugger: React.FC = (props: any) => {
         <Panel header="Plugin Data" key="plugin">
           <div className="plugin-filter">
             <Row gutter={16}>
-              <Col span={12}>
+              <Col span={10}>
                 <Form.Item label="Category">
                   <Select value={struct} onChange={changeStruct}>
                     <Select.Option value="category-id-tree">
@@ -183,24 +182,25 @@ export const Debugger: React.FC = (props: any) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={10}>
                 <Form.Item label="Include">
                   <Select value={exclude} onChange={changeExclude}>
                     <Select.Option value="">All</Select.Option>
-                    <Select.Option value="empty-queue">
-                      With Queue Empty
-                    </Select.Option>
+                    <Select.Option value="empty-queue">Has Queue</Select.Option>
                     <Select.Option value="non-empty-queue">
-                      Queue Data
+                      No Queue
                     </Select.Option>
                     <Select.Option value="empty-record">
-                      With Record
+                      Has Record
                     </Select.Option>
                     <Select.Option value="non-empty-record">
                       No Record
                     </Select.Option>
                   </Select>
                 </Form.Item>
+              </Col>
+              <Col span={4}>
+                <Icon type="redo" title="Reload" onClick={onRefresh} />
               </Col>
             </Row>
             <Row gutter={16}>

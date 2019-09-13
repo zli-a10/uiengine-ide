@@ -73,11 +73,14 @@ const SelectorItem = (props: any) => {
       const schema = draggingNode.schema;
       let selector = {};
       if (_.has(schema, "id")) {
+        console.log('_.has(schema, "id")', _.get(schema, "id"));
         selector["id"] = _.get(schema, "id");
       } else {
         if (_.has(schema, "_id")) {
+          console.log('_.has(schema, "_id")', _.get(schema, "_id"));
           schema.id = _.get(schema, "_id");
         } else {
+          console.log("no id, generate");
           schema.id = _.uniqueId(`ide-gen-node-`);
         }
         selector["id"] = _.get(schema, "id");
@@ -139,8 +142,9 @@ const SelectorItem = (props: any) => {
             onChange={changeValue(compareRule)}
             disabled={disabled}
           >
-            {ruleOptions.map((rule: any) => (
+            {ruleOptions.map((rule: any, key: number) => (
               <Select.Option
+                key={key}
                 value={rule[0]}
                 title={rule[1]}
                 disabled={disabled}
@@ -288,6 +292,7 @@ const DepGroup = (props: any) => {
             dataSource={listValue}
             renderItem={(item: any, index: number) => (
               <SelectorItem
+                key={index}
                 index={index}
                 root={value}
                 group={props.group}

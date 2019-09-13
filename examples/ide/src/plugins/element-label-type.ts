@@ -16,10 +16,10 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   _.set(uiNode, "props.type", inputType);
 };
 
-export const setElementType: IPlugin = {
+export const elementType: IPlugin = {
   categories: ["ui.parser"],
   paramKeys: ["uiNode"],
   priority: 0,
   execution,
-  name: "set-element-type"
+  name: "element-label-type"
 };

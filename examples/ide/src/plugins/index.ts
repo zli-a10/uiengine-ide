@@ -1,2 +1,2 @@
-export * from "./dataSchemaParser";
-export * from "./elementType";
+export * from "./data-schema-parser";
+export * from "./element-label-type";

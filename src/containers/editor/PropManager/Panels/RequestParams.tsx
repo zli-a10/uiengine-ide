@@ -23,7 +23,7 @@ export const RequestParams = (props: any) => {
     return async () => {
       dataMocker.mode = value;
       dataMocker.noCache = true;
-      console.log(value);
+      // console.log(value);
       const rootNode: any = getActiveUINode();
       await rootNode.updateLayout();
       rootNode.sendMessage(true);
@@ -77,11 +77,11 @@ export const RequestParams = (props: any) => {
           ]}
         />
       </Form.Item> */}
-      <Form.Item {...tailFormItemLayout}>
+      {/* <Form.Item {...tailFormItemLayout}>
         <Button type="primary" icon="play-circle">
           Send Request
         </Button>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 };

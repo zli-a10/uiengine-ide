@@ -27,10 +27,10 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   }
 };
 
-export const template: IPlugin = {
+export const $template: IPlugin = {
   categories: ["ui.parser"],
   paramKeys: ["uiNode"],
   priority: 202,
   execution,
-  name: "template"
+  name: "$template"
 };

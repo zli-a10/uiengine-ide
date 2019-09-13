@@ -50,10 +50,10 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   return result;
 };
 
-export const setExampleProps: IPlugin = {
+export const props: IPlugin = {
   categories: ["ui.parser"],
   paramKeys: ["uiNode"],
   priority: 200,
   execution,
-  name: "set-example-props"
+  name: "props-parser"
 };

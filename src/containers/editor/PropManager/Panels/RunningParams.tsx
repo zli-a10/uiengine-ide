@@ -63,7 +63,7 @@ export const RunningParams = (props: any) => {
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
         <Button type="primary" icon="play-circle">
-          Send Request
+          Initial
         </Button>
       </Form.Item>
     </Form>

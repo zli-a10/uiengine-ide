@@ -25,11 +25,11 @@ const execution: IPluginExecution = (param: IPluginParam) => {
   dataNode.schema = result;
 };
 
-export const schemaParser: IPlugin = {
+export const dataSchemaParser: IPlugin = {
   categories: ["data.schema.parser"],
   paramKeys: ["dataNode"],
   priority: 1,
   execution,
-  name: "parse-schema",
+  name: "data-schema-parser",
   debugList: ["dataNode.data"]
 };
