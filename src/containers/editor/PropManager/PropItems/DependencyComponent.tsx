@@ -96,7 +96,7 @@ const SelectorItem = (props: any) => {
 
       data.selector = selector;
       onChange(_.cloneDeep(root));
-      setDroppedSelector(selector);
+      setDroppedSelector(_.get(selector, "id"));
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -111,6 +111,12 @@ const SelectorItem = (props: any) => {
   });
 
   useEffect(() => {
+    const id = _.get(data, "selector.id");
+    setDroppedSelector(id);
+    const state = _.has(data, "state") ? "state" : "data";
+    setStateValue(state);
+    const rule = _.get(data, compareRule);
+    setRule(rule);
     const d = _.get(data, "state") ? "state" : "data";
     setStateValue(d);
   }, [data]);
@@ -118,6 +124,20 @@ const SelectorItem = (props: any) => {
   return (
     <div className="deps-editor">
       <List.Item>
+        <div ref={drop} className={cls}>
+          <Form.Item label="ID(Drag)">
+            <Input
+              title="Drag Any Element Right Here From Drawingboard"
+              readOnly
+              disabled={disabled}
+              value={
+                (droppedSelector && droppedSelector.id) ||
+                _.get(data, "selector.id")
+              }
+              onMouseDown={onMouseDown}
+            />
+          </Form.Item>
+        </div>
         <Form.Item label="Compare">
           <Select
             size="small"
@@ -154,20 +174,7 @@ const SelectorItem = (props: any) => {
             ))}
           </Select>
         </Form.Item>
-        <div ref={drop} className={cls}>
-          <Form.Item label="ID(Drag)">
-            <Input
-              title="Drag Any Element Right Here From Drawingboard"
-              readOnly
-              disabled={disabled}
-              value={
-                (droppedSelector && droppedSelector.id) ||
-                _.get(data, "selector.id")
-              }
-              onMouseDown={onMouseDown}
-            />
-          </Form.Item>
-        </div>
+
         {state === "data" ? (
           <Form.Item label="Value">
             <Input
