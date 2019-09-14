@@ -18,6 +18,21 @@ import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
 
 import { DND_IDE_NODE_TYPE, DndNodeManager } from "../../../../helpers";
+const ruleOptions = [
+  ["is", "Is"],
+  ["not", "Not"],
+  ["above", "Above"],
+  ["below", "Below"],
+  ["include", "Include"],
+  ["exclude", "Exclude"],
+  ["matchOne", "MatchOne"],
+  ["matchAll", "MatchAll"],
+  ["dismatchOne", "DismatchOne"],
+  ["dismatchAll", "DismatchAll"],
+  ["empty", "Empty"],
+  ["notEmpty", "NotEmpty"],
+  ["regexp", "Reg Expression"]
+];
 
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange, disabled } = props;
@@ -25,7 +40,7 @@ const SelectorItem = (props: any) => {
   const data = _.get(root, `deps[${index}]`);
   const [, rerender] = useState();
 
-  const changeValue = (path: string) => {
+  const changeValue = useCallback((path: string) => {
     // setInputValue(e.target.value);
     return (e: any) => {
       const value = e.target ? e.target.value : e;
@@ -33,7 +48,7 @@ const SelectorItem = (props: any) => {
       rerender(Date.now());
       onChange(_.cloneDeep(root));
     };
-  };
+  }, []);
 
   const onMouseDown = useCallback((e: any) => {
     e.stopPropagation();
@@ -60,9 +75,9 @@ const SelectorItem = (props: any) => {
     setStateValue(value);
   };
   // fetch data
-  const compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
-  const rule = _.get(data, compareRule);
-  const value = _.get(data, state === "state" ? "state.visible" : "data");
+  let compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
+  let rule = _.get(data, compareRule);
+  let value = _.get(data, state === "state" ? "state.visible" : "data");
 
   // drag datasource
   const [droppedSelector, setDroppedSelector] = useState();
@@ -73,14 +88,11 @@ const SelectorItem = (props: any) => {
       const schema = draggingNode.schema;
       let selector = {};
       if (_.has(schema, "id")) {
-        console.log('_.has(schema, "id")', _.get(schema, "id"));
         selector["id"] = _.get(schema, "id");
       } else {
         if (_.has(schema, "_id")) {
-          console.log('_.has(schema, "_id")', _.get(schema, "_id"));
           schema.id = _.get(schema, "_id");
         } else {
-          console.log("no id, generate");
           schema.id = _.uniqueId(`ide-gen-node-`);
         }
         selector["id"] = _.get(schema, "id");
@@ -102,22 +114,10 @@ const SelectorItem = (props: any) => {
     "dnd-prop-over": isOverCurrent
   });
 
-  const ruleOptions = [
-    ["is", "Is"],
-    ["not", "Not"],
-    ["above", "Above"],
-    ["below", "Below"],
-    ["include", "Include"],
-    ["exclude", "Exclude"],
-    ["matchOne", "MatchOne"],
-    ["matchAll", "MatchAll"],
-    ["dismatchOne", "DismatchOne"],
-    ["dismatchAll", "DismatchAll"],
-    ["empty", "Empty"],
-    ["notEmpty", "NotEmpty"],
-    ["regexp", "Reg Expression"],
-    ["is", "IS"]
-  ];
+  useEffect(() => {
+    const d = _.get(data, "state") ? "state" : "data";
+    setStateValue(d);
+  }, [data]);
 
   return (
     <div className="deps-editor">
@@ -137,6 +137,7 @@ const SelectorItem = (props: any) => {
         <Form.Item label="Rule" style={{ width: "150px" }}>
           <Select
             size="small"
+            style={{ width: "100px" }}
             defaultValue={"is"}
             value={rule || "is"}
             onChange={changeValue(compareRule)}
@@ -190,7 +191,7 @@ const SelectorItem = (props: any) => {
             </Select>
           </Form.Item>
         )}
-        <Form.Item label="Add">
+        <Form.Item label="Del">
           <Button
             disabled={disabled}
             type="danger"
@@ -311,6 +312,7 @@ const DepGroup = (props: any) => {
 export const DependencyComponent = (props: any) => {
   const { onChange, uinode } = props;
   const finalResult = _.get(uinode, "schema", {});
+  // const [state, changeState] = useState(finalResult);
   const onItemChange = (path: string) => {
     return (v: any) => {
       _.set(finalResult, path, v);
@@ -318,6 +320,11 @@ export const DependencyComponent = (props: any) => {
       dndNodeManager.pushVersion();
     };
   };
+
+  // useEffect(() => {
+  //   changeState(finalResult);
+  // }, [uinode]);
+
   return (
     <>
       <DepGroup

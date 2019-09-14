@@ -1,14 +1,9 @@
 import React from "react";
 import _ from "lodash";
-import { Table, Input, Button, Popconfirm, Form, Icon } from "antd";
+import { Table, Button, Popconfirm, Form, Icon } from "antd";
 // import { A10Modal } from "./Modal";
 
-import {
-  UIEngineContext,
-  NodeController,
-  ComponentWrapper,
-  DataPool
-} from "uiengine";
+import { UIEngineContext, NodeController, ComponentWrapper } from "uiengine";
 import { IWorkingMode } from "uiengine/typings";
 const EditableContext = React.createContext({});
 
@@ -51,7 +46,7 @@ class EditableCell extends React.Component<any, any> {
 
   renderCell = (form: any) => {
     this.form = form;
-    const { children, dataIndex, record, title, index } = this.props;
+    const { children, record, index } = this.props;
     if (!record.uinode) return;
 
     let editing: any = this.state.editing;
@@ -200,7 +195,7 @@ export class EditableTable extends React.Component<any, any> {
   handleCancel = () => {
     const nodeController = NodeController.getInstance();
     const {
-      modal: { layout, connect }
+      modal: { layout }
     } = this.props;
 
     // if (_.has(connect, "source")) {

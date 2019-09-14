@@ -4,7 +4,7 @@ import classNames from "classnames";
 export const Col = (props: any) => {
   const { flex, children } = props;
   const cls = classNames({
-    "col-wrapper": true
+    "ide-wrapper-col": true
   });
   return (
     <div className={cls} style={{ display: "flex", flex }}>
