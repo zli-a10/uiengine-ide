@@ -115,8 +115,7 @@ const SelectorItem = (props: any) => {
     ["dismatchAll", "DismatchAll"],
     ["empty", "Empty"],
     ["notEmpty", "NotEmpty"],
-    ["regexp", "Reg Expression"],
-    ["is", "IS"]
+    ["regexp", "Reg Expression"]
   ];
 
   return (
