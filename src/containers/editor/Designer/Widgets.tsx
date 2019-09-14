@@ -31,7 +31,8 @@ const WidgetItem = (props: any) => {
     item: { type: DND_IDE_NODE_TYPE },
     begin: (monitor: any) => {
       tempSchema[IDE_ID] = _.uniqueId(`${IDE_ID}-new-`);
-      const uinode = new UINode(tempSchema);
+      // const uinode = new UINode(tempSchema);
+      const uinode = { schema: tempSchema };
       return {
         type: DND_IDE_NODE_TYPE,
         uinode

@@ -38,16 +38,18 @@ const WidgetItem = (props: any) => {
   if (data.type === "file") {
     const { component, props } = data;
     dragObj = {
-      uinode: new UINode({
-        component,
-        props,
-        children: getChildrenUiSchema(data)
-      })
+      uinode: {
+        schema: {
+          component,
+          props,
+          children: getChildrenUiSchema(data)
+        }
+      }
     };
     // dragType = DND_IDE_NODE_TYPE;
   } else {
     dragObj = {
-      uinode: new UINode(data)
+      uinode: { schema: data }
     };
     // const { datasource: { source } = {} as any } = data;
     // dragObj = { schema: { datasource: source } };

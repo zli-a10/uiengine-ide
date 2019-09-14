@@ -182,7 +182,7 @@ export class PluginTree extends React.Component<ITree, ITreeState> {
     // const templateSchema = {
     //   $template: `/${dataRef._path_}.json`
     // };
-    const uinode = new UINode(schema);
+    const uinode = { schema };
     const [, drag] = useDrag({
       item: {
         type: DND_IDE_NODE_TYPE,

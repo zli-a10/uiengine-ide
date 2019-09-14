@@ -97,7 +97,9 @@ export const Debugger: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    changeComponentId(editNode.props.id);
+    if (_.get(editNode, `props.id`)) {
+      changeComponentId(editNode.props.id);
+    }
   }, [editNode]);
 
   const [time, setTime] = useState(Date.now());
