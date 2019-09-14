@@ -93,7 +93,7 @@ export default [
         schema: {}
       },
       {
-        component: "antd:Content",
+        component: "antd:Layout.Content",
         title: "Content",
         isContainer: true,
         schema: {}

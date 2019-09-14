@@ -234,3 +234,14 @@ export const fillWithKeywords = (
     }
   }
 };
+
+export const rand = (min: any, max: any) => {
+  return parseInt(Math.random() * (max - min + 1) + min);
+};
+
+export const randColor = (min: number, max: number, alpha: number = 0.2) => {
+  const r = rand(min, max);
+  const g = rand(min, max);
+  const b = rand(min, max);
+  return `rgba(${r},${g}, ${b}, ${alpha})`;
+};

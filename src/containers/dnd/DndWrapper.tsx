@@ -3,8 +3,8 @@ import React, {
   useRef,
   useContext,
   useCallback,
-  useEffect
-  // useMemo
+  useEffect,
+  useMemo
 } from "react";
 import { SchemasContext, GlobalContext, IDEEditorContext } from "../Context";
 import _ from "lodash";
@@ -12,6 +12,8 @@ import { Icon } from "antd";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 import { XYCoord } from "dnd-core";
 import classNames from "classnames";
+
+import { searchDepsNodes } from "uiengine";
 
 import {
   DndNodeManager,
@@ -21,10 +23,16 @@ import {
 } from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
-import { IDE_ID, getDataSource, droppable, IDERegister } from "../../helpers";
-
-// import { UINode } from "uiengine";
-// import { IDEEditor } from "../editor";
+import {
+  IDE_ID,
+  IDE_COLOR,
+  IDE_DEP_COLORS,
+  randColor,
+  getDataSource,
+  droppable,
+  IDERegister
+} from "../../helpers";
+import { IUINode } from "uiengine/typings";
 
 const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
@@ -43,9 +51,22 @@ export const UIEngineDndWrapper = (props: any) => {
   let componentInfo = IDERegister.getComponentInfo(
     _.get(uinode, "schema.component")
   );
-  //
+  const isContainer = _.get(componentInfo, "isContainer", false);
+
+  // will remove if export schema
   // add a wrapper ID
-  if (!uinode.schema[IDE_ID]) uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
+  if (!uinode.schema[IDE_ID]) {
+    uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
+  }
+  if (!uinode.schema[IDE_COLOR]) {
+    uinode.schema[IDE_COLOR] = randColor(0, 255, 0.6);
+    // TO FIX: can't find deps nodes;
+    const depsNodes = searchDepsNodes(uinode);
+    depsNodes.forEach((depNode: IUINode) => {
+      const nodes = _.get(depNode, IDE_DEP_COLORS, {});
+      nodes[depNode.schema[IDE_ID]] = uinode.schema[IDE_COLOR];
+    });
+  }
   // if (preview) return children;
 
   // is it a template
@@ -244,7 +265,7 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-dropped": dropNode === uinode,
     "wrapper-collapsed": isCollapsed,
     "wrapper-drop-disabled": !isDroppable,
-    "wrapper-container": _.get(componentInfo, "isContainer", false)
+    "wrapper-container": isContainer
   });
 
   const onClickMenuBar = (e: any) => {
@@ -253,16 +274,26 @@ export const UIEngineDndWrapper = (props: any) => {
     chooseEditNode(uinode);
   };
 
+  // generate background color
+  const background = useMemo(
+    () =>
+      !isContainer && editNode !== uinode
+        ? { backgroundColor: uinode.schema[IDE_COLOR] }
+        : {},
+    []
+  );
+
   // get uinode layout to keep same layout with preview
   const display = _.get(uinode, "schema.layout.display");
   const flex = _.get(uinode, "schema.layout.flex");
+  const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
   return (
     <div
       ref={isDroppable ? ref : null}
       onClick={wrapperClick}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
-      style={{ ...borderStyle, display, flex }}
+      style={{ ...background, ...borderStyle, display, flex }}
       className={cls}
     >
       <ActionMenu uinode={uinode}>
@@ -274,6 +305,16 @@ export const UIEngineDndWrapper = (props: any) => {
           {uinode.schema.component}
           {dataSource ? `(${dataSource})` : ""}
           <Icon type="more" />
+          <div className="component-deps">
+            {Object.entries(depsColors).map((entry: any) => (
+              <div
+                className="dep-dot"
+                style={{
+                  backgroundColor: entry[1]
+                }}
+              />
+            ))}
+          </div>
         </div>
       </ActionMenu>
       {children}
