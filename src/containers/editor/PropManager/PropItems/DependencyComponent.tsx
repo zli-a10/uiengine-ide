@@ -38,17 +38,6 @@ const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange, disabled } = props;
 
   const data = _.get(root, `deps[${index}]`);
-  const [, rerender] = useState();
-
-  const changeValue = useCallback((path: string) => {
-    // setInputValue(e.target.value);
-    return (e: any) => {
-      const value = e.target ? e.target.value : e;
-      _.set(data, path, value);
-      rerender(Date.now());
-      onChange(_.cloneDeep(root));
-    };
-  }, []);
 
   const onMouseDown = useCallback((e: any) => {
     e.stopPropagation();
@@ -76,8 +65,15 @@ const SelectorItem = (props: any) => {
   };
   // fetch data
   let compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
-  let rule = _.get(data, compareRule);
-  let value = _.get(data, state === "state" ? "state.visible" : "data");
+  let [rule, setRule] = useState(_.get(data, compareRule));
+  let [value, setDataValue] = useState(
+    _.get(data, state === "state" ? "state.visible" : "data")
+  );
+  const changeValue = useCallback((path: string, value: any) => {
+    // setInputValue(e.target.value);
+    _.set(data, path, value);
+    onChange(_.cloneDeep(root));
+  }, []);
 
   // drag datasource
   const [droppedSelector, setDroppedSelector] = useState();
@@ -140,7 +136,10 @@ const SelectorItem = (props: any) => {
             style={{ width: "100px" }}
             defaultValue={"is"}
             value={rule || "is"}
-            onChange={changeValue(compareRule)}
+            onChange={(value: any) => {
+              changeValue(compareRule, value);
+              setRule(value);
+            }}
             disabled={disabled}
           >
             {ruleOptions.map((rule: any, key: number) => (
@@ -174,7 +173,10 @@ const SelectorItem = (props: any) => {
             <Input
               disabled={disabled}
               value={value}
-              onChange={changeValue("data")}
+              onChange={(e: any) => {
+                changeValue("data", e.target.value);
+                setDataValue(e.target.value);
+              }}
               onMouseDown={onMouseDown}
             />
           </Form.Item>
@@ -184,7 +186,10 @@ const SelectorItem = (props: any) => {
               disabled={disabled}
               size="small"
               value={value ? 1 : 0}
-              onChange={changeValue("state.visible")}
+              onChange={(value: any) => {
+                changeValue("state.visible", value);
+                setDataValue(value);
+              }}
             >
               <Select.Option value={1}>True</Select.Option>
               <Select.Option value={0}>False</Select.Option>
