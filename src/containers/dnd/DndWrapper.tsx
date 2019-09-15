@@ -305,9 +305,11 @@ export const UIEngineDndWrapper = (props: any) => {
           title={dataSource}
           onClick={onClickMenuBar}
         >
-          {uinode.schema.component}
-          <strong>({myId})</strong>
-          <Icon type="more" />
+          <div className="component-name">
+            {uinode.schema.component}
+            <strong>({myId})</strong>
+            <Icon type="more" />
+          </div>
           <div className="component-deps">
             {Object.entries(depsColors).map((entry: any) => (
               <div
