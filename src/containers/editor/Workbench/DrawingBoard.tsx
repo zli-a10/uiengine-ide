@@ -78,7 +78,9 @@ export const DrawingBoard: React.FC = (props: any) => {
     window.onkeydown = keyPressActions;
     const drawingboard = document.getElementById("drawingboard");
     if (drawingboard) {
-      drawingboard.ondblclick = () => togglePropsCollapsed(!propsCollapsed);
+      drawingboard.ondblclick = () => {
+        if (!preview) togglePropsCollapsed(!propsCollapsed);
+      };
     }
     // const propManager = document.getElementsByClassName('manager');
     // if (propManager.length) {

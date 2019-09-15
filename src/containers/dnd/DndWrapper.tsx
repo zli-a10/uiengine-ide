@@ -60,14 +60,7 @@ export const UIEngineDndWrapper = (props: any) => {
   }
   if (!uinode.schema[IDE_COLOR]) {
     uinode.schema[IDE_COLOR] = randColor(0, 255, 0.6);
-    // TO FIX: can't find deps nodes;
-    const depsNodes = searchDepsNodes(uinode);
-    depsNodes.forEach((depNode: IUINode) => {
-      const nodes = _.get(depNode, IDE_DEP_COLORS, {});
-      nodes[depNode.schema[IDE_ID]] = uinode.schema[IDE_COLOR];
-    });
   }
-  // if (preview) return children;
 
   // is it a template
   const isDroppable = droppable(uinode);
@@ -238,6 +231,15 @@ export const UIEngineDndWrapper = (props: any) => {
   }, []);
 
   const dataSource = getDataSource(uinode.schema.datasource);
+  let myId = dataSource || _.get(uinode, `schema.id`);
+  // add dep colors for each node, to clearly know I depends on which one
+  const depsNodes = searchDepsNodes(uinode);
+  let nodes;
+  depsNodes.forEach((depNode: IUINode) => {
+    nodes = _.get(depNode, `schema.${IDE_DEP_COLORS}`, {});
+    nodes[myId] = uinode.schema[IDE_COLOR];
+    _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
+  });
 
   // double click
   useEffect(() => {
@@ -287,6 +289,7 @@ export const UIEngineDndWrapper = (props: any) => {
   const display = _.get(uinode, "schema.layout.display");
   const flex = _.get(uinode, "schema.layout.flex");
   const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
+
   return (
     <div
       ref={isDroppable ? ref : null}
@@ -303,16 +306,19 @@ export const UIEngineDndWrapper = (props: any) => {
           onClick={onClickMenuBar}
         >
           {uinode.schema.component}
-          {dataSource ? `(${dataSource})` : ""}
+          <strong>({myId})</strong>
           <Icon type="more" />
           <div className="component-deps">
             {Object.entries(depsColors).map((entry: any) => (
               <div
                 className="dep-dot"
+                key={`key-${entry[0]}`}
                 style={{
                   backgroundColor: entry[1]
                 }}
-              />
+              >
+                {entry[0]}
+              </div>
             ))}
           </div>
         </div>
