@@ -53,7 +53,7 @@ export const Debugger: React.FC = (props: any) => {
 
   const [struct, setStruct] = useState<any>("category-id-tree");
   const [exclude, setExclude] = useState<any>("empty-record");
-  const [componentID, setComponentID] = useState<any>();
+  const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
 
   let pluginData = PluginManager.getInstance().exportHistoryRecords({
     struct,
@@ -84,7 +84,7 @@ export const Debugger: React.FC = (props: any) => {
     if (editNode) {
       changeComponentId(editNode.id);
     }
-  }, []);
+  }, [editNode]);
 
   const [collect, drop] = useDrop({
     accept: [DND_IDE_NODE_TYPE],
@@ -97,8 +97,8 @@ export const Debugger: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    if (_.get(editNode, `props.id`)) {
-      changeComponentId(editNode.props.id);
+    if (_.get(editNode, `id`)) {
+      changeComponentId(editNode.id);
     }
   }, [editNode]);
 
@@ -130,10 +130,7 @@ export const Debugger: React.FC = (props: any) => {
           ></Panels.RunningParams>
         </Panel>
       </Collapse>
-      <Collapse
-        accordion
-        defaultActiveKey={preview ? "plugin" : "ui-node-json"}
-      >
+      <Collapse accordion>
         <Panel header="UI JSON" key="ui-node-json">
           <div className="debugger-tree">
             <ReactJson
@@ -242,6 +239,39 @@ export const Debugger: React.FC = (props: any) => {
               </Form.Item>
             </Col>
           </Row>
+        </Panel>
+        <Panel header="UI Node" key="ui-node">
+          <div className="debugger-tree ui-node">
+            <ReactJson
+              indentWidth={2}
+              src={editNode}
+              displayDataTypes={true}
+              collapsed={1}
+              collapseStringsAfterLength={50}
+            />
+          </div>
+        </Panel>
+        <Panel header="Data Node" key="data-node">
+          <div className="debugger-tree data-node">
+            <ReactJson
+              indentWidth={2}
+              src={editNode.dateNode}
+              displayDataTypes={true}
+              collapsed={1}
+              collapseStringsAfterLength={50}
+            />
+          </div>
+        </Panel>
+        <Panel header="State Node" key="state-node">
+          <div className="debugger-tree state-node">
+            <ReactJson
+              indentWidth={2}
+              src={editNode.stateNode}
+              displayDataTypes={true}
+              collapsed={1}
+              collapseStringsAfterLength={50}
+            />
+          </div>
         </Panel>
       </Collapse>
     </div>

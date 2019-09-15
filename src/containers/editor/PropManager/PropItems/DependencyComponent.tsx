@@ -264,7 +264,11 @@ const DepGroup = (props: any) => {
   return (
     <>
       <Form.Item label={group}>
-        <Switch checked={showGroup} onChange={onGroupChange} />
+        <Switch
+          checked={showGroup}
+          onChange={onGroupChange}
+          disabled={disabled}
+        />
       </Form.Item>
       {showGroup ? (
         <>

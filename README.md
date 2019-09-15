@@ -17,4 +17,5 @@ npm start
 
 ## TO DO
 
-whole block drag in , just as a single object
+E2E: stimulate customer input no need extra tool, just stimulate dataNode data
+UIEngine CLI stimulate data, state, and uinode ,every kinds of objects
