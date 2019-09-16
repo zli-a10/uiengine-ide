@@ -75,7 +75,7 @@
     "start": "node --max-old-space-size=6096 scripts/start.js",
     "build": "node --max-old-space-size=6096 scripts/build.js",
     "test": "node --max-old-space-size=6096 scripts/test.js",
-    "postinstall": "rm -rf ../../node_modules/ && npm link ../../ && npm link ../../node_modules/react-dom && npm link ../../node_modules/react"
+    "postinstall": "rm -rf ../../node_modules/ && npm link ../../ && ln -s ../../lib/*.index.js* ./public/ && npm link ../../node_modules/react-dom && npm link ../../node_modules/react"
   },
   "eslintConfig": {
     "extends": "react-app"

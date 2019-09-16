@@ -1,6 +1,8 @@
 /* global __dirname, require, module*/
 
 const webpack = require('webpack');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 const path = require('path');
 const env = require('yargs').argv.env; // use --env with webpack 2
 const pkg = require('./package.json');
@@ -27,11 +29,10 @@ const config = {
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    globalObject: "typeof self !== 'undefined' ? self : this"
+    globalObject: 'this'
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.tsx?$/,
         loader: 'awesome-typescript-loader'
       },
@@ -44,7 +45,9 @@ const config = {
         test: /(\.jsx|\.js)$/,
         loader: 'eslint-loader',
         exclude: /node_modules/,
-        options: { fix: true }
+        options: {
+          fix: true
+        }
       },
       {
         test: /\.css$/,
@@ -52,8 +55,7 @@ const config = {
       },
       {
         test: /\.less$/,
-        use: [
-          {
+        use: [{
             loader: 'style-loader' // creates style nodes from JS strings
           },
           {
@@ -66,6 +68,12 @@ const config = {
       }
     ]
   },
+  plugins: [
+    new MonacoWebpackPlugin({
+      output: 'monaco-editor',
+      languages: ["json", "javascript", "typescript"]
+    })
+  ],
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
     extensions: ['.json', '.js', '.ts', '.tsx']
@@ -73,7 +81,7 @@ const config = {
   externals: {
     react: 'react',
     'react-dom': 'react-dom',
-    uiengine: 'uiengine'
+    'uiengine': 'uiengine'
   }
 };
 

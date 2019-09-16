@@ -23,7 +23,7 @@ export const CodeEditor: React.FC = (props: any) => {
   return (
     <div className="editor code-editor">
       <MonacoEditor
-        language="javascript"
+        language="typescript"
         theme="vs-dark"
         value={code}
         options={options}

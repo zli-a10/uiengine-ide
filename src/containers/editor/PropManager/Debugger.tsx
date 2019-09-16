@@ -56,7 +56,7 @@ export const Debugger: React.FC = (props: any) => {
   const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
 
   const pluginManager = PluginManager.getInstance();
-  pluginManager.resetHistory(1000);
+  // pluginManager.resetHistory(1000);
   let pluginData = pluginManager.exportHistoryRecords({
     struct,
     exclude,
@@ -258,7 +258,7 @@ export const Debugger: React.FC = (props: any) => {
           <div className="debugger-tree data-node">
             <ReactJson
               indentWidth={2}
-              src={_.get(editNode, "dateNode")}
+              src={_.get(editNode, "dataNode")}
               displayDataTypes={true}
               collapsed={1}
               collapseStringsAfterLength={50}
