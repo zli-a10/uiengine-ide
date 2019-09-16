@@ -255,7 +255,7 @@ export const Debugger: React.FC = (props: any) => {
           <div className="debugger-tree data-node">
             <ReactJson
               indentWidth={2}
-              src={editNode.dateNode}
+              src={_.get(editNode, "dateNode")}
               displayDataTypes={true}
               collapsed={1}
               collapseStringsAfterLength={50}
@@ -266,7 +266,7 @@ export const Debugger: React.FC = (props: any) => {
           <div className="debugger-tree state-node">
             <ReactJson
               indentWidth={2}
-              src={editNode.stateNode}
+              src={_.get(editNode, "stateNode")}
               displayDataTypes={true}
               collapsed={1}
               collapseStringsAfterLength={50}
