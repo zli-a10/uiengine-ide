@@ -19,6 +19,7 @@
   .component-deps,
   .component-name {
     float: left;
+
     .dep-dot {
       color: #fff;
       float: left;
@@ -35,7 +36,7 @@
   overflow: hidden;
   position: relative;
   min-height: 50px;
-  box-shadow: #000000 0px 0px 2px;
+  box-shadow: #bdbdbd 0px 0px 3px;
   flex: 1;
 
   &.with-datasource {
@@ -46,7 +47,7 @@
     // border: 3px solid #0d7ee54a;
     background: #3d4b59 !important;
 
-    > * {
+    >* {
       color: #fff;
     }
 
@@ -56,7 +57,7 @@
       // animation-delay: 2s;
     }
 
-    > .component-action {
+    >.component-action {
       border: 1px solid #0a386b;
       background: #0a386b;
       color: #fff;
@@ -74,7 +75,7 @@
     background: #53bf7c;
     border: 3px solid #53bf7c;
 
-    > .component-action {
+    >.component-action {
       border: 1px solid #087e2687;
       background: #087e2687;
       color: #fff;
@@ -91,7 +92,7 @@
   }
 
   &.node-wrapper-over {
-    > .component-action {
+    >.component-action {
       background: #f00;
       color: #fff;
       z-index: 201;
@@ -115,7 +116,7 @@
   }
 
   .schema-wrapper-over {
-    > .component-action {
+    >.component-action {
       background: rgb(26, 82, 1);
       color: #fff;
       z-index: 201;

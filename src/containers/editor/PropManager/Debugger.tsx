@@ -55,13 +55,16 @@ export const Debugger: React.FC = (props: any) => {
   const [exclude, setExclude] = useState<any>("empty-record");
   const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
 
-  let pluginData = PluginManager.getInstance().exportHistoryRecords({
+  const pluginManager = PluginManager.getInstance();
+  pluginManager.resetHistory(1000);
+  let pluginData = pluginManager.exportHistoryRecords({
     struct,
     exclude,
     include: {
-      id: componentID
+      id: componentID === "" ? undefined : componentID
     }
   });
+
   const changeStruct = useCallback((value: any) => {
     setStruct(value);
   }, []);

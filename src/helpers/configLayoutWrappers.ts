@@ -19,12 +19,17 @@ export const configLayoutWrappers: IConfigWrappers = {
     props: {
       gutter: 16,
       type: "flex",
-      align: "top"
+      align: "top",
+      style: {
+        display: "flex"
+      }
     }
   },
   col: {
     component: "antd:Col",
-    props: {}
+    props: {
+      style: { flex: 1 }
+    }
   }
 };
 
