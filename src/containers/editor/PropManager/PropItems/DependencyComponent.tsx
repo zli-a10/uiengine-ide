@@ -17,7 +17,13 @@ import {
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
 
-import { DND_IDE_NODE_TYPE, DndNodeManager } from "../../../../helpers";
+import {
+  DND_IDE_NODE_TYPE,
+  IDE_DEP_COLORS,
+  DndNodeManager,
+  updateDepsColor,
+  getUINodeLable
+} from "../../../../helpers";
 const ruleOptions = [
   ["is", "Is"],
   ["not", "Not"],
@@ -35,7 +41,7 @@ const ruleOptions = [
 ];
 
 const SelectorItem = (props: any) => {
-  const { index, root, setListValue, onChange, disabled } = props;
+  const { index, root, setListValue, onChange, disabled, uinode } = props;
 
   const data = _.get(root, `deps[${index}]`);
 
@@ -43,10 +49,18 @@ const SelectorItem = (props: any) => {
     e.stopPropagation();
   }, []);
 
+  const updateSchema = () => {
+    _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
+    // updateDepsColor(uinode);
+    uinode.updateLayout();
+    uinode.sendMessage(true);
+  };
+
   const onDeleteItem = useCallback((e: any) => {
     e.stopPropagation();
     root.deps.splice(index, 1);
     setListValue(_.clone(root.deps));
+    updateSchema();
     // setInputValue(Date.now());
   }, []);
 
@@ -62,6 +76,7 @@ const SelectorItem = (props: any) => {
       delete data.stateCompareRule;
     }
     setStateValue(value);
+    updateSchema();
   };
   // fetch data
   let compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
@@ -73,6 +88,7 @@ const SelectorItem = (props: any) => {
     // setInputValue(e.target.value);
     _.set(data, path, value);
     onChange(_.cloneDeep(root));
+    updateSchema();
   }, []);
 
   // drag datasource
@@ -218,7 +234,7 @@ const SelectorItem = (props: any) => {
 };
 
 const DepGroup = (props: any) => {
-  const { value, group, onChange, disabled } = props;
+  const { value, group, onChange, disabled, ...rest } = props;
   let groupChecked = !_.isEmpty(value);
   const [showGroup, setShowGroup] = useState(groupChecked);
   const data = _.get(value, `deps`, []);
@@ -253,13 +269,13 @@ const DepGroup = (props: any) => {
     onChange(value);
   };
 
-  useEffect(() => {
-    setShowGroup(groupChecked);
-  }, [groupChecked]);
+  // useEffect(() => {
+  //   setShowGroup(groupChecked);
+  // }, [groupChecked]);
 
-  useEffect(() => {
-    setListValue(data);
-  }, [data]);
+  // useEffect(() => {
+  //   setListValue(data);
+  // }, [data]);
 
   return (
     <>
@@ -316,6 +332,7 @@ const DepGroup = (props: any) => {
                 setListValue={setListValue}
                 onChange={onChange}
                 disabled={disabled}
+                {...rest}
               />
             )}
           />

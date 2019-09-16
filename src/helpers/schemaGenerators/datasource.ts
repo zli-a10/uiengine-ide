@@ -7,5 +7,5 @@ export const datasource = (
   options: any = {}
 ) => {
   // TODO: validate by componentSchema
-  return value;
+  return { datasource: value };
 };

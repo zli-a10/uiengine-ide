@@ -2,7 +2,8 @@ import _ from "lodash";
 import { NodeController, UINode } from "uiengine";
 import { IUINode, IDataSource } from "uiengine/typings";
 import { DndNodeManager, FileLoader } from ".";
-import { IDE_ID } from "../helpers/consts";
+import { IDE_ID, IDE_DEP_COLORS, IDE_COLOR } from "../helpers/consts";
+import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
@@ -244,4 +245,22 @@ export const randColor = (min: number, max: number, alpha: number = 0.2) => {
   const g = rand(min, max);
   const b = rand(min, max);
   return `rgba(${r},${g}, ${b}, ${alpha})`;
+};
+
+export const getUINodeLable = (uiNode: IUINode) => {
+  const dataSource = getDataSource(uiNode.schema.datasource);
+  let myId = dataSource || _.get(uiNode, `schema.id`);
+  return myId;
+};
+
+export const updateDepsColor = (uiNode: IUINode) => {
+  const depsNodes = searchDepsNodes(uiNode);
+  let nodes;
+  let myId = getUINodeLable(uiNode);
+  depsNodes.forEach((depNode: IUINode) => {
+    nodes = _.get(depNode, `schema.${IDE_DEP_COLORS}`, {});
+    nodes[myId] = uiNode.schema[IDE_COLOR];
+    _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
+  });
+  return myId;
 };

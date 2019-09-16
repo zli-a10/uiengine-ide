@@ -37,10 +37,6 @@ export default [
             "onSelect",
             "onDropdownVisibleChange"
           ]
-        },
-        defaultProps: {
-          active: true,
-          title: "DataSelect 1"
         }
       },
       {

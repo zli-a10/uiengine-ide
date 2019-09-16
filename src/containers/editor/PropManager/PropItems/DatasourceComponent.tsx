@@ -4,13 +4,22 @@ import { DataSourceSelector } from "../../DataSource";
 import { Switch, Form, Input, Popover, Icon } from "antd";
 
 export const DatasourceComponent = (props: any) => {
-  const { onChange, uinode, disabled, ...rest } = props;
-  let dataSource = _.get(uinode, "schema.datasource") as any;
+  const { onChange, value, name, uinode, disabled, ...rest } = props;
+  // let dataSource = _.get(uinode, "schema.datasource") as any;
+  let dataSource = value;
   if (_.isString(dataSource)) {
     dataSource = {
       source: dataSource
     };
   }
+
+  // change source and update layout
+  const [source, changeSource] = useState(_.get(dataSource, "source"));
+  const [schema, changeSchema] = useState(_.get(dataSource, "schema"));
+  const [autoload, changeAutoload] = useState(_.get(dataSource, "autoload"));
+  const [defaultValue, changeDefaultValue] = useState(
+    _.get(dataSource, "defaultValue")
+  );
 
   const [isLock, setLock] = useState(true);
   const onClickLock = useCallback(() => {
@@ -21,8 +30,10 @@ export const DatasourceComponent = (props: any) => {
       dataSource.source = value;
       if (isLock) {
         dataSource.schema = value;
+        changeSchema(value);
       }
-      onChange({ datasource: dataSource });
+      changeSource(value);
+      onChange(dataSource);
     },
     [dataSource, isLock]
   );
@@ -32,8 +43,10 @@ export const DatasourceComponent = (props: any) => {
       dataSource.schema = value;
       if (isLock) {
         dataSource.source = value;
+        changeSource(value);
       }
-      onChange({ datasource: dataSource });
+      changeSchema(value);
+      onChange(dataSource);
     },
     [dataSource, isLock]
   );
@@ -42,31 +55,25 @@ export const DatasourceComponent = (props: any) => {
     (value: boolean) => {
       // console.log("changing auto load", value);
       dataSource.autoload = value;
-      onChange({ datasource: dataSource });
+      changeAutoload(value);
+      onChange(dataSource);
     },
     [dataSource]
   );
 
-  // const [defaultValue, changeDefaultValue] = useState(
-  //   _.get(dataSource, "defaultValue")
-  // );
-  const onChangeInput = (e: any) => {
+  const onChangeDefaultValue = (e: any) => {
     dataSource.defaultValue = e.target.value;
-    // changeDefaultValue(e.target.value);
-    onChange({ datasource: dataSource });
+    changeDefaultValue(e.target.value);
+    onChange(dataSource);
   };
 
-  let ds = dataSource;
-
   // const [ds, changeDs] = useState(dataSource);
-  // useEffect(() => {
-  //   console.log(dataSource, " data source changed");
-  //   // onChange({ datasource: dataSource });
-
-  //   // onChangeAutoLoad(_.get(dataSource, "autoload"));
-  //   // onChangeSchema(_.get(dataSource, "schema"));
-  //   // onChangeSource(_.get(dataSource, "source"));
-  // }, [dataSource]);
+  useEffect(() => {
+    changeSource(_.get(dataSource, "source"));
+    changeSchema(_.get(dataSource, "schema"));
+    changeAutoload(_.get(dataSource, "autoload"));
+    changeDefaultValue(_.get(dataSource, "defaultValue"));
+  }, [dataSource]);
 
   return (
     <>
@@ -75,14 +82,14 @@ export const DatasourceComponent = (props: any) => {
         {...rest}
         disabled={disabled}
         onChange={onChangeSource}
-        value={_.get(ds, "source")}
+        value={source}
       />
       <DataSourceSelector
         label="Schema"
         {...rest}
         disabled={disabled}
         onChange={onChangeSchema}
-        value={_.get(ds, "schema")}
+        value={schema}
       />
       <div style={{ position: "relative" }}>
         <div style={{ position: "absolute", right: "22px", top: "-52px" }}>
@@ -97,20 +104,24 @@ export const DatasourceComponent = (props: any) => {
           )}
         </div>
       </div>
-      <Form.Item label="Autoload">
-        <Switch
-          disabled={disabled}
-          onChange={onChangeAutoLoad}
-          checked={_.get(ds, "autoload", false)}
-        />
-      </Form.Item>
-      <Form.Item label="DefaultValue">
-        <Input
-          value={_.get(ds, "defaultValue")}
-          onChange={onChangeInput}
-          disabled={disabled}
-        />
-      </Form.Item>
+      {name ? null : (
+        <>
+          <Form.Item label="Autoload">
+            <Switch
+              disabled={disabled}
+              onChange={onChangeAutoLoad}
+              checked={autoload}
+            />
+          </Form.Item>
+          <Form.Item label="DefaultValue">
+            <Input
+              value={defaultValue}
+              onChange={onChangeDefaultValue}
+              disabled={disabled}
+            />
+          </Form.Item>
+        </>
+      )}
     </>
   );
 };
