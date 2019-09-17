@@ -349,7 +349,7 @@ export class DndNodeManager implements IDndNodeManager {
   async useSchema(targetNode: IUINode, schema: ILayoutSchema) {
     this.selectNode({} as IUINode, targetNode);
     function customizer(objValue: any, srcValue: any) {
-      if (_.isArray(objValue)) {
+      if (_.isArray(objValue) && _.isArray(srcValue)) {
         return objValue.concat(srcValue);
       }
     }

@@ -1,56 +1,61 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import _ from "lodash";
-import { Select, Form, Col, Icon, Modal } from "antd";
-import ReactJson from "react-json-view";
+import { Select, Form } from "antd";
+import { PropItem } from "../PropItem";
 import { formatTitle } from "../../../../helpers";
 
 const Option = Select.Option;
 export const EventComponent = (props: any) => {
-  const { options, value, onChange, disabled, data } = props;
-  if (!_.isArray(options)) return null;
+  const { name, schema, value, onChange, disabled, data, uinode } = props;
   let v = value;
+  let options = {};
   if (_.isObject(v)) {
     v = _.get(v, "action", "");
+    options = _.get(v, "options");
   }
 
-  const [visible, changeVisible] = useState(false);
-  const handleOk = useCallback((e: any) => {
-    changeVisible(false);
+  const [listener, changeListener] = useState(v);
+  const onChangeListener = useCallback((myValue: any) => {
+    changeListener(listener);
+    onChange({ event: name, action: myValue });
   }, []);
 
-  const handleCancel = useCallback((e: any) => {
-    changeVisible(false);
-  }, []);
-
-  // to remove
-  let json = {
-    method: "POST",
-    params: {},
-    target: "slb.virtual-server:"
-  };
+  useEffect(() => {
+    changeListener(v);
+  }, [v]);
 
   return (
-    <Form.Item label={formatTitle(props.name)}>
-      <Col span={21}>
-        <Select value={v} onChange={onChange} disabled={disabled}>
-          {options.map((option: any, index: number) => (
-            <Option value={option} key={index}>
-              {option}
-            </Option>
+    <Form.Item label={formatTitle(name)}>
+      <Select value={listener} onChange={onChangeListener} disabled={disabled}>
+        {/* {options.map((option: any, index: number) => (
+          <Option value={option} key={index}>
+            {option}
+          </Option>
+        ))} */}
+        <Option value="onChangeValue" key="onChangeValue">
+          onChangeValue
+        </Option>
+
+        <Option value="onChangeData" key="onChangeData">
+          onChangeData
+        </Option>
+      </Select>
+      {listener && schema ? (
+        <div className="event-options">
+          {Object.entries(schema).map((entry: any) => (
+            <PropItem
+              section="event"
+              name={`options.${entry[0]}`}
+              schema={entry[1]}
+              key={`key-${entry[0]}`}
+              uinode={uinode}
+              dataRef={value}
+              isOptions={true}
+              data={_.get(options, `${entry[0]}`)}
+            />
           ))}
-        </Select>
-      </Col>
-      <Col span={2} style={{ marginLeft: "10px" }}>
-        <Icon type="setting" onClick={() => changeVisible(!visible)} />
-      </Col>
-      <Modal
-        title="Edit Event Options"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <ReactJson indentWidth={2} collapsed src={json} />
-      </Modal>
+        </div>
+      ) : null}
     </Form.Item>
   );
 };

@@ -6,7 +6,7 @@ import { GlobalContext } from "../../Context";
 
 const schemaPropManager = SchemaPropManager.getInstance();
 
-export const PropItem = (props: any) => {
+export const PropItem = (props: IComponentSchema) => {
   const { schema, data, name, uinode, section = "prop" } = props;
   const { preview } = useContext(GlobalContext);
 

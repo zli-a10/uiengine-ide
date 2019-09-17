@@ -133,14 +133,11 @@ export const Props: React.FC = (props: any) => {
                   name={name}
                   type="event"
                   key={`key-${name}`}
-                  options={_.keys(plugins)}
+                  schema={{ type: "string", label: "string" }}
                   uinode={editNode}
-                  data={_.find(
-                    _.get(editNode, `schema.props.$events.${name}`, {}),
-                    {
-                      event: name
-                    }
-                  )}
+                  data={_.find(_.get(editNode, `schema.props.$events`, {}), {
+                    event: name
+                  })}
                 />
               ))}
             </Form>

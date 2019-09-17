@@ -94,10 +94,10 @@ interface ICommandOutput {
 
 // define component schema for IDE editing
 interface IComponentSchema {
-  type: string;
-  [name: string]: any;
-  default?: any;
-  options?: Array<number | string>;
-  range?: Array<number>;
-  children?: Array<IComponentSchema>;
+  type?: string; // component type, corresponds to PropItems/*
+  section?: string; // data section, like prop, corresponds to helpers/schemaGenerators
+  [name: string]: any; // schema name
+  default?: any; // default value
+  options?: Array<number | string>; // enum items
+  range?: Array<number>; // range items
 }
