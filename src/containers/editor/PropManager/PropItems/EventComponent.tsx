@@ -15,9 +15,11 @@ export const EventComponent = (props: any) => {
   }
 
   const [listener, changeListener] = useState(v);
+  const [time, changeTime] = useState(Date.now());
   const onChangeListener = useCallback((myValue: any) => {
-    changeListener(listener);
+    changeListener(myValue);
     onChange({ event: name, action: myValue });
+    changeTime(Date.now());
   }, []);
 
   useEffect(() => {
@@ -42,18 +44,20 @@ export const EventComponent = (props: any) => {
       </Select>
       {listener && schema ? (
         <div className="event-options">
-          {Object.entries(schema).map((entry: any) => (
-            <PropItem
-              section="event"
-              name={`options.${entry[0]}`}
-              schema={entry[1]}
-              key={`key-${entry[0]}`}
-              uinode={uinode}
-              dataRef={value}
-              isOptions={true}
-              data={_.get(options, `${entry[0]}`)}
-            />
-          ))}
+          {Object.entries(schema).map((entry: any) => {
+            return (
+              <PropItem
+                section="event"
+                name={`options.${entry[0]}`}
+                schema={entry[1]}
+                key={`key-${entry[0]}`}
+                uinode={uinode}
+                dataRef={value}
+                event={name}
+                data={_.get(options, `${entry[0]}`)}
+              />
+            );
+          })}
         </div>
       ) : null}
     </Form.Item>

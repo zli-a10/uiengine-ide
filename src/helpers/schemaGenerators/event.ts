@@ -8,12 +8,13 @@ export const event = (
   // TODO: validate by componentSchema
   // console.log(options);
   const dataRef = _.get(options, "dataRef", {});
-  const isOptions = _.get(options, "isOptions", false);
+  const event = _.get(options, "event", _.get(value, "event"));
   const eventsSchema = _.get(options, "uinode.schema.props.$events", []);
-  const theEventIndex = !_.isEmpty(dataRef)
-    ? _.findIndex(eventsSchema, dataRef)
+  const theEventIndex = !_.isEmpty(event)
+    ? _.findIndex(eventsSchema, { event })
     : -1;
-  if (isOptions && theEventIndex > -1) {
+
+  if (event && theEventIndex > -1) {
     // set options
     _.set(dataRef, name, value);
     eventsSchema[theEventIndex] = dataRef;
@@ -22,7 +23,12 @@ export const event = (
     if (theEventIndex === -1) {
       eventsSchema.push(dataRef);
     } else {
-      eventsSchema[theEventIndex] = dataRef;
+      if (!_.get(dataRef, "action")) {
+        // remove one
+        eventsSchema.splice(theEventIndex, 1);
+      } else {
+        eventsSchema[theEventIndex] = dataRef;
+      }
     }
   }
 

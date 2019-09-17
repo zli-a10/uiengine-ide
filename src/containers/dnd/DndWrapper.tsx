@@ -292,7 +292,8 @@ export const UIEngineDndWrapper = (props: any) => {
         <div className="component-action" title={myId} onClick={onClickMenuBar}>
           <div className="component-name">
             {uinode.schema.component}
-            <strong>({myId})</strong>
+            <strong>->{myId}</strong>
+            <span>{myId !== uinode.id ? `(${uinode.id})` : ""}</span>
             <Icon type="more" />
           </div>
           <div className="component-deps">

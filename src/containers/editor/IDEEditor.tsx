@@ -15,6 +15,7 @@ import { IUINode } from "uiengine/typings";
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
   const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
+
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
     () => ({
       showTab: "",

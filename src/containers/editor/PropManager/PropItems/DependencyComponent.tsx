@@ -137,18 +137,19 @@ const SelectorItem = (props: any) => {
     setStateValue(d);
   }, [data]);
 
+  let dependId =
+    (droppedSelector && droppedSelector.id) || _.get(data, "selector.id");
   return (
     <div className="deps-editor">
       <List.Item>
         <div ref={drop} className={cls}>
           <Form.Item label="ID(Drag)">
             <Input
-              title="Drag Any Element Right Here From Drawingboard"
+              title={dependId}
               readOnly
               disabled={disabled}
               value={
-                (droppedSelector && droppedSelector.id) ||
-                _.get(data, "selector.id")
+                _.isString(dependId) ? dependId.replace("UINode-", "") : ""
               }
               onMouseDown={onMouseDown}
             />
