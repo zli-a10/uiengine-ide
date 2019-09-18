@@ -98,16 +98,69 @@ export const Debugger: React.FC = (props: any) => {
     }
   });
 
-  useEffect(() => {
-    if (_.get(editNode, `id`)) {
-      changeComponentId(editNode.id);
-    }
-  }, [editNode]);
-
   const [time, setTime] = useState(Date.now());
   const onRefresh = useCallback(() => {
     setTime(Date.now());
   }, []);
+
+  // set data for nodes
+  const [uiNode, setUINode] = useState({});
+  const fetchUINode = useCallback(() => {
+    const {
+      id,
+      schema,
+      errorInfo,
+      rootName,
+      props,
+      stateInfo,
+      nodes
+    } = editNode;
+    const data = {
+      id,
+      schema,
+      props,
+      stateInfo,
+      nodes,
+      errorInfo,
+      rootName
+    };
+    setUINode(data);
+  }, [editNode]);
+
+  const [dataNode, setDataNode] = useState({});
+  const fetchDataNode = useCallback(() => {
+    const { id, schema, rootSchema, source, dataPool } = editNode.dataNode;
+    const data = editNode.dataNode.data;
+    const info = {
+      id,
+      source,
+      schema,
+      data,
+      rootSchema,
+      dataPool
+    };
+    setDataNode(info);
+  }, [editNode]);
+
+  const [stateNode, setStateNode] = useState({});
+  const fetchStateNode = useCallback(() => {
+    const { id, state, errorInfo } = editNode.stateNode;
+    const info = {
+      id,
+      state,
+      errorInfo
+    };
+    setStateNode(info);
+  }, [editNode]);
+
+  useEffect(() => {
+    if (_.get(editNode, `id`)) {
+      changeComponentId(editNode.id);
+    }
+    fetchUINode();
+    fetchDataNode();
+    fetchStateNode();
+  }, [editNode]);
 
   return (
     <div className="ide-props-events">
@@ -242,38 +295,42 @@ export const Debugger: React.FC = (props: any) => {
             </Col>
           </Row>
         </Panel>
-        <Panel header="UI Node" key="ui-node">
-          <div className="debugger-tree ui-node">
-            <ReactJson
-              indentWidth={2}
-              src={editNode}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
-        </Panel>
-        <Panel header="Data Node" key="data-node">
-          <div className="debugger-tree data-node">
-            <ReactJson
-              indentWidth={2}
-              src={_.get(editNode, "dataNode")}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
-        </Panel>
-        <Panel header="State Node" key="state-node">
-          <div className="debugger-tree state-node">
-            <ReactJson
-              indentWidth={2}
-              src={_.get(editNode, "stateNode")}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
+        <Panel header="Nodes" key="nodes">
+          <Collapse bordered={false} defaultActiveKey={"ui-node"}>
+            <Panel header="UI Node" key="ui-node">
+              <div className="debugger-tree ui-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={uiNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+            <Panel header="Data Node" key="data-node">
+              <div className="debugger-tree data-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={dataNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+            <Panel header="State Node" key="state-node">
+              <div className="debugger-tree state-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={stateNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+          </Collapse>
         </Panel>
       </Collapse>
     </div>
