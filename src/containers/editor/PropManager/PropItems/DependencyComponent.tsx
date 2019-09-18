@@ -12,17 +12,17 @@ import {
   Row,
   Col
 } from "antd";
-// import { formatTitle } from "../../../helpers";
+import { updateDepsColor } from "../../../../helpers";
 // const ButtonGroup = Button.Group;
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
+import { searchNodes } from "uiengine";
+import { IUINode } from "uiengine/typings";
 
 import {
   DND_IDE_NODE_TYPE,
-  IDE_DEP_COLORS,
   DndNodeManager,
-  updateDepsColor,
-  getUINodeLable
+  IDE_DEP_COLORS
 } from "../../../../helpers";
 const ruleOptions = [
   ["is", "Is"],
@@ -40,28 +40,41 @@ const ruleOptions = [
   ["regexp", "Reg Expression"]
 ];
 
+const updateDepsNodeColor = (uiNode: IUINode, deps: Array<any>) => {
+  // remove all deps color first
+  _.unset(uiNode, `schema.${IDE_DEP_COLORS}`);
+
+  // update deps color
+  deps.forEach((dep: any) => {
+    const selector = _.get(dep, `selector`);
+    if (selector) {
+      const depsNodes = searchNodes(selector);
+      depsNodes.forEach((depNode: any) => {
+        updateDepsColor(depNode);
+        // depNode.sendMessage(true);
+      });
+    }
+  });
+};
+
 const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange, disabled, uinode } = props;
 
   const data = _.get(root, `deps[${index}]`);
-
-  const onMouseDown = useCallback((e: any) => {
-    e.stopPropagation();
-  }, []);
-
-  const updateSchema = () => {
-    _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
-    // updateDepsColor(uinode);
-    uinode.updateLayout();
-    uinode.sendMessage(true);
-  };
+  const [droppedSelector, setDroppedSelector] = useState();
+  let dependId =
+    (droppedSelector && droppedSelector.id) || _.get(data, "selector.id");
 
   const onDeleteItem = useCallback((e: any) => {
-    e.stopPropagation();
+    // remove deps from schema
     root.deps.splice(index, 1);
     setListValue(_.clone(root.deps));
-    updateSchema();
-    // setInputValue(Date.now());
+
+    // update dependant label
+    // generate again
+    updateDepsNodeColor(uinode, root.deps);
+    onChange(_.cloneDeep(root));
+    uinode.sendMessage(true);
   }, []);
 
   const [state, setStateValue] = useState(
@@ -76,7 +89,7 @@ const SelectorItem = (props: any) => {
       delete data.stateCompareRule;
     }
     setStateValue(value);
-    updateSchema();
+    uinode.sendMessage(true);
   };
   // fetch data
   let compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
@@ -88,11 +101,9 @@ const SelectorItem = (props: any) => {
     // setInputValue(e.target.value);
     _.set(data, path, value);
     onChange(_.cloneDeep(root));
-    updateSchema();
   }, []);
 
   // drag datasource
-  const [droppedSelector, setDroppedSelector] = useState();
   const [{ isOver, isOverCurrent }, drop] = useDrop({
     accept: [DND_IDE_NODE_TYPE],
     drop: async (item: DragItem, monitor: DropTargetMonitor) => {
@@ -111,8 +122,11 @@ const SelectorItem = (props: any) => {
       }
 
       data.selector = selector;
-      onChange(_.cloneDeep(root));
-      setDroppedSelector(_.get(selector, "id"));
+      // onChange(_.cloneDeep(root));
+      // setDroppedSelector(_.get(selector, "id"));
+      await draggingNode.updateLayout();
+      updateDepsColor(draggingNode);
+      uinode.sendMessage(true);
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -137,8 +151,6 @@ const SelectorItem = (props: any) => {
     setStateValue(d);
   }, [data]);
 
-  let dependId =
-    (droppedSelector && droppedSelector.id) || _.get(data, "selector.id");
   return (
     <div className="deps-editor">
       <List.Item>
@@ -151,7 +163,6 @@ const SelectorItem = (props: any) => {
               value={
                 _.isString(dependId) ? dependId.replace("UINode-", "") : ""
               }
-              onMouseDown={onMouseDown}
             />
           </Form.Item>
         </div>
@@ -201,7 +212,6 @@ const SelectorItem = (props: any) => {
                 changeValue("data", e.target.value);
                 setDataValue(e.target.value);
               }}
-              onMouseDown={onMouseDown}
             />
           </Form.Item>
         ) : (
@@ -235,7 +245,7 @@ const SelectorItem = (props: any) => {
 };
 
 const DepGroup = (props: any) => {
-  const { value, group, onChange, disabled, ...rest } = props;
+  const { value, uinode, group, onChange, disabled, ...rest } = props;
   let groupChecked = !_.isEmpty(value);
   const [showGroup, setShowGroup] = useState(groupChecked);
   const data = _.get(value, `deps`, []);
@@ -248,6 +258,8 @@ const DepGroup = (props: any) => {
       onChange(value);
     }
     setShowGroup(checked);
+    updateDepsNodeColor(uinode, data);
+    uinode.sendMessage(true);
   };
 
   const [logicValue, setLogicValue] = useState(_.get(value, `strategy`, "and"));
@@ -270,13 +282,10 @@ const DepGroup = (props: any) => {
     onChange(value);
   };
 
-  // useEffect(() => {
-  //   setShowGroup(groupChecked);
-  // }, [groupChecked]);
-
-  // useEffect(() => {
-  //   setListValue(data);
-  // }, [data]);
+  useEffect(() => {
+    setShowGroup(groupChecked);
+    setListValue(data);
+  }, [uinode]);
 
   return (
     <>
@@ -331,9 +340,7 @@ const DepGroup = (props: any) => {
                 root={value}
                 group={props.group}
                 setListValue={setListValue}
-                onChange={onChange}
-                disabled={disabled}
-                {...rest}
+                {...props}
               />
             )}
           />

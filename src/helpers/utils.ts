@@ -262,5 +262,4 @@ export const updateDepsColor = (uiNode: IUINode) => {
     nodes[myId] = uiNode.schema[IDE_COLOR];
     _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
   });
-  return myId;
 };

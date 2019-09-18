@@ -27,6 +27,7 @@ import {
   IDE_DEP_COLORS,
   randColor,
   updateDepsColor,
+  getUINodeLable,
   droppable,
   IDERegister
 } from "../../helpers";
@@ -228,7 +229,8 @@ export const UIEngineDndWrapper = (props: any) => {
   }, []);
 
   // update schema deps
-  let myId = updateDepsColor(uinode);
+  updateDepsColor(uinode);
+  let myId = getUINodeLable(uinode);
 
   // double click
   useEffect(() => {
