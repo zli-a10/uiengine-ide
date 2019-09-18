@@ -156,10 +156,10 @@ export const Debugger: React.FC = (props: any) => {
   useEffect(() => {
     if (_.get(editNode, `id`)) {
       changeComponentId(editNode.id);
+      fetchUINode();
+      fetchDataNode();
+      fetchStateNode();
     }
-    fetchUINode();
-    fetchDataNode();
-    fetchStateNode();
   }, [editNode]);
 
   return (
@@ -296,7 +296,7 @@ export const Debugger: React.FC = (props: any) => {
           </Row>
         </Panel>
         <Panel header="Nodes" key="nodes">
-          <Collapse bordered={false} defaultActiveKey={"ui-node"}>
+          <Collapse accordion bordered={false} defaultActiveKey={"ui-node"}>
             <Panel header="UI Node" key="ui-node">
               <div className="debugger-tree ui-node">
                 <ReactJson

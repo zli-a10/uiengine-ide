@@ -61,9 +61,8 @@ const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange, disabled, uinode } = props;
 
   const data = _.get(root, `deps[${index}]`);
-  const [droppedSelector, setDroppedSelector] = useState();
-  let dependId =
-    (droppedSelector && droppedSelector.id) || _.get(data, "selector.id");
+  const [droppedId, setdroppedId] = useState();
+  let dependId = droppedId || _.get(data, "selector.id");
 
   const onDeleteItem = useCallback((e: any) => {
     // remove deps from schema
@@ -73,35 +72,89 @@ const SelectorItem = (props: any) => {
     // update dependant label
     // generate again
     updateDepsNodeColor(uinode, root.deps);
-    onChange(_.cloneDeep(root));
-    uinode.sendMessage(true);
+    onChange(root);
+    // uinode.sendMessage(true);
   }, []);
 
   const [state, setStateValue] = useState(
     _.get(data, "state") ? "state" : "data"
   );
-  const onChangeState = (value: any) => {
-    if (value === "state") {
-      delete data.data;
-      delete data.dataCompareRule;
-    } else {
-      delete data.state;
-      delete data.stateCompareRule;
-    }
-    setStateValue(value);
-    uinode.sendMessage(true);
+
+  // what are current working rule and keys for value?
+  let compareRule: any, valueKey: any;
+  const changeCompareRule = (state: any) => {
+    compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
+    valueKey = state === "state" ? "state.visible" : "data";
   };
-  // fetch data
-  let compareRule = state === "data" ? "dataCompareRule" : "stateCompareRule";
-  let [rule, setRule] = useState(_.get(data, compareRule));
-  let [value, setDataValue] = useState(
-    _.get(data, state === "state" ? "state.visible" : "data")
-  );
-  const changeValue = useCallback((path: string, value: any) => {
-    // setInputValue(e.target.value);
-    _.set(data, path, value);
-    onChange(_.cloneDeep(root));
+  changeCompareRule(state);
+
+  // rule settings
+  let [rule, setRule] = useState(_.get(data, compareRule, "is"));
+  let [isHidden, setIsHidden] = useState(false);
+  let [value, setDataValue] = useState(_.get(data, valueKey));
+
+  // change schema value
+  const numberRules = ["above", "below"];
+  const emptyRules = ["empty", "notEmpty"];
+
+  const getValue = (state: string, value: any) => {
+    let newValue = value;
+    if (state === "state") {
+      newValue = Boolean(value);
+    } else {
+      if (numberRules.indexOf(rule) > -1) {
+        newValue = Number(value);
+      }
+    }
+    return newValue;
+  };
+  const changeValue = (value: any) => {
+    let newValue = getValue(state, value);
+    // remove unnecessary data
+    if (emptyRules.indexOf(rule) > -1) {
+      _.unset(data, valueKey);
+    } else {
+      _.set(data, valueKey, newValue);
+    }
+
+    onChange(root);
+  };
+
+  // special rule handling
+  const changeRule = useCallback((rule: string) => {
+    if (emptyRules.indexOf(rule) > -1) {
+      setIsHidden(true);
+    } else {
+      setIsHidden(false);
+    }
+    _.set(data, compareRule, rule);
+    setRule(rule);
+    onChange(root);
   }, []);
+
+  // change Compare
+  const onChangeState = useCallback(
+    (value: any) => {
+      if (value === "state") {
+        delete data.data;
+        delete data.dataCompareRule;
+        _.set(data, "state.visible", true);
+        _.set(data, "stateCompareRule", "is");
+        setDataValue(true);
+      } else {
+        delete data.state;
+        delete data.stateCompareRule;
+        _.set(data, "data", "");
+        _.set(data, "dataCompareRule", "is");
+        setDataValue("");
+      }
+
+      changeCompareRule(value);
+      setStateValue(value);
+      onChange(root);
+    },
+    [uinode]
+  );
 
   // drag datasource
   const [{ isOver, isOverCurrent }, drop] = useDrop({
@@ -122,9 +175,8 @@ const SelectorItem = (props: any) => {
       }
 
       data.selector = selector;
-      // onChange(_.cloneDeep(root));
-      // setDroppedSelector(_.get(selector, "id"));
       await draggingNode.updateLayout();
+      _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
       updateDepsColor(draggingNode);
       uinode.sendMessage(true);
     },
@@ -136,19 +188,22 @@ const SelectorItem = (props: any) => {
 
   const cls = classNames({
     "dnd-prop-default": true,
-    "dnd-prop-dropped": droppedSelector,
+    "dnd-prop-dropped": droppedId,
     "dnd-prop-over": isOverCurrent
   });
 
   useEffect(() => {
     const id = _.get(data, "selector.id");
-    setDroppedSelector(id);
+    setdroppedId(id);
     const state = _.has(data, "state") ? "state" : "data";
     setStateValue(state);
+    const compareRule =
+      state === "data" ? "dataCompareRule" : "stateCompareRule";
     const rule = _.get(data, compareRule);
     setRule(rule);
-    const d = _.get(data, "state") ? "state" : "data";
-    setStateValue(d);
+    const path = state === "state" ? "state.visible" : "data";
+    const value = _.get(data, path);
+    setDataValue(value);
   }, [data]);
 
   return (
@@ -183,10 +238,11 @@ const SelectorItem = (props: any) => {
             size="small"
             style={{ width: "100px" }}
             defaultValue={"is"}
-            value={rule || "is"}
+            value={rule}
             onChange={(value: any) => {
-              changeValue(compareRule, value);
-              setRule(value);
+              _.set(data, compareRule, value);
+              onChange(_.cloneDeep(root));
+              changeRule(value);
             }}
             disabled={disabled}
           >
@@ -202,14 +258,13 @@ const SelectorItem = (props: any) => {
             ))}
           </Select>
         </Form.Item>
-
-        {state === "data" ? (
+        {isHidden ? null : state === "data" ? (
           <Form.Item label="Value">
             <Input
               disabled={disabled}
               value={value}
               onChange={(e: any) => {
-                changeValue("data", e.target.value);
+                changeValue(e.target.value);
                 setDataValue(e.target.value);
               }}
             />
@@ -221,7 +276,7 @@ const SelectorItem = (props: any) => {
               size="small"
               value={value ? 1 : 0}
               onChange={(value: any) => {
-                changeValue("state.visible", value);
+                changeValue(value);
                 setDataValue(value);
               }}
             >
@@ -252,14 +307,15 @@ const DepGroup = (props: any) => {
   const [listValue, setListValue] = useState(data);
 
   const onGroupChange = (checked: any) => {
+    updateDepsNodeColor(uinode, data);
+    setShowGroup(checked);
+
     if (!checked) {
       onChange({});
     } else {
       onChange(value);
     }
-    setShowGroup(checked);
-    updateDepsNodeColor(uinode, data);
-    uinode.sendMessage(true);
+    // uinode.sendMessage(true);
   };
 
   const [logicValue, setLogicValue] = useState(_.get(value, `strategy`, "and"));
@@ -357,6 +413,8 @@ export const DependencyComponent = (props: any) => {
   const onItemChange = (path: string) => {
     return (v: any) => {
       _.set(finalResult, path, v);
+      uinode.updateLayout();
+      uinode.sendMessage(true);
       const dndNodeManager = DndNodeManager.getInstance();
       dndNodeManager.pushVersion();
     };
