@@ -175,10 +175,12 @@ const SelectorItem = (props: any) => {
       }
 
       data.selector = selector;
-      await draggingNode.updateLayout();
-      _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
-      updateDepsColor(draggingNode);
-      uinode.sendMessage(true);
+      // _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
+      // await draggingNode.updateLayout();
+      // updateDepsColor(draggingNode);
+      // uinode.sendMessage(true);
+      updateDepsNodeColor(uinode, root.deps);
+      onChange(root);
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
@@ -307,15 +309,14 @@ const DepGroup = (props: any) => {
   const [listValue, setListValue] = useState(data);
 
   const onGroupChange = (checked: any) => {
-    updateDepsNodeColor(uinode, data);
-    setShowGroup(checked);
-
     if (!checked) {
       onChange({});
     } else {
       onChange(value);
     }
-    // uinode.sendMessage(true);
+    updateDepsNodeColor(uinode, data);
+    setShowGroup(checked);
+    uinode.sendMessage(true);
   };
 
   const [logicValue, setLogicValue] = useState(_.get(value, `strategy`, "and"));
