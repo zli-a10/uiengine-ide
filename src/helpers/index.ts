@@ -1,4 +1,9 @@
+// tools
 export * from "./utils";
+export * from "./consts";
+export * from "./hooks";
+
+// objects
 export * from "./IDERegister";
 export * from "./FileLoader";
 export * from "./SchemaPropManager";
@@ -7,5 +12,4 @@ export * from "./DndTypes";
 export * from "./RegionDetector";
 export * from "./VersionControl";
 export * from "./configLayoutWrappers";
-export * from "./consts";
 export * from "./DataMocker";

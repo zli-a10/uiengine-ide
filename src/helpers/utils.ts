@@ -261,3 +261,21 @@ export const updateDepsColor = (uiNode: IUINode) => {
     _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
   });
 };
+
+export const removeDepsSchema = (uiNode: IUINode) => {
+  const depsNodes = searchDepsNodes(uiNode);
+  depsNodes.forEach((depNode: IUINode) => {
+    const stateSchema = _.get(depNode, "state", {});
+    _.forIn(stateSchema, (state: any, stateName: string) => {
+      const depsSchema = _.get(state, "deps", []);
+      const newDeps: any = [];
+      depsSchema.forEach((depSchema: any, index: number) => {
+        const selector = _.get(depsSchema, "selector.id");
+        if (selector !== uiNode.id) {
+          newDeps.push(depSchema);
+        }
+      });
+      if (newDeps.length) _.set(state, "deps", newDeps);
+    });
+  });
+};

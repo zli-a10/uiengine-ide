@@ -1,22 +1,19 @@
 import React, { useCallback, useEffect, useContext, useMemo } from "react";
-// import { Tabs, Icon } from 'antd';
-// import { LayoutManager } from "./LayoutManager";
 import _ from "lodash";
-import { UIEngine, UIEngineRegister, PluginManager } from "uiengine";
+import { UIEngine, UIEngineRegister } from "uiengine";
 import { UIEngineDndWrapper } from "../../dnd";
 import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
-import { cloneUINode, DndNodeManager, VersionControl } from "../../../helpers";
+import { VersionControl, useDeleteNode, useCloneNode } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 
 UIEngineRegister.registerPlugins(plugins);
 
-// const fileLoader = FileLoader.getInstance();
 export const DrawingBoard: React.FC = (props: any) => {
   const { preview, propsCollapsed, togglePropsCollapsed } = useContext(
     GlobalContext
   );
   const { updateSchema } = useContext(SchemasContext);
-  const { editNode, chooseEditNode } = useContext(IDEEditorContext);
+  const { editNode } = useContext(IDEEditorContext);
   const { layouts, config = {} } = props;
   let schemas = layouts;
 
@@ -31,6 +28,9 @@ export const DrawingBoard: React.FC = (props: any) => {
     _.set(config, `widgetConfig.componentWrapper`, productWrapper);
     _.set(config, `ideMode`, false);
   }
+
+  let deleteEditNode = useDeleteNode(editNode);
+  let cloneEditNode = useCloneNode(editNode);
 
   // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
   const keyPressActions = useCallback(
@@ -57,16 +57,10 @@ export const DrawingBoard: React.FC = (props: any) => {
         e.preventDefault();
         // dup: Bug: ^D  will recover downwards elements
         if (e.ctrlKey && keyMap[e.code] && editNode) {
-          const newUiNode = await cloneUINode(editNode, keyMap[e.code]);
-          chooseEditNode(newUiNode);
-        }
-        // delete
-        if (e.key === "Delete" || (e.code === "KeyD" && !preview)) {
-          const dndNodeManager = DndNodeManager.getInstance();
-          await dndNodeManager.delete(editNode);
-          // to show schema corret on prop window
-          updateSchema(editNode.schema);
-          chooseEditNode(null);
+          cloneEditNode(keyMap[e.code])();
+        } else if (e.key === "Delete" || (e.code === "KeyD" && !preview)) {
+          // delete
+          deleteEditNode();
         }
         return false;
       }
@@ -82,11 +76,6 @@ export const DrawingBoard: React.FC = (props: any) => {
         if (!preview) togglePropsCollapsed(!propsCollapsed);
       };
     }
-    // const propManager = document.getElementsByClassName('manager');
-    // if (propManager.length) {
-    //   propManager[0].ondblclick = () => togglePropsCollapsed(!propsCollapsed);
-    // }
-    // const header = document.getElementsByClassName('ide-header')[0];
   }, [editNode, propsCollapsed]);
   return (
     <div className="editor" id="drawingboard">
