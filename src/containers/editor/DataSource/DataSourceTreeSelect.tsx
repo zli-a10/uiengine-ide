@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
-import { TreeSelect, Icon, Input } from "antd";
+import { TreeSelect, Icon, Input, Col, Button } from "antd";
 
 import { GlobalContext } from "../../Context";
 
@@ -91,7 +91,8 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   const onSelect = useCallback(
     (value: string) => {
-      if (value && onChange && _.includes(value, ":")) {
+      if (onChange) {
+        if (!value) value = "";
         onChange(value);
       }
     },
@@ -175,27 +176,38 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   return (
     <div className="datasource-select">
-      {showInput ? (
-        <Input
-          {...(value ? { value } : {})}
-          disabled={disabled}
-          onChange={(e: any) => {
-            onChange && onChange(e.target.value);
-          }}
-          addonAfter={<Icon type="search" onClick={switchEdit} />}
-        />
-      ) : (
-        <TreeSelect
-          disabled={disabled}
-          {...(value ? { value } : {})}
-          onSelect={onSelect}
-          showSearch
+      <Col span={20}>
+        {showInput ? (
+          <Input
+            {...(value ? { value } : {})}
+            disabled={disabled}
+            onChange={(e: any) => {
+              onChange && onChange(e.target.value);
+            }}
+          />
+        ) : (
+          <TreeSelect
+            dropdownClassName="cancel-drag"
+            disabled={disabled}
+            allowClear
+            {...(value ? { value } : {})}
+            onSelect={onSelect}
+            showSearch
+            size="small"
+            onChange={onSelect}
+          >
+            {renderNode(nodes)}
+          </TreeSelect>
+        )}
+      </Col>
+      <Col span={4}>
+        <Button
+          type="primary"
           size="small"
-          suffixIcon={() => <Icon type="edit" onClick={switchEdit} />}
-        >
-          {renderNode(nodes)}
-        </TreeSelect>
-      )}
+          icon={showInput ? "search" : "edit"}
+          onClick={switchEdit}
+        />
+      </Col>
     </div>
   );
 };

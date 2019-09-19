@@ -32,7 +32,7 @@ export const PropManager: React.FC<IPropManager> = props => {
   }, [editNode]);
 
   return !propsCollapsed ? (
-    <Draggable onMouseDown={onMouseDown} cancel=".ant-tabs-content">
+    <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
       <div className={`props ${animatedClassName}`} id="prop-manager">
         <h3 className="prop-title">
           {_.get(
@@ -57,14 +57,14 @@ export const PropManager: React.FC<IPropManager> = props => {
           onChange={setActiveKey}
         >
           {!editNode ? null : (
-            <TabPane tab="Design" key="1">
+            <TabPane tab="Design" key="1" className="cancel-drag">
               <Props {...props} />
             </TabPane>
           )}
-          <TabPane tab="Debug" key="2">
+          <TabPane tab="Debug" key="2" className="cancel-drag">
             <Debugger />
           </TabPane>
-          <TabPane tab="Release" key="3">
+          <TabPane tab="Release" key="3" className="cancel-drag">
             <Release />
           </TabPane>
         </Tabs>
