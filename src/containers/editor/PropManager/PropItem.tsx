@@ -38,20 +38,8 @@ export const PropItem = (props: IComponentSchema) => {
 
   // disable the element if it's template
   const disabled = _.has(uinode, "props.ide_droppable") || preview;
-  if (type === "sub") {
-    return standardSchema["sub"].map((restSchema: any) =>
-      Object.entries(restSchema).map((entry: any) => (
-        <PropItem
-          section="prop"
-          name={`${name}.${entry[0]}`}
-          schema={entry[1]}
-          key={`key-${entry[0]}`}
-          uinode={uinode}
-          data={_.get(uinode, `schema.props.${name}.${entry[0]}`)}
-        />
-      ))
-    );
-  } else if (Com) {
+
+  if (Com) {
     return (
       <Com
         onChange={onChange}
@@ -59,6 +47,7 @@ export const PropItem = (props: IComponentSchema) => {
         value={value}
         uinode={uinode}
         disabled={disabled}
+        typeSchema={standardSchema}
         {...schemaProps}
         {...props}
       />

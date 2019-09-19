@@ -17,7 +17,7 @@ import {
 
 const dataMocker = DataMocker.getInstance();
 
-export const RequestParams = (props: any) => {
+export const TestToolkits = (props: any) => {
   const { formItemLayout, tailFormItemLayout, value } = props;
   const onRefreshData = (value: any) => {
     return async () => {
@@ -27,6 +27,7 @@ export const RequestParams = (props: any) => {
       const rootNode: any = getActiveUINode();
       await rootNode.updateLayout();
       rootNode.sendMessage(true);
+      dataMocker.noCache = false;
     };
   };
   const [selectedValue, setValue] = useState("empty");

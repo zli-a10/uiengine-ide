@@ -351,6 +351,8 @@ export class DndNodeManager implements IDndNodeManager {
     function customizer(objValue: any, srcValue: any) {
       if (_.isArray(objValue) && _.isArray(srcValue)) {
         return objValue.concat(srcValue);
+      } else if (_.isEmpty(srcValue)) {
+        return srcValue;
       }
     }
     _.mergeWith(this.targetSchema, schema, customizer);

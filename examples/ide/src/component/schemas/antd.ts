@@ -216,7 +216,7 @@ export default [
         schema: {
           layout: ["horizontal", "vertical", "inline"],
           labelAlign: ["left", "right"],
-          labelCol: [{ sm: [{ span: "number" }, { offset: "number" }] }],
+          labelCol: [{ span: "number" }, { offset: "number" }],
           hideRequiredMark: "boolean"
         },
         children: [
@@ -225,9 +225,9 @@ export default [
             title: "Item",
             isContainer: true,
             schema: {
-              extra: [{ help: "string" }],
+              extra: "string",
               label: "string",
-              labelCol: [{ sm: [{ span: "number" }, { offset: "number" }] }],
+              labelCol: [{ span: "number" }, { offset: "number" }],
               required: "boolean",
               htmlFor: "string",
               hasFeedback: "boolean"

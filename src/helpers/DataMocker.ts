@@ -1,8 +1,6 @@
 import Mock from "mockjs";
 import _ from "lodash";
-import { EMPTY_DATA, getDataSource, getDataSchema } from "../helpers";
-import { DataNode, UINode, Request } from "uiengine";
-// import { DataEngine, Request } from "uiengine";
+import { EMPTY_DATA } from "../helpers";
 import { IUINode } from "uiengine/typings";
 
 export class DataMocker implements IDataMocker {
@@ -25,7 +23,7 @@ export class DataMocker implements IDataMocker {
   maxRow: number = 5;
   enable: boolean = true;
   mode: string = "normal";
-  noCache: boolean = true;
+  noCache: boolean = false; // default cache
   dataCached: any = {}; // see mockjs definiation
   generate(schema: any) {
     if (this.mode === EMPTY_DATA) return;

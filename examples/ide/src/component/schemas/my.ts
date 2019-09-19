@@ -46,15 +46,13 @@ export default [
         schema: {
           type: "string",
           label: "string",
-          extra: {
-            help: "string"
-          },
-          labelCol: {
-            sm: {
-              span: "number",
-              offset: "number"
+          extra: "string",
+          labelCol: [
+            {
+              span: [1, 24],
+              offset: [1, 24]
             }
-          },
+          ],
           required: "boolean",
           htmlFor: "string",
           hasFeedback: "boolean"

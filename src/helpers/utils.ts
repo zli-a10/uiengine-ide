@@ -104,7 +104,7 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
     } else {
       if (_.isObject(fieldSchema[0])) {
         // subobject treated
-        standardSchema["sub"] = fieldSchema;
+        standardSchema["sub"] = fieldSchema.map(schemaTidy);
         standardSchema["type"] = "sub";
       } else {
         standardSchema["options"] = fieldSchema;
@@ -114,14 +114,12 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
   } else if (_.isString(fieldSchema)) {
     standardSchema["type"] = fieldSchema;
   } else if (_.isObject(fieldSchema)) {
-    standardSchema = fieldSchema;
     if (!_.has(fieldSchema, "type")) {
-      if (_.has(fieldSchema, "options")) {
-        standardSchema["type"] = "enum";
-      } else if (_.has(fieldSchema, "range")) {
-        standardSchema["type"] = "range";
-      }
+      _.forIn(fieldSchema, (schema: any, key: string) => {
+        fieldSchema[key] = schemaTidy(schema);
+      });
     }
+    standardSchema = fieldSchema;
   }
   return standardSchema;
 };

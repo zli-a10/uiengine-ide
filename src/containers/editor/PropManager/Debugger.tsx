@@ -166,10 +166,10 @@ export const Debugger: React.FC = (props: any) => {
     <div className="ide-props-events">
       <Collapse accordion>
         <Panel header="Test Toolkits " key="request-params">
-          <Panels.RequestParams
+          <Panels.TestToolkits
             formItemLayout={formItemLayout}
             tailFormItemLayout={tailFormItemLayout}
-          ></Panels.RequestParams>
+          ></Panels.TestToolkits>
           {/* <ReactJson
               indentWidth={2}
               src={[]}
@@ -179,10 +179,10 @@ export const Debugger: React.FC = (props: any) => {
             /> */}
         </Panel>
         <Panel header="Initial Params" key="running-params">
-          <Panels.RunningParams
+          <Panels.InitialParams
             formItemLayout={formItemLayout}
             tailFormItemLayout={tailFormItemLayout}
-          ></Panels.RunningParams>
+          ></Panels.InitialParams>
         </Panel>
       </Collapse>
       <Collapse accordion>
