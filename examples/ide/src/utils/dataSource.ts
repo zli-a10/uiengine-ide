@@ -1,6 +1,7 @@
 import * as _ from 'lodash'
 import { getSchema } from './request'
 import { expandDataSource } from './schema'
+import data from '../data';
 
 const withFilterSchema = (list: any[], searchText: string) => {
   return list.filter((item: any) => {
@@ -20,7 +21,7 @@ const withFilterSchema = (list: any[], searchText: string) => {
 }
 
 export const getDataSourceJson = async (searchText: string) => {
-  const schema = (await getSchema('json/menu.json')) || []
+  const schema = data.menu;
   if (searchText) {
     return withFilterSchema(schema, searchText)
   }
