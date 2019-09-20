@@ -19,10 +19,6 @@ export const PropManager: React.FC<IPropManager> = props => {
     setActiveKey(defaultActiveKey);
   }, [preview]);
 
-  const onMouseDown = (e: any) => {
-    e.stopPropagation();
-  };
-
   const [animatedClassName, setAnimatedClassName] = useState("showout");
   useEffect(() => {
     setAnimatedClassName("showout");
@@ -40,10 +36,10 @@ export const PropManager: React.FC<IPropManager> = props => {
         setMinimize(!minimize);
       };
     }
-  }, [minimize]);
+  });
 
   return !propsCollapsed ? (
-    <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
+    <Draggable cancel=".cancel-drag">
       <div className={`props ${animatedClassName}`} id="prop-manager">
         <h3 className="prop-title">
           {_.get(

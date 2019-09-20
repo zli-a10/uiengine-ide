@@ -1,12 +1,35 @@
-// import React from "react"; // useMemo // useEffect // useCallback, // useContext, // useRef, // useState,
-// import _ from "lodash";
+import React, { useContext, useCallback, useState } from "react"; // useMemo // useEffect // useCallback, // useContext, // useRef, // useState,
+import { IDEEditorContext } from "uiengine-ide";
+
+import _ from "lodash";
 export const ProductWrapper = (props: any) => {
+  const { uinode, style } = props;
+  const { chooseEditNode } = useContext(IDEEditorContext);
+
   const { children } = props;
-  return children;
-  // const display = _.get(uinode, "schema.props.style", {});
-  // return (
-  //   <div className="product-wrapper" style={display}>
-  //     {children}
-  //   </div>
-  // );
+
+  const [hoverClassNames, setHoverClassNames] = useState("");
+  const mouseOver = useCallback((e: any) => {
+    e.stopPropagation();
+    setHoverClassNames("preview-wrapper over");
+  }, []);
+
+  const mouseOut = useCallback((e: any) => {
+    e.stopPropagation();
+    setHoverClassNames("preview-wrapper out");
+  }, []);
+
+  return (
+    <div
+      className={hoverClassNames}
+      onClick={() => {
+        chooseEditNode(uinode);
+      }}
+      onMouseOver={mouseOver}
+      onMouseOut={mouseOut}
+      style={style}
+    >
+      {children}
+    </div>
+  );
 };

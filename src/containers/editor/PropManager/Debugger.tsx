@@ -1,13 +1,13 @@
-import React, { useContext, useState, useCallback, useEffect } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import _ from "lodash";
 import ReactJson from "react-json-view";
 import { Collapse, Row, Col, Input, Select, Form, Icon } from "antd";
+import { useDrop } from "react-dnd";
 import { IDEEditorContext, GlobalContext } from "../../Context";
 import * as Panels from "./Panels";
 import { getActiveUINode } from "../../../helpers";
 import { PluginManager } from "uiengine";
-import { DND_IDE_NODE_TYPE } from "../../../helpers";
-import { useDrop } from "react-dnd";
+import { DND_IDE_NODE_TYPE, useDeepCompareEffect } from "../../../helpers";
 
 const Panel = Collapse.Panel;
 // layout
@@ -99,9 +99,10 @@ export const Debugger: React.FC = (props: any) => {
   });
 
   const [time, setTime] = useState(Date.now());
-  const onRefresh = useCallback(() => {
+  const onRefresh = (e: any) => {
+    e.stopPropagation();
     setTime(Date.now());
-  }, []);
+  };
 
   // set data for nodes
   const [uiNode, setUINode] = useState({});
@@ -153,7 +154,7 @@ export const Debugger: React.FC = (props: any) => {
     setStateNode(info);
   }, [editNode]);
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (_.get(editNode, `id`)) {
       changeComponentId(editNode.id);
       fetchUINode();
@@ -295,7 +296,11 @@ export const Debugger: React.FC = (props: any) => {
             </Col>
           </Row>
         </Panel>
-        <Panel header="Nodes" key="nodes">
+        <Panel
+          header="Nodes"
+          key="nodes"
+          extra={<Icon type="reload" onClick={onRefresh} />}
+        >
           <Collapse accordion bordered={false} defaultActiveKey={"ui-node"}>
             <Panel header="UI Node" key="ui-node">
               <div className="debugger-tree ui-node">

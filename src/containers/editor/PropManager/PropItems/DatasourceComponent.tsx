@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useContext, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import { DataSourceSelector } from "../../DataSource";
-import { Switch, Form, Input, Popover, Icon } from "antd";
+import { Switch, Form, Input, Row, Col, Icon, Select, InputNumber } from "antd";
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, value, name, uinode, disabled, ...rest } = props;
@@ -61,9 +61,24 @@ export const DatasourceComponent = (props: any) => {
     [dataSource]
   );
 
+  const [defaultValueType, changeDefaultValueType] = useState("string");
+  const onChangeDefaultValueType = (value: string) => {
+    changeDefaultValueType(value);
+    changeDefaultValue(undefined);
+    onChange(dataSource);
+  };
+
   const onChangeDefaultValue = (e: any) => {
-    dataSource.defaultValue = e.target.value;
-    changeDefaultValue(e.target.value);
+    let value: any;
+    if (defaultValueType === "string") {
+      value = e.target.value;
+    } else if (defaultValueType === "undefined") {
+      value = undefined;
+    } else {
+      value = e;
+    }
+    dataSource.defaultValue = value;
+    changeDefaultValue(value);
     onChange(dataSource);
   };
 
@@ -114,11 +129,42 @@ export const DatasourceComponent = (props: any) => {
             />
           </Form.Item>
           <Form.Item label="DefaultValue">
-            <Input
-              value={defaultValue}
-              onChange={onChangeDefaultValue}
-              disabled={disabled}
-            />
+            <Row gutter={8}>
+              <Col span={8}>
+                <Select
+                  defaultValue="string"
+                  onChange={onChangeDefaultValueType}
+                >
+                  <Select.Option value="string">String</Select.Option>
+                  <Select.Option value="boolean">Boolean</Select.Option>
+                  <Select.Option value="number">Number</Select.Option>
+                  <Select.Option value="undefined">Undefined</Select.Option>
+                </Select>
+              </Col>
+              <Col span={16}>
+                {defaultValueType === "number" ? (
+                  <InputNumber
+                    value={defaultValue}
+                    onChange={onChangeDefaultValue}
+                    disabled={disabled}
+                    size="small"
+                  />
+                ) : defaultValueType === "boolean" ? (
+                  <Switch
+                    onChange={onChangeDefaultValue}
+                    checked={defaultValue}
+                    disabled={disabled}
+                  />
+                ) : (
+                  <Input
+                    value={defaultValue}
+                    onChange={onChangeDefaultValue}
+                    disabled={disabled}
+                    size="small"
+                  />
+                )}
+              </Col>
+            </Row>
           </Form.Item>
         </>
       )}
