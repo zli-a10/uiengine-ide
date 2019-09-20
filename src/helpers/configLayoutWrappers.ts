@@ -21,7 +21,8 @@ export const configLayoutWrappers: IConfigWrappers = {
       type: "flex",
       align: "top",
       style: {
-        display: "flex"
+        display: "flex",
+        flex: 1
       }
     }
   },

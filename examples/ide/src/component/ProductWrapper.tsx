@@ -1,5 +1,6 @@
 import React, { useContext, useCallback, useState } from "react"; // useMemo // useEffect // useCallback, // useContext, // useRef, // useState,
 import { IDEEditorContext } from "uiengine-ide";
+import { Icon } from "antd";
 
 import _ from "lodash";
 export const ProductWrapper = (props: any) => {
@@ -8,7 +9,7 @@ export const ProductWrapper = (props: any) => {
 
   const { children } = props;
 
-  const [hoverClassNames, setHoverClassNames] = useState("");
+  const [hoverClassNames, setHoverClassNames] = useState("preview-wrapper");
   const mouseOver = useCallback((e: any) => {
     e.stopPropagation();
     setHoverClassNames("preview-wrapper over");
@@ -22,13 +23,20 @@ export const ProductWrapper = (props: any) => {
   return (
     <div
       className={hoverClassNames}
-      onClick={() => {
-        chooseEditNode(uinode);
-      }}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
       style={style}
     >
+      <a
+        className="info"
+        onClick={(e: any) => {
+          e.stopPropagation();
+          chooseEditNode(uinode);
+        }}
+      >
+        <Icon type="info-circle" />
+        {uinode.id}
+      </a>
       {children}
     </div>
   );

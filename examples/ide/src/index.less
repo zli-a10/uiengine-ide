@@ -46,14 +46,27 @@
   }
 
   .preview-wrapper {
-    border: 1px solid transparent;
+    position: relative;
 
-    &.over {
-      border: 1px solid #53bf7c;
+    >.info {
+      display: none;
+      color: #aaa;
+      font-size: 12px;
     }
 
-    &.out {
-      border: 1px solid transparent;
+    &.over {
+      >.info {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 100;
+
+        &:hover {
+          color: #1890ff;
+          font-weight: bold;
+        }
+      }
     }
   }
 }
