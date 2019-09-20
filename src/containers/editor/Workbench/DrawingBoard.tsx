@@ -9,9 +9,12 @@ import * as plugins from "../../../helpers/plugins";
 UIEngineRegister.registerPlugins(plugins);
 
 export const DrawingBoard: React.FC = (props: any) => {
-  const { preview, propsCollapsed, togglePropsCollapsed } = useContext(
-    GlobalContext
-  );
+  const {
+    preview,
+    togglePropsCollapsed,
+    componentCollapsed,
+    toggleComponentCollapsed
+  } = useContext(GlobalContext);
   const { updateSchema } = useContext(SchemasContext);
   const { editNode } = useContext(IDEEditorContext);
   const { layouts, config = {} } = props;
@@ -67,16 +70,19 @@ export const DrawingBoard: React.FC = (props: any) => {
     },
     [editNode]
   );
+
   useEffect(() => {
     // Update the document title using the browser API
     window.onkeydown = keyPressActions;
     const drawingboard = document.getElementById("drawingboard");
     if (drawingboard) {
-      drawingboard.ondblclick = () => {
-        if (!preview) togglePropsCollapsed(!propsCollapsed);
+      drawingboard.ondblclick = (e: any) => {
+        e.stopPropagation();
+        toggleComponentCollapsed(!componentCollapsed);
+        togglePropsCollapsed(!componentCollapsed);
       };
     }
-  }, [editNode, propsCollapsed]);
+  }, [editNode, componentCollapsed]);
   return (
     <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}

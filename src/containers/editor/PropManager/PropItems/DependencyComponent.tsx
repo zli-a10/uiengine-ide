@@ -24,8 +24,15 @@ import {
   DndNodeManager,
   IDE_DEP_COLORS
 } from "../../../../helpers";
-const ruleOptions = [
+const stateRuleOptions = [["is", "Is"]];
+
+const dataRuleOptions = [
+  // system
   ["is", "Is"],
+  // customize
+  ["isTrue", "isTrue"],
+  ["isFalse", "isFalse"],
+  // system
   ["not", "Not"],
   ["above", "Above"],
   ["below", "Below"],
@@ -96,6 +103,8 @@ const SelectorItem = (props: any) => {
   // change schema value
   const numberRules = ["above", "below"];
   const emptyRules = ["empty", "notEmpty"];
+  const booleanRules = ["isTrue", "isFalse"];
+  const noFillRules = [...emptyRules, ...booleanRules];
 
   const getValue = (state: string, value: any) => {
     let newValue = value;
@@ -111,7 +120,7 @@ const SelectorItem = (props: any) => {
   const changeValue = (value: any) => {
     let newValue = getValue(state, value);
     // remove unnecessary data
-    if (emptyRules.indexOf(rule) > -1) {
+    if (noFillRules.indexOf(rule) > -1) {
       _.unset(data, valueKey);
     } else {
       _.set(data, valueKey, newValue);
@@ -122,12 +131,20 @@ const SelectorItem = (props: any) => {
 
   // special rule handling
   const changeRule = useCallback((rule: string) => {
-    if (emptyRules.indexOf(rule) > -1) {
+    if (noFillRules.indexOf(rule) > -1) {
       setIsHidden(true);
+      if (rule === "isFalse") {
+        _.set(data, valueKey, false);
+      } else if (rule === "isTrue") {
+        _.set(data, valueKey, true);
+      } else {
+        _.unset(data, valueKey);
+      }
     } else {
       setIsHidden(false);
     }
     _.set(data, compareRule, rule);
+
     setRule(rule);
     onChange(root);
   }, []);
@@ -207,6 +224,8 @@ const SelectorItem = (props: any) => {
     const value = _.get(data, path);
     setDataValue(value);
   }, [data]);
+
+  const ruleOptions = state === "state" ? stateRuleOptions : dataRuleOptions;
 
   return (
     <div className="deps-editor">

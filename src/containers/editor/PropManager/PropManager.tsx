@@ -31,6 +31,17 @@ export const PropManager: React.FC<IPropManager> = props => {
     }, 1200)();
   }, [editNode]);
 
+  const [minimize, setMinimize] = useState(false);
+  useEffect(() => {
+    const propManager = document.getElementById("prop-manager");
+    if (propManager) {
+      propManager.ondblclick = (e: any) => {
+        e.stopPropagation();
+        setMinimize(!minimize);
+      };
+    }
+  }, [minimize]);
+
   return !propsCollapsed ? (
     <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
       <div className={`props ${animatedClassName}`} id="prop-manager">
@@ -51,23 +62,25 @@ export const PropManager: React.FC<IPropManager> = props => {
           </a>
         </h3>
 
-        <Tabs
-          defaultActiveKey={defaultActiveKey}
-          activeKey={activeKey}
-          onChange={setActiveKey}
-        >
-          {!editNode ? null : (
-            <TabPane tab="Design" key="1" className="cancel-drag">
-              <Props {...props} />
+        {minimize ? null : (
+          <Tabs
+            defaultActiveKey={defaultActiveKey}
+            activeKey={activeKey}
+            onChange={setActiveKey}
+          >
+            {!editNode ? null : (
+              <TabPane tab="Design" key="1" className="cancel-drag">
+                <Props {...props} />
+              </TabPane>
+            )}
+            <TabPane tab="Debug" key="2" className="cancel-drag">
+              <Debugger />
             </TabPane>
-          )}
-          <TabPane tab="Debug" key="2" className="cancel-drag">
-            <Debugger />
-          </TabPane>
-          <TabPane tab="Release" key="3" className="cancel-drag">
-            <Release />
-          </TabPane>
-        </Tabs>
+            <TabPane tab="Release" key="3" className="cancel-drag">
+              <Release />
+            </TabPane>
+          </Tabs>
+        )}
       </div>
     </Draggable>
   ) : null;

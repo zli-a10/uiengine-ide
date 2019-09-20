@@ -265,17 +265,26 @@ export const updateDepsColor = (uiNode: IUINode) => {
 export const removeDepsSchema = (uiNode: IUINode) => {
   const depsNodes = searchDepsNodes(uiNode);
   depsNodes.forEach((depNode: IUINode) => {
-    const stateSchema = _.get(depNode, "state", {});
+    const stateSchema = _.get(depNode, "schema.state", {});
     _.forIn(stateSchema, (state: any, stateName: string) => {
       const depsSchema = _.get(state, "deps", []);
       const newDeps: any = [];
       depsSchema.forEach((depSchema: any, index: number) => {
-        const selector = _.get(depsSchema, "selector.id");
-        if (selector !== uiNode.id) {
+        const depId = _.get(depSchema, "selector.id");
+        if (depId !== uiNode.id) {
           newDeps.push(depSchema);
+        } else {
+          _.unset(depNode, `schema.${IDE_DEP_COLORS}.${depId}`);
         }
       });
-      if (newDeps.length) _.set(state, "deps", newDeps);
+      _.set(state, "deps", newDeps);
     });
+    depNode.sendMessage(true);
   });
+
+  if (!_.isEmpty(uiNode.children)) {
+    uiNode.children.forEach((node: IUINode) => {
+      removeDepsSchema(node);
+    });
+  }
 };
