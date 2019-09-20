@@ -163,6 +163,38 @@ export const Debugger: React.FC = (props: any) => {
     }
   }, [editNode]);
 
+  // change ui tree schema
+  const onChangeTreeSchema = useCallback(
+    async (d: any) => {
+      const namespace = _.cloneDeep(d.namespace);
+      namespace.push(d.name);
+      _.set(editNode.schema, namespace, d.new_value);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
+  const onAddTreeSchema = useCallback(
+    async (d: any) => {
+      _.merge(editNode.schema, d.new_value);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
+  const onDeleteTreeSchema = useCallback(
+    async (d: any) => {
+      const namespace = _.cloneDeep(d.namespace);
+      namespace.push(d.name);
+      _.unset(editNode.schema, namespace);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
   return (
     <div className="ide-props-events">
       <Collapse accordion>
@@ -192,9 +224,9 @@ export const Debugger: React.FC = (props: any) => {
             <ReactJson
               indentWidth={2}
               src={uiJson}
-              onEdit={(d: any) => {
-                console.log(d);
-              }}
+              onEdit={onChangeTreeSchema}
+              onAdd={onAddTreeSchema}
+              onDelete={onDeleteTreeSchema}
               displayDataTypes={false}
               collapsed={2}
               collapseStringsAfterLength={50}
