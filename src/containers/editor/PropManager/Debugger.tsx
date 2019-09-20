@@ -163,6 +163,16 @@ export const Debugger: React.FC = (props: any) => {
     }
   }, [editNode]);
 
+  // change ui tree schema
+  const onChangeTreeSchema = useCallback(
+    async (d: any) => {
+      _.set(editNode.schema, `${d.namespace}.${d.name}`, d.new_value);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
   return (
     <div className="ide-props-events">
       <Collapse accordion>
@@ -192,9 +202,7 @@ export const Debugger: React.FC = (props: any) => {
             <ReactJson
               indentWidth={2}
               src={uiJson}
-              onEdit={(d: any) => {
-                console.log(d);
-              }}
+              onEdit={onChangeTreeSchema}
               displayDataTypes={false}
               collapsed={2}
               collapseStringsAfterLength={50}
