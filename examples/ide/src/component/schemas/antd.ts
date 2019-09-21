@@ -497,6 +497,9 @@ export default [
               checked: "boolean",
               defaultChecked: "boolean",
               value: "any"
+            },
+            defaultProps: {
+              $valueKey: "checked"
             }
           }
         ]
@@ -515,6 +518,9 @@ export default [
           className: "string",
           unCheckedChildren: "string",
           events: ["onChange", "onClick"]
+        },
+        defaultProps: {
+          $valueKey: 'checked'
         }
       },
       {
