@@ -52,16 +52,21 @@ export const Props: React.FC = (props: any) => {
   );
 
   const [treeValue, selectTreeValue] = useState(component);
-  const onTreeChange = (value: any) => {
+  const onTreeChange = (value: any, label: any, extra: any) => {
     if (value && value.indexOf("component-category-") === -1) {
       const dndNodeManager = DndNodeManager.getInstance();
       dndNodeManager.pushVersion();
-      editNode.schema.component = value;
       _.remove(editNode, "schema.props");
       _.remove(editNode, "schema.children");
       _.remove(editNode, "schema.$children");
       _.remove(editNode, "schema.$_children");
       _.remove(editNode, "schema.$template");
+      editNode.schema.component = value;
+      editNode.schema.props = _.get(
+        extra,
+        "triggerNode.props.defaultProps",
+        {}
+      );
       selectTreeValue(value);
       editNode.sendMessage(true);
     }
@@ -77,6 +82,7 @@ export const Props: React.FC = (props: any) => {
   return (
     <div className="ide-props-events">
       <TreeSelect
+        dropdownClassName="cancel-drag"
         showSearch
         className={"component-select"}
         value={treeValue}
