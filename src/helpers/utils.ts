@@ -144,6 +144,32 @@ export const formatTree = (data: any, parent?: any) => {
   return data;
 };
 
+// format tree, add key and value
+export const formatSchemaToTree = (data: any, parentPath?: any) => {
+  const result: any = [];
+  _.forIn(data, (value: any, key: string) => {
+    if (key[0] !== "_") {
+      let path = key;
+      if (parentPath) {
+        path = `${parentPath}.${path}`;
+      }
+      let obj: any = {
+        key: path
+      };
+      if (_.isObject(value)) {
+        obj.value = path;
+        obj.title = path;
+        obj.children = formatSchemaToTree(value, key);
+      } else {
+        obj.value = value || path;
+        obj.title = value;
+      }
+      result.push(obj);
+    }
+  });
+  return result;
+};
+
 // clone schema, remove _id & id
 export const cloneSchemaDeep = (schema: any) => {
   const toRemoveKeys = ["id", "_id"];

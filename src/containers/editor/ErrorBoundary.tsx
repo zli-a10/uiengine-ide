@@ -25,7 +25,7 @@ class ErrorBoundary extends PureComponent<
         <Result
           status="error"
           title="Oops! IDE is meeting some critical issue"
-          subTitle={error.stack}
+          subTitle={<pre>{error.stack}</pre>}
           extra={[
             <Button type="primary" key="console">
               Got it!

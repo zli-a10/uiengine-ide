@@ -12,7 +12,7 @@ import {
   Row,
   Col
 } from "antd";
-import { updateDepsColor } from "../../../../helpers";
+import { updateDepsColor, formatSchemaToTree } from "../../../../helpers";
 // const ButtonGroup = Button.Group;
 import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
@@ -68,8 +68,27 @@ const SelectorItem = (props: any) => {
   const { index, root, setListValue, onChange, disabled, uinode } = props;
 
   const data = _.get(root, `deps[${index}]`);
-  const [droppedId, setdroppedId] = useState();
-  let dependId = droppedId || _.get(data, "selector.id");
+  // const [droppedId, setdroppedId] = useState();
+  let [selector, setSelector] = useState<Array<any>>(
+    _.values(_.get(data, "selector", {}))
+  );
+  let [draggedSchema, setDraggedSchema] = useState([] as any);
+  // let dependId = droppedId || _.get(selector, "id");
+
+  // change selector type
+  const onChangeSelector = useCallback((value: any, label: any, extra: any) => {
+    if (extra.allCheckedNodes.length) {
+      const selector = {};
+      extra.allCheckedNodes.forEach((node: any) => {
+        const key = _.get(node, `node.key`);
+        const value = _.get(node, `node.props.value`);
+        selector[key] = value;
+      });
+      data.selector = selector;
+      setSelector(value);
+      onChange(root);
+    }
+  }, []);
 
   const onDeleteItem = useCallback((e: any) => {
     // remove deps from schema
@@ -192,10 +211,9 @@ const SelectorItem = (props: any) => {
       }
 
       data.selector = selector;
-      // _.unset(uinode, `schema.${IDE_DEP_COLORS}`);
-      // await draggingNode.updateLayout();
-      // updateDepsColor(draggingNode);
-      // uinode.sendMessage(true);
+      const treeData = formatSchemaToTree(schema);
+      setDraggedSchema(treeData);
+      setSelector([selector["id"]]);
       updateDepsNodeColor(uinode, root.deps);
       onChange(root);
     },
@@ -207,13 +225,27 @@ const SelectorItem = (props: any) => {
 
   const cls = classNames({
     "dnd-prop-default": true,
-    "dnd-prop-dropped": droppedId,
     "dnd-prop-over": isOverCurrent
   });
 
   useEffect(() => {
-    const id = _.get(data, "selector.id");
-    setdroppedId(id);
+    const selectors = _.values(_.get(data, "selector", {}));
+
+    setSelector(selectors);
+    if (selectors.length) {
+      const depNodes = searchNodes(_.get(data, "selector"));
+      if (depNodes.length) {
+        const schema = _.get(depNodes[0], "schema", {});
+        const { id, props, datasource } = schema;
+        const validProps = {};
+        if (id !== undefined) validProps["id"] = id;
+        if (props !== undefined) validProps["props"] = props;
+        if (datasource !== undefined) validProps["datasource"] = datasource;
+        const treeData = formatSchemaToTree(validProps);
+        setDraggedSchema(treeData);
+      }
+    }
+
     const state = _.has(data, "state") ? "state" : "data";
     setStateValue(state);
     const compareRule =
@@ -231,14 +263,15 @@ const SelectorItem = (props: any) => {
     <div className="deps-editor">
       <List.Item>
         <div ref={drop} className={cls}>
-          <Form.Item label="ID(Drag)">
-            <Input
-              title={dependId}
-              readOnly
-              disabled={disabled}
-              value={
-                _.isString(dependId) ? dependId.replace("UINode-", "") : ""
-              }
+          <Form.Item label="Selector">
+            <TreeSelect
+              size="small"
+              style={{ maxWidth: "120px" }}
+              treeData={draggedSchema}
+              value={selector}
+              onChange={onChangeSelector}
+              treeCheckable
+              searchPlaceholder="Please select"
             />
           </Form.Item>
         </div>
@@ -254,31 +287,33 @@ const SelectorItem = (props: any) => {
             <Select.Option value="data">Data</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item label="Rule" style={{ width: "150px" }}>
-          <Select
-            size="small"
-            style={{ width: "100px" }}
-            defaultValue={"is"}
-            value={rule}
-            onChange={(value: any) => {
-              _.set(data, compareRule, value);
-              onChange(_.cloneDeep(root));
-              changeRule(value);
-            }}
-            disabled={disabled}
-          >
-            {ruleOptions.map((rule: any, key: number) => (
-              <Select.Option
-                key={key}
-                value={rule[0]}
-                title={rule[1]}
-                disabled={disabled}
-              >
-                {rule[1]}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {ruleOptions.length > 1 ? (
+          <Form.Item label="Rule" style={{ width: "150px" }}>
+            <Select
+              size="small"
+              style={{ maxWidth: "100px" }}
+              defaultValue={"is"}
+              value={rule}
+              onChange={(value: any) => {
+                _.set(data, compareRule, value);
+                onChange(_.cloneDeep(root));
+                changeRule(value);
+              }}
+              disabled={disabled}
+            >
+              {ruleOptions.map((rule: any, key: number) => (
+                <Select.Option
+                  key={key}
+                  value={rule[0]}
+                  title={rule[1]}
+                  disabled={disabled}
+                >
+                  {rule[1]}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        ) : null}
         {isHidden ? null : state === "data" ? (
           <Form.Item label="Value">
             <Input
