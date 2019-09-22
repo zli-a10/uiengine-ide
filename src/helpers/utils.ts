@@ -161,8 +161,8 @@ export const formatSchemaToTree = (data: any, parentPath?: any) => {
         obj.title = path;
         obj.children = formatSchemaToTree(value, key);
       } else {
-        obj.value = value || path;
-        obj.title = value;
+        obj.value = `${path}:${value}`;
+        obj.title = `${path}(${value})`;
       }
       result.push(obj);
     }

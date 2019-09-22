@@ -69,9 +69,11 @@ const SelectorItem = (props: any) => {
 
   const data = _.get(root, `deps[${index}]`);
   // const [droppedId, setdroppedId] = useState();
-  let [selector, setSelector] = useState<Array<any>>(
-    _.values(_.get(data, "selector", {}))
-  );
+  const getSelectors = () =>
+    _.entries(_.get(data, "selector", {})).map(
+      (entry: any) => `${entry[0]}.${entry[1]}`
+    );
+  let [selector, setSelector] = useState<Array<any>>(getSelectors());
   let [draggedSchema, setDraggedSchema] = useState([] as any);
   // let dependId = droppedId || _.get(selector, "id");
 
@@ -82,7 +84,7 @@ const SelectorItem = (props: any) => {
       extra.allCheckedNodes.forEach((node: any) => {
         const key = _.get(node, `node.key`);
         const value = _.get(node, `node.props.value`);
-        selector[key] = value;
+        selector[key] = _.last(value.split(":"));
       });
       data.selector = selector;
       setSelector(value);
@@ -213,7 +215,7 @@ const SelectorItem = (props: any) => {
       data.selector = selector;
       const treeData = formatSchemaToTree(schema);
       setDraggedSchema(treeData);
-      setSelector([selector["id"]]);
+      setSelector([`id:${selector["id"]}`]);
       updateDepsNodeColor(uinode, root.deps);
       onChange(root);
     },
@@ -229,7 +231,7 @@ const SelectorItem = (props: any) => {
   });
 
   useEffect(() => {
-    const selectors = _.values(_.get(data, "selector", {}));
+    const selectors = getSelectors();
 
     setSelector(selectors);
     if (selectors.length) {
