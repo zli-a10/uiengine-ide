@@ -169,7 +169,7 @@ export const Debugger: React.FC = (props: any) => {
       fetchStateNode();
     }
     getJson();
-  }, [editNode.id, editNode.dataNode.schema, time]);
+  }, [editNode, time]);
 
   // change ui tree schema
   const onChangeTreeSchema = useCallback(

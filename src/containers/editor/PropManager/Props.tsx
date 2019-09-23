@@ -2,15 +2,15 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
-import { IDEEditorContext } from "../../Context";
+import { IDEEditorContext, GlobalContext } from "../../Context";
 import { IDERegister, formatTitle, DndNodeManager } from "../../../helpers";
-import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;
-const plugins = PluginManager.getInstance().getPlugins("global");
 
 export const Props: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
+  const { preview } = useContext(GlobalContext);
+
   let componentInfo: IComponentInfo = {} as IComponentInfo;
   if (editNode) {
     componentInfo = IDERegister.getComponentInfo(editNode.schema.component);
@@ -77,6 +77,7 @@ export const Props: React.FC = (props: any) => {
   }, [editNode]);
 
   const treeData = useMemo(() => IDERegister.componentsLibrary, []);
+  const disabled = _.has(editNode, "props.ide_droppable") || preview;
 
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
@@ -91,6 +92,7 @@ export const Props: React.FC = (props: any) => {
         placeholder={formatTitle(title)}
         treeDefaultExpandAll
         onChange={onTreeChange}
+        disabled={disabled}
       />
 
       <Collapse accordion defaultActiveKey={"props"}>

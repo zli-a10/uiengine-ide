@@ -85,6 +85,7 @@ export const ChildrenComponent = (props: any) => {
           <Col span={20}>
             <TreeSelect
               showSearch
+              dropdownClassName="cancel-drag"
               style={{ height: 22 }}
               value={selectedValue}
               size="small"
