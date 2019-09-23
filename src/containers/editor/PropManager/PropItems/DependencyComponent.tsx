@@ -84,10 +84,11 @@ const SelectorItem = (props: any) => {
       extra.allCheckedNodes.forEach((node: any) => {
         const key = _.get(node, `node.key`);
         const value = _.get(node, `node.props.value`);
-        selector[key] = _.last(value.split(":"));
+        selector[key] = value.slice(value.indexOf(":") + 1, value.length);
       });
       data.selector = selector;
       setSelector(value);
+      updateDepsNodeColor(uinode, root.deps);
       onChange(root);
     }
   }, []);
