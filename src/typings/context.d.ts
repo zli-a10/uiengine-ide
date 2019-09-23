@@ -64,8 +64,8 @@ interface IPropsContext {
   activeTab: (tab: string) => any;
   help: string;
   setHelp: (help: string) => any;
-  refresh: string;
-  toggleRefresh: (refresh: string) => any;
+  time: number;
+  refresh: () => any;
 }
 
 // interface IDataSourceContext {

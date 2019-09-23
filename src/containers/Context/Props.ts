@@ -5,6 +5,6 @@ export const PropsContext = React.createContext<IPropsContext>({
   activeTab: (tab: string) => {},
   help: "",
   setHelp: (help: string) => {},
-  refresh: "",
-  toggleRefresh: (refresh: string) => {}
+  time: Date.now(),
+  refresh: () => {}
 });

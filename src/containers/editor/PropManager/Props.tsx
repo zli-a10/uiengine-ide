@@ -96,7 +96,10 @@ export const Props: React.FC = (props: any) => {
       <Collapse accordion defaultActiveKey={"props"}>
         {!_.isEmpty(restSchema) ? (
           <Panel header="Component Props" key="props">
-            <Form {...formItemLayout}>
+            <Form
+              {...formItemLayout}
+              style={{ maxHeight: "400px", overflow: "auto" }}
+            >
               {Object.entries(restSchema).map((entry: any) => (
                 <PropItem
                   section="prop"

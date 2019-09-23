@@ -3,7 +3,7 @@ import _ from "lodash";
 import ReactJson from "react-json-view";
 import { Collapse, Row, Col, Input, Select, Form, Icon } from "antd";
 import { useDrop } from "react-dnd";
-import { IDEEditorContext, GlobalContext } from "../../Context";
+import { IDEEditorContext, GlobalContext, PropsContext } from "../../Context";
 import * as Panels from "./Panels";
 import { getActiveUINode } from "../../../helpers";
 import { PluginManager } from "uiengine";
@@ -38,18 +38,25 @@ const tailFormItemLayout = {
 export const Debugger: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
 
-  const { preview } = useContext(GlobalContext);
+  const { time } = useContext(PropsContext);
 
   // preview json
-  let uiJson: any = {},
-    dataJson;
-  if (editNode) {
-    uiJson = editNode.schema;
-    dataJson = editNode.dataNode.schema;
-  } else {
-    const uiNode = getActiveUINode(true);
-    uiJson = _.get(uiNode, "schema", {});
-  }
+  const [stateUiJson, setStateUIJson] = useState();
+  const [stateDataJson, setStateDataJson] = useState();
+
+  const getJson = () => {
+    let uiJson: any = {},
+      dataJson;
+    if (editNode) {
+      uiJson = editNode.schema;
+      dataJson = editNode.dataNode.schema;
+    } else {
+      const uiNode = getActiveUINode(true);
+      uiJson = _.get(uiNode, "schema", {});
+    }
+    setStateUIJson(uiJson);
+    setStateDataJson(dataJson);
+  };
 
   const [struct, setStruct] = useState<any>("category-id-tree");
   const [exclude, setExclude] = useState<any>("empty-record");
@@ -98,10 +105,10 @@ export const Debugger: React.FC = (props: any) => {
     }
   });
 
-  const [time, setTime] = useState(Date.now());
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const onRefresh = (e: any) => {
     e.stopPropagation();
-    setTime(Date.now());
+    setCurrentTime(Date.now());
   };
 
   // set data for nodes
@@ -161,7 +168,8 @@ export const Debugger: React.FC = (props: any) => {
       fetchDataNode();
       fetchStateNode();
     }
-  }, [editNode, time]);
+    getJson();
+  }, [editNode.id, editNode.dataNode.schema, time]);
 
   // change ui tree schema
   const onChangeTreeSchema = useCallback(
@@ -223,7 +231,7 @@ export const Debugger: React.FC = (props: any) => {
           <div className="debugger-tree">
             <ReactJson
               indentWidth={2}
-              src={uiJson}
+              src={stateUiJson}
               onEdit={onChangeTreeSchema}
               onAdd={onAddTreeSchema}
               onDelete={onDeleteTreeSchema}
@@ -233,12 +241,12 @@ export const Debugger: React.FC = (props: any) => {
             />
           </div>
         </Panel>
-        {dataJson ? (
+        {stateDataJson ? (
           <Panel header="Data JSON" key="ui-data-json">
             <div className="debugger-tree">
               <ReactJson
                 indentWidth={2}
-                src={dataJson}
+                src={stateDataJson}
                 onEdit={(d: any) => {
                   console.log(d);
                 }}

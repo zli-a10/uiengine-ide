@@ -56,24 +56,26 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       <IDEEditorContext.Provider value={ideEditorContextValue}>
         <UIEngineDndProvider>
           <Providers.Schemas>
+            {/*
             <Providers.Props>
-              <Providers.Components>
-                <Main datasource={props.datasource}>
-                  <div className="ide-editor">
-                    <DesignManager datasource={props.datasource} />
-                    <Tabs defaultActiveKey="1">
-                      <TabPane tab="Drawing Board" key="1">
-                        <DrawingBoard {...props} />
-                      </TabPane>
-                      <TabPane tab="Code Editor" key="2">
-                        <CodeEditor />
-                      </TabPane>
-                    </Tabs>
-                    <PropManager {...props} />
-                  </div>
-                </Main>
-              </Providers.Components>
+              <Providers.Components> */}
+            <Main datasource={props.datasource}>
+              <div className="ide-editor">
+                <DesignManager datasource={props.datasource} />
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab="Drawing Board" key="1">
+                    <DrawingBoard {...props} />
+                  </TabPane>
+                  <TabPane tab="Code Editor" key="2">
+                    <CodeEditor />
+                  </TabPane>
+                </Tabs>
+                <PropManager {...props} />
+              </div>
+            </Main>
+            {/* </Providers.Components>
             </Providers.Props>
+          </Providers.Schemas> */}
           </Providers.Schemas>
         </UIEngineDndProvider>
       </IDEEditorContext.Provider>

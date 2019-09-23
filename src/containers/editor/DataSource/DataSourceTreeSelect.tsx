@@ -8,9 +8,9 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
   const { onChange, searchText, value, disabled } = props;
-  const {
-    datasource: { getDataSource, expandDataSource } = {} as any
-  } = useContext(GlobalContext);
+  const { datasource: { getDataSource } = {} as any } = useContext(
+    GlobalContext
+  );
 
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
@@ -18,12 +18,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   const covertNodes = (nodes: any[], nodeKeys: string[] = []) => {
     return nodes.map((node: any) => {
       const newNodeKeys = _.cloneDeep(nodeKeys);
-      // if (node.type === "field") {
-      // node.value = `${newNodeKeys.join(".")}:${node.name}`;
-      // } else {
-      //   node.value = `${newNodeKeys.join(".")}.${node.name}`;
-      // }
-      let value = _.get(node, "children[0].datasource.source");
+      let value = _.get(node, "datasource.source");
       if (!value) {
         value = `${newNodeKeys.join(".")}.${node.name}`;
       }
@@ -111,6 +106,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         saveSearchText !== searchText
       ) {
         let newNodes = (await getDataSource(searchText)) || [];
+
         newNodes = covertNodes(newNodes);
         setNodes(newNodes);
         setSaveSearchText(searchText as string);

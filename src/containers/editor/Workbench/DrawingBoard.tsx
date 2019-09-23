@@ -82,7 +82,15 @@ export const DrawingBoard: React.FC = (props: any) => {
         togglePropsCollapsed(!componentCollapsed);
       };
     }
-  }, [editNode, componentCollapsed]);
+
+    const uiengineContainer = document.getElementById("uiengine-container");
+    if (uiengineContainer) {
+      uiengineContainer.ondblclick = (e: any) => {
+        e.stopPropagation();
+        console.log(e, "clicking ");
+      };
+    }
+  }, [componentCollapsed]);
   return (
     <div className="editor" id="drawingboard">
       {/* <LayoutManager layout={layout} /> */}

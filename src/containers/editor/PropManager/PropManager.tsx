@@ -5,6 +5,7 @@ import Draggable from "react-draggable";
 import { Debugger } from "./Debugger";
 import { Release, Props } from "../PropManager";
 import { GlobalContext, IDEEditorContext } from "../../Context";
+import * as Providers from "../Providers";
 
 const TabPane = Tabs.TabPane;
 export const PropManager: React.FC<IPropManager> = props => {
@@ -45,42 +46,44 @@ export const PropManager: React.FC<IPropManager> = props => {
   return !propsCollapsed ? (
     <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
       <div className={`props ${animatedClassName}`} id="prop-manager">
-        <h3 className="prop-title">
-          {_.get(
-            editNode,
-            "schema.datasource.source",
-            _.get(editNode, "schema.datasource")
-          )}
-          <a
-            className="close-button"
-            onClick={() => {
-              togglePropsCollapsed(true);
-              setAnimatedClassName("");
-            }}
-          >
-            <Icon type="close" />
-          </a>
-        </h3>
-
-        {minimize ? null : (
-          <Tabs
-            defaultActiveKey={defaultActiveKey}
-            activeKey={activeKey}
-            onChange={setActiveKey}
-          >
-            {!editNode ? null : (
-              <TabPane tab="Design" key="1" className="cancel-drag">
-                <Props {...props} />
-              </TabPane>
+        <Providers.Props>
+          <h3 className="prop-title">
+            {_.get(
+              editNode,
+              "schema.datasource.source",
+              _.get(editNode, "schema.datasource")
             )}
-            <TabPane tab="Debug" key="2" className="cancel-drag">
-              <Debugger />
-            </TabPane>
-            <TabPane tab="Release" key="3" className="cancel-drag">
-              <Release />
-            </TabPane>
-          </Tabs>
-        )}
+            <a
+              className="close-button"
+              onClick={() => {
+                togglePropsCollapsed(true);
+                setAnimatedClassName("");
+              }}
+            >
+              <Icon type="close" />
+            </a>
+          </h3>
+
+          {minimize ? null : (
+            <Tabs
+              defaultActiveKey={defaultActiveKey}
+              activeKey={activeKey}
+              onChange={setActiveKey}
+            >
+              {!editNode ? null : (
+                <TabPane tab="Design" key="1" className="cancel-drag">
+                  <Props {...props} />
+                </TabPane>
+              )}
+              <TabPane tab="Debug" key="2" className="cancel-drag">
+                <Debugger />
+              </TabPane>
+              <TabPane tab="Release" key="3" className="cancel-drag">
+                <Release />
+              </TabPane>
+            </Tabs>
+          )}
+        </Providers.Props>
       </div>
     </Draggable>
   ) : null;

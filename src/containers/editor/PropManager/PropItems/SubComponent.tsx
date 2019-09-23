@@ -8,7 +8,6 @@ export const SubComponent = (props: any) => {
   const { typeSchema, data, name, uinode, onChange } = props;
   const [showSub, setShowSub] = useState(!_.isEmpty(data) ? true : false);
   const onChangeSub = (value: any) => {
-    console.log(value, "was changed");
     setShowSub(value);
     if (!value) onChange({});
   };
