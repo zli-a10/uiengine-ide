@@ -280,6 +280,9 @@ export const UIEngineDndWrapper = (props: any) => {
   const display = _.get(uinode, "schema.layout.display");
   const flex = _.get(uinode, "schema.layout.flex");
   const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
+  const dataSource = _.get(uinode, `dataNode.source.source`, "");
+  const actionName =
+    dataSource.indexOf("$dummy") === 0 ? _.get(uinode, "id") : dataSource;
 
   return (
     <div
@@ -291,11 +294,18 @@ export const UIEngineDndWrapper = (props: any) => {
       className={cls}
     >
       <ActionMenu uinode={uinode}>
-        <div className="component-action" title={myId} onClick={onClickMenuBar}>
+        <div
+          className="component-action"
+          title={`Component: ${uinode.schema.component}, ID: ${_.get(
+            uinode,
+            "id"
+          )}, Data Source: ${dataSource}`}
+          onClick={onClickMenuBar}
+        >
           <div className="component-name">
-            {uinode.schema.component}
-            <strong>->{myId}</strong>
-            <span>{myId !== uinode.id ? `(${uinode.id})` : ""}</span>
+            {/* {uinode.schema.component} */}
+            {/* <strong>{myId}</strong> */}
+            <span>{actionName}</span>
             <Icon type="more" />
           </div>
           <div className="component-deps">

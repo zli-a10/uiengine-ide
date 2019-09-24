@@ -85,7 +85,6 @@ export const DrawingBoard: React.FC = (props: any) => {
   }, [editNode, componentCollapsed]);
   return (
     <div className="editor" id="drawingboard">
-      {/* <LayoutManager layout={layout} /> */}
       <UIEngine layouts={schemas} config={config} />
     </div>
   );

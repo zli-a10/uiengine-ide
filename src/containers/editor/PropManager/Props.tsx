@@ -77,7 +77,7 @@ export const Props: React.FC = (props: any) => {
   }, [editNode]);
 
   const treeData = useMemo(() => IDERegister.componentsLibrary, []);
-  const disabled = _.has(editNode, "props.ide_droppable") || preview;
+  const disabled = false; //_.has(editNode, "props.ide_droppable") || preview;
 
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (

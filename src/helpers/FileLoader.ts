@@ -68,17 +68,14 @@ export class FileLoader implements IFileLoader {
     return true;
   }
 
-  loadFileTree(type: string = "schema"): IFileTree {
+  loadFileTree(type: string = "schema") {
     const fileTreeJson = this.storage.get(`file_tree.${type}`);
     // console.log(fileTreeJson);
     if (fileTreeJson) {
-      return JSON.parse(fileTreeJson);
+      const tree = JSON.parse(fileTreeJson);
+      return _.get(tree, `children`, []);
     } else {
-      return {
-        name: "root",
-        title: "Root Node",
-        children: []
-      };
+      return [];
     }
   }
 

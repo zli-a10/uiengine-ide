@@ -314,3 +314,36 @@ export const removeDepsSchema = (uiNode: IUINode) => {
     });
   }
 };
+
+export const getPluginTree = (plugins: any) => {
+  // console.log(PluginManager.plugins);
+  let results: any[] = [];
+  for (let key in plugins) {
+    let result: any = {};
+    const plugin: { type?: any } = plugins[key];
+    if (_.isObject(plugin)) {
+      if (plugin.type) {
+        let name = _.get(plugin, "name", plugin.type);
+        result = { name: plugin.type, title: name };
+      } else {
+        let children: any = [];
+        for (let k in plugin) {
+          const p = plugin[k];
+          children.push(getPluginSubTree(k, p));
+        }
+        result = { key: _.uniqueId(key), name: key, title: key, children };
+      }
+    }
+    if (!_.isEmpty(result)) results.push(result);
+  }
+  return results;
+};
+
+const getPluginSubTree = (key: string, plugins: any) => {
+  const result: any = { key: _.uniqueId(key), name: key, title: key };
+  if (!plugins.type) {
+    const children = getPluginTree(plugins);
+    if (!_.isEmpty(children)) result.children = children;
+  }
+  return result;
+};
