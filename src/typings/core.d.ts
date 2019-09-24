@@ -86,3 +86,25 @@ interface IDataMocker {
   generate(schema: any); // called on plugin
   generateTableData(childrenNode: IUINode);
 }
+
+// web socket
+interface IServerOptions {
+  port: number; // default 3000
+  host?: string; // default localhost
+  paths: {
+    schemaPath?: string;
+    pluginPath?: string;
+    componentsPath?: string;
+    dataSourcePath?: string;
+  };
+}
+
+interface IServer {}
+
+interface IClient {}
+
+interface IWebsocketCommands {
+  name: string;
+  options?: any;
+  response?: any; // responseData, server will append to
+}

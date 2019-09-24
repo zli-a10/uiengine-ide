@@ -24,6 +24,7 @@ export class IDERegister {
   static componentsLibrary: any = [];
   // for easier to fetch component schemas
   static componentsList: any = {};
+  static websocketOptions: IServerOptions;
 
   static registerComponentsInfo(componentInfos: any) {
     if (componentInfos) {
@@ -80,5 +81,9 @@ export class IDERegister {
   static registerSchemaConverter(converter: ISchemaConverter) {
     const mocker = DataMocker.getInstance();
     mocker.schemaCoverter = converter;
+  }
+
+  static registerWebsocket(options: IServerOptions) {
+    IDERegister.websocketOptions = options;
   }
 }

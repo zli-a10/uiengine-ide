@@ -63,10 +63,6 @@ export const Debugger: React.FC = (props: any) => {
   const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
 
   const pluginManager = PluginManager.getInstance();
-<<<<<<< HEAD
-  // pluginManager.resetHistory(1000);
-=======
->>>>>>> 2e620489bd5649c2ce64b659c7d72106ab504aef
   let pluginData = pluginManager.exportHistoryRecords({
     struct,
     exclude,
