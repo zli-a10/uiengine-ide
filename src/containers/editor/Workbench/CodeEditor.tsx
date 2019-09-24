@@ -4,16 +4,14 @@ import MonacoEditor from "react-monaco-editor";
 export const CodeEditor: React.FC = (props: any) => {
   const { layouts, config = {} } = props;
   const options = {
-    // selectOnLineNumbers: true,
-    // acceptSuggestionOnCommitCharacter: true,
-    // autoIndent: true,
-    // automaticLayout: true,
-    // dragAndDrop: true,
-    // folding: true,
-    // foldingStrategy: "auto",
-    // highlightActiveIndentGuide: true,
-    // mouseWheelZoom: true,
-    // multiCursorModifier: "ctrlCmd"
+    selectOnLineNumbers: true,
+    acceptSuggestionOnCommitCharacter: true,
+    autoIndent: true,
+    automaticLayout: true,
+    dragAndDrop: true,
+    folding: true,
+    highlightActiveIndentGuide: true,
+    mouseWheelZoom: true
   };
 
   const [code, setCode] = useState("");
