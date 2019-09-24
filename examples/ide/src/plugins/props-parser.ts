@@ -14,6 +14,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   const layout: any = _.get(schema, "layout", {});
 
   // get data value
+  const valueKey = _.get(props, "$valueKey", "value");
   const value = uiNode.dataNode.data;
 
   // load event and default event
@@ -34,14 +35,14 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   // assign all default props
   let result = {
     // key: uiNode.id,
-    value,
+    [valueKey]: value,
     error: errorInfo,
     ...eventFuncs
   };
 
   // assign user defined props;
   if (props) {
-    let { $events, ide_droppable, style, ...rest } = props as any;
+    let { $events, $valueKey, ide_droppable, style, ...rest } = props as any;
     style = _.merge(style, layout);
     // assign props to uiNode
     result = { ...rest, ...result, style };

@@ -20,7 +20,7 @@ interface IFileLoader {
     type: string,
     treeRoot?: IFileTree
   ): boolean;
-  loadFileTree(type: string): IFileTree;
+  loadFileTree(type: string): Array<IFileTree>;
   loadFile(path: string, type?: string): any;
   removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean;
 }

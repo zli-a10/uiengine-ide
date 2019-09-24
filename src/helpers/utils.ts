@@ -104,7 +104,7 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
     } else {
       if (_.isObject(fieldSchema[0])) {
         // subobject treated
-        standardSchema["sub"] = fieldSchema;
+        standardSchema["sub"] = fieldSchema.map(schemaTidy);
         standardSchema["type"] = "sub";
       } else {
         standardSchema["options"] = fieldSchema;
@@ -114,14 +114,12 @@ export const schemaTidy = (fieldSchema: any): IComponentSchema => {
   } else if (_.isString(fieldSchema)) {
     standardSchema["type"] = fieldSchema;
   } else if (_.isObject(fieldSchema)) {
-    standardSchema = fieldSchema;
     if (!_.has(fieldSchema, "type")) {
-      if (_.has(fieldSchema, "options")) {
-        standardSchema["type"] = "enum";
-      } else if (_.has(fieldSchema, "range")) {
-        standardSchema["type"] = "range";
-      }
+      _.forIn(fieldSchema, (schema: any, key: string) => {
+        fieldSchema[key] = schemaTidy(schema);
+      });
     }
+    standardSchema = fieldSchema;
   }
   return standardSchema;
 };
@@ -144,6 +142,32 @@ export const formatTree = (data: any, parent?: any) => {
     }
   }
   return data;
+};
+
+// format tree, add key and value
+export const formatSchemaToTree = (data: any, parentPath?: any) => {
+  const result: any = [];
+  _.forIn(data, (value: any, key: string) => {
+    if (key[0] !== "_") {
+      let path = key;
+      if (parentPath) {
+        path = `${parentPath}.${path}`;
+      }
+      let obj: any = {
+        key: path
+      };
+      if (_.isObject(value)) {
+        obj.value = path;
+        obj.title = path;
+        obj.children = formatSchemaToTree(value, key);
+      } else {
+        obj.value = `${path}:${value}`;
+        obj.title = `${path}(${value})`;
+      }
+      result.push(obj);
+    }
+  });
+  return result;
 };
 
 // clone schema, remove _id & id
@@ -262,5 +286,64 @@ export const updateDepsColor = (uiNode: IUINode) => {
     nodes[myId] = uiNode.schema[IDE_COLOR];
     _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
   });
-  return myId;
+};
+
+export const removeDepsSchema = (uiNode: IUINode) => {
+  const depsNodes = searchDepsNodes(uiNode);
+  depsNodes.forEach((depNode: IUINode) => {
+    const stateSchema = _.get(depNode, "schema.state", {});
+    _.forIn(stateSchema, (state: any, stateName: string) => {
+      const depsSchema = _.get(state, "deps", []);
+      const newDeps: any = [];
+      depsSchema.forEach((depSchema: any, index: number) => {
+        const depId = _.get(depSchema, "selector.id");
+        if (depId !== uiNode.id) {
+          newDeps.push(depSchema);
+        } else {
+          _.unset(depNode, `schema.${IDE_DEP_COLORS}.${depId}`);
+        }
+      });
+      _.set(state, "deps", newDeps);
+    });
+    depNode.sendMessage(true);
+  });
+
+  if (!_.isEmpty(uiNode.children)) {
+    uiNode.children.forEach((node: IUINode) => {
+      removeDepsSchema(node);
+    });
+  }
+};
+
+export const getPluginTree = (plugins: any) => {
+  // console.log(PluginManager.plugins);
+  let results: any[] = [];
+  for (let key in plugins) {
+    let result: any = {};
+    const plugin: { type?: any } = plugins[key];
+    if (_.isObject(plugin)) {
+      if (plugin.type) {
+        let name = _.get(plugin, "name", plugin.type);
+        result = { name: plugin.type, title: name };
+      } else {
+        let children: any = [];
+        for (let k in plugin) {
+          const p = plugin[k];
+          children.push(getPluginSubTree(k, p));
+        }
+        result = { key: _.uniqueId(key), name: key, title: key, children };
+      }
+    }
+    if (!_.isEmpty(result)) results.push(result);
+  }
+  return results;
+};
+
+const getPluginSubTree = (key: string, plugins: any) => {
+  const result: any = { key: _.uniqueId(key), name: key, title: key };
+  if (!plugins.type) {
+    const children = getPluginTree(plugins);
+    if (!_.isEmpty(children)) result.children = children;
+  }
+  return result;
 };

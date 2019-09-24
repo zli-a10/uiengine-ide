@@ -5,6 +5,7 @@ import Draggable from "react-draggable";
 import { Debugger } from "./Debugger";
 import { Release, Props } from "../PropManager";
 import { GlobalContext, IDEEditorContext } from "../../Context";
+import * as Providers from "../Providers";
 
 const TabPane = Tabs.TabPane;
 export const PropManager: React.FC<IPropManager> = props => {
@@ -31,43 +32,58 @@ export const PropManager: React.FC<IPropManager> = props => {
     }, 1200)();
   }, [editNode]);
 
-  return !propsCollapsed ? (
-    <Draggable onMouseDown={onMouseDown} cancel=".ant-tabs-content">
-      <div className={`props ${animatedClassName}`} id="prop-manager">
-        <h3 className="prop-title">
-          {_.get(
-            editNode,
-            "schema.datasource.source",
-            _.get(editNode, "schema.datasource")
-          )}
-          <a
-            className="close-button"
-            onClick={() => {
-              togglePropsCollapsed(true);
-              setAnimatedClassName("");
-            }}
-          >
-            <Icon type="close" />
-          </a>
-        </h3>
+  const [minimize, setMinimize] = useState(false);
+  useEffect(() => {
+    const propManager = document.getElementById("prop-manager");
+    if (propManager) {
+      propManager.ondblclick = (e: any) => {
+        e.stopPropagation();
+        setMinimize(!minimize);
+      };
+    }
+  }, [minimize]);
 
-        <Tabs
-          defaultActiveKey={defaultActiveKey}
-          activeKey={activeKey}
-          onChange={setActiveKey}
-        >
-          {!editNode ? null : (
-            <TabPane tab="Design" key="1">
-              <Props {...props} />
-            </TabPane>
+  return !propsCollapsed ? (
+    <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
+      <div className={`props ${animatedClassName}`} id="prop-manager">
+        <Providers.Props>
+          <h3 className="prop-title">
+            {_.get(
+              editNode,
+              "schema.datasource.source",
+              _.get(editNode, "schema.datasource")
+            )}
+            <a
+              className="close-button"
+              onClick={() => {
+                togglePropsCollapsed(true);
+                setAnimatedClassName("");
+              }}
+            >
+              <Icon type="close" />
+            </a>
+          </h3>
+
+          {minimize ? null : (
+            <Tabs
+              defaultActiveKey={defaultActiveKey}
+              activeKey={activeKey}
+              onChange={setActiveKey}
+            >
+              {!editNode ? null : (
+                <TabPane tab="Design" key="1" className="cancel-drag">
+                  <Props {...props} />
+                </TabPane>
+              )}
+              <TabPane tab="Debug" key="2" className="cancel-drag">
+                <Debugger />
+              </TabPane>
+              <TabPane tab="Release" key="3" className="cancel-drag">
+                <Release />
+              </TabPane>
+            </Tabs>
           )}
-          <TabPane tab="Debug" key="2">
-            <Debugger />
-          </TabPane>
-          <TabPane tab="Release" key="3">
-            <Release />
-          </TabPane>
-        </Tabs>
+        </Providers.Props>
       </div>
     </Draggable>
   ) : null;

@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
-import { TreeSelect, Icon, Input } from "antd";
+import { TreeSelect, Icon, Input, Col, Button } from "antd";
 
 import { GlobalContext } from "../../Context";
 
@@ -8,9 +8,9 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
   const { onChange, searchText, value, disabled } = props;
-  const {
-    datasource: { getDataSource, expandDataSource } = {} as any
-  } = useContext(GlobalContext);
+  const { datasource: { getDataSource } = {} as any } = useContext(
+    GlobalContext
+  );
 
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
@@ -18,12 +18,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   const covertNodes = (nodes: any[], nodeKeys: string[] = []) => {
     return nodes.map((node: any) => {
       const newNodeKeys = _.cloneDeep(nodeKeys);
-      // if (node.type === "field") {
-      // node.value = `${newNodeKeys.join(".")}:${node.name}`;
-      // } else {
-      //   node.value = `${newNodeKeys.join(".")}.${node.name}`;
-      // }
-      let value = _.get(node, "children[0].datasource.source");
+      let value = _.get(node, "datasource.source");
       if (!value) {
         value = `${newNodeKeys.join(".")}.${node.name}`;
       }
@@ -91,7 +86,8 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   const onSelect = useCallback(
     (value: string) => {
-      if (value && onChange && _.includes(value, ":")) {
+      if (onChange) {
+        if (!value) value = "";
         onChange(value);
       }
     },
@@ -110,6 +106,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         saveSearchText !== searchText
       ) {
         let newNodes = (await getDataSource(searchText)) || [];
+
         newNodes = covertNodes(newNodes);
         setNodes(newNodes);
         setSaveSearchText(searchText as string);
@@ -175,27 +172,38 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   return (
     <div className="datasource-select">
-      {showInput ? (
-        <Input
-          {...(value ? { value } : {})}
-          disabled={disabled}
-          onChange={(e: any) => {
-            onChange && onChange(e.target.value);
-          }}
-          addonAfter={<Icon type="search" onClick={switchEdit} />}
-        />
-      ) : (
-        <TreeSelect
-          disabled={disabled}
-          {...(value ? { value } : {})}
-          onSelect={onSelect}
-          showSearch
+      <Col span={20}>
+        {showInput ? (
+          <Input
+            {...(value ? { value } : {})}
+            disabled={disabled}
+            onChange={(e: any) => {
+              onChange && onChange(e.target.value);
+            }}
+          />
+        ) : (
+          <TreeSelect
+            dropdownClassName="cancel-drag"
+            disabled={disabled}
+            allowClear
+            {...(value ? { value } : {})}
+            onSelect={onSelect}
+            showSearch
+            size="small"
+            onChange={onSelect}
+          >
+            {renderNode(nodes)}
+          </TreeSelect>
+        )}
+      </Col>
+      <Col span={4}>
+        <Button
+          type="primary"
           size="small"
-          suffixIcon={() => <Icon type="edit" onClick={switchEdit} />}
-        >
-          {renderNode(nodes)}
-        </TreeSelect>
-      )}
+          icon={showInput ? "search" : "edit"}
+          onClick={switchEdit}
+        />
+      </Col>
     </div>
   );
 };

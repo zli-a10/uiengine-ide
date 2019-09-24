@@ -1,3 +1,10 @@
+interface IErrorBoundaryProps {}
+
+interface IErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
 interface IPropInfo {
   schema?: ILayoutSchema;
   debug?: any;

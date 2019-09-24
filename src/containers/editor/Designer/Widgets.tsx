@@ -30,7 +30,7 @@ const WidgetItem = (props: any) => {
   const [, drag] = useDrag({
     item: { type: DND_IDE_NODE_TYPE },
     begin: (monitor: any) => {
-      tempSchema[IDE_ID] = _.uniqueId(`${IDE_ID}-new-`);
+      tempSchema[IDE_ID] = _.uniqueId(`${IDE_ID}_new_`);
       // const uinode = new UINode(tempSchema);
       const uinode = { schema: tempSchema };
       return {

@@ -2,15 +2,15 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
-import { IDEEditorContext } from "../../Context";
+import { IDEEditorContext, GlobalContext } from "../../Context";
 import { IDERegister, formatTitle, DndNodeManager } from "../../../helpers";
-import { PluginManager } from "uiengine";
 
 const Panel = Collapse.Panel;
-const plugins = PluginManager.getInstance().getPlugins("global");
 
 export const Props: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
+  const { preview } = useContext(GlobalContext);
+
   let componentInfo: IComponentInfo = {} as IComponentInfo;
   if (editNode) {
     componentInfo = IDERegister.getComponentInfo(editNode.schema.component);
@@ -52,16 +52,21 @@ export const Props: React.FC = (props: any) => {
   );
 
   const [treeValue, selectTreeValue] = useState(component);
-  const onTreeChange = (value: any) => {
+  const onTreeChange = (value: any, label: any, extra: any) => {
     if (value && value.indexOf("component-category-") === -1) {
       const dndNodeManager = DndNodeManager.getInstance();
       dndNodeManager.pushVersion();
-      editNode.schema.component = value;
       _.remove(editNode, "schema.props");
       _.remove(editNode, "schema.children");
       _.remove(editNode, "schema.$children");
       _.remove(editNode, "schema.$_children");
       _.remove(editNode, "schema.$template");
+      editNode.schema.component = value;
+      editNode.schema.props = _.get(
+        extra,
+        "triggerNode.props.defaultProps",
+        {}
+      );
       selectTreeValue(value);
       editNode.sendMessage(true);
     }
@@ -72,11 +77,13 @@ export const Props: React.FC = (props: any) => {
   }, [editNode]);
 
   const treeData = useMemo(() => IDERegister.componentsLibrary, []);
+  const disabled = false; //_.has(editNode, "props.ide_droppable") || preview;
 
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
       <TreeSelect
+        dropdownClassName="cancel-drag"
         showSearch
         className={"component-select"}
         value={treeValue}
@@ -85,12 +92,16 @@ export const Props: React.FC = (props: any) => {
         placeholder={formatTitle(title)}
         treeDefaultExpandAll
         onChange={onTreeChange}
+        disabled={disabled}
       />
 
       <Collapse accordion defaultActiveKey={"props"}>
         {!_.isEmpty(restSchema) ? (
           <Panel header="Component Props" key="props">
-            <Form {...formItemLayout}>
+            <Form
+              {...formItemLayout}
+              style={{ maxHeight: "400px", overflow: "auto" }}
+            >
               {Object.entries(restSchema).map((entry: any) => (
                 <PropItem
                   section="prop"
@@ -133,14 +144,11 @@ export const Props: React.FC = (props: any) => {
                   name={name}
                   type="event"
                   key={`key-${name}`}
-                  options={_.keys(plugins)}
+                  schema={{ type: "string", label: "string" }}
                   uinode={editNode}
-                  data={_.find(
-                    _.get(editNode, `schema.props.$events.${name}`, {}),
-                    {
-                      event: name
-                    }
-                  )}
+                  data={_.find(_.get(editNode, `schema.props.$events`, {}), {
+                    event: name
+                  })}
                 />
               ))}
             </Form>

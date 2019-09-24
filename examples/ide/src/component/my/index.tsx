@@ -1,3 +1,6 @@
+import Table from "./Table";
+export { Table };
+
 export * from "./Section";
 export * from "./DataSelect";
 export * from "./EditableTable";

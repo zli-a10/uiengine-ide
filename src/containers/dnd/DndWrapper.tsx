@@ -27,6 +27,7 @@ import {
   IDE_DEP_COLORS,
   randColor,
   updateDepsColor,
+  getUINodeLable,
   droppable,
   IDERegister
 } from "../../helpers";
@@ -228,7 +229,8 @@ export const UIEngineDndWrapper = (props: any) => {
   }, []);
 
   // update schema deps
-  let myId = updateDepsColor(uinode);
+  updateDepsColor(uinode);
+  let myId = getUINodeLable(uinode);
 
   // double click
   useEffect(() => {
@@ -278,6 +280,9 @@ export const UIEngineDndWrapper = (props: any) => {
   const display = _.get(uinode, "schema.layout.display");
   const flex = _.get(uinode, "schema.layout.flex");
   const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
+  const dataSource = _.get(uinode, `dataNode.source.source`, "");
+  const actionName =
+    dataSource.indexOf("$dummy") === 0 ? _.get(uinode, "id") : dataSource;
 
   return (
     <div
@@ -289,10 +294,18 @@ export const UIEngineDndWrapper = (props: any) => {
       className={cls}
     >
       <ActionMenu uinode={uinode}>
-        <div className="component-action" title={myId} onClick={onClickMenuBar}>
+        <div
+          className="component-action"
+          title={`Component: ${uinode.schema.component}, ID: ${_.get(
+            uinode,
+            "id"
+          )}, Data Source: ${dataSource}`}
+          onClick={onClickMenuBar}
+        >
           <div className="component-name">
-            {uinode.schema.component}
-            <strong>({myId})</strong>
+            {/* {uinode.schema.component} */}
+            {/* <strong>{myId}</strong> */}
+            <span>{actionName}</span>
             <Icon type="more" />
           </div>
           <div className="component-deps">

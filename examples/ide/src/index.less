@@ -44,4 +44,29 @@
   .ant-select-enabled {
     width: 100%
   }
+
+  .preview-wrapper {
+    position: relative;
+
+    >.info {
+      display: none;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    &.over {
+      >.info {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 100;
+
+        &:hover {
+          color: #1890ff;
+          font-weight: bold;
+        }
+      }
+    }
+  }
 }

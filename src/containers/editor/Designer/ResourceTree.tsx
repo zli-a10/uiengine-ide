@@ -1,7 +1,6 @@
 import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
-import { UINode } from "uiengine";
 import { SchemasContext } from "../../Context";
 import _ from "lodash";
 import {
@@ -17,7 +16,7 @@ const { TreeNode } = Tree;
 let defaultExpandedKeys: any = [];
 const fileLoader = FileLoader.getInstance();
 
-export class PluginTree extends React.Component<ITree, ITreeState> {
+export class ResourceTree extends React.Component<ITree, ITreeState> {
   constructor(props: ITree) {
     super(props);
     const items = props.tree.children;
@@ -301,11 +300,11 @@ export class PluginTree extends React.Component<ITree, ITreeState> {
           expandedKeys={this.state.expandKeys}
           selectedKeys={this.state.selectedKeys}
         >
-          {this.renderTreeNodes(tree.children)}
+          {this.renderTreeNodes(tree)}
         </Tree>
       </div>
     );
   }
 }
 
-PluginTree.contextType = SchemasContext;
+ResourceTree.contextType = SchemasContext;

@@ -3,9 +3,9 @@ import _ from "lodash";
 import { FileLoader, formatTree } from "../../../../helpers";
 // import { UIEngine } from "uiengine";
 import ReactJson from "react-json-view";
-import { TreeSelect, Form, Icon, Modal } from "antd";
+import { TreeSelect, Form, Icon, Modal, Row, Col, Button } from "antd";
 import { ILayoutSchema } from "uiengine/typings";
-const { TreeNode } = TreeSelect;
+
 // schemas fetch
 const fileLoader = FileLoader.getInstance();
 const formatDataSource = (children: ILayoutSchema[]) => {
@@ -81,25 +81,33 @@ export const ChildrenComponent = (props: any) => {
   return (
     <div className="children-setting">
       <Form.Item label="Template">
-        <TreeSelect
-          showSearch
-          style={{ height: 22 }}
-          value={selectedValue}
-          size="small"
-          dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-          placeholder="Please select"
-          treeDefaultExpandAll
-          suffixIcon={() => (
-            <Icon
-              type="eye"
-              style={{ color: "#3570bd" }}
-              onClick={onViewCode(selectedValue)}
+        <Row gutter={12}>
+          <Col span={20}>
+            <TreeSelect
+              showSearch
+              dropdownClassName="cancel-drag"
+              style={{ height: 22 }}
+              value={selectedValue}
+              size="small"
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+              placeholder="Please select"
+              treeDefaultExpandAll
+              allowClear
+              onChange={onTreeChange}
+              treeData={memoTree}
             />
-          )}
-          allowClear
-          onChange={onTreeChange}
-          treeData={memoTree}
-        />
+          </Col>
+          {selectedValue ? (
+            <Col span={4}>
+              <Button
+                type="primary"
+                size="small"
+                icon="eye"
+                onClick={onViewCode(selectedValue)}
+              />
+            </Col>
+          ) : null}
+        </Row>
       </Form.Item>
       <Modal
         title="Basic Modal"

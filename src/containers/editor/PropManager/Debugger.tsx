@@ -1,13 +1,13 @@
-import React, { useContext, useState, useCallback, useEffect } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import _ from "lodash";
 import ReactJson from "react-json-view";
 import { Collapse, Row, Col, Input, Select, Form, Icon } from "antd";
-import { IDEEditorContext, GlobalContext } from "../../Context";
+import { useDrop } from "react-dnd";
+import { IDEEditorContext, GlobalContext, PropsContext } from "../../Context";
 import * as Panels from "./Panels";
 import { getActiveUINode } from "../../../helpers";
 import { PluginManager } from "uiengine";
-import { DND_IDE_NODE_TYPE } from "../../../helpers";
-import { useDrop } from "react-dnd";
+import { DND_IDE_NODE_TYPE, useDeepCompareEffect } from "../../../helpers";
 
 const Panel = Collapse.Panel;
 // layout
@@ -38,25 +38,35 @@ const tailFormItemLayout = {
 export const Debugger: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
 
-  const { preview } = useContext(GlobalContext);
+  const { time } = useContext(PropsContext);
 
   // preview json
-  let uiJson: any = {},
-    dataJson;
-  if (editNode) {
-    uiJson = editNode.schema;
-    dataJson = editNode.dataNode.schema;
-  } else {
-    const uiNode = getActiveUINode(true);
-    uiJson = _.get(uiNode, "schema", {});
-  }
+  const [stateUiJson, setStateUIJson] = useState();
+  const [stateDataJson, setStateDataJson] = useState();
+
+  const getJson = () => {
+    let uiJson: any = {},
+      dataJson;
+    if (editNode) {
+      uiJson = editNode.schema;
+      dataJson = editNode.dataNode.schema;
+    } else {
+      const uiNode = getActiveUINode(true);
+      uiJson = _.get(uiNode, "schema", {});
+    }
+    setStateUIJson(uiJson);
+    setStateDataJson(dataJson);
+  };
 
   const [struct, setStruct] = useState<any>("category-id-tree");
   const [exclude, setExclude] = useState<any>("empty-record");
   const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
 
   const pluginManager = PluginManager.getInstance();
+<<<<<<< HEAD
   // pluginManager.resetHistory(1000);
+=======
+>>>>>>> 2e620489bd5649c2ce64b659c7d72106ab504aef
   let pluginData = pluginManager.exportHistoryRecords({
     struct,
     exclude,
@@ -99,25 +109,112 @@ export const Debugger: React.FC = (props: any) => {
     }
   });
 
-  useEffect(() => {
-    if (_.get(editNode, `id`)) {
-      changeComponentId(editNode.id);
-    }
+  const [currentTime, setCurrentTime] = useState(Date.now());
+  const onRefresh = (e: any) => {
+    e.stopPropagation();
+    setCurrentTime(Date.now());
+  };
+
+  // set data for nodes
+  const [uiNode, setUINode] = useState({});
+  const fetchUINode = useCallback(() => {
+    const {
+      id,
+      schema,
+      errorInfo,
+      rootName,
+      props,
+      stateInfo,
+      nodes
+    } = editNode;
+    const data = {
+      id,
+      schema,
+      props,
+      stateInfo,
+      nodes,
+      errorInfo,
+      rootName
+    };
+    setUINode(data);
   }, [editNode]);
 
-  const [time, setTime] = useState(Date.now());
-  const onRefresh = useCallback(() => {
-    setTime(Date.now());
-  }, []);
+  const [dataNode, setDataNode] = useState({});
+  const fetchDataNode = useCallback(() => {
+    const { id, schema, rootSchema, source, dataPool } = editNode.dataNode;
+    const data = editNode.dataNode.data;
+    const info = {
+      id,
+      source,
+      schema,
+      data,
+      rootSchema,
+      dataPool
+    };
+    setDataNode(info);
+  }, [editNode]);
+
+  const [stateNode, setStateNode] = useState({});
+  const fetchStateNode = useCallback(() => {
+    const { id, state, errorInfo } = editNode.stateNode;
+    const info = {
+      id,
+      state,
+      errorInfo
+    };
+    setStateNode(info);
+  }, [editNode]);
+
+  useDeepCompareEffect(() => {
+    if (_.get(editNode, `id`)) {
+      changeComponentId(editNode.id);
+      fetchUINode();
+      fetchDataNode();
+      fetchStateNode();
+    }
+    getJson();
+  }, [editNode, time]);
+
+  // change ui tree schema
+  const onChangeTreeSchema = useCallback(
+    async (d: any) => {
+      const namespace = _.cloneDeep(d.namespace);
+      namespace.push(d.name);
+      _.set(editNode.schema, namespace, d.new_value);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
+  const onAddTreeSchema = useCallback(
+    async (d: any) => {
+      _.merge(editNode.schema, d.new_value);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
+
+  const onDeleteTreeSchema = useCallback(
+    async (d: any) => {
+      const namespace = _.cloneDeep(d.namespace);
+      namespace.push(d.name);
+      _.unset(editNode.schema, namespace);
+      await editNode.updateLayout();
+      editNode.sendMessage(true);
+    },
+    [editNode]
+  );
 
   return (
     <div className="ide-props-events">
       <Collapse accordion>
         <Panel header="Test Toolkits " key="request-params">
-          <Panels.RequestParams
+          <Panels.TestToolkits
             formItemLayout={formItemLayout}
             tailFormItemLayout={tailFormItemLayout}
-          ></Panels.RequestParams>
+          ></Panels.TestToolkits>
           {/* <ReactJson
               indentWidth={2}
               src={[]}
@@ -127,10 +224,10 @@ export const Debugger: React.FC = (props: any) => {
             /> */}
         </Panel>
         <Panel header="Initial Params" key="running-params">
-          <Panels.RunningParams
+          <Panels.InitialParams
             formItemLayout={formItemLayout}
             tailFormItemLayout={tailFormItemLayout}
-          ></Panels.RunningParams>
+          ></Panels.InitialParams>
         </Panel>
       </Collapse>
       <Collapse accordion>
@@ -138,22 +235,22 @@ export const Debugger: React.FC = (props: any) => {
           <div className="debugger-tree">
             <ReactJson
               indentWidth={2}
-              src={uiJson}
-              onEdit={(d: any) => {
-                console.log(d);
-              }}
+              src={stateUiJson}
+              onEdit={onChangeTreeSchema}
+              onAdd={onAddTreeSchema}
+              onDelete={onDeleteTreeSchema}
               displayDataTypes={false}
               collapsed={2}
               collapseStringsAfterLength={50}
             />
           </div>
         </Panel>
-        {dataJson ? (
+        {stateDataJson ? (
           <Panel header="Data JSON" key="ui-data-json">
             <div className="debugger-tree">
               <ReactJson
                 indentWidth={2}
-                src={dataJson}
+                src={stateDataJson}
                 onEdit={(d: any) => {
                   console.log(d);
                 }}
@@ -243,38 +340,46 @@ export const Debugger: React.FC = (props: any) => {
             </Col>
           </Row>
         </Panel>
-        <Panel header="UI Node" key="ui-node">
-          <div className="debugger-tree ui-node">
-            <ReactJson
-              indentWidth={2}
-              src={editNode}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
-        </Panel>
-        <Panel header="Data Node" key="data-node">
-          <div className="debugger-tree data-node">
-            <ReactJson
-              indentWidth={2}
-              src={_.get(editNode, "dataNode")}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
-        </Panel>
-        <Panel header="State Node" key="state-node">
-          <div className="debugger-tree state-node">
-            <ReactJson
-              indentWidth={2}
-              src={_.get(editNode, "stateNode")}
-              displayDataTypes={true}
-              collapsed={1}
-              collapseStringsAfterLength={50}
-            />
-          </div>
+        <Panel
+          header="Nodes"
+          key="nodes"
+          extra={<Icon type="reload" onClick={onRefresh} />}
+        >
+          <Collapse accordion bordered={false} defaultActiveKey={"ui-node"}>
+            <Panel header="UI Node" key="ui-node">
+              <div className="debugger-tree ui-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={uiNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+            <Panel header="Data Node" key="data-node">
+              <div className="debugger-tree data-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={dataNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+            <Panel header="State Node" key="state-node">
+              <div className="debugger-tree state-node">
+                <ReactJson
+                  indentWidth={2}
+                  src={stateNode}
+                  displayDataTypes={true}
+                  collapsed={1}
+                  collapseStringsAfterLength={50}
+                />
+              </div>
+            </Panel>
+          </Collapse>
         </Panel>
       </Collapse>
     </div>

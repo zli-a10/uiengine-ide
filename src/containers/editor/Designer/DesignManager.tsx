@@ -4,43 +4,10 @@ import { PluginManager } from "uiengine";
 import _ from "lodash";
 
 import { GlobalContext } from "../../Context";
-import { PageTree, PluginTree, Libraries } from "..";
+import { PageTree, ResourceTree, Libraries } from "..";
 import { DataSource } from "../DataSource";
-import { FileLoader, IDERegister } from "../../../helpers";
+import { FileLoader, IDERegister, getPluginTree } from "../../../helpers";
 const TabPane = Tabs.TabPane;
-
-const getPluginTree = (plugins: any) => {
-  // console.log(PluginManager.plugins);
-  let results: any[] = [];
-  for (let key in plugins) {
-    let result: any = {};
-    const plugin: { type?: any } = plugins[key];
-    if (_.isObject(plugin)) {
-      if (plugin.type) {
-        let name = _.get(plugin, "name", plugin.type);
-        result = { name: plugin.type, title: name };
-      } else {
-        let children: any = [];
-        for (let k in plugin) {
-          const p = plugin[k];
-          children.push(getPluginSubTree(k, p));
-        }
-        result = { key: _.uniqueId(key), name: key, title: key, children };
-      }
-    }
-    if (!_.isEmpty(result)) results.push(result);
-  }
-  return results;
-};
-
-const getPluginSubTree = (key: string, plugins: any) => {
-  const result: any = { key: _.uniqueId(key), name: key, title: key };
-  if (!plugins.type) {
-    const children = getPluginTree(plugins);
-    if (!_.isEmpty(children)) result.children = children;
-  }
-  return result;
-};
 
 export const DesignManager: React.FC<IDesignManager> = props => {
   const { componentCollapsed, toggleComponentCollapsed } = useContext(
@@ -48,17 +15,58 @@ export const DesignManager: React.FC<IDesignManager> = props => {
   );
   // schemas fetch
   const fileLoader = FileLoader.getInstance();
-  const schemaTree = {
-    name: "root",
-    title: "Start Up",
-    children: [fileLoader.loadFileTree("schema")]
-  };
+  const schemaTree = [
+    {
+      name: "templates",
+      title: "Templates",
+      children: [
+        {
+          name: "classic-form",
+          title: "Classic Form"
+        },
+        {
+          name: "waf-form",
+          title: "WAF Form"
+        },
+        {
+          name: "wizard",
+          title: "Wizard"
+        },
+        {
+          name: "page-list",
+          title: "Page List"
+        }
+      ]
+    },
+    {
+      name: "pages",
+      title: "Pages",
+      children: fileLoader.loadFileTree("schema")
+    }
+  ];
   // const [tree, setTree] = useState(treeStructure)
-  const pluginTree = {
-    name: "root",
-    title: "Start Up",
-    children: getPluginTree(PluginManager.getInstance().getPlugins("global"))
-  };
+  const resourceTree = [
+    {
+      name: "Plugins",
+      title: "Plugins",
+      children: getPluginTree(PluginManager.getInstance().getPlugins("global"))
+    },
+    {
+      name: "Events",
+      title: "Events",
+      children: []
+    },
+    {
+      name: "Components",
+      title: "Components",
+      children: []
+    },
+    {
+      name: "DataSources",
+      title: "Data Sources",
+      children: []
+    }
+  ];
 
   // libraries fetch
   const librariesData = IDERegister.componentsLibrary;
@@ -77,8 +85,8 @@ export const DesignManager: React.FC<IDesignManager> = props => {
             <TabPane tab="Schemas" key="1">
               <PageTree tree={schemaTree} />
             </TabPane>
-            <TabPane tab="Plugins" key="2">
-              <PluginTree tree={pluginTree} />
+            <TabPane tab="Resources" key="2">
+              <ResourceTree tree={resourceTree} />
             </TabPane>
           </Tabs>
         </div>

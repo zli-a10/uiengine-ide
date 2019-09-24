@@ -6,7 +6,7 @@ import { Collapse, Input, Form, Button, Select, TreeSelect } from "antd";
 // import { getActiveUINode } from "../../../helpers";
 const TreeNode = TreeSelect.TreeNode;
 
-export const RunningParams = (props: any) => {
+export const InitialParams = (props: any) => {
   const { formItemLayout, tailFormItemLayout, value } = props;
   const changeDomain = () => {};
 

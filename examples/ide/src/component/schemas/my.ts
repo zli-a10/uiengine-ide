@@ -6,7 +6,7 @@ export default [
     children: [
       {
         component: "my:Section",
-        title: "My Section",
+        title: "Section",
         isContainer: true,
         schema: {
           active: "boolean",
@@ -19,7 +19,7 @@ export default [
       },
       {
         component: "my:DataSelect",
-        title: "My DataSelect",
+        title: "DataSelect",
         isContainer: false,
         schema: {
           datasource: "datasource",
@@ -41,20 +41,18 @@ export default [
       },
       {
         component: "my:FormItem",
-        title: "My FormItem",
+        title: "FormItem",
         isContainer: false,
         schema: {
           type: "string",
           label: "string",
-          extra: {
-            help: "string"
-          },
-          labelCol: {
-            sm: {
-              span: "number",
-              offset: "number"
+          extra: "string",
+          labelCol: [
+            {
+              span: [1, 24],
+              offset: [1, 24]
             }
-          },
+          ],
           required: "boolean",
           htmlFor: "string",
           hasFeedback: "boolean"
@@ -62,6 +60,29 @@ export default [
         defaultProps: {
           // label: `My Item ${_.uniqueId()}`
         }
+      },
+      {
+        component: "my:Table.Table",
+        title: "Table",
+        isContainer: false,
+        schema: {},
+        defaultProps: {},
+        children: [
+          {
+            component: "my:Table.Tr",
+            title: "Row",
+            isContainer: true,
+            schema: {},
+            defaultProps: {}
+          },
+          {
+            component: "my:Table.Td",
+            title: "Column",
+            isContainer: true,
+            schema: {},
+            defaultProps: {}
+          }
+        ]
       }
     ]
   }

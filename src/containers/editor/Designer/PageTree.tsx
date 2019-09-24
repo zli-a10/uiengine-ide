@@ -314,7 +314,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
           expandedKeys={this.state.expandKeys}
           selectedKeys={this.context.selectedKeys}
         >
-          {this.renderTreeNodes(tree.children)}
+          {this.renderTreeNodes(tree)}
         </Tree>
       </div>
     );

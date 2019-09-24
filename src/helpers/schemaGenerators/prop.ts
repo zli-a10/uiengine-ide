@@ -7,9 +7,7 @@ export const prop = (
   options?: any
 ) => {
   // TODO: validate by info
-  return {
-    props: {
-      [name]: value
-    }
-  };
+  const props = {};
+  _.set(props, name, value);
+  return { props };
 };

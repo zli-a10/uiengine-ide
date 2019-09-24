@@ -3,17 +3,20 @@ import React, { useState, useMemo } from "react";
 import { PropsContext } from "../../Context";
 
 export const Props = (props: any) => {
-  // const [schema, setSchema] = useState();
+  const [time, updateTime] = useState(Date.now());
   const propManagerContextValue = useMemo<IPropsContext>(
     () => ({
       showTab: "",
       activeTab: (tab: string) => {},
       help: "",
       setHelp: (help: string) => {},
-      refresh: "",
-      toggleRefresh: (refresh: string) => {}
+      time,
+      refresh: () => {
+        updateTime(Date.now());
+        console.log(time);
+      }
     }),
-    []
+    [time]
   );
   return (
     <PropsContext.Provider value={propManagerContextValue}>
