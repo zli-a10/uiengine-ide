@@ -1,1 +1,24 @@
-{}
+{
+  "component": "div",
+  "props": {
+    "className": "uiengine-container",
+    "id": "uiengine-container"
+  },
+  "children": [{
+    "component": "antd:Row",
+    "props": {},
+    "datasource": "$dummy.UINode-108",
+    "children": [{
+      "component": "antd:Col",
+      "props": {},
+      "datasource": "$dummy.UINode-120",
+      "children": [{
+        "component": "antd:Button",
+        "content": "Button",
+        "props": {
+          "content": "Button"
+        }
+      }]
+    }]
+  }]
+}

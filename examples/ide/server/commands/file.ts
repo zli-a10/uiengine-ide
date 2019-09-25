@@ -1,4 +1,4 @@
-import websockets from "../config/websocket";
+import websockets from "../../src/config/websocket";
 import { get, has } from "lodash";
 const fs = require("fs");
 
@@ -15,6 +15,7 @@ interface ICommandOptions {
 
 function getPath(options: ICommandOptions) {
   const { type, path } = options;
+  console.log(type, path, "..........");
   const config = websockets as any;
   const readpath = get(config, `paths.${type}`);
   return path ? `${readpath}/${path}` : readpath;
@@ -27,8 +28,12 @@ const walkSync = (dir: any) => {
   files.forEach((file: any) => {
     const p = dir ? `${dir}/${file}` : file;
     const node = {
-      key: p,
-      value: p,
+      server: true,
+      key: file,
+      path: p,
+      value: file,
+      name: file,
+      title: file,
       children: []
     };
     if (fs.statSync(dir + "/" + file).isDirectory()) {
@@ -43,22 +48,18 @@ const walkSync = (dir: any) => {
 
 /**
  *
- * @param options {"name": "getFileList", "options":{ "type": "schemas", "options": { "tree": true} }}
+ * @param options {"name": "getFileList", "options":{ "type": "schemas"}}
  */
 export function getFileList(options: ICommandOptions) {
   const readpath = getPath(options);
   let result: any;
   try {
-    if (!has(options, `options.tree`)) {
-      result = readpath ? fs.readdirSync(readpath) : [];
-    } else {
-      result = walkSync(readpath);
-    }
+    result = walkSync(readpath);
   } catch (e) {
     console.warn(e.message);
     result = [];
   }
-  return JSON.stringify(result);
+  return result;
 }
 
 /**

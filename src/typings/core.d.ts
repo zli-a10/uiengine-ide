@@ -20,9 +20,9 @@ interface IFileLoader {
     type: string,
     treeRoot?: IFileTree
   ): boolean;
-  loadFileTree(type: string): Array<IFileTree>;
-  loadFile(path: string, type?: string): any;
-  removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean;
+  loadFileTree(type: string);
+  loadFile(path: string, type?: string);
+  removeFile(path: string, type?: string, treeRoot?: IFileTree);
 }
 
 interface IStorage {
@@ -99,12 +99,27 @@ interface IServerOptions {
   };
 }
 
-interface IServer {}
+interface IClient {
+  connect(command?: IWebsocketCommands);
+}
 
-interface IClient {}
+enum EResourceType {
+  SCHEMAS = "schemas",
+  COMPONENTS = "components",
+  PLUGINS = "plugins",
+  DATASOURCES = "datasources",
+  LISTENERS = "listeners"
+}
+
+// copy from websocket server side command options
+interface ICommandOptions {
+  type: string;
+  path?: string;
+  options?: any;
+}
 
 interface IWebsocketCommands {
   name: string;
-  options?: any;
-  response?: any; // responseData, server will append to
+  options?: ICommandOptions;
+  response?: any;
 }

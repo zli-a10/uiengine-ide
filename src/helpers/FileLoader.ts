@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { StorageAdapter } from "./StorageAdapter";
+import * as commands from "./websocket";
 
 export class FileLoader implements IFileLoader {
   static storageType: string = "Local";
@@ -69,26 +70,38 @@ export class FileLoader implements IFileLoader {
   }
 
   loadFileTree(type: string = "schema") {
-    const fileTreeJson = this.storage.get(`file_tree.${type}`);
-    // console.log(fileTreeJson);
-    if (fileTreeJson) {
-      const tree = JSON.parse(fileTreeJson);
-      return _.get(tree, `children`, []);
-    } else {
-      return [];
-    }
+    const promise = commands.getFileList(type);
+    return promise;
+    // const fileTreeJson = this.storage.get(`file_tree.${type}`);
+    // // console.log(fileTreeJson);
+    // if (fileTreeJson) {
+    //   const tree = JSON.parse(fileTreeJson);
+    //   return _.get(tree, `children`, []);
+    // } else {
+    //   return [];
+    // }
   }
 
-  loadFile(path: string, type?: string) {
-    const content = this.storage.get(`${type}/${path}`);
-    if (type === "schema") {
-      if (content) {
-        return JSON.parse(content);
-      } else {
-        return {};
-      }
-    }
-    return content;
+  loadFile(path: string, type: string = "schema") {
+    // console.log(path, type, "........");
+    const newPromise = new Promise((resolve: any) => {
+      const promise = commands.readFile(type, path);
+      promise.then((data: any) => {
+        let content = this.storage.get(`${type}/${path}`);
+        // if (type === "schema" && content) {
+        //   content = JSON.parse(content);
+        //   if (!_.isEqual(content, data)) {
+        //     console.log(data, "schemas are different");
+        //   }
+        // }
+        // console.log(type, path, content, "....");
+
+        resolve(content || data);
+      });
+    });
+
+    // return content;
+    return newPromise;
   }
 
   removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean {

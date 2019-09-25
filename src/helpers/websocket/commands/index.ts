@@ -1,5 +1,1 @@
-import file from "./file";
-
-export default {
-  ...file
-};
+export * from "./file";

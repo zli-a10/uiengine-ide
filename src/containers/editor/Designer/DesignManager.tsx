@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Tabs, Icon } from "antd";
 import { PluginManager } from "uiengine";
 import _ from "lodash";
@@ -13,8 +13,11 @@ export const DesignManager: React.FC<IDesignManager> = props => {
   const { componentCollapsed, toggleComponentCollapsed } = useContext(
     GlobalContext
   );
+
   // schemas fetch
   const fileLoader = FileLoader.getInstance();
+  const [schemaTreeChildren, setSchemaTreeChildren] = useState([]);
+
   const schemaTree = [
     {
       name: "templates",
@@ -41,9 +44,16 @@ export const DesignManager: React.FC<IDesignManager> = props => {
     {
       name: "pages",
       title: "Pages",
-      children: fileLoader.loadFileTree("schema")
+      children: schemaTreeChildren
     }
   ];
+
+  useEffect(() => {
+    fileLoader.loadFileTree("schema").then((data: any) => {
+      setSchemaTreeChildren(data);
+    });
+  }, []);
+
   // const [tree, setTree] = useState(treeStructure)
   const resourceTree = [
     {

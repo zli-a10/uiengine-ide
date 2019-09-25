@@ -1,6 +1,5 @@
 import MyWebsocket from "isomorphic-ws";
 import _ from "lodash";
-import commands from "./commands";
 import { IDERegister } from "../IDERegister";
 
 export class Client implements IClient {
@@ -14,42 +13,33 @@ export class Client implements IClient {
 
   public ws: any;
 
-  connect(command?: string) {
-    const options: IServerOptions = IDERegister.websocketOptions;
-    let port = _.get(options, "port", 8080);
-    let host = _.get(options, "host", "localhost");
-    this.ws = new MyWebsocket(`wss://${host}:${port}/`);
-    if (this.ws) {
-      this.ws.onmessage = this.onMessage;
-      if (command) this.ws.onopen = this.onOpen(command);
-      this.ws.onclose = this.onClose;
+  connect(command?: IWebsocketCommands) {
+    const socketOptions: IServerOptions = IDERegister.websocketOptions;
+    let port = _.get(socketOptions, "port", 3001);
+    let host = _.get(socketOptions, "host", "localhost");
+    this.ws = new MyWebsocket(`ws://${host}:${port}/`);
+    if (command) {
+      this.ws.onopen = () => {
+        this.ws.send(JSON.stringify(command));
+      };
     }
-  }
+    const promise = new Promise((resolve: any, reject: any) => {
+      this.ws.onmessage = (event: any) => {
+        if (event) {
+          // call onResponse
+          try {
+            resolve(JSON.parse(event.data));
+          } catch (e) {
+            resolve(event.data);
+          }
+        }
+      };
 
-  private executeCommand(socketCommands: IWebsocketCommands) {
-    const { name } = socketCommands;
-    if (commands[name]) {
-      const { data, client } = commands[name];
-      if (_.isFunction(client)) return client(data);
-    }
-  }
+      this.ws.onerror = (e: any) => {
+        reject(e);
+      };
+    });
 
-  onMessage(socketCommands: IWebsocketCommands) {
-    this.executeCommand(socketCommands);
-  }
-
-  onOpen(command: string) {
-    const commandOptions = {
-      name: command,
-      options: _.get(commands, `command.options`, {})
-    };
-    return () => {
-      this.ws.send(commandOptions);
-    };
-  }
-
-  onClose() {
-    console.log("disconnected");
-    this.connect();
+    return promise;
   }
 }

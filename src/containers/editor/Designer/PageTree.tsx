@@ -1,7 +1,6 @@
 import React from "react";
 import { Tree, Input, Icon, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
-import { UINode } from "uiengine";
 import { SchemasContext } from "../../Context";
 import _ from "lodash";
 import {
@@ -162,7 +161,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       that.rerender();
     };
 
-    const menu = (
+    let menu: any = (
       <Menu onClick={onClick}>
         <Menu.Item key="Add">
           <a>Add</a>
@@ -210,9 +209,11 @@ export class PageTree extends React.Component<ITree, ITreeState> {
         ) : (
           <a className="ant-dropdown-link" href="#">
             {props.children}{" "}
-            <Dropdown overlay={menu}>
-              <Icon type="more" />
-            </Dropdown>
+            {dataRef._path_.indexOf("templates") === 0 ? null : (
+              <Dropdown overlay={menu}>
+                <Icon type="more" />
+              </Dropdown>
+            )}
           </a>
         )}
       </div>
@@ -228,6 +229,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
 
           item._path_ = parent ? `${parent._path_}/${item.name}` : item.name;
           item._key_ = item.key || item._path_;
+
           // console.log(id);
           if (item.children) {
             return (
@@ -274,7 +276,7 @@ export class PageTree extends React.Component<ITree, ITreeState> {
     });
   };
 
-  onSelect = async (selectedKeys: string[], treeNode?: any) => {
+  onSelect = (selectedKeys: string[], treeNode?: any) => {
     if (
       selectedKeys.length &&
       !_.has(treeNode, "node.props.dataRef._editing_")
@@ -284,13 +286,15 @@ export class PageTree extends React.Component<ITree, ITreeState> {
       if (path) {
         versionControl.clearHistories();
         fileLoader.editingFile = path;
-        const schema = fileLoader.loadFile(path, "schema");
-        if (_.isObject(schema) && !_.isEmpty(schema)) {
-          const uiNode = getActiveUINode() as IUINode;
-          uiNode.schema = schema;
-          await uiNode.updateLayout();
-          uiNode.sendMessage(true);
-        }
+        const schemaPromise = fileLoader.loadFile(path, "schema");
+        schemaPromise.then((schema: any) => {
+          if (_.isObject(schema) && !_.isEmpty(schema)) {
+            const uiNode = getActiveUINode() as IUINode;
+            uiNode.schema = schema;
+            uiNode.updateLayout();
+            uiNode.sendMessage(true);
+          }
+        });
 
         // set current dataRef
         if (_.has(treeNode, "node.props.dataRef")) {
