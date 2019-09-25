@@ -36,6 +36,7 @@ export class Server implements IServer {
   onMessage(socketCommands: IWebsocketCommands) {
     this.wss.clients.forEach((client: any) => {
       if (client.readyState === WebSocket.OPEN) {
+        console.log("received", socketCommands);
         const data = this.executeCommand(socketCommands);
         socketCommands.response = data;
         client.send(socketCommands);
@@ -44,6 +45,7 @@ export class Server implements IServer {
   }
 
   onConnect(ws: any) {
+    console.log("connected");
     this.ws = ws;
     this.ws.on("message", this.onMessage);
   }

@@ -14,14 +14,16 @@ export class Client implements IClient {
 
   public ws: any;
 
-  connect(command: string) {
+  connect(command?: string) {
     const options: IServerOptions = IDERegister.websocketOptions;
     let port = _.get(options, "port", 8080);
     let host = _.get(options, "host", "localhost");
     this.ws = new MyWebsocket(`wss://${host}:${port}/`);
-    this.ws.onmessage = this.onMessage;
-    this.ws.onopen = this.onOpen(command);
-    this.ws.onclose = this.onClose;
+    if (this.ws) {
+      this.ws.onmessage = this.onMessage;
+      if (command) this.ws.onopen = this.onOpen(command);
+      this.ws.onclose = this.onClose;
+    }
   }
 
   private executeCommand(socketCommands: IWebsocketCommands) {
@@ -48,5 +50,6 @@ export class Client implements IClient {
 
   onClose() {
     console.log("disconnected");
+    this.connect();
   }
 }
