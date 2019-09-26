@@ -1,5 +1,6 @@
 import server from './server'
 import virtualServer from './virtualServer'
+import slbTemplateTcp from './slbTemplateTcp'
 export default [
   {
     "name": "adc",
@@ -329,7 +330,7 @@ export default [
             "children": [
               {
                 "name": "tcp",
-                "children": [],
+                "children": slbTemplateTcp,
                 "type": "file",
                 "component": "antd:Col",
                 "datasource": {

@@ -83,6 +83,43 @@ export default [
             defaultProps: {}
           }
         ]
+      },
+      {
+        component: "my:FixedSelect",
+        title: "My FixedSelect",
+        isContainer: false,
+        schema: {
+          datasource: "datasource",
+          optionmap: [{ title: "string" }, { value: "string" }],
+          open: "boolean",
+          userDefinedOptions: "string",
+          events: [
+            "onChange",
+            "onBlur",
+            "onDeselect",
+            "onFocus",
+            "onInputKeyDown",
+            "onMouseEnter",
+            "onMouseLeave",
+            "onSearch",
+            "onSelect",
+            "onDropdownVisibleChange"
+          ]
+        }
+      },
+      {
+        component: "my:RadioGroup",
+        title: "My RadioGroup",
+        isContainer: true,
+        schema: {
+          name: "string",
+          defaultValue: "string",
+          value: "string",
+          radioOptions: "string",
+          events: [
+            "onChange",
+          ]
+        }
       }
     ]
   }

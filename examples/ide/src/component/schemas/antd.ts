@@ -389,6 +389,9 @@ export default [
           disabled: "boolean",
           indeterminate: "boolean",
           events: ["onChange"]
+        },
+        defaultProps: {
+          $valueKey: "checked"
         }
       },
       {

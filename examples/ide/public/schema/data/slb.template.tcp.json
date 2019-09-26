@@ -1,0 +1,235 @@
+{
+  "version": "3.0.0#Autoform v1.5",
+  "endpoints": {
+    "default": "slb/template/tcp/{name}"
+  },
+  "cm-branch": "",
+  "cm-lineage": "slb.template.tcp",
+  "cm-object-meta": {
+    "obj-occurences": "multi"
+  },
+  "fields": [
+    {
+      "key": "name",
+      "label": "Name",
+      "type": "input",
+      "cm-lineage": "slb.template.tcp.name",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mvm",
+        "object-key": true,
+        "range": "1-127",
+        "help": "Fast TCP Template Name"
+      }
+    },
+    {
+      "key": "idle-timeout",
+      "label": "Idle Timeout",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.idle-timeout",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "range": "1-2097151",
+        "gui-section": "Timeout",
+        "help": "Idle Timeout value (Interval of 60 seconds), default 120 seconds",
+        "default": "120",
+        "round-off": [
+          "60",
+          "30",
+          "60"
+        ]
+      }
+    },
+    {
+      "key": "half-open-idle-timeout",
+      "label": "Half Open Idle Timeout",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.half-open-idle-timeout",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "range": "1-60",
+        "gui-section": "Timeout",
+        "help": "TCP Half Open Idle Timeout (sec), default off"
+      }
+    },
+    {
+      "key": "half-close-idle-timeout",
+      "label": "Half Close Idle Timeout",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.half-close-idle-timeout",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "range": "60-120",
+        "gui-section": "Timeout",
+        "help": "TCP Half Close Idle Timeout (sec), default off"
+      }
+    },
+    {
+      "key": "initial-window-size",
+      "label": "Initial Window Size",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.initial-window-size",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "range": "1-65535",
+        "gui-section": "Basic",
+        "help": "Set the initial window size"
+      }
+    },
+    {
+      "key": "force-delete-timeout",
+      "label": "Force Delete Timeout",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.force-delete-timeout",
+      "cm-meta": {
+        "format": "number",
+        "flags": "oby",
+        "range": "1-31",
+        "gui-section": "Timeout",
+        "help": "The maximum time that a session can stay in the system before being delete",
+        "m-exclusion": [
+          "force-delete-timeout-100ms"
+        ]
+      }
+    },
+    {
+      "key": "force-delete-timeout-100ms",
+      "label": "Force Delete Timeout 100ms",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.force-delete-timeout-100ms",
+      "cm-meta": {
+        "format": "number",
+        "flags": "oby",
+        "range": "1-31",
+        "gui-section": "Timeout",
+        "m-exclusion": [
+          "force-delete-timeout"
+        ],
+        "help": "The maximum time that a session can stay in the system before being delete"
+      }
+    },
+    {
+      "key": "alive-if-active",
+      "label": "Alive If Active",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.alive-if-active",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "condition": "force-delete-timeout",
+        "help": "keep connection alive if active traffic",
+        "gui-section": "Timeout"
+      }
+    },
+    {
+      "key": "qos",
+      "label": "QoS",
+      "type": "input-number",
+      "cm-lineage": "slb.template.tcp.qos",
+      "cm-meta": {
+        "format": "number",
+        "flags": "ob",
+        "range": "1-63",
+        "gui-section": "Basic",
+        "help": "QOS level"
+      }
+    },
+    {
+      "key": "insert-client-ip",
+      "label": "Insert Client IP",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.insert-client-ip",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "default": "0",
+        "help": "Insert client ip into TCP option"
+      }
+    },
+    {
+      "key": "lan-fast-ack",
+      "label": "LAN Fast ACK",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.lan-fast-ack",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "Enable fast TCP ack on LAN"
+      }
+    },
+    {
+      "key": "reset-fwd",
+      "label": "Reset Forward",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.reset-fwd",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "send reset to server if error happens"
+      }
+    },
+    {
+      "key": "reset-rev",
+      "label": "Reset Receive",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.reset-rev",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "oky",
+        "gui-section": "Advanced",
+        "help": "send reset to client if error happens"
+      }
+    },
+    {
+      "key": "disable",
+      "label": "Disable",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.disable",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "condition": "reset-rev",
+        "help": "send reset to client when server is disabled",
+        "m-exclusion": [
+          "down"
+        ],
+        "gui-section": "Advanced"
+      }
+    },
+    {
+      "key": "down",
+      "label": "Down",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.down",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "condition": "reset-rev",
+        "m-exclusion": [
+          "disable"
+        ],
+        "help": "send reset to client when server is down",
+        "gui-section": "Advanced"
+      }
+    },
+    {
+      "key": "del-session-on-server-down",
+      "label": "Delete Session On Server Down",
+      "type": "switch",
+      "cm-lineage": "slb.template.tcp.del-session-on-server-down",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "ok",
+        "gui-section": "Advanced",
+        "help": "Delete session if the server/port goes down (either disabled/hm down)"
+      }
+    }
+  ]
+}
