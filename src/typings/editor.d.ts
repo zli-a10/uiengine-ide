@@ -57,3 +57,16 @@ interface IWidget {
 interface IMenuTitle {
   dataRef: any;
 }
+
+type EEditingType = "add" | "edit" | "clone" | "rename" | boolean;
+type EStatus = "changed" | "new" | "removed";
+interface IResourceTreeNode {
+  name: string;
+  title: string;
+  children: Array<IResourceTreeNode>;
+  _path_: string;
+  _key_: string;
+  _parent_: IResourceTreeNode;
+  _status_?: EStatus;
+  _editing_: EEditingType;
+}

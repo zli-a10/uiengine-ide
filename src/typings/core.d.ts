@@ -13,16 +13,16 @@ interface IFileTree {
 interface IFileLoader {
   storage: IStorage;
   editingFile: string;
-  saveTree(treeRoot: IFileTree, type: string);
+  saveTree(treeRoot: IFileTree, type: EResourceType);
   saveFile(
     path: string,
     content: any,
-    type: string,
+    type: EResourceType,
     treeRoot?: IFileTree
   ): boolean;
-  loadFileTree(type: string);
-  loadFile(path: string, type?: string);
-  removeFile(path: string, type?: string, treeRoot?: IFileTree);
+  loadFileTree(type: EResourceType);
+  loadFile(path: string, type?: EResourceType);
+  removeFile(path: string, type?: EResourceType, treeRoot?: IFileTree);
 }
 
 interface IStorage {
@@ -103,17 +103,18 @@ interface IClient {
   connect(command?: IWebsocketCommands);
 }
 
-enum EResourceType {
-  SCHEMAS = "schemas",
-  COMPONENTS = "components",
-  PLUGINS = "plugins",
-  DATASOURCES = "datasources",
-  LISTENERS = "listeners"
-}
+type EResourceType =
+  | "schema"
+  | "components"
+  | "plugins"
+  | "datasources"
+  | "listeners";
+
+type EStorageType = "Local" | "Session" | "File";
 
 // copy from websocket server side command options
 interface ICommandOptions {
-  type: string;
+  type: EResourceType;
   path?: string;
   options?: any;
 }
