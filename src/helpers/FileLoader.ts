@@ -65,7 +65,11 @@ export class FileLoader implements IFileLoader {
       this.saveTree(treeRoot, type);
     }
 
-    this.storage.save(`${type}/${path}`, JSON.stringify(content));
+    if (type === "schema" || type === "datasource") {
+      content = JSON.stringify(content);
+    }
+
+    this.storage.save(`${type}/${path}`, content);
     return true;
   }
 
@@ -108,8 +112,12 @@ export class FileLoader implements IFileLoader {
       const promise = commands.readFile(type, path, isTemplate);
       promise.then((data: any) => {
         let content = this.storage.get(`${type}/${path}`);
-        if (type === "schema" && content) {
-          content = JSON.parse(content);
+        if (type === "schema" || (type === "datasource" && content)) {
+          try {
+            content = JSON.parse(content);
+          } catch (e) {
+            console.warn(e);
+          }
           // if (!_.isEqual(content, data)) {
           //   console.log(data, "schemas are different");
           // }
@@ -122,7 +130,7 @@ export class FileLoader implements IFileLoader {
   }
 
   removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean {
-    if (type === "schema") {
+    if (type === "schema" || type === "datasource") {
       if (this.isTempStorage() && treeRoot) {
         this.saveTree(treeRoot, type);
       }

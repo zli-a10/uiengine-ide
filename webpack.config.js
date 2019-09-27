@@ -1,7 +1,7 @@
 /* global __dirname, require, module*/
 
 const webpack = require('webpack');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const path = require('path');
 const env = require('yargs').argv.env; // use --env with webpack 2
@@ -69,7 +69,7 @@ const config = {
     ]
   },
   plugins: [
-    new MonacoWebpackPlugin(),
+    // new MonacoWebpackPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     })

@@ -1,13 +1,13 @@
-import React, { useState, useContext, useEffect } from "react";
-import MonacoEditor from "react-monaco-editor";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+// import MonacoEditor from "react-monaco-editor";
+import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext } from "../../Context";
 import { FileLoader } from "../../../helpers";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
 export const CodeEditor: React.FC = (props: any) => {
   const { currentData } = useContext(SchemasContext);
 
-  const { layouts, config = {} } = props;
+  // const { layouts, config = {} } = props;
   const options = {
     selectOnLineNumbers: true,
     acceptSuggestionOnCommitCharacter: true,
@@ -29,29 +29,39 @@ export const CodeEditor: React.FC = (props: any) => {
       if (type === "schema") {
         setLanguage("json");
       } else {
-        setLanguage("json");
+        setLanguage("typescript");
       }
       const fileLoader = FileLoader.getInstance();
       const newPromise = fileLoader.loadFile(path, type, isTemplate);
       newPromise.then((content: any) => {
         if (type === "schema" || type === "datasource") {
-          content = JSON.stringify(content, undefined, "\n\t");
+          content = JSON.stringify(content, null, "\t");
         }
         setCode(content);
       });
     }
-  }, [currentData]);
+  });
 
-  const onEditorChange = () => {};
+  const onEditorChange = useCallback(
+    (ev: any, value: any) => {
+      const fileLoader = FileLoader.getInstance();
+      if (currentData) {
+        const { _path_: path, type } = currentData;
+        fileLoader.saveFile(path, value, type);
+      }
+      return value;
+    },
+    [currentData]
+  );
 
   return (
     <div className="editor code-editor">
-      <MonacoEditor
-        language="typescript"
-        theme="vs-dark"
+      <ControlledEditor
+        language={language}
         value={code}
-        options={options}
+        theme="dark"
         onChange={onEditorChange}
+        options={options}
       />
     </div>
   );
