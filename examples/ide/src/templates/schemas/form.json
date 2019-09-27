@@ -1,0 +1,30 @@
+{
+  "component": "div",
+  "props": {
+    "className": "uiengine-container",
+    "id": "uiengine-container"
+  },
+  "children": [{
+    "component": "antd:Form",
+    "children": [{
+        "component": "antd:Form.Item",
+        "props": {
+          "label": "Name"
+        },
+        "children": [{
+          "component": "antd:Input"
+        }]
+      },
+      {
+        "component": "antd:Form.Item",
+        "props": {
+          "label": "Password"
+        },
+        "children": [{
+          "component": "antd:Input.Password"
+        }]
+      }
+
+    ]
+  }]
+}

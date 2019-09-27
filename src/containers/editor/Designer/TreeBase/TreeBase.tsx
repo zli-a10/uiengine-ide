@@ -7,7 +7,7 @@ import { loadFileAndRefresh } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
-  const { tree, type } = props;
+  const { tree } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
   const onExpand = useCallback((expandKeys: string[]) => {
@@ -22,8 +22,8 @@ export const TreeBase = (props: any) => {
   const onSelect = (keys: string[], treeNode?: any) => {
     if (!_.has(treeNode, "node.props.dataRef._editing_")) {
       const dataRef = _.get(treeNode, "node.props.dataRef");
-      if (keys.length)
-        loadFileAndRefresh(keys[0], _.get(dataRef, "type", "schema"));
+      const type = _.get(dataRef, "type", "schema");
+      if (keys.length) loadFileAndRefresh(keys[0], type);
       setSelectedKey(keys, dataRef, type);
     }
   };

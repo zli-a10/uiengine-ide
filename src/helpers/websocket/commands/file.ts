@@ -1,22 +1,27 @@
 import _ from "lodash";
 import { Client } from "../Client";
 
-export async function getFileList(type: EResourceType) {
-  const client = Client.getInstance();
+export async function getFileList(
+  type: EResourceType,
+  isTemplate: boolean = false
+) {
   const command: IWebsocketCommands = {
     name: "getFileList",
-    options: { type }
+    options: { type, isTemplate }
   };
 
-  return await client.connect(command);
+  return await Client.connect(command);
 }
 
-export async function readFile(type: EResourceType, name: string) {
-  const client = Client.getInstance();
+export async function readFile(
+  type: EResourceType,
+  name: string,
+  isTemplate: boolean = false
+) {
   const command: IWebsocketCommands = {
     name: "readFile",
-    options: { type, path: name }
+    options: { type, path: name, isTemplate }
   };
 
-  return await client.connect(command);
+  return await Client.connect(command);
 }
