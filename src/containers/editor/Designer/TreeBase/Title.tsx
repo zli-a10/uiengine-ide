@@ -5,20 +5,15 @@ import classnames from "classnames";
 import { Input, Icon, Dropdown } from "antd";
 import { useDrag } from "react-dnd";
 import { DND_IDE_NODE_TYPE, resourceActions } from "../../../../helpers";
-import { SchemasContext } from "../../../Context";
+// import { SchemasContext } from "../../../Context";
 import { ActionMenu } from "./ActionMenu";
 
 export const Title = (props: any) => {
-  const { setSelectedKey } = useContext(SchemasContext);
-  const { dataRef, editable, children, type, ...rest } = props;
+  const { dataRef, children, type, onSelect, ...rest } = props;
   const classNames = classnames({
     "node-title": true,
     "node-modifed": dataRef._status_ === "changed"
   });
-
-  const onSelect = (keys: string[], treeNode?: any) => {
-    setSelectedKey(keys, treeNode, type);
-  };
 
   // dnd
   const templateSchema = {
@@ -35,7 +30,7 @@ export const Title = (props: any) => {
     });
   }
 
-  const title = children.replace(/\.*?$/, "");
+  const title = children.replace(/\.\w+$/, "");
   const cancelEdit = useCallback(() => {
     switch (dataRef._editing_) {
       case "clone":
@@ -61,7 +56,7 @@ export const Title = (props: any) => {
 
   return (
     <div className={classNames} ref={drag}>
-      {editable ? (
+      {dataRef._editing_ ? (
         <>
           <Input
             size="small"

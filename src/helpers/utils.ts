@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { NodeController, UINode } from "uiengine";
 import { IUINode, IDataSource } from "uiengine/typings";
-import { DndNodeManager, FileLoader } from ".";
+import { DndNodeManager, FileLoader, VersionControl } from ".";
 import { IDE_ID, IDE_DEP_COLORS, IDE_COLOR } from "../helpers/consts";
 import { searchDepsNodes } from "uiengine";
 
@@ -347,3 +347,35 @@ const getPluginSubTree = (key: string, plugins: any) => {
   }
   return result;
 };
+
+export function loadSchemaAndUpdateLayout(path: string) {
+  const fileLoader = FileLoader.getInstance();
+  const versionControl = VersionControl.getInstance();
+  versionControl.clearHistories();
+  fileLoader.editingFile = path;
+  const schemaPromise = fileLoader.loadFile(path, "schema");
+  schemaPromise.then((schema: any) => {
+    if (_.isObject(schema) && !_.isEmpty(schema)) {
+      const uiNode = getActiveUINode() as IUINode;
+      uiNode.schema = schema;
+      uiNode.updateLayout();
+      uiNode.sendMessage(true);
+    }
+  });
+  return schemaPromise;
+}
+
+export function loadResourceAndUpdateEditor(path: string) {}
+
+/**
+ * This function will adapte what you load and update editor or drawingboard depends on type
+ * @param path
+ * @param type
+ */
+export function loadFileAndRefresh(path: string, type: string) {
+  if (type === "schema") {
+    return loadSchemaAndUpdateLayout(path);
+  } else {
+    return loadResourceAndUpdateEditor(path);
+  }
+}

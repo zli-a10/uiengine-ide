@@ -3,6 +3,7 @@ import _ from "lodash";
 import { Tree } from "antd";
 import { renderTreeNodes } from "./renderTreeNodes";
 import { SchemasContext } from "../../../Context";
+import { loadFileAndRefresh } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
@@ -19,10 +20,16 @@ export const TreeBase = (props: any) => {
   let defaultExpandedKeys: any = [];
 
   const onSelect = (keys: string[], treeNode?: any) => {
-    setSelectedKey(keys, treeNode, type);
+    if (!_.has(treeNode, "node.props.dataRef._editing_")) {
+      const dataRef = _.get(treeNode, "node.props.dataRef");
+      if (keys.length)
+        loadFileAndRefresh(keys[0], _.get(dataRef, "type", "schema"));
+      setSelectedKey(keys, dataRef, type);
+    }
   };
 
   const followProps = {
+    onSelect,
     onExpandKeys: setExpandKeys,
     onAutoExpandParent: setAutoExpandParent,
     onRefresh: setRefresh,

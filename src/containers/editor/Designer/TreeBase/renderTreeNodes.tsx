@@ -7,7 +7,9 @@ const { TreeNode } = Tree;
 
 const intialItems = (node: IResourceTreeNode, parent: IResourceTreeNode) => {
   node._parent_ = parent;
-  node._path_ = parent ? `${parent._path_}/${node.name}` : node.name;
+  node._path_ = _.has(parent, "_path_")
+    ? `${parent._path_}/${node.name}`
+    : node.name;
   node._key_ = node._key_ || node._path_;
 };
 
@@ -26,14 +28,14 @@ export const renderTreeNodes = (
           return (
             <TreeNode
               title={
-                <Title dataRef={item} editable={item._editing_} {...props}>
+                <Title dataRef={item} {...props}>
                   {title}
                 </Title>
               }
               key={item._key_}
               dataRef={item}
             >
-              {renderTreeNodes(item.children, item, props)}
+              {renderTreeNodes(item.children, props, item)}
               {/* <Nodes treeNodes={item.children} parent={item} {...props} /> */}
             </TreeNode>
           );
@@ -41,7 +43,7 @@ export const renderTreeNodes = (
         return (
           <TreeNode
             title={
-              <Title dataRef={item} editable={item._editing_} {...props}>
+              <Title dataRef={item} {...props}>
                 {title}
               </Title>
             }

@@ -21,13 +21,14 @@ function getPath(options: ICommandOptions) {
   return path ? `${readpath}/${path}` : readpath;
 }
 
-const walkSync = (dir: any) => {
+const walkSync = (dir: any, type: string) => {
   var fs: any = fs || require("fs"),
     files = fs.readdirSync(dir);
   let filelist: any = [];
   files.forEach((file: any) => {
     const p = dir ? `${dir}/${file}` : file;
     const node = {
+      type,
       server: true,
       key: file,
       path: p,
@@ -37,7 +38,7 @@ const walkSync = (dir: any) => {
       children: []
     };
     if (fs.statSync(dir + "/" + file).isDirectory()) {
-      const tmpFiles = walkSync(dir + "/" + file);
+      const tmpFiles = walkSync(dir + "/" + file, type);
       node.children = tmpFiles;
       // filelist.push(tmpFiles);
     }
@@ -48,13 +49,14 @@ const walkSync = (dir: any) => {
 
 /**
  *
- * @param options {"name": "getFileList", "options":{ "type": "schemas"}}
+ * @param options {"name": "getFileList", "options":{ "type": "schema"}}
  */
 export function getFileList(options: ICommandOptions) {
   const readpath = getPath(options);
+  const type = get(options, "type");
   let result: any;
   try {
-    result = walkSync(readpath);
+    result = walkSync(readpath, type);
   } catch (e) {
     console.warn(e.message);
     result = [];
@@ -64,7 +66,7 @@ export function getFileList(options: ICommandOptions) {
 
 /**
  *
- * @param options {"name": "readFile", "options":{ "type": "schemas", "path": "any.json" }}
+ * @param options {"name": "readFile", "options":{ "type": "schema", "path": "any.json" }}
  */
 export function readFile(options: ICommandOptions) {
   const readpath = getPath(options);
@@ -80,7 +82,7 @@ export function readFile(options: ICommandOptions) {
 
 /**
  *
- * @param options {"name": "writeFile", "options":{ "type": "schemas",  "path": "any.json", "options": { "data": "{}" }  }}
+ * @param options {"name": "writeFile", "options":{ "type": "schema",  "path": "any.json", "options": { "data": "{}" }  }}
  */
 export function writeFile(options: ICommandOptions) {
   const readpath = getPath(options);

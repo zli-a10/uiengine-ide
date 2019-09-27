@@ -61,6 +61,7 @@ interface IMenuTitle {
 type EEditingType = "add" | "edit" | "clone" | "rename" | boolean;
 type EStatus = "changed" | "new" | "removed";
 interface IResourceTreeNode {
+  type: string; //default schema
   name: string;
   title: string;
   children: Array<IResourceTreeNode>;
