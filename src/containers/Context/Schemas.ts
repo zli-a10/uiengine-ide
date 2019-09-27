@@ -5,7 +5,7 @@ export const SchemasContext = React.createContext<ISchemasContext>({
   currentData: {},
   setCurrentData: (dataRef: any) => {},
   selectedKeys: [],
-  setSelectedKey: (key: any) => {},
+  setSelectedKey: (key: any, treeNode?: any, type?: string) => {},
   help: "",
   setHelp: (help: string) => {},
   refresh: "",

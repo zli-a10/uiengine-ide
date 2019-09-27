@@ -13,16 +13,16 @@ interface IFileTree {
 interface IFileLoader {
   storage: IStorage;
   editingFile: string;
-  saveTree(treeRoot: IFileTree, type: string);
+  saveTree(treeRoot: IFileTree, type: EResourceType);
   saveFile(
     path: string,
     content: any,
-    type: string,
+    type: EResourceType,
     treeRoot?: IFileTree
   ): boolean;
-  loadFileTree(type: string): Array<IFileTree>;
-  loadFile(path: string, type?: string): any;
-  removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean;
+  loadFileTree(type: EResourceType);
+  loadFile(path: string, type?: EResourceType);
+  removeFile(path: string, type?: EResourceType, treeRoot?: IFileTree);
 }
 
 interface IStorage {
@@ -85,4 +85,42 @@ interface IDataMocker {
   maxRow: number = 5;
   generate(schema: any); // called on plugin
   generateTableData(childrenNode: IUINode);
+}
+
+// web socket
+interface IServerOptions {
+  port: number; // default 3000
+  host?: string; // default localhost
+  paths: {
+    schemaPath?: string;
+    pluginPath?: string;
+    componentsPath?: string;
+    dataSourcePath?: string;
+  };
+}
+
+interface IClient {
+  connect(command?: IWebsocketCommands);
+}
+
+type EResourceType =
+  | "schema"
+  | "components"
+  | "plugins"
+  | "datasources"
+  | "listeners";
+
+type EStorageType = "Local" | "Session" | "File";
+
+// copy from websocket server side command options
+interface ICommandOptions {
+  type: EResourceType;
+  path?: string;
+  options?: any;
+}
+
+interface IWebsocketCommands {
+  name: string;
+  options?: ICommandOptions;
+  response?: any;
 }

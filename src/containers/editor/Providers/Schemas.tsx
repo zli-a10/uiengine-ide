@@ -14,7 +14,10 @@ export const Schemas = (props: any) => {
         setCurrentData(data);
       },
       selectedKeys,
-      setSelectedKey: (key: any) => {
+      setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
+        if (selectedKeys.length) {
+          setCurrentData(treeNode);
+        }
         let keys: any = _.clone(selectedKeys);
         if (_.isArray(key)) {
           keys = key;

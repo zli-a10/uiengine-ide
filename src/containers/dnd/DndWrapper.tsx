@@ -303,7 +303,7 @@ export const UIEngineDndWrapper = (props: any) => {
           onClick={onClickMenuBar}
         >
           <div className="component-name">
-            {/* {uinode.schema.component} */}
+            {uinode.schema.component}
             {/* <strong>{myId}</strong> */}
             <span>{actionName}</span>
             <Icon type="more" />

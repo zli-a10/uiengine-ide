@@ -2,6 +2,8 @@
 export * from "./utils";
 export * from "./consts";
 export * from "./hooks";
+export * from "./websocket";
+export * from "./resourceTreeOperations";
 
 // objects
 export * from "./IDERegister";

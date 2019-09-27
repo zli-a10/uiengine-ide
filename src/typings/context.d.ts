@@ -17,7 +17,7 @@ interface ISchemasContext {
   currentData: any;
   setCurrentData: (dataRef: any) => any;
   selectedKeys;
-  setSelectedKey: (key: any) => any;
+  setSelectedKey: (key: any, treeNode?: any, type?: string) => any;
   savedTime: string;
   setSavedTime: (savedTime: string) => any;
   help: string;

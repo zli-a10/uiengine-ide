@@ -16,8 +16,7 @@
     "jsx": "react",
     "typeRoots": [
       "./node_modules/@types",
-      "./src/typings",
-      "./node_modules/uiengine"
+      "./src/typings"
     ]
   },
   "include": ["src"]
