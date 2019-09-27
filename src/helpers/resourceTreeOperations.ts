@@ -91,7 +91,6 @@ export const saveSchemaToResourceNode = (
   _.merge(dstNode, newAttrs);
 
   if (editing === "add") {
-    console.log(path, type, defaultEmptyLayoutSchema);
     fileLoader.saveFile(
       path,
       defaultEmptyLayoutSchema,

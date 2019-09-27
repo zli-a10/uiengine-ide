@@ -5,6 +5,7 @@ import { SchemasContext } from "../../Context";
 
 export const Schemas = (props: any) => {
   const [schema, setSchema] = useState();
+  // for showing
   const [currentData, setCurrentData] = useState();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const schemasContextValue = useMemo<ISchemasContext>(

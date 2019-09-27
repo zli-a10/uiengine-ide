@@ -1,11 +1,11 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Tabs, Icon } from "antd";
 import _ from "lodash";
 
 import { GlobalContext } from "../../Context";
 import { PageTree, ResourceTree, Libraries } from "..";
 import { DataSource } from "../DataSource";
-import { FileLoader, IDERegister, getPluginTree } from "../../../helpers";
+import { IDERegister } from "../../../helpers";
 const TabPane = Tabs.TabPane;
 
 export const DesignManager: React.FC<IDesignManager> = props => {

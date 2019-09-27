@@ -69,10 +69,7 @@ const config = {
     ]
   },
   plugins: [
-    new MonacoWebpackPlugin({
-      output: 'monaco-editor',
-      languages: ["json", "javascript", "typescript"]
-    }),
+    new MonacoWebpackPlugin(),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     })
