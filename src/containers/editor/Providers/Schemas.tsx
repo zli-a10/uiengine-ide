@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import _ from "lodash";
 import { ILayoutSchema } from "uiengine/typings";
-import { SchemasContext } from "../../Context";
+import { SchemasContext, IDEEditorContext } from "../../Context";
+import { getActiveUINode } from "../../../helpers";
 
 export const Schemas = (props: any) => {
+  const { setContent } = useContext(IDEEditorContext);
   const [schema, setSchema] = useState();
   // for showing
   const [currentData, setCurrentData] = useState();
@@ -16,7 +18,7 @@ export const Schemas = (props: any) => {
       },
       selectedKeys,
       setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
-        if (selectedKeys.length) {
+        if (treeNode) {
           setCurrentData(treeNode);
         }
         let keys: any = _.clone(selectedKeys);
@@ -39,6 +41,9 @@ export const Schemas = (props: any) => {
       schema,
       updateSchema: (schema: ILayoutSchema) => {
         setSchema(schema);
+        // fetch latest version of schema
+        const allSchema = getActiveUINode(true);
+        setContent(allSchema);
       }
     }),
     [schema, currentData, selectedKeys]

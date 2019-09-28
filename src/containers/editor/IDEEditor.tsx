@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from "react";
-
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import * as _ from "lodash";
 import { Tabs, Icon, Row, Col, Menu, Dropdown } from "antd";
 import { IUINode } from "uiengine/typings";
@@ -11,15 +10,17 @@ import * as Providers from "./Providers";
 import { IDE_ID } from "../../helpers";
 import "./styles/index.less";
 import ErrorBoundary from "./ErrorBoundary";
-import { useCallback } from "react";
 
 const WindowSizeDown = (props: any) => {
-  const { onSplitWindow } = props;
+  const { onSplitWindow, onMenuClick } = props;
+
   const menu = (
-    <Menu>
+    <Menu onClick={onMenuClick}>
       <Menu.Item key="12:12">1:1</Menu.Item>
       <Menu.Item key="8:16">1:2</Menu.Item>
       <Menu.Item key="6:18">1:3</Menu.Item>
+      <Menu.Item key="16:8">2:1</Menu.Item>
+      <Menu.Item key="18:6">3:1</Menu.Item>
     </Menu>
   );
 
@@ -36,6 +37,7 @@ const WindowSizeDown = (props: any) => {
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
+  const [content, setContent] = useState();
   const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
 
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
@@ -68,16 +70,46 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         }
         // console.log("collapsedNodes", collapsedNodes);
         setCollapsedNodes(_.clone(collapsedNodes));
+      },
+      content,
+      setContent: (content: any) => {
+        if (_.isObject(content)) {
+          content = JSON.stringify(content, null, "\t");
+        }
+        setContent(content);
       }
     }),
-    [editNode, collapsedNodes]
+    [editNode, collapsedNodes, content]
   );
 
   // split window
   const [splitted, setSpitted] = useState(false);
   const onSplitWindow = useCallback(() => {
     setSpitted(!splitted);
+    if (!splitted) {
+      localStorage["drawingBoardLayout"] = "12:12";
+    } else {
+      localStorage["drawingBoardLayout"] = "";
+    }
   }, [splitted]);
+
+  const [leftSpan, setLeftSpan] = useState(12);
+  const [rightSpan, setRightSpan] = useState(12);
+  const onMenuClick = useCallback((e: any) => {
+    const { key } = e;
+    const [left, right] = key.split(":");
+    setLeftSpan(left);
+    setRightSpan(right);
+    setSpitted(true);
+    localStorage["drawingBoardLayout"] = key;
+  }, []);
+
+  useEffect(() => {
+    if (localStorage["drawingBoardLayout"]) {
+      onMenuClick({ key: localStorage["drawingBoardLayout"] });
+    }
+    setSpitted(!!localStorage["drawingBoardLayout"]);
+  }, [localStorage["drawingBoardLayout"]]);
 
   return (
     <ErrorBoundary>
@@ -90,11 +122,14 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             <Main datasource={props.datasource}>
               <div className="ide-editor">
                 <DesignManager datasource={props.datasource} />
-                {splitted ? (
+                {!splitted ? (
                   <Tabs
                     defaultActiveKey="1"
                     tabBarExtraContent={
-                      <WindowSizeDown onSplitWindow={onSplitWindow} />
+                      <WindowSizeDown
+                        onMenuClick={onMenuClick}
+                        onSplitWindow={onSplitWindow}
+                      />
                     }
                   >
                     <TabPane tab="Drawing Board" key="1">
@@ -106,18 +141,21 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                   </Tabs>
                 ) : (
                   <Row>
-                    <Col span={12}>
+                    <Col span={leftSpan}>
                       <Tabs defaultActiveKey="1">
                         <TabPane tab="Drawing Board" key="1">
                           <DrawingBoard {...props} />
                         </TabPane>
                       </Tabs>
                     </Col>
-                    <Col span={12}>
+                    <Col span={rightSpan}>
                       <Tabs
                         defaultActiveKey="1"
                         tabBarExtraContent={
-                          <WindowSizeDown onSplitWindow={onSplitWindow} />
+                          <WindowSizeDown
+                            onMenuClick={onMenuClick}
+                            onSplitWindow={onSplitWindow}
+                          />
                         }
                       >
                         <TabPane tab="Code Editor" key="1">

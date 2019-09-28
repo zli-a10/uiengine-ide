@@ -2,11 +2,12 @@ import React, { useState, useContext, useCallback } from "react";
 import _ from "lodash";
 import { Tree } from "antd";
 import { renderTreeNodes } from "./renderTreeNodes";
-import { SchemasContext } from "../../../Context";
+import { SchemasContext, IDEEditorContext } from "../../../Context";
 import { loadFileAndRefresh } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
+  const { setContent } = useContext(IDEEditorContext);
   const { tree } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
@@ -23,8 +24,13 @@ export const TreeBase = (props: any) => {
     if (!_.has(treeNode, "node.props.dataRef._editing_")) {
       const dataRef = _.get(treeNode, "node.props.dataRef");
       const type = _.get(dataRef, "type", "schema");
-      if (keys.length) loadFileAndRefresh(keys[0], type);
-      setSelectedKey(keys, dataRef, type);
+      if (keys.length) {
+        const promise = loadFileAndRefresh(keys[0], type);
+        promise.then((data: any) => {
+          setContent(data);
+        });
+      }
+      setSelectedKey(keys, dataRef);
     }
   };
 

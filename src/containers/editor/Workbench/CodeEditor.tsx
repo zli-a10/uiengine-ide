@@ -2,12 +2,13 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
 import { ControlledEditor } from "@monaco-editor/react";
-import { SchemasContext } from "../../Context";
-import { FileLoader } from "../../../helpers";
+import { SchemasContext, IDEEditorContext } from "../../Context";
+import { FileLoader, DndNodeManager, getActiveUINode } from "../../../helpers";
 
+let debounced: any;
 export const CodeEditor: React.FC = (props: any) => {
   const { currentData } = useContext(SchemasContext);
-
+  const { content, setContent } = useContext(IDEEditorContext);
   // const { layouts, config = {} } = props;
   const options = {
     selectOnLineNumbers: true,
@@ -20,38 +21,53 @@ export const CodeEditor: React.FC = (props: any) => {
     mouseWheelZoom: true
   };
 
-  const [code, setCode] = useState("");
+  // const [code, setCode] = useState(content);
   const [language, setLanguage] = useState("json");
 
   useEffect(() => {
     // load remote data
     if (currentData) {
-      const { _path_: path, type, isTemplate } = currentData;
+      const { type } = currentData;
       if (type === "schema") {
         setLanguage("json");
       } else {
         setLanguage("typescript");
       }
-      const fileLoader = FileLoader.getInstance();
-      const newPromise = fileLoader.loadFile(path, type, isTemplate);
-      newPromise.then((content: any) => {
-        if (type === "schema" || type === "datasource") {
-          if (_.isObject(content)) {
-            content = JSON.stringify(content, null, "\t");
-          }
-        }
-        setCode(content);
-      });
+
+      // setCode(content);
     }
-  });
+  }, [currentData]);
 
   const onEditorChange = useCallback(
     (ev: any, value: any) => {
-      const fileLoader = FileLoader.getInstance();
-      if (currentData) {
-        const { _path_: path, type } = currentData;
-        fileLoader.saveFile(path, value, type);
-      }
+      // if (debounced) {
+      //   console.log("cancel debounce...");
+      //   debounced.cancel();
+      // }
+      console.log(currentData);
+      const debounceFunc = () => {
+        if (currentData) {
+          const fileLoader = FileLoader.getInstance();
+          const { _path_: path, type } = currentData;
+          fileLoader.saveFile(path, value, type);
+          if (type === "schema") {
+            const dndNodeManager = DndNodeManager.getInstance();
+            try {
+              const schema = JSON.parse(value);
+              if (schema) {
+                const node = getActiveUINode();
+                console.log("schema to use", schema);
+                dndNodeManager.useSchema(node, schema);
+              }
+            } catch (e) {
+              console.warn("Your UI JSON is not correct %s", value);
+            }
+          }
+        }
+      };
+      // setContent(value);
+      // debounced = _.debounce(debounceFunc, 1000)();
+      debounceFunc();
       return value;
     },
     [currentData]
@@ -61,7 +77,7 @@ export const CodeEditor: React.FC = (props: any) => {
     <div className="editor code-editor">
       <ControlledEditor
         language={language}
-        value={code}
+        value={content}
         theme="dark"
         onChange={onEditorChange}
         options={options}

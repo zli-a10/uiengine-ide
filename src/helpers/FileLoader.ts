@@ -112,17 +112,15 @@ export class FileLoader implements IFileLoader {
       const promise = commands.readFile(type, path, isTemplate);
       promise.then((data: any) => {
         let content = this.storage.get(`${type}/${path}`);
-        if (type === "schema" || (type === "datasource" && content)) {
+        if (content) data = content;
+        if ((type === "schema" || type === "datasource") && _.isString(data)) {
           try {
-            content = JSON.parse(content);
+            data = JSON.parse(data);
           } catch (e) {
             console.warn(e);
           }
-          // if (!_.isEqual(content, data)) {
-          //   console.log(data, "schemas are different");
-          // }
         }
-        resolve(content || data);
+        resolve(data);
       });
     });
 

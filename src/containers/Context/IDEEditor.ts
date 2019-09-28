@@ -15,5 +15,7 @@ export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   editNode: {} as IUINode,
   chooseEditNode: (editNode?: IUINode) => {},
   collapsedNodes: [],
-  setCollapsedNode: (uiNode: IUINode) => {}
+  setCollapsedNode: (uiNode: IUINode) => {},
+  content: "",
+  setContent: (content: string) => {}
 });

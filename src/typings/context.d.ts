@@ -15,7 +15,7 @@ interface IGlobalContext {
 
 interface ISchemasContext {
   currentData: any;
-  setCurrentData: (dataRef: any) => any;
+  setCurrentData: (data: any) => any;
   selectedKeys;
   setSelectedKey: (key: any, treeNode?: any, type?: string) => any;
   savedTime: string;
@@ -57,6 +57,8 @@ interface IIDEEditorContext {
   chooseEditNode: (editNode: IUINode) => any;
   collapsedNodes: Array<string>;
   setCollapsedNode: (uiNode: IUINode) => any;
+  content: any;
+  setContent: (content: any) => any;
 }
 
 interface IPropsContext {
