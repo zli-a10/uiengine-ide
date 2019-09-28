@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
+import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
 import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext } from "../../Context";
@@ -35,7 +36,9 @@ export const CodeEditor: React.FC = (props: any) => {
       const newPromise = fileLoader.loadFile(path, type, isTemplate);
       newPromise.then((content: any) => {
         if (type === "schema" || type === "datasource") {
-          content = JSON.stringify(content, null, "\t");
+          if (_.isObject(content)) {
+            content = JSON.stringify(content, null, "\t");
+          }
         }
         setCode(content);
       });

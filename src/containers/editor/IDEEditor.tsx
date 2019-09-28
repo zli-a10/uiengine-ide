@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 
 import * as _ from "lodash";
-import { Tabs } from "antd";
+import { Tabs, Icon, Row, Col, Menu, Dropdown } from "antd";
 import { IUINode } from "uiengine/typings";
 import { Main, DesignManager, PropManager, DrawingBoard, CodeEditor } from "./";
 import { IDEEditorContext } from "../Context";
@@ -11,6 +11,28 @@ import * as Providers from "./Providers";
 import { IDE_ID } from "../../helpers";
 import "./styles/index.less";
 import ErrorBoundary from "./ErrorBoundary";
+import { useCallback } from "react";
+
+const WindowSizeDown = (props: any) => {
+  const { onSplitWindow } = props;
+  const menu = (
+    <Menu>
+      <Menu.Item key="12:12">1:1</Menu.Item>
+      <Menu.Item key="8:16">1:2</Menu.Item>
+      <Menu.Item key="6:18">1:3</Menu.Item>
+    </Menu>
+  );
+
+  return (
+    <Dropdown overlay={menu}>
+      <Icon
+        type="layout"
+        style={{ marginRight: "20px" }}
+        onClick={onSplitWindow}
+      />
+    </Dropdown>
+  );
+};
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
@@ -51,6 +73,12 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     [editNode, collapsedNodes]
   );
 
+  // split window
+  const [splitted, setSpitted] = useState(false);
+  const onSplitWindow = useCallback(() => {
+    setSpitted(!splitted);
+  }, [splitted]);
+
   return (
     <ErrorBoundary>
       <IDEEditorContext.Provider value={ideEditorContextValue}>
@@ -62,14 +90,43 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             <Main datasource={props.datasource}>
               <div className="ide-editor">
                 <DesignManager datasource={props.datasource} />
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab="Drawing Board" key="1">
-                    <DrawingBoard {...props} />
-                  </TabPane>
-                  <TabPane tab="Code Editor" key="2">
-                    <CodeEditor />
-                  </TabPane>
-                </Tabs>
+                {splitted ? (
+                  <Tabs
+                    defaultActiveKey="1"
+                    tabBarExtraContent={
+                      <WindowSizeDown onSplitWindow={onSplitWindow} />
+                    }
+                  >
+                    <TabPane tab="Drawing Board" key="1">
+                      <DrawingBoard {...props} />
+                    </TabPane>
+                    <TabPane tab="Code Editor" key="2">
+                      <CodeEditor />
+                    </TabPane>
+                  </Tabs>
+                ) : (
+                  <Row>
+                    <Col span={12}>
+                      <Tabs defaultActiveKey="1">
+                        <TabPane tab="Drawing Board" key="1">
+                          <DrawingBoard {...props} />
+                        </TabPane>
+                      </Tabs>
+                    </Col>
+                    <Col span={12}>
+                      <Tabs
+                        defaultActiveKey="1"
+                        tabBarExtraContent={
+                          <WindowSizeDown onSplitWindow={onSplitWindow} />
+                        }
+                      >
+                        <TabPane tab="Code Editor" key="1">
+                          <CodeEditor />
+                        </TabPane>
+                      </Tabs>
+                    </Col>
+                  </Row>
+                )}
                 <PropManager {...props} />
               </div>
             </Main>
