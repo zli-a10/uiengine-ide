@@ -42,6 +42,7 @@ export const Schemas = (props: any) => {
       updateSchema: (schema: ILayoutSchema) => {
         setSchema(schema);
         // fetch latest version of schema
+        // Bug to fix: sometimes dnd not working
         const allSchema = getActiveUINode(true);
         setContent(allSchema);
       }

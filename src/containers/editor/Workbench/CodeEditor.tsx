@@ -44,30 +44,30 @@ export const CodeEditor: React.FC = (props: any) => {
       //   console.log("cancel debounce...");
       //   debounced.cancel();
       // }
-      console.log(currentData);
-      const debounceFunc = () => {
-        if (currentData) {
-          const fileLoader = FileLoader.getInstance();
-          const { _path_: path, type } = currentData;
-          fileLoader.saveFile(path, value, type);
-          if (type === "schema") {
-            const dndNodeManager = DndNodeManager.getInstance();
-            try {
-              const schema = JSON.parse(value);
-              if (schema) {
-                const node = getActiveUINode();
-                console.log("schema to use", schema);
-                dndNodeManager.useSchema(node, schema);
-              }
-            } catch (e) {
-              console.warn("Your UI JSON is not correct %s", value);
-            }
-          }
-        }
-      };
+      // console.log(currentData);
+      // const debounceFunc = () => {
+      //   if (currentData) {
+      //     const fileLoader = FileLoader.getInstance();
+      //     const { _path_: path, type } = currentData;
+      //     fileLoader.saveFile(path, value, type);
+      //     if (type === "schema") {
+      //       const dndNodeManager = DndNodeManager.getInstance();
+      //       try {
+      //         const schema = JSON.parse(value);
+      //         if (schema) {
+      //           const node = getActiveUINode();
+      //           console.log("schema to use", schema);
+      //           dndNodeManager.useSchema(node, schema);
+      //         }
+      //       } catch (e) {
+      //         console.warn("Your UI JSON is not correct %s", value);
+      //       }
+      //     }
+      //   }
+      // };
       // setContent(value);
       // debounced = _.debounce(debounceFunc, 1000)();
-      debounceFunc();
+      // debounceFunc();
       return value;
     },
     [currentData]
