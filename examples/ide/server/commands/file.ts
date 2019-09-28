@@ -1,4 +1,4 @@
-import websockets from "../../src/config/websocket";
+import websockets from "../config/websocket";
 import { get, has } from "lodash";
 const fs = require("fs");
 

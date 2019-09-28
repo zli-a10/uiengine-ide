@@ -4,7 +4,7 @@ const NodemonPlugin = require("nodemon-webpack-plugin");
 const path = require("path");
 // const fs = require("fs");
 
-const pathRoot = path.join(__dirname, "../../");
+const pathRoot = path.join(__dirname, "../../server/");
 const pathPublic = path.join(pathRoot, "dist");
 
 const config: webpack.Configuration = {
