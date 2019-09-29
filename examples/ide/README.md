@@ -4,8 +4,22 @@
 
 ## link upper uiengine-ide
 
-rm -rf ../../node_modules/ && npm link ../../
+> cd examples/ide
+> rm -rf ../../node_modules/ && npm link ../../
 
-## link react
+## link uiengine for uiengine-ide
 
-npm link ../../node_modules/react-dom && npm link ../../node_modules/react"
+### Entering the uiengine-ide forder from
+
+> cd ../../
+
+Provide your uiengine at same level as uiengine-ide
+
+> npm link ../uiengine
+
+### running uiengine-ide
+
+run both server socket and client server
+
+> cd examples/ide
+> npm run all

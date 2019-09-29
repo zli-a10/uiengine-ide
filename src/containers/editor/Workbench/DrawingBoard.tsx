@@ -24,12 +24,13 @@ export const DrawingBoard: React.FC = (props: any) => {
     () => _.get(config, `widgetConfig.componentWrapper`),
     []
   );
+  const newConfig = _.cloneDeep(config);
   if (!preview) {
-    _.set(config, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
-    _.set(config, `ideMode`, true);
+    _.set(newConfig, `widgetConfig.componentWrapper`, UIEngineDndWrapper);
+    _.set(newConfig, `ideMode`, true);
   } else {
-    _.set(config, `widgetConfig.componentWrapper`, productWrapper);
-    _.set(config, `ideMode`, false);
+    _.set(newConfig, `widgetConfig.componentWrapper`, productWrapper);
+    _.set(newConfig, `ideMode`, false);
   }
 
   let deleteEditNode = useDeleteNode(editNode);
@@ -85,7 +86,7 @@ export const DrawingBoard: React.FC = (props: any) => {
   }, [editNode, componentCollapsed]);
   return (
     <div className="editor" id="drawingboard">
-      <UIEngine layouts={schemas} config={config} />
+      <UIEngine layouts={schemas} config={newConfig} />
     </div>
   );
 };

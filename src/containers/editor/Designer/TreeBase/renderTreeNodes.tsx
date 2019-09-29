@@ -7,9 +7,10 @@ const { TreeNode } = Tree;
 
 const intialItems = (node: IResourceTreeNode, parent: IResourceTreeNode) => {
   node._parent_ = parent;
-  node._path_ = _.has(parent, "_path_")
-    ? `${parent._path_}/${node.name}`
-    : node.name;
+  node._path_ =
+    _.has(parent, "_path_") && parent.nodeType !== "root"
+      ? `${parent._path_}/${node.name}`
+      : node.name;
   node._key_ = node._key_ || node._path_;
 };
 

@@ -69,7 +69,7 @@ export const Title = (props: any) => {
       ) : (
         <a className="ant-dropdown-link" href="#">
           {title}
-          {dataRef._path_.indexOf("templates") === 0 ? null : (
+          {dataRef.isTemplate || dataRef.nodeType === "category" ? null : (
             <Dropdown
               overlay={
                 <ActionMenu onSelect={onSelect} dataRef={dataRef} {...rest} />

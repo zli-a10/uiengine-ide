@@ -36,7 +36,7 @@ const dndNodeManager = DndNodeManager.getInstance();
 const regionDetector = RegionDetector.getInstance();
 
 export const UIEngineDndWrapper = (props: any) => {
-  const { preview, togglePropsCollapsed } = useContext(GlobalContext);
+  const { togglePropsCollapsed } = useContext(GlobalContext);
   const {
     editNode,
     chooseEditNode,
@@ -153,9 +153,9 @@ export const UIEngineDndWrapper = (props: any) => {
         return;
       }
       const draggingNode = item.uinode;
-      const hoverNode = uinode;
+      const targetNode = uinode;
       // Don't replace items with themselves
-      if (draggingNode === hoverNode || !isOverCurrent) {
+      if (draggingNode === targetNode || !isOverCurrent) {
         return;
       }
 
@@ -178,18 +178,18 @@ export const UIEngineDndWrapper = (props: any) => {
 
           const insertMethodName = `insert${_.upperFirst(regionName)}`;
           if (dndNodeManager[insertMethodName]) {
-            dndNodeManager[insertMethodName](draggingNode, hoverNode);
+            dndNodeManager[insertMethodName](draggingNode, targetNode);
           }
           break;
         case DND_IDE_SCHEMA_TYPE:
           if (_.isObject(item.schema)) {
-            dndNodeManager.useSchema(hoverNode, item.schema);
+            dndNodeManager.useSchema(targetNode, item.schema);
           }
           break;
       }
       setDropNode(draggingNode);
       // chooseEditNode(draggingNode);
-      updateSchema(hoverNode.schema);
+      updateSchema(targetNode.schema);
     },
 
     collect: monitor => ({

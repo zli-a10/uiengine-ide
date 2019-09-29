@@ -2,13 +2,14 @@ import React, { useState, useContext, useCallback } from "react";
 import _ from "lodash";
 import { Tree } from "antd";
 import { renderTreeNodes } from "./renderTreeNodes";
-import { SchemasContext } from "../../../Context";
+import { SchemasContext, IDEEditorContext } from "../../../Context";
 import { loadFileAndRefresh } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
-  const { tree, type } = props;
-  const [expandKeys, setExpandKeys] = useState<string[]>([]);
+  const { setContent } = useContext(IDEEditorContext);
+  const { tree, openKeys } = props;
+  const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
   const onExpand = useCallback((expandKeys: string[]) => {
     setExpandKeys(expandKeys);
@@ -22,9 +23,14 @@ export const TreeBase = (props: any) => {
   const onSelect = (keys: string[], treeNode?: any) => {
     if (!_.has(treeNode, "node.props.dataRef._editing_")) {
       const dataRef = _.get(treeNode, "node.props.dataRef");
-      if (keys.length)
-        loadFileAndRefresh(keys[0], _.get(dataRef, "type", "schema"));
-      setSelectedKey(keys, dataRef, type);
+      const type = _.get(dataRef, "type", "schema");
+      if (keys.length) {
+        const promise = loadFileAndRefresh(keys[0], type);
+        promise.then((data: any) => {
+          setContent(data);
+        });
+      }
+      setSelectedKey(keys, dataRef);
     }
   };
 

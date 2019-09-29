@@ -1,5 +1,6 @@
+import React, { useContext } from "react";
 import _ from "lodash";
-import { NodeController, UINode } from "uiengine";
+import { NodeController } from "uiengine";
 import { IUINode, IDataSource } from "uiengine/typings";
 import { DndNodeManager, FileLoader, VersionControl } from ".";
 import { IDE_ID, IDE_DEP_COLORS, IDE_COLOR } from "../helpers/consts";
@@ -355,7 +356,14 @@ export function loadSchemaAndUpdateLayout(path: string) {
   fileLoader.editingFile = path;
   const schemaPromise = fileLoader.loadFile(path, "schema");
   schemaPromise.then((schema: any) => {
-    if (_.isObject(schema) && !_.isEmpty(schema)) {
+    if (_.isString(schema)) {
+      try {
+        schema = JSON.parse(schema);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (!_.isEmpty(schema)) {
       const uiNode = getActiveUINode() as IUINode;
       uiNode.schema = schema;
       uiNode.updateLayout();
@@ -365,17 +373,21 @@ export function loadSchemaAndUpdateLayout(path: string) {
   return schemaPromise;
 }
 
-export function loadResourceAndUpdateEditor(path: string) {}
+export function loadResourceAndUpdateEditor(path: string, type: EResourceType) {
+  const fileLoader = FileLoader.getInstance();
+  const promise = fileLoader.loadFile(path, type);
+  return promise;
+}
 
 /**
  * This function will adapte what you load and update editor or drawingboard depends on type
  * @param path
  * @param type
  */
-export function loadFileAndRefresh(path: string, type: string) {
+export function loadFileAndRefresh(path: string, type: EResourceType) {
   if (type === "schema") {
     return loadSchemaAndUpdateLayout(path);
   } else {
-    return loadResourceAndUpdateEditor(path);
+    return loadResourceAndUpdateEditor(path, type);
   }
 }

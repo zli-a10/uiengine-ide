@@ -3,8 +3,12 @@ import { getTreeRoot } from "./utils";
 import { FileLoader } from "./FileLoader";
 import { defaultEmptyLayoutSchema } from "./configLayoutWrappers";
 
-export const AddResourceNode = (dataRef: IResourceTreeNode) => {
+export const AddResourceNode = (
+  dataRef: IResourceTreeNode,
+  type: EResourceType = "schema"
+) => {
   const newItem: IResourceTreeNode = {
+    type,
     name: "",
     title: "",
     _key_: _.uniqueId("tree-node-"),
@@ -31,9 +35,13 @@ export const DeleteResourceNode = (dstNode: IResourceTreeNode) => {
   fileLoader.removeFile(dstNode._path_, "schema", getTreeRoot(dstNode));
 };
 
-export const CloneResourceNode = (dstNode: IResourceTreeNode) => {
+export const CloneResourceNode = (
+  dstNode: IResourceTreeNode,
+  type: EResourceType = "schema"
+) => {
   const fileLoader = FileLoader.getInstance();
   const newItem: IResourceTreeNode = {
+    type,
     name: "",
     title: `Copy_${dstNode.title}`,
     _key_: _.uniqueId("tree-node-"),
@@ -42,7 +50,10 @@ export const CloneResourceNode = (dstNode: IResourceTreeNode) => {
     _parent_: dstNode._parent_,
     children: []
   };
-  dstNode._parent_.children.push(newItem);
+  const children = _.get(dstNode, `_parent_.children`);
+  if (children) {
+    children.push(newItem);
+  }
   const content = fileLoader.loadFile(dstNode._path_);
   const newName = `${dstNode._path_}_${_.uniqueId("copy_")}`;
   fileLoader.saveFile(newName, content, "schema", getTreeRoot(dstNode));
@@ -55,16 +66,19 @@ export const RenameResourceNode = (dstNode: IResourceTreeNode) => {
 
 export const saveSchemaToResourceNode = (
   dstNode: IResourceTreeNode,
-  value: string
+  value: string,
+  type: EResourceType = "schema"
 ) => {
   const fileLoader = FileLoader.getInstance();
   let name = _.snakeCase(value);
   name = name.indexOf(".json") > -1 ? name : `${name}.json`;
   const oldPath = dstNode._path_;
-  let path = dstNode._parent_
-    ? `${dstNode._parent_._path_}/${dstNode.name}`
-    : dstNode.name;
+  let path =
+    dstNode._parent_ && dstNode._parent_.nodeType !== "root"
+      ? `${dstNode._parent_._path_}/${name}`
+      : name;
   const newAttrs = {
+    type,
     name,
     title: value,
     _path_: path,
@@ -72,22 +86,24 @@ export const saveSchemaToResourceNode = (
     _status_: "changed",
     _editing_: false
   };
+
+  const editing = dstNode._editing_;
   _.merge(dstNode, newAttrs);
 
-  if (dstNode._editing_ === "add") {
+  if (editing === "add") {
     fileLoader.saveFile(
       path,
       defaultEmptyLayoutSchema,
-      "schema",
+      type,
       getTreeRoot(dstNode)
     );
-  } else if (dstNode._editing_ === "rename") {
+  } else if (editing === "rename") {
     const content = fileLoader.loadFile(oldPath);
     fileLoader.removeFile(oldPath);
     fileLoader.saveFile(
       path,
       content || defaultEmptyLayoutSchema,
-      "schema",
+      type,
       getTreeRoot(dstNode)
     );
   }

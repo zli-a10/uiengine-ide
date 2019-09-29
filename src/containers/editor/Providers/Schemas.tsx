@@ -1,22 +1,31 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useContext, useCallback } from "react";
 import _ from "lodash";
 import { ILayoutSchema } from "uiengine/typings";
-import { SchemasContext } from "../../Context";
+import { SchemasContext, IDEEditorContext } from "../../Context";
+import { getActiveUINode } from "../../../helpers";
 
 export const Schemas = (props: any) => {
+  const { setContent } = useContext(IDEEditorContext);
   const [schema, setSchema] = useState();
+  // for showing
   const [currentData, setCurrentData] = useState();
+  const onSetCurrentData = useCallback((data: IResourceTreeNode) => {
+    setCurrentData(data);
+    const { _parent_, children, ...rest } = data;
+    localStorage["currentEditNode"] = JSON.stringify(rest);
+  }, []);
+
   const [selectedKeys, setSelectedKeys] = useState([]);
   const schemasContextValue = useMemo<ISchemasContext>(
     () => ({
       currentData,
-      setCurrentData: (data: any) => {
-        setCurrentData(data);
+      setCurrentData: (data: IResourceTreeNode) => {
+        onSetCurrentData(data);
       },
       selectedKeys,
       setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
-        if (selectedKeys.length) {
-          setCurrentData(treeNode);
+        if (treeNode) {
+          onSetCurrentData(treeNode);
         }
         let keys: any = _.clone(selectedKeys);
         if (_.isArray(key)) {
@@ -38,6 +47,10 @@ export const Schemas = (props: any) => {
       schema,
       updateSchema: (schema: ILayoutSchema) => {
         setSchema(schema);
+        // fetch latest version of schema
+        // Bug to fix: sometimes dnd not working
+        const allSchema = getActiveUINode(true);
+        setContent(allSchema);
       }
     }),
     [schema, currentData, selectedKeys]

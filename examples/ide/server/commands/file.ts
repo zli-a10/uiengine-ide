@@ -1,4 +1,4 @@
-import websockets from "../../src/config/websocket";
+import websockets from "../config/websocket";
 import { get, has } from "lodash";
 const fs = require("fs");
 
@@ -10,53 +10,60 @@ const fs = require("fs");
 interface ICommandOptions {
   type: string;
   path: string;
+  isTemplate?: boolean;
   options?: any;
 }
 
 function getPath(options: ICommandOptions) {
-  const { type, path } = options;
-  console.log(type, path, "..........");
+  const { type, path, isTemplate = false } = options;
+  console.log("Read options: %s", options);
+  let root = isTemplate ? "templates" : "paths";
   const config = websockets as any;
-  const readpath = get(config, `paths.${type}`);
+  const readpath = get(config, `${root}.${type}`);
   return path ? `${readpath}/${path}` : readpath;
 }
 
-const walkSync = (dir: any, type: string) => {
+const walkSync = (dir: any, type: string, isTemplate: boolean = false) => {
   var fs: any = fs || require("fs"),
     files = fs.readdirSync(dir);
   let filelist: any = [];
   files.forEach((file: any) => {
-    const p = dir ? `${dir}/${file}` : file;
-    const node = {
-      type,
-      server: true,
-      key: file,
-      path: p,
-      value: file,
-      name: file,
-      title: file,
-      children: []
-    };
-    if (fs.statSync(dir + "/" + file).isDirectory()) {
-      const tmpFiles = walkSync(dir + "/" + file, type);
-      node.children = tmpFiles;
-      // filelist.push(tmpFiles);
+    if (file.indexOf("index.") !== 0) {
+      const p = dir ? `${dir}/${file}` : file;
+      const node = {
+        type,
+        isTemplate,
+        server: true,
+        key: file,
+        path: p,
+        value: file,
+        name: file,
+        title: file,
+        children: []
+      };
+      if (fs.statSync(dir + "/" + file).isDirectory()) {
+        const tmpFiles = walkSync(dir + "/" + file, type);
+        node.children = tmpFiles;
+        // filelist.push(tmpFiles);
+      }
+      filelist.push(node);
     }
-    filelist.push(node);
   });
   return filelist;
 };
 
 /**
  *
- * @param options {"name": "getFileList", "options":{ "type": "schema"}}
+ * @param options {"name": "getFileList", "options":{ "type": "schema", "isTemplate": false}}
  */
 export function getFileList(options: ICommandOptions) {
   const readpath = getPath(options);
   const type = get(options, "type");
+  const isTemplate = get(options, "isTemplate");
   let result: any;
   try {
-    result = walkSync(readpath, type);
+    result = walkSync(readpath, type, isTemplate);
+    console.log(result);
   } catch (e) {
     console.warn(e.message);
     result = [];
@@ -66,7 +73,7 @@ export function getFileList(options: ICommandOptions) {
 
 /**
  *
- * @param options {"name": "readFile", "options":{ "type": "schema", "path": "any.json" }}
+ * @param options {"name": "readFile", "options":{ "type": "schema", "path": "any.json", "isTemplate": false }}
  */
 export function readFile(options: ICommandOptions) {
   const readpath = getPath(options);
@@ -82,7 +89,7 @@ export function readFile(options: ICommandOptions) {
 
 /**
  *
- * @param options {"name": "writeFile", "options":{ "type": "schema",  "path": "any.json", "options": { "data": "{}" }  }}
+ * @param options {"name": "writeFile", "options":{ "type": "schema",  "path": "any.json", "options": { "data": "{}" }, "isTemplate": false  }}
  */
 export function writeFile(options: ICommandOptions) {
   const readpath = getPath(options);

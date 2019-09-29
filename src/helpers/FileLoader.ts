@@ -12,12 +12,6 @@ export class FileLoader implements IFileLoader {
     return FileLoader.instance;
   }
   storage: IStorage;
-
-  private trees = {
-    schema: {},
-    plugins: {}
-  };
-
   editingFile: string = "";
 
   constructor() {
@@ -65,45 +59,62 @@ export class FileLoader implements IFileLoader {
       this.saveTree(treeRoot, type);
     }
 
-    this.storage.save(`${type}/${path}`, JSON.stringify(content));
+    if (type === "schema" || type === "datasource") {
+      content = JSON.stringify(content);
+    }
+
+    this.storage.save(`${type}/${path}`, content);
     return true;
   }
 
-  loadFileTree(type: EResourceType = "schema") {
+  loadFileTree(type: EResourceType = "schema", isTemplate?: boolean) {
     const newPromise = new Promise((resolve: any) => {
-      const fileTreeJson = this.storage.get(`file_tree.${type}`);
-      if (fileTreeJson) {
-        try {
-          let result = JSON.parse(fileTreeJson);
-          resolve(result);
-        } catch (e) {
-          resolve([]);
+      if (!isTemplate) {
+        const fileTreeJson = this.storage.get(`file_tree.${type}`);
+        let result: any = [];
+        if (fileTreeJson) {
+          try {
+            result = JSON.parse(fileTreeJson);
+          } catch (e) {
+            result = [];
+          }
+          // result = _.unionBy(localTree.children, localTree, "name");
         }
-        // result = _.unionBy(localTree.children, localTree, "name");
-      } else {
-        const promise = commands.getFileList(type);
+        const promise = commands.getFileList(type, isTemplate);
         promise.then((tree: any) => {
+          result = _.unionBy(result, tree, "name");
           // cache to local storage
-          this.storage.save(`file_tree.${type}`, JSON.stringify(tree));
-          resolve(tree);
+          this.storage.save(`file_tree.${type}`, JSON.stringify(result));
+          resolve(result);
+        });
+      } else {
+        const promise = commands.getFileList(type, isTemplate);
+        promise.then((tree: any) => {
+          if (tree) {
+            resolve(tree);
+          } else {
+            resolve([]);
+          }
         });
       }
     });
     return newPromise;
   }
 
-  loadFile(path: string, type: EResourceType = "schema") {
+  loadFile(path: string, type: EResourceType = "schema", isTemplate?: boolean) {
     const newPromise = new Promise((resolve: any) => {
-      const promise = commands.readFile(type, path);
+      const promise = commands.readFile(type, path, isTemplate);
       promise.then((data: any) => {
         let content = this.storage.get(`${type}/${path}`);
-        if (type === "schema" && content) {
-          content = JSON.parse(content);
-          // if (!_.isEqual(content, data)) {
-          //   console.log(data, "schemas are different");
-          // }
+        if (content) data = content;
+        if ((type === "schema" || type === "datasource") && _.isString(data)) {
+          try {
+            data = JSON.parse(data);
+          } catch (e) {
+            console.warn(e);
+          }
         }
-        resolve(content || data);
+        resolve(data);
       });
     });
 
@@ -111,7 +122,7 @@ export class FileLoader implements IFileLoader {
   }
 
   removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean {
-    if (type === "schema") {
+    if (type === "schema" || type === "datasource") {
       if (this.isTempStorage() && treeRoot) {
         this.saveTree(treeRoot, type);
       }
