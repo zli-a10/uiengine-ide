@@ -12,12 +12,6 @@ export class FileLoader implements IFileLoader {
     return FileLoader.instance;
   }
   storage: IStorage;
-
-  private trees = {
-    schema: {},
-    plugins: {}
-  };
-
   editingFile: string = "";
 
   constructor() {

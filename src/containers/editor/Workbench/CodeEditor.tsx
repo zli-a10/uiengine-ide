@@ -3,7 +3,7 @@ import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
 import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
-import { FileLoader, DndNodeManager, getActiveUINode } from "../../../helpers";
+import { FileLoader, getActiveUINode } from "../../../helpers";
 
 let debounced: any;
 export const CodeEditor: React.FC = (props: any) => {
@@ -33,41 +33,40 @@ export const CodeEditor: React.FC = (props: any) => {
       } else {
         setLanguage("typescript");
       }
-
-      // setCode(content);
     }
   }, [currentData]);
 
+  const debounceFunc = useCallback(
+    _.debounce((value: any) => {
+      if (localStorage["currentEditNode"]) {
+        // why can't directly use current Data, because I can't get the current
+        // Data right here, why??
+        const currentNode = JSON.parse(localStorage["currentEditNode"]);
+        const fileLoader = FileLoader.getInstance();
+        const { _path_: path, type } = currentNode;
+        fileLoader.saveFile(path, value, type);
+        if (type === "schema") {
+          try {
+            const schema = JSON.parse(value);
+            if (schema) {
+              const uiNode = getActiveUINode();
+              uiNode.schema = schema;
+              uiNode.updateLayout();
+              uiNode.sendMessage(true);
+            }
+          } catch (e) {
+            console.warn("Your UI JSON is not correct %s", value);
+          }
+        }
+      }
+    }, 1000),
+    []
+  );
+
   const onEditorChange = useCallback(
     (ev: any, value: any) => {
-      // if (debounced) {
-      //   console.log("cancel debounce...");
-      //   debounced.cancel();
-      // }
-      // console.log(currentData);
-      // const debounceFunc = () => {
-      //   if (currentData) {
-      //     const fileLoader = FileLoader.getInstance();
-      //     const { _path_: path, type } = currentData;
-      //     fileLoader.saveFile(path, value, type);
-      //     if (type === "schema") {
-      //       const dndNodeManager = DndNodeManager.getInstance();
-      //       try {
-      //         const schema = JSON.parse(value);
-      //         if (schema) {
-      //           const node = getActiveUINode();
-      //           console.log("schema to use", schema);
-      //           dndNodeManager.useSchema(node, schema);
-      //         }
-      //       } catch (e) {
-      //         console.warn("Your UI JSON is not correct %s", value);
-      //       }
-      //     }
-      //   }
-      // };
+      debounceFunc(value);
       // setContent(value);
-      // debounced = _.debounce(debounceFunc, 1000)();
-      // debounceFunc();
       return value;
     },
     [currentData]

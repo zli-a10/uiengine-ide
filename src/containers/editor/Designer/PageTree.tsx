@@ -36,7 +36,7 @@ export const PageTree = () => {
   ];
   return (
     <div className="pagetree">
-      <TreeBase tree={schemaTree} />
+      <TreeBase tree={schemaTree} openKeys={["pages"]} />
     </div>
   );
 };

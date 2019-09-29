@@ -373,9 +373,9 @@ export function loadSchemaAndUpdateLayout(path: string) {
   return schemaPromise;
 }
 
-export function loadResourceAndUpdateEditor(path: string) {
+export function loadResourceAndUpdateEditor(path: string, type: EResourceType) {
   const fileLoader = FileLoader.getInstance();
-  const promise = fileLoader.loadFile(path, "schema");
+  const promise = fileLoader.loadFile(path, type);
   return promise;
 }
 
@@ -384,10 +384,10 @@ export function loadResourceAndUpdateEditor(path: string) {
  * @param path
  * @param type
  */
-export function loadFileAndRefresh(path: string, type: string) {
+export function loadFileAndRefresh(path: string, type: EResourceType) {
   if (type === "schema") {
     return loadSchemaAndUpdateLayout(path);
   } else {
-    return loadResourceAndUpdateEditor(path);
+    return loadResourceAndUpdateEditor(path, type);
   }
 }

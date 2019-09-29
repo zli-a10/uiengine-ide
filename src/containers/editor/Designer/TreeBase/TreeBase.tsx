@@ -8,8 +8,8 @@ import { loadFileAndRefresh } from "../../../../helpers";
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
   const { setContent } = useContext(IDEEditorContext);
-  const { tree } = props;
-  const [expandKeys, setExpandKeys] = useState<string[]>([]);
+  const { tree, openKeys } = props;
+  const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
   const onExpand = useCallback((expandKeys: string[]) => {
     setExpandKeys(expandKeys);

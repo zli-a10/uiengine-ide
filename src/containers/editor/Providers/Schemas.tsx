@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo, useContext, useCallback } from "react";
 import _ from "lodash";
 import { ILayoutSchema } from "uiengine/typings";
 import { SchemasContext, IDEEditorContext } from "../../Context";
@@ -9,17 +9,23 @@ export const Schemas = (props: any) => {
   const [schema, setSchema] = useState();
   // for showing
   const [currentData, setCurrentData] = useState();
+  const onSetCurrentData = useCallback((data: IResourceTreeNode) => {
+    setCurrentData(data);
+    const { _parent_, children, ...rest } = data;
+    localStorage["currentEditNode"] = JSON.stringify(rest);
+  }, []);
+
   const [selectedKeys, setSelectedKeys] = useState([]);
   const schemasContextValue = useMemo<ISchemasContext>(
     () => ({
       currentData,
-      setCurrentData: (data: any) => {
-        setCurrentData(data);
+      setCurrentData: (data: IResourceTreeNode) => {
+        onSetCurrentData(data);
       },
       selectedKeys,
       setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
         if (treeNode) {
-          setCurrentData(treeNode);
+          onSetCurrentData(treeNode);
         }
         let keys: any = _.clone(selectedKeys);
         if (_.isArray(key)) {
