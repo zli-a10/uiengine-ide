@@ -13,7 +13,10 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
     const label: string = uiNode.dataNode.getSchema("label");
     _.set(uiNode, "props.label", label);
   }
-  _.set(uiNode, "props.type", inputType);
+
+  if (!_.has(uiNode, 'props.type')) {
+    _.set(uiNode, "props.type", inputType);
+  }
 };
 
 export const elementType: IPlugin = {
