@@ -23,7 +23,7 @@ export const event = (
     if (theEventIndex === -1) {
       eventsSchema.push(dataRef);
     } else {
-      if (!_.get(dataRef, "action")) {
+      if (!_.get(dataRef, "listener")) {
         // remove one
         eventsSchema.splice(theEventIndex, 1);
       } else {
