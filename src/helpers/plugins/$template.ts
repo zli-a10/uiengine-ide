@@ -19,11 +19,21 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   // parse $$template
   if (_.has(uiNode.schema, "$template")) {
     const path = _.get(uiNode.schema, "$template");
-    _.unset(uiNode.schema, "$template");
-    _.set(uiNode.schema, "$$template", path);
-    const schema = fileLoader.loadFile(path, "schema");
-    _.merge(uiNode.schema, schema);
-    await uiNode.updateLayout();
+    const isSysTemplate = _.get(uiNode.schema, "isSysTemplate");
+    try {
+      let schema = await fileLoader.loadFile(path, "schema", isSysTemplate);
+      if (!schema) {
+        schema = {
+          component: "div"
+        };
+      }
+      _.merge(uiNode.schema, schema);
+      _.unset(uiNode.schema, "$template");
+      _.set(uiNode.schema, "$$template", path);
+      await uiNode.updateLayout();
+    } catch (e) {
+      console.warn(e.message);
+    }
   }
 };
 

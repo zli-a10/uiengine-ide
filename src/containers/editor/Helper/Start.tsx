@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import _ from "lodash";
-import { Button, Icon } from "antd";
+import { Icon } from "antd";
 import Tour from "reactour";
 // import steps from "./steps";
 const timeout = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -11,7 +11,7 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             <strong>Schemas</strong> has two parts,
             <ol>
               <li>
@@ -24,8 +24,8 @@ const steps = [
                 directly, we can manully create them or use DnD to create them
               </li>
             </ol>
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Try to
             <ol>
               <li>
@@ -37,7 +37,7 @@ const steps = [
                 as a schema template to reuse it
               </li>
             </ol>
-          </p>
+          </div>
         </div>
       );
     }
@@ -48,15 +48,15 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             <strong>Resources</strong> are source code loaded from your source
             code and stored back by Websocket, you can directly edit them on the
             browser.
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Expand any item, and click a
             Node, turns to right Code Editor, see the file source
-          </p>
+          </div>
         </div>
       );
     },
@@ -71,14 +71,14 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Components listed all the components you would like used to the
             project.
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Try to drag a component to the
             Drawingboard on the right
-          </p>
+          </div>
         </div>
       );
     }
@@ -89,15 +89,15 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             DataSources correspond to UIEngine's data schema, here we read all
             the datasources from the example datasources folder which served by
             the websocket server.
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Try to drag a Datasource(both
             tree folder and leaves) to the Drawingboard
-          </p>
+          </div>
         </div>
       );
     },
@@ -109,12 +109,12 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Drawingboard can help you build your GUI page layout, you can drag &
             drop resource from right panels(whatever Components, Datasource,
             Schemas).
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Drag and Drop Tips:
             <ol>
               <li>
@@ -129,7 +129,7 @@ const steps = [
                 can help us create the mockups faster
               </li>
             </ol>
-          </p>
+          </div>
         </div>
       );
     },
@@ -140,17 +140,17 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Drawingboard editing area, all the actions operated on the
             drawingboard will refresh the UISchema in time.
-          </p>
-          <p className="tip">
+          </div>
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Operation Tips:
             <ol>
               <li>Drag and Drop one element to another</li>
               <li>Click this item to select this item to edit</li>
             </ol>
-          </p>
+          </div>
         </div>
       );
     }
@@ -160,11 +160,11 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Element Tag helps us know the element's name, component, and
             dependency relations
-          </p>
-          <p className="describe">
+          </div>
+          <div className="describe">
             Operation Tips:
             <ol>
               <li>Mouse over the Element Tag to see full info</li>
@@ -174,11 +174,11 @@ const steps = [
               </li>
               <li>Click the Element Tag to open Prop Window</li>
             </ol>
-            <p className="tip">
+            <div className="tip">
               <Icon type="bulb" className="icon" /> Now try to click the Element
               Tag to open Prop Window
-            </p>
-          </p>
+            </div>
+          </div>
         </div>
       );
     },
@@ -190,10 +190,10 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Properties manager window, work with Debug & Release Tabs, at this
             part.
-          </p>
+          </div>
           <i className="describe">
             Tips: If some elements label has words(Drag), it means you can drag
             any elements from Drawing board into that area, example, Dependency
@@ -201,7 +201,7 @@ const steps = [
             you can drag element from Drawing Board to select that element as
             dependency object.{" "}
           </i>
-          <p className="tip">
+          <div className="tip">
             <Icon type="bulb" className="icon" />
             <ol>
               <li>
@@ -216,7 +216,7 @@ const steps = [
                 test data
               </li>
             </ol>
-          </p>
+          </div>
         </div>
       );
     }
@@ -226,15 +226,15 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Any time when you edting and want to see the final render view,
             click this swicher to preview, the Drawing Board will update in
             time.
-          </p>
+          </div>
 
-          <p className="tip">
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Try to switch it now
-          </p>
+          </div>
         </div>
       );
     },
@@ -248,19 +248,19 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             Code Editor will sync source code from backend in time by connecting
             Websocket,
-          </p>
+          </div>
 
-          <p className="tip">
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Operation Tips:
             <ol>
               <li>Try to click a page schema from right Schemas Tab </li>
               <li>Try to click any source code from right Resources Tab </li>
               <li>Try to type some words on it... </li>
             </ol>
-          </p>
+          </div>
         </div>
       );
     },
@@ -271,13 +271,13 @@ const steps = [
   //   content: (params: any) => {
   //     return (
   //       <div className="tour-tips">
-  //         <p className="describe">
+  //         <div className="describe">
   //           Split the Edit region into two parts, this is very helpful to edit a
   //           page schema, edit on the Code Editor, and IDE will render the view
   //           in time on Drawing Board
-  //         </p>
+  //         </div>
 
-  //         <p className="tip">
+  //         <div className="tip">
   //           <Icon type="bulb" className="icon" /> Operation Tips:
   //           <ol>
   //             <li>
@@ -286,7 +286,7 @@ const steps = [
   //             </li>
   //             <li>Try to open any file from Resources Tab </li>
   //           </ol>
-  //         </p>
+  //         </div>
   //       </div>
   //     );
   //   },
@@ -297,7 +297,7 @@ const steps = [
     content: (params: any) => {
       return (
         <div className="tour-tips">
-          <p className="describe">
+          <div className="describe">
             All the operations you have done are tempary stored on localStorage,
             if you have confirmd they are final result, click the save icon to
             back up to your working folder, the working folder on your disk
@@ -305,12 +305,12 @@ const steps = [
             <br />
             Caution: After all contents you selected are being saved, the
             localStorage will be cleaned.
-          </p>
+          </div>
 
-          <p className="tip">
+          <div className="tip">
             <Icon type="bulb" className="icon" /> Try to click it, and check
             whether all your contents stored on your working directory.
-          </p>
+          </div>
         </div>
       );
     }

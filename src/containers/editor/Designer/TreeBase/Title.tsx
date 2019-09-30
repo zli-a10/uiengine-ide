@@ -16,11 +16,12 @@ export const Title = (props: any) => {
   });
 
   // dnd
-  const templateSchema = {
-    $template: dataRef._path_ // this will be parsed on ide's template parser
-  };
   let drag;
-  if (!_.isEmpty(templateSchema)) {
+  if (!_.isEmpty(dataRef._path_)) {
+    const templateSchema = {
+      $template: dataRef._path_, // this will be parsed on ide's template parser
+      isSysTemplate: dataRef.isTemplate //system preserved template path
+    };
     const uinode = { schema: templateSchema };
     [, drag] = useDrag({
       item: {
