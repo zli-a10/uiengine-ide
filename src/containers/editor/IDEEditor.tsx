@@ -34,6 +34,7 @@ const WindowSizeDown = (props: any) => {
     </Dropdown>
   );
 };
+import { Start } from "./Helper";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
@@ -168,6 +169,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                 <PropManager {...props} />
               </div>
             </Main>
+            <Start />
+
             {/* </Providers.Components>
             </Providers.Props>
           </Providers.Schemas> */}
