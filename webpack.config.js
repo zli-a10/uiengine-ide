@@ -81,7 +81,7 @@ const config = {
   externals: {
     react: 'react',
     'react-dom': 'react-dom',
-    'uiengine': 'uiengine'
+    uiengine: 'uiengine'
   }
 };
 
