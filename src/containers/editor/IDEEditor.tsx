@@ -30,6 +30,7 @@ const WindowSizeDown = (props: any) => {
         type="layout"
         style={{ marginRight: "20px" }}
         onClick={onSplitWindow}
+        className="splitter"
       />
     </Dropdown>
   );
