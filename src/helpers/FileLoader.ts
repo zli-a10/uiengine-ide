@@ -68,7 +68,7 @@ export class FileLoader implements IFileLoader {
   }
 
   loadFileTree(type: EResourceType = "schema", isTemplate?: boolean) {
-    const newPromise = new Promise((resolve: any) => {
+    const promise = new Promise((resolve: any) => {
       if (!isTemplate) {
         const fileTreeJson = this.storage.get(`file_tree.${type}`);
         let result: any = [];
@@ -78,7 +78,6 @@ export class FileLoader implements IFileLoader {
           } catch (e) {
             result = [];
           }
-          // result = _.unionBy(localTree.children, localTree, "name");
         }
         const promise = commands.getFileList(type, isTemplate);
         promise.then((tree: any) => {
@@ -98,24 +97,35 @@ export class FileLoader implements IFileLoader {
         });
       }
     });
-    return newPromise;
+    return promise;
   }
 
   loadFile(path: string, type: EResourceType = "schema", isTemplate?: boolean) {
     const newPromise = new Promise((resolve: any) => {
-      const promise = commands.readFile(type, path, isTemplate);
-      promise.then((data: any) => {
-        let content = this.storage.get(`${type}/${path}`);
-        if (content) data = content;
-        if ((type === "schema" || type === "datasource") && _.isString(data)) {
-          try {
-            data = JSON.parse(data);
-          } catch (e) {
-            console.warn(e);
-          }
+      let content = this.storage.get(`${type}/${path}`);
+      if (content) {
+        try {
+          content = JSON.parse(content);
+        } catch {
+          content = [];
         }
-        resolve(data);
-      });
+        resolve(content);
+      } else {
+        const promise = commands.readFile(type, path, isTemplate);
+        promise.then((data: any) => {
+          if (
+            (type === "schema" || type === "datasource") &&
+            _.isString(data)
+          ) {
+            try {
+              data = JSON.parse(data);
+            } catch (e) {
+              console.warn(e);
+            }
+          }
+          resolve(data);
+        });
+      }
     });
 
     return newPromise;

@@ -81,6 +81,8 @@ export const saveSchemaToResourceNode = (
     type,
     name,
     title: value,
+    value: path,
+    key: path,
     _path_: path,
     _key_: path,
     _status_: "changed",

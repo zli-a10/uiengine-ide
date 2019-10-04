@@ -53,16 +53,31 @@ export const ChildrenComponent = (props: any) => {
       return (e: any) => {
         e.stopPropagation();
         // console.log(path, " is clicked");
-        const schema = fileLoader.loadFile(path, "schema");
-        changeSchemas(schema);
-        changeVisible(true);
+        const schemaProsmise = fileLoader.loadFile(path, "schema");
+        schemaProsmise.then((schema: any) => {
+          changeSchemas(schema);
+          changeVisible(true);
+        });
         return false;
       };
     },
     [schemas]
   );
-  const tree = fileLoader.loadFileTree("schema");
-  const memoTree = useMemo(() => [formatTree(_.cloneDeep(tree))], [tree]);
+  // const treePromise = fileLoader.loadFileTree("schema");
+  const [memoTree, setMemoTree] = useState([]);
+  // treePromise.then((tree: any) => {
+  //   let fileTreeJson = localStorage[`file_tree.schema`];
+  //   if (fileTreeJson) {
+  //     try {
+  //       fileTreeJson = JSON.parse(fileTreeJson);
+  //     } catch (e) {
+  //       fileTreeJson = [];
+  //     }
+  //   }
+  //   const formattedTree = formatTree(_.cloneDeep(fileTreeJson));
+  //   setMemoTree(formattedTree);
+  // });
+  // const memoTree = useMemo(() => [formatTree(_.cloneDeep(tree))], [tree]);
 
   const { onChange, value, uinode, disabled } = props;
   // onchange tree item
@@ -76,6 +91,18 @@ export const ChildrenComponent = (props: any) => {
   // listen editNode
   useEffect(() => {
     selectItem(value);
+
+    // should also load from fileLoader
+    let fileTreeJson = localStorage[`file_tree.schema`];
+    if (fileTreeJson) {
+      try {
+        fileTreeJson = JSON.parse(fileTreeJson);
+      } catch (e) {
+        fileTreeJson = [];
+      }
+    }
+    const formattedTree = formatTree(_.cloneDeep(fileTreeJson));
+    setMemoTree(formattedTree);
   }, [value, uinode]);
 
   return (

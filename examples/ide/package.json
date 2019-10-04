@@ -83,7 +83,7 @@
     "build": "node --max-old-space-size=6096 scripts/build.js",
     "test": "node --max-old-space-size=6096 scripts/test.js",
     "server": "tsc --allowSyntheticDefaultImports --project ./server && webpack --watch --config ./dist/config",
-    "all": "concurrently \"npm run start\" \"npm run start\""
+    "all": "concurrently \"npm run server\" \"npm run start\""
   },
   "eslintConfig": {
     "extends": "react-app"

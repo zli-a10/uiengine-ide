@@ -21,7 +21,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   const $$children = _.get(uiNode.schema, "$$children");
   // const $children = _.get(uiNode.schema, "$children");
   if ($$children) {
-    const schema = fileLoader.loadFile($$children, "schema");
+    const schema = await fileLoader.loadFile($$children, "schema");
     if (!_.isArray(schema.children)) return;
     _.set(uiNode, "schema.$children", schema.children);
     _.set(uiNode, "schema.$_children", $$children);
