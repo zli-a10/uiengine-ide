@@ -8,6 +8,7 @@
 @import "./CodeEditor.less";
 @import "../DataSource/styles/DataSource.less";
 @import "./widgets.less";
+
 // @import "../prop/styles/index.less";
 body {
   background: #333;
@@ -26,6 +27,7 @@ body {
   padding-top: 5px;
   z-index: 1000;
   background-color: #ececec;
+
   &:hover {
     background: #ececec;
     width: 36px;
@@ -34,9 +36,11 @@ body {
 
 .tabs {
   display: flex;
+
   .tab {
     flex: 1;
     padding: 10px;
+
     &.on {
       border-bottom: 3px solid #015478;
     }
@@ -52,6 +56,7 @@ body {
     display: none;
     margin-left: 10px;
   }
+
   &:hover {
     svg {
       display: inline-block;
@@ -66,6 +71,7 @@ body {
     margin-left: 5px;
   }
 }
+
 #root {
   height: 100%;
 }
@@ -73,4 +79,22 @@ body {
 .uiengine-container {
   min-height: 200px;
   background: #ececec;
+}
+
+
+.tour-tips {
+  .icon {
+    color: #ff9800;
+    font-size: 20px;
+    margin-top: 12px;
+  }
+
+  .tip {
+    font-size: 18px;
+    color: #4096ff;
+  }
+
+  .describe {
+    font-size: 16px;
+  }
 }

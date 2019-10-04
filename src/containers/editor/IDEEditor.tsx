@@ -30,10 +30,12 @@ const WindowSizeDown = (props: any) => {
         type="layout"
         style={{ marginRight: "20px" }}
         onClick={onSplitWindow}
+        className="splitter"
       />
     </Dropdown>
   );
 };
+import { Start } from "./Helper";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
@@ -168,6 +170,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                 <PropManager {...props} />
               </div>
             </Main>
+            <Start />
+
             {/* </Providers.Components>
             </Providers.Props>
           </Providers.Schemas> */}

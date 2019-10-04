@@ -24,8 +24,9 @@ export const TreeBase = (props: any) => {
     if (!_.has(treeNode, "node.props.dataRef._editing_")) {
       const dataRef = _.get(treeNode, "node.props.dataRef");
       const type = _.get(dataRef, "type", "schema");
+      const isTemplate = _.get(dataRef, "isTemplate", false);
       if (keys.length) {
-        const promise = loadFileAndRefresh(keys[0], type);
+        const promise = loadFileAndRefresh(keys[0], type, isTemplate);
         promise.then((data: any) => {
           setContent(data);
         });

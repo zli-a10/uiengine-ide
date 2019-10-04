@@ -349,12 +349,12 @@ const getPluginSubTree = (key: string, plugins: any) => {
   return result;
 };
 
-export function loadSchemaAndUpdateLayout(path: string) {
+export function loadSchemaAndUpdateLayout(path: string, isTemplate: boolean) {
   const fileLoader = FileLoader.getInstance();
   const versionControl = VersionControl.getInstance();
   versionControl.clearHistories();
   fileLoader.editingFile = path;
-  const schemaPromise = fileLoader.loadFile(path, "schema");
+  const schemaPromise = fileLoader.loadFile(path, "schema", isTemplate);
   schemaPromise.then((schema: any) => {
     if (_.isString(schema)) {
       try {
@@ -373,9 +373,13 @@ export function loadSchemaAndUpdateLayout(path: string) {
   return schemaPromise;
 }
 
-export function loadResourceAndUpdateEditor(path: string, type: EResourceType) {
+export function loadResourceAndUpdateEditor(
+  path: string,
+  type: EResourceType,
+  isTemplate: boolean
+) {
   const fileLoader = FileLoader.getInstance();
-  const promise = fileLoader.loadFile(path, type);
+  const promise = fileLoader.loadFile(path, type, isTemplate);
   return promise;
 }
 
@@ -384,10 +388,14 @@ export function loadResourceAndUpdateEditor(path: string, type: EResourceType) {
  * @param path
  * @param type
  */
-export function loadFileAndRefresh(path: string, type: EResourceType) {
+export function loadFileAndRefresh(
+  path: string,
+  type: EResourceType,
+  isTemplate: boolean
+) {
   if (type === "schema") {
-    return loadSchemaAndUpdateLayout(path);
+    return loadSchemaAndUpdateLayout(path, isTemplate);
   } else {
-    return loadResourceAndUpdateEditor(path, type);
+    return loadResourceAndUpdateEditor(path, type, isTemplate);
   }
 }

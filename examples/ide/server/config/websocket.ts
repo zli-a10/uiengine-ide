@@ -7,10 +7,10 @@ export default {
     listener: "./src/listeners"
   },
   templates: {
-    schema: "./src/templates/schemas",
-    plugin: "./src/templates/plugins",
-    component: "./src/templates/components",
-    datasource: "./src/templates/datasources",
-    listener: "./src/templates/listeners"
+    schema: "./public/templates/ui",
+    plugin: "./public/templates/plugins",
+    component: "./public/templates/components",
+    datasource: "./public/templates/data",
+    listener: "./public/templates/listeners"
   }
 };
