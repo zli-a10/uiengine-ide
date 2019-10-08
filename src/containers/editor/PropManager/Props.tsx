@@ -23,7 +23,8 @@ export const Props: React.FC = (props: any) => {
     schema
   } = componentInfo;
 
-  let allEvents, restSchema;
+  let allEvents = [],
+    restSchema;
   if (schema) {
     const { events, ...rest } = schema;
     allEvents = events;

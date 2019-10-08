@@ -17,10 +17,13 @@ export const SubComponent = (props: any) => {
   }, [uinode, data]);
 
   return (
-    <Form.Item label={formatTitle(name)} colon={false}>
-      <Switch defaultChecked={showSub} onChange={onChangeSub} />
-      {showSub
-        ? typeSchema["sub"].map((restSchema: any) =>
+    <>
+      <Form.Item label={formatTitle(name)} colon={false}>
+        <Switch defaultChecked={showSub} onChange={onChangeSub} />
+      </Form.Item>
+      {showSub ? (
+        <div className="sub-options">
+          {typeSchema["sub"].map((restSchema: any) =>
             Object.entries(restSchema).map((entry: any) => {
               return (
                 <PropItem
@@ -33,8 +36,9 @@ export const SubComponent = (props: any) => {
                 />
               );
             })
-          )
-        : null}
-    </Form.Item>
+          )}
+        </div>
+      ) : null}
+    </>
   );
 };

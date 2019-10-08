@@ -86,7 +86,8 @@ export function getTreeRoot(treeRoot: any) {
 }
 
 export function formatTitle(wording: string) {
-  const words = _.words(wording).map(word => _.upperFirst(word));
+  let lastWord = _.last(wording.split("."));
+  const words = _.words(lastWord).map(word => _.upperFirst(word));
   return words.join(" ");
 }
 

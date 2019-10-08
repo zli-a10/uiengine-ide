@@ -11,3 +11,5 @@ export * from "./DatasourceComponent";
 export * from "./ChildrenComponent";
 export * from "./LayoutComponent";
 export * from "./SubComponent";
+export * from "./TemplateComponent";
+export * from "./DatatargetComponent";

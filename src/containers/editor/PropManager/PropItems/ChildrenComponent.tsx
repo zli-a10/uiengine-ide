@@ -137,7 +137,7 @@ export const ChildrenComponent = (props: any) => {
         </Row>
       </Form.Item>
       <Modal
-        title="Basic Modal"
+        title="View UI Schema"
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}

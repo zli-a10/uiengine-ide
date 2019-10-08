@@ -33,15 +33,15 @@ export const PropManager: React.FC<IPropManager> = props => {
   }, [editNode]);
 
   const [minimize, setMinimize] = useState(false);
-  useEffect(() => {
-    const propManager = document.getElementById("prop-manager");
-    if (propManager) {
-      propManager.ondblclick = (e: any) => {
-        e.stopPropagation();
-        setMinimize(!minimize);
-      };
-    }
-  }, [minimize]);
+  // useEffect(() => {
+  //   const propManager = document.getElementById("prop-manager");
+  //   if (propManager) {
+  //     propManager.ondblclick = (e: any) => {
+  //       e.stopPropagation();
+  //       setMinimize(!minimize);
+  //     };
+  //   }
+  // }, [minimize]);
 
   return !propsCollapsed ? (
     <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">

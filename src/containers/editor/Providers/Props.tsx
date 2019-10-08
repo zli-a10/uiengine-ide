@@ -12,8 +12,8 @@ export const Props = (props: any) => {
       setHelp: (help: string) => {},
       time,
       refresh: () => {
-        updateTime(Date.now());
-        console.log(time);
+        // updateTime(Date.now());
+        // console.log(time);
       }
     }),
     [time]

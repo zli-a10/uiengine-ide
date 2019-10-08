@@ -12,25 +12,31 @@ export const EventComponent = (props: any) => {
   let options = {};
   let listenerName = value;
   if (_.isObject(listenerName)) {
-    listenerName = _.get(listenerName, "listener", "");
+    listenerName = _.get(listenerName, "listener");
     options = _.get(listenerName, "defaultParams");
   }
+  console.log(props, "props");
   // load listeners
   const listeners = useMemo(() => {
     const listenerManager = ListenerManager.getInstance();
-    return listenerManager.getListenerConfig("");
+    const list = listenerManager.getListenerConfig("");
+    return { None: {}, ...list };
   }, []);
 
   const [listener, changeListener] = useState(listenerName);
-  const [schema, changeSchema] = useState(Date.now());
-  const onChangeListener = useCallback((name: any) => {
-    const entry = listeners[name];
+  const [schema, changeSchema] = useState();
+  const onChangeListener = useCallback((listenerName: any) => {
+    const entry = listeners[listenerName];
     if (entry) {
       const { name: entryName, describe } = entry;
-      changeListener(entryName);
       changeSchema(describe);
-      onChange({ event: name, listener: entryName });
+      // onChange({ event: name, listener: entryName });
+    } else {
+      // onChange({ event: name });
+      changeSchema({});
     }
+
+    changeListener(listenerName);
   }, []);
 
   useEffect(() => {
@@ -38,19 +44,26 @@ export const EventComponent = (props: any) => {
   }, [listenerName]);
 
   return (
-    <Form.Item label={formatTitle(name)}>
-      <Select value={listener} onChange={onChangeListener} disabled={disabled}>
-        {_.entries(listeners).map((entry: any) => {
-          const [name] = entry;
-          return (
-            <Option value={name} key={name}>
-              {name}
-            </Option>
-          );
-        })}
-      </Select>
+    <>
+      <Form.Item label={formatTitle(name)}>
+        <Select
+          value={listener}
+          onChange={onChangeListener}
+          disabled={disabled}
+          defaultValue={"None"}
+        >
+          {_.entries(listeners).map((entry: any) => {
+            const [name] = entry;
+            return (
+              <Option value={name} key={name}>
+                {name}
+              </Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
       {listener && schema ? (
-        <div className="event-options">
+        <div className="sub-options event-options">
           {Object.entries(schema).map((entry: any) => {
             return (
               <PropItem
@@ -67,6 +80,6 @@ export const EventComponent = (props: any) => {
           })}
         </div>
       ) : null}
-    </Form.Item>
+    </>
   );
 };
