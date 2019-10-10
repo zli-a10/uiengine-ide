@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, useContext } from "react";
 import * as _ from "lodash";
 import { TreeSelect, Icon, Input, Col, Button } from "antd";
-
+import { convertNodes } from "../../../helpers";
 import { GlobalContext } from "../../Context";
 
 const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
@@ -14,23 +14,6 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   const [nodes, setNodes] = useState([] as any[]);
   const [saveSearchText, setSaveSearchText] = useState("");
-
-  const covertNodes = (nodes: any[], nodeKeys: string[] = []) => {
-    return nodes.map((node: any) => {
-      const newNodeKeys = _.cloneDeep(nodeKeys);
-      let value = _.get(node, "datasource.source");
-      if (!value) {
-        value = `${newNodeKeys.join(".")}.${node.name}`;
-      }
-      node.value = value;
-      newNodeKeys.push(node.name);
-      node.key = newNodeKeys.join(".");
-      if (node.children) {
-        node.children = covertNodes(node.children, newNodeKeys);
-      }
-      return node;
-    });
-  };
 
   // const onAddFields = useCallback(
   //   async (dataRef: any) => {
@@ -107,7 +90,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
       ) {
         let newNodes = (await getDataSource(searchText)) || [];
 
-        newNodes = covertNodes(newNodes);
+        newNodes = convertNodes(newNodes);
         setNodes(newNodes);
         setSaveSearchText(searchText as string);
       }

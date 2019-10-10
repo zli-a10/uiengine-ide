@@ -58,13 +58,13 @@ export function cleanSchema(schema: any, exporting: boolean = false) {
 
 export function getActiveUINode(
   schemaOnly: boolean = false,
-  returnOrigin: boolean = false
+  copySchema: boolean = false
 ) {
   const nodeController = NodeController.getInstance();
   const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
   if (schemaOnly) {
     let result = (uiNode as IUINode).schema;
-    if (!returnOrigin) {
+    if (!copySchema) {
       // if don't clone the schema, once the schema has $$template or $$children
       // that area will be removed when refresh other target parent
       result = _.cloneDeep(result);
@@ -72,6 +72,107 @@ export function getActiveUINode(
     return cleanSchema(result);
   }
   return uiNode;
+}
+
+export function getDataSourceDomains(schema: any = {}) {
+  if (_.isEmpty(schema)) {
+    schema = getActiveUINode(true);
+  }
+
+  let results: any = [];
+  const datasource = _.get(schema, "datasource", "");
+  let formattedSource = getDataSource(datasource, true);
+  let domain = "unknown";
+  if (formattedSource) {
+    let sourceSegs: any = [];
+    if (formattedSource.indexOf(":") > -1) {
+      sourceSegs = formattedSource.split(":");
+    } else {
+      sourceSegs = formattedSource.split(".");
+    }
+
+    results = [];
+    domain = sourceSegs.shift();
+    let name;
+
+    if (results.indexOf(domain) === -1) {
+      name = domain;
+      results.push(name);
+    }
+  }
+  if (_.isArray(schema.children)) {
+    schema.children.forEach((s: any) => {
+      results = _.union(results, getDataSourceDomains(s));
+    });
+  }
+  return results;
+}
+
+export function getDataSourceFields(schema: any = {}) {
+  if (_.isEmpty(schema)) {
+    schema = getActiveUINode(true);
+  }
+
+  let results: any = {};
+  const datasource = _.get(schema, "datasource", "");
+  let formattedSource = getDataSource(datasource, true);
+  let domain = "";
+  if (formattedSource) {
+    let sourceSegs: any = [];
+    if (formattedSource.indexOf(":") > -1) {
+      sourceSegs = formattedSource.split(":");
+    } else {
+      sourceSegs = formattedSource.split(".");
+    }
+
+    domain = sourceSegs.shift();
+    const fieldName = sourceSegs.join(".");
+    if (!results[domain]) results[domain] = [];
+    results[domain].push(fieldName);
+  }
+
+  if (_.isArray(schema.children)) {
+    schema.children.forEach((s: any) => {
+      const cResults = getDataSourceFields(s);
+      if (domain) {
+        if (results[domain] && cResults[domain]) {
+          results[domain] = results[domain].concat(cResults[domain]);
+        } else {
+          results = _.assign(results, cResults);
+        }
+      } else {
+        results = cResults;
+      }
+    });
+  }
+
+  return results;
+}
+
+export function convertNodes(
+  nodes: any[],
+  nodeKeys: string[] = [],
+  shortFormat: boolean = false
+) {
+  return nodes.map((node: any) => {
+    const newNodeKeys = _.cloneDeep(nodeKeys);
+    let value = _.get(node, "datasource.source");
+    if (!value) {
+      value = `${newNodeKeys.join(".")}.${node.name}`;
+    }
+    if (!shortFormat) {
+      node.value = value;
+    } else {
+      node.value = node.name;
+    }
+    node.title = node.name;
+    newNodeKeys.push(node.name);
+    node.key = newNodeKeys.join(".");
+    if (node.children) {
+      node.children = convertNodes(node.children, newNodeKeys);
+    }
+    return node;
+  });
 }
 
 export function getTreeRoot(treeRoot: any) {
@@ -86,9 +187,12 @@ export function getTreeRoot(treeRoot: any) {
 }
 
 export function formatTitle(wording: string) {
-  let lastWord = _.last(wording.split("."));
-  const words = _.words(lastWord).map(word => _.upperFirst(word));
-  return words.join(" ");
+  if (_.isString(wording)) {
+    let lastWord = _.last(wording.split("."));
+    const words = _.words(lastWord).map(word => _.upperFirst(word));
+    return words.join(" ");
+  }
+  return "";
 }
 
 /**

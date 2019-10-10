@@ -106,12 +106,28 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     localStorage["drawingBoardLayout"] = key;
   }, []);
 
+  // show start ?
+  const [showGuide, setShowGuide] = useState(false);
   useEffect(() => {
     if (localStorage["drawingBoardLayout"]) {
       onMenuClick({ key: localStorage["drawingBoardLayout"] });
     }
     setSpitted(!!localStorage["drawingBoardLayout"]);
-  }, [localStorage["drawingBoardLayout"]]);
+
+    // show guide
+    const showGuideStatus =
+      localStorage["showGuide"] === undefined
+        ? true
+        : localStorage["showGuide"] === "false"
+        ? false
+        : true;
+    setShowGuide(showGuideStatus);
+  }, [localStorage["drawingBoardLayout"], localStorage["showGuide"]]);
+
+  const onCloseGuide = useCallback(() => {
+    setShowGuide(false);
+    localStorage["showGuide"] = false;
+  }, []);
 
   return (
     <ErrorBoundary>
@@ -170,7 +186,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                 <PropManager {...props} />
               </div>
             </Main>
-            <Start />
+            <Start onClose={onCloseGuide} opened={showGuide} />
 
             {/* </Providers.Components>
             </Providers.Props>

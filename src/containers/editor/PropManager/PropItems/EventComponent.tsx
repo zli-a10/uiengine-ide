@@ -8,14 +8,19 @@ import { formatTitle } from "../../../../helpers";
 
 const Option = Select.Option;
 export const EventComponent = (props: any) => {
-  const { name, value, onChange, disabled, data, uinode } = props;
-  let options = {};
-  let listenerName = value;
-  if (_.isObject(listenerName)) {
-    listenerName = _.get(listenerName, "listener");
-    options = _.get(listenerName, "defaultParams");
+  const { name, onChange, disabled, uinode } = props;
+  const events = _.get(uinode, `schema.props.$events`, []);
+  const eventIndex = _.findIndex(events, {
+    event: name
+  });
+  let event: any;
+  if (eventIndex > -1) {
+    event = events[eventIndex];
   }
-  console.log(props, "props");
+
+  let listenerName = _.get(event, "listener");
+  // console.log(event, eventIndex, "event");
+
   // load listeners
   const listeners = useMemo(() => {
     const listenerManager = ListenerManager.getInstance();
@@ -24,24 +29,52 @@ export const EventComponent = (props: any) => {
   }, []);
 
   const [listener, changeListener] = useState(listenerName);
-  const [schema, changeSchema] = useState();
-  const onChangeListener = useCallback((listenerName: any) => {
-    const entry = listeners[listenerName];
-    if (entry) {
-      const { name: entryName, describe } = entry;
-      changeSchema(describe);
-      // onChange({ event: name, listener: entryName });
-    } else {
-      // onChange({ event: name });
-      changeSchema({});
-    }
+  const [describe, changeDescribe] = useState();
+  const onChangeListener = useCallback(
+    (listenerName: any) => {
+      const entry = listeners[listenerName];
+      if (entry) {
+        const { name: entryName, describe } = entry;
+        if (_.isEmpty(event)) {
+          const eventSchema = { event: name, listener: entryName };
+          events.push(eventSchema);
+        } else {
+          if (listenerName === "None" && eventIndex > -1) {
+            events.splice(eventIndex, 1);
+          } else {
+            event.listener = entryName;
+          }
+        }
+        changeDescribe(describe);
+        // console.log(_.get(uinode, `schema.props.$events`, []));
+        onChange(events);
+      } else if (listenerName === "None" && eventIndex > -1) {
+        events.splice(eventIndex, 1);
+        changeDescribe({});
+        onChange(events);
+      }
+      changeListener(listenerName);
+    },
+    [eventIndex]
+  );
 
-    changeListener(listenerName);
-  }, []);
-
+  const onChangeEvent = useCallback(
+    (event: any) => {
+      events[eventIndex] = event;
+      onChange(events);
+    },
+    [eventIndex]
+  );
+  // const [eventOptions, setEventOptions] = useState({});
   useEffect(() => {
     changeListener(listenerName);
-  }, [listenerName]);
+    // setEventOptions(event);
+    // schema
+    const entry = listeners[listenerName];
+    if (_.has(entry, "describe")) {
+      changeDescribe(entry.describe);
+    }
+  }, [event]);
 
   return (
     <>
@@ -62,19 +95,21 @@ export const EventComponent = (props: any) => {
           })}
         </Select>
       </Form.Item>
-      {listener && schema ? (
+      {listener && describe ? (
         <div className="sub-options event-options">
-          {Object.entries(schema).map((entry: any) => {
+          {Object.entries(describe).map((entry: any) => {
+            const [name, listenerSchema] = entry;
             return (
               <PropItem
                 section="event"
-                name={`options.${entry[0]}`}
-                schema={entry[1]}
-                key={`key-${entry[0]}`}
+                name={name}
+                schema={listenerSchema}
+                key={`key-${name}`}
                 uinode={uinode}
-                dataRef={value}
+                dataRef={event}
                 event={name}
-                data={_.get(options, `${entry[0]}`)}
+                onChangeEvent={onChangeEvent}
+                data={_.get(event, "listener")}
               />
             );
           })}

@@ -317,15 +317,14 @@ const steps = [
   }
 ];
 
-export const Start: React.FC = (props: any) => {
-  const [tour, setTour] = useState(true);
+// interface IStartGuide {
+//   onClose: () => void;
+//   opened: boolean;
+// }
 
+export const Start = (props: any) => {
+  const { onClose, opened } = props;
   return (
-    <Tour
-      steps={steps}
-      isOpen={tour}
-      onRequestClose={() => setTour(false)}
-      rounded={12}
-    />
+    <Tour steps={steps} isOpen={opened} onRequestClose={onClose} rounded={12} />
   );
 };

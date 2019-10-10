@@ -137,7 +137,7 @@ export const Props: React.FC = (props: any) => {
           </Form>
         </Panel>
         {!_.isEmpty(allEvents) ? (
-          <Panel header="Events" key="events">
+          <Panel header="Events" key="events" extra={genExtra()}>
             <Form {...formItemLayout}>
               {allEvents.map((name: any) => (
                 <PropItem
