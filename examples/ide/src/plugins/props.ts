@@ -21,39 +21,34 @@ function getDefaultEventConfig(component: string, type: string) {
     listener: "updateData"
   };
 
-  switch (component) {
-    case "a10:FormItem":
-      if (_.isString(type)) {
-        if (type === "input-number") {
-          type = "InputNumber";
-        }
-        if (type.indexOf(":") === -1) {
-          type = "antd:" + _.upperFirst(type);
-        }
+  if (_.isString(type)) {
+    if (type === "input-number") {
+      type = "InputNumber";
+    }
+    if (type.indexOf(":") === -1) {
+      type = "antd:" + _.upperFirst(type);
+    }
 
-        if (type.includes("antd:")) {
-          switch (true) {
-            case type === "antd:Input":
-            case type.includes("antd:Input."):
-            case type === "antd:Checkbox":
-            case type === "antd:Radio.Group":
-              return [onChangeWithEvent];
-            case type === "antd:InputNumber":
-            case type === "antd:Checkbox.Group":
-            case type === "antd:Switch":
-            case type === "antd:Select":
-              return [onChangeWithValue];
-            default:
-              return [];
-          }
-        } else {
+    if (type.includes("antd:")) {
+      switch (true) {
+        case type === "antd:Input":
+        case type.includes("antd:Input."):
+        case type === "antd:Checkbox":
+        case type === "antd:Radio.Group":
+          return [onChangeWithEvent];
+        case type === "antd:InputNumber":
+        case type === "antd:Checkbox.Group":
+        case type === "antd:Switch":
+        case type === "antd:Select":
           return [onChangeWithValue];
-        }
+        default:
+          return [];
       }
-      break;
-    default:
-      break;
+    } else {
+      return [onChangeWithValue];
+    }
   }
+
   return [];
 }
 
@@ -67,9 +62,10 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
   const dataNode = uiNode.dataNode;
   // load label & type from data schema
   const dataLabel: string = dataNode.getSchema("label");
-  const inputType: string = dataNode.getSchema("type");
+  const inputType: string = dataNode.getSchema("type") || "input";
   // get data value
   const value = dataNode.data;
+  const valueKey = _.get(props, "$valueKey", "value");
   // get error validation info
   const error = dataNode.errorInfo;
 
@@ -78,7 +74,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
     key: uiNode.id,
     label: dataLabel,
     type: inputType,
-    value,
+    [valueKey]: value,
     error
   };
 
@@ -88,6 +84,9 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
     let {
       label = dataLabel,
       type = inputType,
+      $valueKey,
+      ide_droppable,
+      style,
       $events,
       ...rest
     } = props as any;
@@ -97,8 +96,11 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
       eventConfigs = $events;
     }
 
+    const layout: any = _.get(schema, "layout", {});
+    style = _.merge(style, layout);
+
     // assign props to result
-    result = { ...rest, ...result, label, type };
+    result = { ...rest, ...result, label, type, style };
   }
 
   // get default event configs
@@ -110,6 +112,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
   const manager = ListenerManager.getInstance();
   let eventFuncs = manager.getStaticEventProps(
     eventConfigs.map((config: IEventConfig) => {
+      // console.log(config);
       const {
         eventName,
         receiveParams,
@@ -142,5 +145,5 @@ export const props: IPlugin = {
   categories: ["ui.parser"],
   paramKeys: ["uiNode"],
   execution,
-  priority: 100
+  priority: 200
 };

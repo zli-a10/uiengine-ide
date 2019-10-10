@@ -11,7 +11,7 @@ export const EventComponent = (props: any) => {
   const { name, onChange, disabled, uinode } = props;
   const events = _.get(uinode, `schema.props.$events`, []);
   const eventIndex = _.findIndex(events, {
-    event: name
+    eventName: name
   });
   let event: any;
   if (eventIndex > -1) {
@@ -36,7 +36,7 @@ export const EventComponent = (props: any) => {
       if (entry) {
         const { name: entryName, describe } = entry;
         if (_.isEmpty(event)) {
-          const eventSchema = { event: name, listener: entryName };
+          const eventSchema = { eventName: name, listener: entryName };
           events.push(eventSchema);
         } else {
           if (listenerName === "None" && eventIndex > -1) {

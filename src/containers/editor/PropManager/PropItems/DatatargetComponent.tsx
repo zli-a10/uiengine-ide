@@ -93,31 +93,6 @@ const TargetItem = (props: any) => {
       </Form.Item>
       {dataSource ? (
         <>
-          <Form.Item label="Exclude Fields">
-            <Select
-              value={excludes}
-              onChange={changeItem("dataSource.exclude", setExcludes)}
-              mode="multiple"
-            >
-              <Select.Option value="">None</Select.Option>
-              {treeFields[dataSource].map((value: any, index: number) => (
-                <Select.Option value={value} key={index}>
-                  {value}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Schema">
-            <TreeSelect
-              allowClear
-              showSearch
-              value={schemaLineage}
-              treeData={schemas}
-              placeholder="Please select"
-              onChange={changeItem("dataSchema.lineage", setSchemaLineage)}
-            />
-          </Form.Item>
-
           <Form.Item label="Method">
             <Select
               value={schemaMethod}
@@ -130,6 +105,33 @@ const TargetItem = (props: any) => {
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+
+          <Form.Item label="Excludes">
+            <Select
+              value={excludes}
+              onChange={changeItem("dataSource.exclude", setExcludes)}
+              mode="multiple"
+            >
+              <Select.Option value="">None</Select.Option>
+              {treeFields[dataSource]
+                ? treeFields[dataSource].map((value: any, index: number) => (
+                    <Select.Option value={value} key={index}>
+                      {value}
+                    </Select.Option>
+                  ))
+                : null}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Schema">
+            <TreeSelect
+              allowClear
+              showSearch
+              value={schemaLineage}
+              treeData={schemas}
+              placeholder="Please select"
+              onChange={changeItem("dataSchema.lineage", setSchemaLineage)}
+            />
           </Form.Item>
 
           <Form.Item label="Depend On">
@@ -189,18 +191,19 @@ will generate following schema:
 export const DatatargetComponent = (props: any) => {
   const { schema, data, name, uinode, onChangeEvent, dataRef } = props;
 
-  // const _targets = _.get(dataRef, "target.targets", []);
+  // const _targets = _.get(dataRef, "defaultParams.target.targets", []);
   const [targets, setTargets] = useState([]);
 
   const [mode, setMode] = useState();
   const onChangeMode = useCallback(
     (value: boolean) => {
       if (value) {
-        _.set(dataRef, "target.mode", "sync");
+        _.set(dataRef, "defaultParams.target.mode", "sync");
       } else {
-        _.set(dataRef, "target.mode", "async");
+        _.set(dataRef, "defaultParams.target.mode", "async");
       }
       setMode(value);
+      // _.set(dataRef, "defaultParams", ["target"]);
       onChangeEvent(dataRef);
     },
     [targets]
@@ -221,7 +224,7 @@ export const DatatargetComponent = (props: any) => {
     (item: any) => {
       if (_.has(item, "dataSource")) {
         const newTargets = [];
-        const _targets = _.get(dataRef, "target.targets", []);
+        const _targets = _.get(dataRef, "defaultParams.target.targets", []);
         let findedIndex = -1;
         if (_targets.length) {
           _targets.forEach((data: any, index: any) => {
@@ -238,7 +241,7 @@ export const DatatargetComponent = (props: any) => {
         } else {
           newTargets[findedIndex] = item;
         }
-        _.set(dataRef, "target.targets", newTargets);
+        _.set(dataRef, "defaultParams.target.targets", newTargets);
         onChangeEvent(dataRef);
       }
     },
@@ -257,7 +260,7 @@ export const DatatargetComponent = (props: any) => {
             saveTargets.push(data);
           }
         });
-        _.set(dataRef, "target.targets", saveTargets);
+        _.set(dataRef, "defaultParams.target.targets", saveTargets);
         onChangeEvent(dataRef);
       };
     },
@@ -265,10 +268,10 @@ export const DatatargetComponent = (props: any) => {
   );
 
   useEffect(() => {
-    const _targets = _.get(dataRef, "target.targets", []);
+    const _targets = _.get(dataRef, "defaultParams.target.targets", []);
     setTargets(_targets);
 
-    const mode = _.get(dataRef, "target.mode");
+    const mode = _.get(dataRef, "defaultParams.target.mode");
     if (mode === "sync") {
       setMode(true);
     } else {
