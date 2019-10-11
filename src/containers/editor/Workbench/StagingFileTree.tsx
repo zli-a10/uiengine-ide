@@ -1,0 +1,51 @@
+import React, { useCallback, useState, useMemo, useEffect } from "react";
+import { Tree } from "antd";
+import { loadFileStatus } from "../../../helpers";
+
+const { TreeNode } = Tree;
+
+export const StagingFileTree = (props: any) => {
+  const { onChange } = props;
+
+  const onCheck = (checkedKeys: any, info: any) => {
+    onChange(checkedKeys);
+  };
+
+  const treeData = useMemo(() => {
+    const files = loadFileStatus();
+    onChange(Object.keys(files));
+    return files;
+  }, [localStorage.fileStatus]);
+
+  // useEffect(() => {
+  // }, [treeData]);
+
+  return (
+    <Tree
+      checkable
+      onCheck={onCheck}
+      defaultCheckedKeys={Object.keys(treeData)}
+    >
+      {Object.entries(treeData).map((entry: any) => {
+        const [type, files] = entry;
+        return (
+          <TreeNode title={type} key={type} dataRef={entry}>
+            {Object.entries(files).map((f: any) => {
+              const [file, status] = f;
+              return (
+                <TreeNode
+                  title={file}
+                  key={`${type}/${file}`}
+                  type={type}
+                  dataRef={f}
+                >
+                  ({status})
+                </TreeNode>
+              );
+            })}
+          </TreeNode>
+        );
+      })}
+    </Tree>
+  );
+};

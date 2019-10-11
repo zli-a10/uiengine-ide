@@ -5,7 +5,6 @@ import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
 import { FileLoader, getActiveUINode } from "../../../helpers";
 
-let debounced: any;
 export const CodeEditor: React.FC = (props: any) => {
   const { currentData } = useContext(SchemasContext);
   const { content, setContent } = useContext(IDEEditorContext);
@@ -66,7 +65,6 @@ export const CodeEditor: React.FC = (props: any) => {
   const onEditorChange = useCallback(
     (ev: any, value: any) => {
       debounceFunc(value);
-      // setContent(value);
       return value;
     },
     [currentData]

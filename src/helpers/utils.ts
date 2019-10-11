@@ -504,3 +504,60 @@ export function loadFileAndRefresh(
     return loadResourceAndUpdateEditor(path, type, isTemplate);
   }
 }
+
+/**
+ * Save file status tree
+ */
+interface IFileStatusGroup {
+  type: EResourceType;
+  file: string;
+  status: EStatus;
+}
+export function saveFileStatus(
+  file: string,
+  type: EResourceType,
+  status: EStatus = "changed"
+) {
+  const fileStatus: Array<IFileStatusGroup> = [{ file, type, status }];
+  updateFileStatus(fileStatus);
+}
+
+/**
+ * Restore file status
+ *
+ * @param files  to update file status
+ */
+export function updateFileStatus(files: Array<IFileStatusGroup>) {
+  let fileStatus = loadFileStatus();
+
+  files.forEach((f: IFileStatusGroup) => {
+    const { type, file, status } = f;
+    if (fileStatus[type] && fileStatus[type][file]) {
+      // update
+      if (status === "removed") {
+        delete fileStatus[type][file];
+      } else {
+        fileStatus[type][file] = status;
+      }
+    } else {
+      // new
+      if (!fileStatus[type]) fileStatus[type] = {};
+      fileStatus[type][file] = status;
+    }
+  });
+
+  localStorage.fileStatus = JSON.stringify(fileStatus);
+}
+
+export function loadFileStatus(type?: EResourceType) {
+  let fileStatus = {};
+
+  if (localStorage.fileStatus) {
+    fileStatus = JSON.parse(localStorage.fileStatus);
+  }
+
+  if (type) {
+    return fileStatus[type] || {};
+  }
+  return fileStatus;
+}

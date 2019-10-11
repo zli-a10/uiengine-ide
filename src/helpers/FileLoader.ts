@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { StorageAdapter } from "./StorageAdapter";
 import * as commands from "./websocket";
+import { saveFileStatus } from "./utils";
 
 export class FileLoader implements IFileLoader {
   static storageType: EStorageType = "Local";
@@ -64,6 +65,9 @@ export class FileLoader implements IFileLoader {
     }
 
     this.storage.save(`${type}/${path}`, content);
+
+    // save file status
+    saveFileStatus(path, type, "changed");
     return true;
   }
 

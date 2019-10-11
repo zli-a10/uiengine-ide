@@ -1,16 +1,11 @@
-import React, {
-  useCallback,
-  useState,
-  useMemo,
-  useEffect,
-  useContext
-} from "react";
+import React, { useCallback, useState, useMemo } from "react";
 
-import { Switch, Icon } from "antd";
+import { Switch, Icon, Modal } from "antd";
 import { UINode } from "uiengine";
 import _ from "lodash";
 import { GlobalContext, SchemasContext } from "../../Context";
 import { getActiveUINode } from "../../../helpers";
+import { StagingFileTree } from "./StagingFileTree";
 
 export const Main = (props: any) => {
   const { datasource } = props;
@@ -90,6 +85,28 @@ export const Main = (props: any) => {
     toggleHeaderCollapse(false);
   }, []);
 
+  // file save window
+  const [visible, changeVisible] = useState(false);
+  const [files, setFiles] = useState(false);
+
+  const handleOk = useCallback((data: any) => {
+    // save files using sockets
+    // update file status
+    changeVisible(false);
+  }, []);
+
+  const handleCancel = useCallback((e: any) => {
+    changeVisible(false);
+  }, []);
+
+  const showSaveWindow = useCallback((e: any) => {
+    changeVisible(true);
+  }, []);
+
+  const onCheckFiles = useCallback((files: any) => {
+    setFiles(files);
+  }, []);
+
   return (
     <GlobalContext.Provider value={contextValue}>
       {headerCollapsed ? (
@@ -135,14 +152,22 @@ export const Main = (props: any) => {
             >
               <Icon type="setting" />
             </a>
-            <a className="save">
+            <a className="save" onClick={showSaveWindow}>
               <Icon type="save" />
             </a>
           </div>
 
-          <div className="brand">GUI IDE</div>
+          <div className="brand">UIEngine</div>
         </div>
       </div>
+      <Modal
+        title="Choose Saving Files"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <StagingFileTree onChange={onCheckFiles} />
+      </Modal>
       {props.children}
     </GlobalContext.Provider>
   );
