@@ -85,7 +85,7 @@ const TargetItem = (props: any) => {
         >
           <Select.Option value="">None</Select.Option>
           {treeData.map((value: any, index: number) => (
-            <Select.Option value={value} key={index}>
+            <Select.Option value={`${value}:`} key={index}>
               {value}
             </Select.Option>
           ))}

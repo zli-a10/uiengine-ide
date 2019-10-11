@@ -55,6 +55,11 @@ export const PropItem = (props: IComponentSchema) => {
       />
     );
   } else {
+    console.warn(
+      'name "%s" with type "%s" did not find the correspond component on prop window',
+      name,
+      componentType
+    );
     return null;
   }
 };

@@ -23,6 +23,7 @@ export default [
         title: "Button",
         isContainer: false,
         schema: {
+          content: "string",
           disabled: "string",
           size: ["small", "large"],
           loading: "boolean|number",
@@ -171,7 +172,14 @@ export default [
         schema: {
           disabled: "boolean",
           overlayClassName: "string",
-          placement: ["bottomLeft", "bottomCenter", "bottomRight", "topLeft", "topCenter", "topRight"],
+          placement: [
+            "bottomLeft",
+            "bottomCenter",
+            "bottomRight",
+            "topLeft",
+            "topCenter",
+            "topRight"
+          ],
           visible: "boolean"
         },
         children: [
@@ -206,7 +214,13 @@ export default [
           selectable: "boolean",
           selectedKeys: "string[]",
           theme: ["light", "dark"],
-          events: ["onClick", "onDeselect", "onOpenChange", "onSelect", "overflowedIndicator"]
+          events: [
+            "onClick",
+            "onDeselect",
+            "onOpenChange",
+            "onSelect",
+            "overflowedIndicator"
+          ]
         },
         children: [
           {
@@ -375,7 +389,14 @@ export default [
           value: [{ key: "string" }, { label: "string" }],
           open: "boolean",
           defaultOpen: "boolean",
-          events: ["onBlur", "onChange", "onFocus", "onSearch", "onSelect", "onDropdownVisibleChange"]
+          events: [
+            "onBlur",
+            "onChange",
+            "onFocus",
+            "onSearch",
+            "onSelect",
+            "onDropdownVisibleChange"
+          ]
         }
       },
       {
@@ -475,7 +496,13 @@ export default [
           defaultValue: "number",
           value: "number",
           character: "string",
-          events: ["onBlur", "onChange", "onFocus", "onHoverChange", "onKeyDown"],
+          events: [
+            "onBlur",
+            "onChange",
+            "onFocus",
+            "onHoverChange",
+            "onKeyDown"
+          ]
         }
       },
       {
@@ -523,7 +550,7 @@ export default [
           events: ["onChange", "onClick"]
         },
         defaultProps: {
-          $valueKey: 'checked'
+          $valueKey: "checked"
         }
       },
       {
@@ -574,7 +601,14 @@ export default [
           placeholder: "string",
           searchValue: "string",
           size: "string",
-          events: ["onBlur", "onChange", "onDeselect", "onFocus", "onSearch", "onSelect"]
+          events: [
+            "onBlur",
+            "onChange",
+            "onDeselect",
+            "onFocus",
+            "onSearch",
+            "onSelect"
+          ]
         }
       },
       {
@@ -661,7 +695,7 @@ export default [
           text: "string",
           dot: "boolean",
           showZero: "boolean",
-          status: ["success", "processing", "default", "error", "warning"],
+          status: ["success", "processing", "default", "error", "warning"]
         }
       },
       {
@@ -795,7 +829,19 @@ export default [
           defaultSelectedKeys: "string[]",
           expandedKeys: "string[]",
           selectedKeys: "string[]",
-          events: ["onCheck", "onDragEnd", "onDragEnter", "onDragLeave", "onDragOver", "onDragStart", "onDrop", "onExpand", "onLoad", "onRightClick", "onSelect"]
+          events: [
+            "onCheck",
+            "onDragEnd",
+            "onDragEnter",
+            "onDragLeave",
+            "onDragOver",
+            "onDragStart",
+            "onDrop",
+            "onExpand",
+            "onLoad",
+            "onRightClick",
+            "onSelect"
+          ]
         }
       },
       {
@@ -809,7 +855,20 @@ export default [
           mouseEnterDelay: "number",
           mouseLeaveDelay: "number",
           overlayClassName: "string",
-          placement: ["top", "left", "right", "bottom", "topLeft", "topRight", "bottomLeft", "bottomRight", "leftTop", "leftBottom", "rightTop", "rightBottom"],
+          placement: [
+            "top",
+            "left",
+            "right",
+            "bottom",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "leftTop",
+            "leftBottom",
+            "rightTop",
+            "rightBottom"
+          ],
           trigger: ["hover", "focus", "click", "contextMenu"],
           visible: "boolean",
           destroyTooltipOnHide: "boolean"
@@ -845,7 +904,13 @@ export default [
           size: "string",
           tabPosition: ["top", "right", "bottom", "left"],
           type: ["line", "card", "editable-card"],
-          events: ["onChange", "onEdit", "onNextClick", "onPrevClick", "onTabClick"]
+          events: [
+            "onChange",
+            "onEdit",
+            "onNextClick",
+            "onPrevClick",
+            "onTabClick"
+          ]
         }
       },
       {
@@ -864,7 +929,13 @@ export default [
           indentSize: "number",
           showHeader: "boolean",
           size: ["default", "middle", "small"],
-          events: ["onChange", "onExpand", "onExpandedRowsChange", "onHeaderRow", "onRow"]
+          events: [
+            "onChange",
+            "onExpand",
+            "onExpandedRowsChange",
+            "onHeaderRow",
+            "onRow"
+          ]
         }
       }
     ]
@@ -947,7 +1018,7 @@ export default [
         isContainer: false,
         schema: {
           description: "string",
-          duration: 'number',
+          duration: "number",
           message: "string",
           placement: ["topLeft", "topRight", "bottomLeft", "bottomRight"],
           events: ["onClick", "onClose"]
@@ -1012,7 +1083,7 @@ export default [
           avatar: "boolean",
           loading: "boolean",
           paragraph: "boolean",
-          title: "boolean",
+          title: "boolean"
         }
       }
     ]

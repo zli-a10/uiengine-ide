@@ -1,15 +1,14 @@
 {
   "version": "3.0.0#Autoform v1.5",
   "endpoints": {
-    "default": "slb/server/{name}"
+    "default": "/axapi/v3/slb/server/{name}"
   },
   "cm-branch": "",
   "cm-lineage": "slb.server",
   "cm-object-meta": {
     "obj-occurences": "multi"
   },
-  "fields": [
-    {
+  "fields": [{
       "key": "name",
       "label": "Name",
       "type": "input",
@@ -75,8 +74,7 @@
         "format": "string",
         "flags": "ovy",
         "condition": "fqdn-name",
-        "allowed": [
-          {
+        "allowed": [{
             "label": "Resolve To IPv4",
             "value": "resolve-to-ipv4",
             "help": "Use A Query only to resolve FQDN"
@@ -106,8 +104,7 @@
         "format": "string",
         "flags": "ovy",
         "gui-section": "Basic",
-        "allowed": [
-          {
+        "allowed": [{
             "label": "Enable",
             "value": "enable",
             "help": "Enable this Real Server"
@@ -356,8 +353,7 @@
         "format": "string",
         "flags": "ovy",
         "gui-section": "Advanced",
-        "allowed": [
-          {
+        "allowed": [{
             "label": "Stats Data Enable",
             "value": "stats-data-enable",
             "help": "Enable statistical data collection for real server"
@@ -396,8 +392,7 @@
         "multi": true,
         "gui-section": "Advanced"
       },
-      "fields": [
-        {
+      "fields": [{
           "key": "alternate",
           "label": "Alternate",
           "type": "input-number",

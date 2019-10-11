@@ -120,15 +120,16 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         target,
         listener
       } = config;
+
       return {
-        eventName: _.isString(eventName) ? eventName : "unknownEvent",
+        eventName: _.isString(eventName) ? eventName : "",
         receiveParams: _.isArray(receiveParams) ? receiveParams : [],
         defaultParams: {
           ...(_.isObject(defaultParams) ? defaultParams : {}),
           uiNode
         },
         target: _.isString(target) ? target : uiNode.id,
-        listener: _.isString(listener) ? listener : "unknownListener"
+        listener: _.isString(listener) ? listener : ""
       };
     })
   );

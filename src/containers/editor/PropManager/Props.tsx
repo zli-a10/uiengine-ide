@@ -9,7 +9,6 @@ const Panel = Collapse.Panel;
 
 export const Props: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
-  const { preview } = useContext(GlobalContext);
 
   let componentInfo: IComponentInfo = {} as IComponentInfo;
   if (editNode) {

@@ -1,6 +1,8 @@
+import { dev } from "./host";
+
 const reqConfig = {
   // axios config
-  baseURL: "http://localhost:3000/",
+  baseURL: `http://${dev}:3000/`,
   timeout: 1000,
 
   // customize config

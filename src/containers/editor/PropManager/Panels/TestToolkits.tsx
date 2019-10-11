@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import _ from "lodash";
-import ReactJson from "react-json-view";
+// import ReactJson from "react-json-view";
 import { Input, Form, Button, Select, Icon, Col } from "antd";
-import ButtonGroup from "antd/lib/button/button-group";
+// import ButtonGroup from "antd/lib/button/button-group";
 // import { IDEEditorContext, GlobalContext } from "../../Context";
 import {
   NORMAL_DATA,
@@ -19,25 +19,54 @@ const dataMocker = DataMocker.getInstance();
 
 export const TestToolkits = (props: any) => {
   const { formItemLayout, tailFormItemLayout, value } = props;
-  const onRefreshData = (value: any) => {
-    return async () => {
-      dataMocker.mode = value;
-      dataMocker.noCache = true;
-      // console.log(value);
-      const rootNode: any = getActiveUINode();
-      await rootNode.updateLayout();
-      rootNode.sendMessage(true);
-      dataMocker.noCache = false;
-    };
-  };
+  const rootNode: any = getActiveUINode(false);
+
+  const onRefreshData = useCallback(
+    (value: any) => {
+      return async () => {
+        dataMocker.mode = value;
+        dataMocker.noCache = true;
+        // console.log(value);
+        await rootNode.updateLayout();
+        rootNode.sendMessage(true);
+        dataMocker.noCache = false;
+      };
+    },
+    [dataMocker]
+  );
+
   const [selectedValue, setValue] = useState("empty");
+  const [host, setHost] = useState();
+
+  const onSetHost = useCallback(() => {
+    _.set(rootNode, `request.config.baseURL`, host);
+  }, [host]);
+
+  const onChangeHost = useCallback(
+    (e: any) => {
+      let host = _.get(e, "target.value");
+      if (_.trimEnd(host).indexOf("http") !== 0) {
+        host = `http://${host}/`;
+      }
+      setHost(host);
+    },
+    [host]
+  );
+
+  useEffect(() => {
+    const host = _.get(rootNode, `request.config.baseURL`);
+    setHost(host);
+  }, [rootNode]);
+
   return (
     <Form {...formItemLayout}>
       <Form.Item label="Host">
         <Input
+          value={host}
           size={"default"}
           placeholder={"192.168.x.x"}
-          addonAfter={<a>Send</a>}
+          onChange={onChangeHost}
+          addonAfter={<a onClick={onSetHost}>Set</a>}
         />
       </Form.Item>
       <Form.Item label="Test Data">

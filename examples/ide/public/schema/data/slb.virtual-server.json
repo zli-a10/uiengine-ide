@@ -1,15 +1,14 @@
 {
   "version": "3.0.0#Autoform v1.5",
   "endpoints": {
-    "default": "slb/virtual-server/{name}"
+    "default": "/axapi/v3/slb/virtual-server/{name}"
   },
   "cm-branch": "",
   "cm-lineage": "slb.virtual-server",
   "cm-object-meta": {
     "obj-occurences": "multi"
   },
-  "fields": [
-    {
+  "fields": [{
       "key": "name",
       "label": "Name",
       "type": "input",
@@ -335,8 +334,7 @@
         "format": "string",
         "flags": "ovy",
         "gui-section": "Basic",
-        "allowed": [
-          {
+        "allowed": [{
             "label": "Enable",
             "value": "enable",
             "help": "Enable Virtual Server (default)"
@@ -546,8 +544,7 @@
         "format": "string",
         "flags": "ovy",
         "gui-section": "Advanced",
-        "allowed": [
-          {
+        "allowed": [{
             "label": "Stats Data Enable",
             "value": "stats-data-enable",
             "help": "Enable statistical data collection for virtual server"
