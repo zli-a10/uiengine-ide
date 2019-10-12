@@ -27,10 +27,12 @@ export const PageTree = () => {
       children: templateSchemaChildren
     },
     {
+      key: "root",
       name: "pages",
       title: "Pages",
       nodeType: "root",
       isTemplate: false,
+      type: "schema",
       children: schemaTreeChildren
     }
   ];

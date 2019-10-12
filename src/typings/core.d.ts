@@ -18,11 +18,12 @@ interface IFileLoader {
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree
+    treeRoot?: IFileTree,
+    status: EStatus = "changed"
   ): boolean;
   loadFileTree(type: EResourceType, isTemplate?: boolean);
-  loadFile(path: string, type?: EResourceType, isTemplate?: boolean);
-  removeFile(path: string, type?: EResourceType, treeRoot?: IFileTree);
+  loadFile(path: string, type: EResourceType, isTemplate?: boolean);
+  removeFile(path: string, type: EResourceType, treeRoot?: IFileTree);
 }
 
 interface IStorage {
@@ -113,7 +114,7 @@ type EResourceType =
 
 type EStorageType = "Local" | "Session" | "File";
 type EEditingType = "add" | "edit" | "clone" | "rename" | boolean;
-type EStatus = "changed" | "new" | "removed";
+type EStatus = "changed" | "new" | "removed" | "normal";
 type ENodeType = "root" | "category";
 
 // copy from websocket server side command options

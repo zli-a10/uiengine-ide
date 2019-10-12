@@ -45,6 +45,7 @@ export const ResourceTree = () => {
           name: "my-plugins",
           title: "My Plugins",
           nodeType: "root",
+          type: "plugin",
           children: pluginsChildren
         }
       ]
@@ -53,18 +54,21 @@ export const ResourceTree = () => {
       name: "Listeners",
       title: "Listeners",
       nodeType: "root",
+      type: "listener",
       children: listenerChildren
     },
     {
       name: "Components",
       title: "Components",
       nodeType: "root",
+      type: "component",
       children: componentChildren
     },
     {
       name: "DataSources",
       title: "Data Sources",
       nodeType: "root",
+      type: "datasource",
       children: datasourceChildren
     }
   ];

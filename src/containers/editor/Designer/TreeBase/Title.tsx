@@ -1,20 +1,19 @@
 import React, { useContext, useCallback } from "react";
 import _ from "lodash";
 
-import classnames from "classnames";
 import { Input, Icon, Dropdown } from "antd";
 import { useDrag } from "react-dnd";
-import { DND_IDE_NODE_TYPE, resourceActions } from "../../../../helpers";
+import {
+  DND_IDE_NODE_TYPE,
+  resourceActions,
+  loadFileStatus
+} from "../../../../helpers";
 // import { SchemasContext } from "../../../Context";
 import { ActionMenu } from "./ActionMenu";
 
 export const Title = (props: any) => {
   const { dataRef, children, type, onSelect, ...rest } = props;
-  const classNames = classnames({
-    "node-title": true,
-    "node-modifed": dataRef._status_ === "changed"
-  });
-
+  const status = loadFileStatus(dataRef.type, dataRef._path_);
   // dnd
   let drag;
   if (!_.isEmpty(dataRef._path_)) {
@@ -56,7 +55,7 @@ export const Title = (props: any) => {
   );
 
   return (
-    <div className={classNames} ref={drag}>
+    <div ref={drag}>
       {dataRef._editing_ ? (
         <>
           <Input
@@ -68,12 +67,20 @@ export const Title = (props: any) => {
           <Icon type="close" onClick={cancelEdit} />
         </>
       ) : (
-        <a className="ant-dropdown-link" href="#">
+        <a
+          className={`ant-dropdown-link node-title node-modified-${status}`}
+          href="#"
+        >
           {title}
           {dataRef.isTemplate || dataRef.nodeType === "category" ? null : (
             <Dropdown
               overlay={
-                <ActionMenu onSelect={onSelect} dataRef={dataRef} {...rest} />
+                <ActionMenu
+                  onSelect={onSelect}
+                  dataRef={dataRef}
+                  {...rest}
+                  status={status}
+                />
               }
             >
               <Icon type="more" />

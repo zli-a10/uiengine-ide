@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
+import _ from "lodash";
 import { Tree } from "antd";
 import { loadFileStatus } from "../../../helpers";
 
@@ -32,15 +33,19 @@ export const StagingFileTree = (props: any) => {
           <TreeNode title={type} key={type} dataRef={entry}>
             {Object.entries(files).map((f: any) => {
               const [file, status] = f;
+              if (status === "normal") return null;
               return (
                 <TreeNode
-                  title={file}
+                  title={
+                    <a>
+                      {file}{" "}
+                      <i className={`node-modified-${status}`}>{status}</i>
+                    </a>
+                  }
                   key={`${type}/${file}`}
                   type={type}
                   dataRef={f}
-                >
-                  ({status})
-                </TreeNode>
+                ></TreeNode>
               );
             })}
           </TreeNode>

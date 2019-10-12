@@ -52,7 +52,8 @@ export class FileLoader implements IFileLoader {
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree
+    treeRoot?: IFileTree,
+    status: EStatus = "changed"
   ): boolean {
     console.log("saving ...", path);
     // store tree
@@ -67,7 +68,7 @@ export class FileLoader implements IFileLoader {
     this.storage.save(`${type}/${path}`, content);
 
     // save file status
-    saveFileStatus(path, type, "changed");
+    saveFileStatus(path, type, status);
     return true;
   }
 
@@ -135,12 +136,18 @@ export class FileLoader implements IFileLoader {
     return newPromise;
   }
 
-  removeFile(path: string, type?: string, treeRoot?: IFileTree): boolean {
+  removeFile(
+    path: string,
+    type: EResourceType = "schema",
+    treeRoot?: IFileTree
+  ): boolean {
     if (type === "schema" || type === "datasource") {
       if (this.isTempStorage() && treeRoot) {
         this.saveTree(treeRoot, type);
       }
     }
+    // console.log(path, type);
+    // saveFileStatus(path, type, "removed");
     return this.storage.remove(`${type}/${path}`);
   }
 }

@@ -518,6 +518,7 @@ export function saveFileStatus(
   type: EResourceType,
   status: EStatus = "changed"
 ) {
+  console.log(file, type, status);
   const fileStatus: Array<IFileStatusGroup> = [{ file, type, status }];
   updateFileStatus(fileStatus);
 }
@@ -533,8 +534,7 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
   files.forEach((f: IFileStatusGroup) => {
     const { type, file, status } = f;
     if (fileStatus[type] && fileStatus[type][file]) {
-      // update
-      if (status === "removed") {
+      if (status === undefined) {
         delete fileStatus[type][file];
       } else {
         fileStatus[type][file] = status;
@@ -549,7 +549,7 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
   localStorage.fileStatus = JSON.stringify(fileStatus);
 }
 
-export function loadFileStatus(type?: EResourceType) {
+export function loadFileStatus(type?: EResourceType, file?: string) {
   let fileStatus = {};
 
   if (localStorage.fileStatus) {
@@ -557,7 +557,25 @@ export function loadFileStatus(type?: EResourceType) {
   }
 
   if (type) {
-    return fileStatus[type] || {};
+    const fs = fileStatus[type];
+    if (file && fs) {
+      return fs[file];
+    }
+    return fs;
   }
   return fileStatus;
 }
+
+export const getFileSuffix = (dstNode: IResourceTreeNode) => {
+  const { type } = dstNode;
+
+  const jsonSuffixTypes = ["datasource", "schema"];
+  const tsSuffixTypes = ["plugin", "listener"];
+  const suffix =
+    jsonSuffixTypes.indexOf(type) > -1
+      ? ".json"
+      : tsSuffixTypes.indexOf(type)
+      ? ".ts"
+      : ".tsx";
+  return suffix;
+};

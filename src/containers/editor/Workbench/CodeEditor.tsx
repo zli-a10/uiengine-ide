@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useMemo
+} from "react";
 import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
 import { ControlledEditor } from "@monaco-editor/react";
@@ -34,6 +40,23 @@ export const CodeEditor: React.FC = (props: any) => {
       }
     }
   }, [currentData]);
+
+  // const [currentFile, setCurrentFile] = useState(
+  //   localStorage["currentEditNode"]
+  // );
+  // const changedFile: boolean = useMemo(() => {
+  //   if (localStorage["currentEditNode"]) {
+  //     const currentNode = JSON.parse(localStorage["currentEditNode"]);
+  //     const { _path_: path } = currentNode;
+  //     setCurrentFile(path);
+  //     return currentFile === path;
+  //   }
+  //   return true;
+  // }, [localStorage["currentEditNode"]]);
+
+  // useEffect(() => {
+  //   setCurrentFile(localStorage["currentEditNode"]);
+  // }, [localStorage["currentEditNode"]]);
 
   const debounceFunc = useCallback(
     _.debounce((value: any) => {

@@ -3,14 +3,22 @@ import _ from "lodash";
 import { Title } from "./Title";
 
 import { Tree } from "antd";
+import { getFileSuffix } from "../../../../helpers";
+
 const { TreeNode } = Tree;
 
 const intialItems = (node: IResourceTreeNode, parent: IResourceTreeNode) => {
+  const suffix = getFileSuffix(node);
+  const regExp = new RegExp(`${suffix}$`);
+
   node._parent_ = parent;
-  node._path_ =
-    _.has(parent, "_path_") && parent.nodeType !== "root"
-      ? `${parent._path_}/${node.name}`
-      : node.name;
+  let path = node.name;
+  if (_.has(parent, "_path_") && parent.nodeType !== "root") {
+    const p = parent._path_.replace(regExp, "");
+    path = `${p}/${node.name}`;
+  }
+
+  node._path_ = path;
   node._key_ = node._key_ || node._path_;
 };
 
