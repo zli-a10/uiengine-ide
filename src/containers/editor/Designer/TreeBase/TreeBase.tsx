@@ -17,10 +17,13 @@ export const TreeBase = (props: any) => {
   }, []);
 
   const [refresh, setRefresh] = useState(Date.now());
+  const onRefresh = useCallback(() => {
+    setRefresh(Date.now());
+  }, []);
 
   let defaultExpandedKeys: any = [];
 
-  const onSelect = (keys: string[], treeNode?: any) => {
+  const onSelect = useCallback((keys: string[], treeNode?: any) => {
     if (!_.has(treeNode, "node.props.dataRef._editing_")) {
       const dataRef = _.get(treeNode, "node.props.dataRef");
       const type = _.get(dataRef, "type", "schema");
@@ -33,13 +36,13 @@ export const TreeBase = (props: any) => {
       }
       setSelectedKey(keys, dataRef);
     }
-  };
+  }, []);
 
   const followProps = {
     onSelect,
     onExpandKeys: setExpandKeys,
     onAutoExpandParent: setAutoExpandParent,
-    onRefresh: setRefresh,
+    onRefresh: onRefresh,
     expandKeys: expandKeys
   };
 

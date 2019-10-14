@@ -38,7 +38,7 @@ export const DeleteResourceNode = (
       return d._key_ === dstNode._key_;
     });
     fileLoader.removeFile(dstNode._path_, type, getTreeRoot(dstNode));
-    saveFileStatus(dstNode._path_, type, undefined);
+    saveFileStatus(dstNode._path_, type, "dropped");
   } else {
     if (!revert) {
       // instead remove, just record the stauts
@@ -50,6 +50,12 @@ export const DeleteResourceNode = (
       dstNode._status_ = "normal";
       saveFileStatus(dstNode._path_, type, "normal");
     }
+  }
+
+  if (dstNode.children) {
+    dstNode.children.forEach((node: IResourceTreeNode) => {
+      DeleteResourceNode(node, revert);
+    });
   }
 };
 
@@ -86,7 +92,7 @@ export const CloneResourceNode = (
 
 export const RenameResourceNode = (dstNode: IResourceTreeNode) => {
   dstNode._editing_ = "rename";
-  dstNode._status_ = "new";
+  dstNode._status_ = "renamed";
 };
 
 export const saveToResourceNode = (
@@ -125,15 +131,16 @@ export const saveToResourceNode = (
   _.merge(dstNode, newAttrs);
 
   if (editing === "rename") {
-    const content = fileLoader.loadFile(oldPath, type);
-    fileLoader.removeFile(oldPath, type);
-    fileLoader.saveFile(
-      path,
-      content || defaultEmptyLayoutSchema,
-      type,
-      getTreeRoot(dstNode),
-      status
-    );
+    // const content = fileLoader.loadFile(oldPath, type);
+    // fileLoader.removeFile(oldPath, type);
+    // fileLoader.saveFile(
+    //   path,
+    //   content || defaultEmptyLayoutSchema,
+    //   type,
+    //   getTreeRoot(dstNode),
+    //   status
+    // );
+    saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
   } else {
     fileLoader.saveFile(
       path,

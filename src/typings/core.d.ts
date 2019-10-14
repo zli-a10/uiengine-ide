@@ -114,7 +114,8 @@ type EResourceType =
 
 type EStorageType = "Local" | "Session" | "File";
 type EEditingType = "add" | "edit" | "clone" | "rename" | boolean;
-type EStatus = "changed" | "new" | "removed" | "normal";
+type EStatus = "changed" | "new" | "removed" | "normal" | "renamed" | "dropped";
+type EFullStatus = { [key: string]: any; status: EStatus };
 type ENodeType = "root" | "category";
 
 // copy from websocket server side command options

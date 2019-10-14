@@ -32,8 +32,9 @@ export const StagingFileTree = (props: any) => {
         return (
           <TreeNode title={type} key={type} dataRef={entry}>
             {Object.entries(files).map((f: any) => {
-              const [file, status] = f;
-              if (status === "normal") return null;
+              const [file, statusObj] = f;
+              if (statusObj === "normal") return null;
+              const status = _.get(statusObj, "status", statusObj);
               return (
                 <TreeNode
                   title={

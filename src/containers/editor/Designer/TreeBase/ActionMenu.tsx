@@ -18,7 +18,6 @@ export const ActionMenu = (props: any) => {
   const actionmMap: any = useMemo(
     () => ({
       add: () => {
-        console.log(dataRef);
         resourceActions.add(dataRef);
         if (expandKeys.indexOf(dataRef._key_) === -1) {
           expandKeys.push(dataRef._key_);

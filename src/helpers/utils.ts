@@ -461,14 +461,14 @@ export function loadSchemaAndUpdateLayout(path: string, isTemplate: boolean) {
   fileLoader.editingFile = path;
   const schemaPromise = fileLoader.loadFile(path, "schema", isTemplate);
   schemaPromise.then((schema: any) => {
-    if (_.isString(schema)) {
-      try {
-        schema = JSON.parse(schema);
-      } catch (e) {
-        console.error(e);
-      }
-    }
     if (!_.isEmpty(schema)) {
+      if (_.isString(schema)) {
+        try {
+          schema = JSON.parse(schema);
+        } catch (e) {
+          console.error(e);
+        }
+      }
       const uiNode = getActiveUINode() as IUINode;
       uiNode.schema = schema;
       uiNode.updateLayout();
@@ -511,14 +511,13 @@ export function loadFileAndRefresh(
 interface IFileStatusGroup {
   type: EResourceType;
   file: string;
-  status: EStatus;
+  status: EStatus | EFullStatus;
 }
 export function saveFileStatus(
   file: string,
   type: EResourceType,
-  status: EStatus = "changed"
+  status: EStatus | EFullStatus
 ) {
-  console.log(file, type, status);
   const fileStatus: Array<IFileStatusGroup> = [{ file, type, status }];
   updateFileStatus(fileStatus);
 }
@@ -533,16 +532,21 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
 
   files.forEach((f: IFileStatusGroup) => {
     const { type, file, status } = f;
-    if (fileStatus[type] && fileStatus[type][file]) {
-      if (status === undefined) {
-        delete fileStatus[type][file];
+
+    if (type) {
+      if (fileStatus[type] && fileStatus[type][file]) {
+        if (status === "dropped") {
+          delete fileStatus[type][file];
+        } else {
+          if (fileStatus[type][file] === "changed" || status === "removed") {
+            fileStatus[type][file] = status;
+          }
+        }
       } else {
+        // new
+        if (!fileStatus[type]) fileStatus[type] = {};
         fileStatus[type][file] = status;
       }
-    } else {
-      // new
-      if (!fileStatus[type]) fileStatus[type] = {};
-      fileStatus[type][file] = status;
     }
   });
 

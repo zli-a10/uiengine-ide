@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import _ from "lodash";
 
 import { Input, Icon, Dropdown } from "antd";
@@ -12,8 +12,23 @@ import {
 import { ActionMenu } from "./ActionMenu";
 
 export const Title = (props: any) => {
-  const { dataRef, children, type, onSelect, ...rest } = props;
-  const status = loadFileStatus(dataRef.type, dataRef._path_);
+  const { dataRef, children, type, onSelect, onRefresh, ...rest } = props;
+  let statusObj: any = {};
+  if (dataRef.type && dataRef._path_) {
+    statusObj = loadFileStatus(dataRef.type, dataRef._path_);
+  }
+  let status = "normal",
+    newPath = "";
+  let title = dataRef.title.replace(/\.\w+$/, "");
+  if (!_.isEmpty(statusObj)) {
+    if (!_.isString(statusObj)) {
+      status = statusObj.status;
+      newPath = statusObj.newPath.replace(/\.\w+$/, "");
+      title = `${title} -> ${newPath}`;
+    } else {
+      status = statusObj;
+    }
+  }
   // dnd
   let drag;
   if (!_.isEmpty(dataRef._path_)) {
@@ -30,18 +45,17 @@ export const Title = (props: any) => {
     });
   }
 
-  const title = children.replace(/\.\w+$/, "");
   const cancelEdit = useCallback(() => {
     switch (dataRef._editing_) {
       case "clone":
       case "add":
-        _.remove(dataRef._parent_, (d: any) => {
+        _.remove(dataRef._parent_.children, (d: any) => {
           return d._key_ === dataRef._key_;
         });
         break;
     }
     dataRef._editing_ = false;
-    // that.rerender();???
+    onRefresh();
   }, [dataRef]);
 
   const saveSchema = useCallback(
@@ -50,6 +64,16 @@ export const Title = (props: any) => {
       const path = resourceActions.save(dataRef, title);
       // select on tree
       onSelect([path]);
+    },
+    [dataRef]
+  );
+
+  const keyDown = useCallback(
+    (e: any) => {
+      if (e.keyCode === 27) {
+        dataRef._editing_ = false;
+        onRefresh();
+      }
     },
     [dataRef]
   );
@@ -63,6 +87,7 @@ export const Title = (props: any) => {
             placeholder="new-schema"
             defaultValue={title}
             onPressEnter={saveSchema}
+            onKeyDown={keyDown}
           />
           <Icon type="close" onClick={cancelEdit} />
         </>
@@ -78,6 +103,7 @@ export const Title = (props: any) => {
                 <ActionMenu
                   onSelect={onSelect}
                   dataRef={dataRef}
+                  onRefresh={onRefresh}
                   {...rest}
                   status={status}
                 />
