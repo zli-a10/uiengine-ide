@@ -35,11 +35,14 @@ export const StagingFileTree = (props: any) => {
               const [file, statusObj] = f;
               if (statusObj === "normal") return null;
               const status = _.get(statusObj, "status", statusObj);
+              const newPath = _.get(statusObj, "newPath", "");
               return (
                 <TreeNode
                   title={
                     <a>
-                      {file}{" "}
+                      {file}
+                      {newPath ? " -> " : " "}
+                      {newPath}
                       <i className={`node-modified-${status}`}>{status}</i>
                     </a>
                   }

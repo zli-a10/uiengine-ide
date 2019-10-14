@@ -20,11 +20,13 @@ export const Title = (props: any) => {
   let status = "normal",
     newPath = "";
   let title = dataRef.title.replace(/\.\w+$/, "");
+  let newTitle = title;
   if (!_.isEmpty(statusObj)) {
     if (!_.isString(statusObj)) {
       status = statusObj.status;
       newPath = statusObj.newPath.replace(/\.\w+$/, "");
-      title = `${title} -> ${newPath}`;
+      newTitle = `${title} -> ${newPath}`;
+      title = newPath;
     } else {
       status = statusObj;
     }
@@ -71,8 +73,7 @@ export const Title = (props: any) => {
   const keyDown = useCallback(
     (e: any) => {
       if (e.keyCode === 27) {
-        dataRef._editing_ = false;
-        onRefresh();
+        cancelEdit();
       }
     },
     [dataRef]
@@ -96,7 +97,7 @@ export const Title = (props: any) => {
           className={`ant-dropdown-link node-title node-modified-${status}`}
           href="#"
         >
-          {title}
+          {newTitle}
           {dataRef.isTemplate || dataRef.nodeType === "category" ? null : (
             <Dropdown
               overlay={

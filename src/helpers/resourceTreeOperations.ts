@@ -31,6 +31,7 @@ export const DeleteResourceNode = (
 ) => {
   const { type } = dstNode;
   const status = loadFileStatus(type, dstNode._path_);
+  console.log(status, type, dstNode._path_, ".....");
   if (status === "new") {
     const fileLoader = FileLoader.getInstance();
     const srcNodes = _.get(dstNode, `_parent_.children`, []);
@@ -48,7 +49,7 @@ export const DeleteResourceNode = (
       // instead remove, just record the stauts
       const { type } = dstNode;
       dstNode._status_ = "normal";
-      saveFileStatus(dstNode._path_, type, "normal");
+      saveFileStatus(dstNode._path_, type, "dropped");
     }
   }
 
@@ -66,14 +67,11 @@ export const CloneResourceNode = (
   const fileLoader = FileLoader.getInstance();
   const suffix = getFileSuffix(dstNode);
   const regExp = new RegExp(`${suffix}$`);
-  const newName = dstNode._path_.replace(
-    regExp,
-    `${_.uniqueId("_copy")}${suffix}`
-  );
+  const newName = dstNode._path_.replace(regExp, `_copy${suffix}`);
   const newItem: IResourceTreeNode = {
     type,
-    name: "",
-    title: `Copy_${dstNode.title}`,
+    name: newName,
+    title: newName,
     _key_: _.uniqueId("tree-node-"),
     _path_: newName,
     _editing_: "clone",
@@ -86,7 +84,12 @@ export const CloneResourceNode = (
     children.push(newItem);
   }
   const content = fileLoader.loadFile(dstNode._path_, type);
-  fileLoader.saveFile(newName, content, type, getTreeRoot(dstNode), "new");
+  // console.log(content, dstNode._path_, type);
+  if (content instanceof Promise) {
+    content.then((data: any) => {
+      fileLoader.saveFile(newName, data, type, getTreeRoot(dstNode), "new");
+    });
+  }
   return newName;
 };
 
@@ -130,6 +133,7 @@ export const saveToResourceNode = (
 
   _.merge(dstNode, newAttrs);
 
+  console.log(oldPath, type, path);
   if (editing === "rename") {
     // const content = fileLoader.loadFile(oldPath, type);
     // fileLoader.removeFile(oldPath, type);

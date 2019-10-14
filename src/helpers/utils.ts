@@ -538,7 +538,13 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
         if (status === "dropped") {
           delete fileStatus[type][file];
         } else {
-          if (fileStatus[type][file] === "changed" || status === "removed") {
+          const s = _.get(status, "status", status);
+          if (
+            (fileStatus[type][file] !== "new" &&
+              fileStatus[type][file] !== "renamed") ||
+            s === "removed" ||
+            s === "renamed"
+          ) {
             fileStatus[type][file] = status;
           }
         }
