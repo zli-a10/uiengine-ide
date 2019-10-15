@@ -70,7 +70,7 @@ export class FileLoader implements IFileLoader {
     const statusObj = loadFileStatus(type, path);
     const list = ["new", "renamed", "removed"];
     if (statusObj && list.indexOf(statusObj.status) === -1) {
-      saveFileStatus(path, type, "changed");
+      saveFileStatus(path, type, { status: "changed" });
     }
     return true;
   }

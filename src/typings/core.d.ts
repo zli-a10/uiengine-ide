@@ -144,3 +144,10 @@ interface IResourceTreeNode {
   _status_?: EStatus;
   _editing_: EEditingType;
 }
+
+interface IUploadFile {
+  data: string;
+  path: string;
+  status: EFullStatus;
+  type: EResourceType;
+}

@@ -9,12 +9,20 @@ export const StagingFileTree = (props: any) => {
   const { onChange } = props;
 
   const onCheck = (checkedKeys: any, info: any) => {
-    onChange(checkedKeys);
+    const keys: any = [];
+    info.checkedNodes.forEach((node: any) => {
+      if (_.has(node, `props.dataRef[1].status`)) {
+        const [path, status] = _.get(node, `props.dataRef`);
+        const type = _.get(node, `props.type`);
+        keys.push({ path, status, type });
+      }
+    });
+    console.log(keys);
+    onChange(keys);
   };
 
   const treeData = useMemo(() => {
     const files = loadFileStatus();
-    onChange(Object.keys(files));
     return files;
   }, [localStorage.fileStatus]);
 

@@ -25,3 +25,11 @@ export async function readFile(
 
   return await Client.connect(command);
 }
+
+export function saveFile(fileOptions: IUploadFile) {
+  const command: IWebsocketCommands = {
+    name: "writeFile",
+    options: fileOptions
+  };
+  return Client.connect(command);
+}
