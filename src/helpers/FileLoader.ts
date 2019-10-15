@@ -75,7 +75,7 @@ export class FileLoader implements IFileLoader {
     return true;
   }
 
-  loadFileTree(type: EResourceType = "schema", isTemplate?: boolean) {
+  loadFileTree(type: EResourceType = "schema", isTemplate: boolean = false) {
     const promise = new Promise((resolve: any) => {
       if (!isTemplate) {
         const fileTreeJson = this.storage.get(`file_tree.${type}`);

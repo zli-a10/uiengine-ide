@@ -11,13 +11,21 @@ export const StagingFileTree = (props: any) => {
   const onCheck = (checkedKeys: any, info: any) => {
     const keys: any = [];
     info.checkedNodes.forEach((node: any) => {
-      if (_.has(node, `props.dataRef[1].status`)) {
+      if (_.has(node, `props.dataRef`)) {
         const [path, status] = _.get(node, `props.dataRef`);
-        const type = _.get(node, `props.type`);
-        keys.push({ path, status, type });
+        if (
+          _.isString(status) ||
+          (_.isObject(status) && _.has(status, "status"))
+        ) {
+          let finalStatus = status;
+          if (_.isString(status)) {
+            finalStatus = { status };
+          }
+          const type = _.get(node, `props.type`);
+          keys.push({ path, status: finalStatus, type });
+        }
       }
     });
-    console.log(keys);
     onChange(keys);
   };
 

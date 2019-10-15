@@ -16,6 +16,8 @@ export const Schemas = (props: any) => {
   }, []);
 
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [time, setTime] = useState(Date.now());
+
   const schemasContextValue = useMemo<ISchemasContext>(
     () => ({
       currentData,
@@ -37,8 +39,10 @@ export const Schemas = (props: any) => {
       },
       help: "",
       setHelp: (help: string) => {},
-      refresh: "",
-      toggleRefresh: (refresh: string) => {},
+      refresh: time,
+      toggleRefresh: () => {
+        setTime(Date.now());
+      },
       showTab: "",
       activeTab: (tab: string) => {},
       savedTime: "",
@@ -53,7 +57,7 @@ export const Schemas = (props: any) => {
         setContent(allSchema);
       }
     }),
-    [schema, currentData, selectedKeys]
+    [schema, currentData, selectedKeys, time]
   );
   return (
     <SchemasContext.Provider value={schemasContextValue}>

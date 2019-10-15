@@ -1,5 +1,5 @@
 import websockets from "../config/websocket";
-import { get, has } from "lodash";
+import { get, has, trim } from "lodash";
 const fs = require("fs");
 
 /**
@@ -14,13 +14,13 @@ interface ICommandOptions {
   options?: any;
 }
 
-function getPath(options: ICommandOptions) {
+function getPath(options: ICommandOptions, rootOnly: boolean = false) {
   const { type, path, isTemplate = false } = options;
   console.log("Read options: %s", options);
   let root = isTemplate ? "templates" : "paths";
   const config = websockets as any;
   const readpath = get(config, `${root}.${type}`);
-  return path ? `${readpath}/${path}` : readpath;
+  return path && !rootOnly ? `${readpath}/${path}` : readpath;
 }
 
 const walkSync = (dir: any, type: string, isTemplate: boolean = false) => {
@@ -87,16 +87,56 @@ export function readFile(options: ICommandOptions) {
   return result;
 }
 
+function rewriteIndex(type: string, newFileName: string, oldFileName?: string) {
+  if (type !== "schema" && type !== "datasource") {
+    // rewrite index.ts or index.tsx
+  }
+}
+
 /**
  *
  * @param options {"name": "writeFile", "options":{ "type": "schema",  "path": "any.json", "options": { "data": "{}" }, "isTemplate": false  }}
  */
 export function writeFile(options: ICommandOptions) {
-  const readpath = getPath(options);
   let result: any;
-  if (has(options, "options.data")) {
+  if (has(options, "status")) {
+    const readpath = getPath(options);
     try {
-      result = fs.writeFileSync(readpath, get(options, `options.data`), "utf8");
+      const status = get(options, "status.status");
+      const type = get(options, "type");
+      if (status === "renamed") {
+        const newName = get(options, "status.newPath");
+        const newPath = `${getPath(options, true)}/${newName}`;
+        // console.log("renaming", newName, newPath);
+        fs.rename(readpath, newPath, function() {
+          console.log("file from %s to %s was renamed", readpath, newPath);
+          rewriteIndex(type, newPath, readpath);
+        });
+      } else if (status === "removed") {
+        fs.unlink(readpath, function() {
+          console.log("file %s was removed", readpath);
+          rewriteIndex(type, readpath);
+        });
+      } else {
+        let data = get(options, `data`);
+        if (typeof data === "object") {
+          data = JSON.stringify(data, null, "\t");
+        }
+        // recursive save
+        const folderSegs = trim(readpath, "/").split("/");
+        if (folderSegs.length > 1) folderSegs.pop();
+        const folder = folderSegs.join("/");
+        if (!fs.existsSync(folder)) {
+          try {
+            console.log("new folder %s is creating", folder);
+            fs.mkdirSync(folder);
+          } catch {
+            console.warn("mkdir %s failed", folder);
+          }
+        }
+        result = fs.writeFileSync(readpath, data, "utf8");
+        rewriteIndex(type, readpath);
+      }
     } catch (e) {
       console.warn(e.message);
       result = e.message;

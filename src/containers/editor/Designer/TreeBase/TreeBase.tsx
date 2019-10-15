@@ -6,7 +6,9 @@ import { SchemasContext, IDEEditorContext } from "../../../Context";
 import { loadFileAndRefresh } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
-  const { selectedKeys, setSelectedKey } = useContext(SchemasContext);
+  const { selectedKeys, setSelectedKey, toggleRefresh } = useContext(
+    SchemasContext
+  );
   const { setContent } = useContext(IDEEditorContext);
   const { tree, openKeys } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
@@ -16,9 +18,8 @@ export const TreeBase = (props: any) => {
     setAutoExpandParent(false);
   }, []);
 
-  const [refresh, setRefresh] = useState(Date.now());
   const onRefresh = useCallback(() => {
-    setRefresh(Date.now());
+    toggleRefresh();
   }, []);
 
   let defaultExpandedKeys: any = [];
@@ -46,6 +47,7 @@ export const TreeBase = (props: any) => {
     expandKeys: expandKeys
   };
 
+  console.log(selectedKeys);
   return (
     <div className="pagetree">
       <Tree

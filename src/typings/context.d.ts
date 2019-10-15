@@ -22,8 +22,8 @@ interface ISchemasContext {
   setSavedTime: (savedTime: string) => any;
   help: string;
   setHelp: (help: string) => any;
-  refresh: string;
-  toggleRefresh: (refresh: string) => any;
+  refresh: number;
+  toggleRefresh: () => any;
   showTab: string;
   activeTab: (tab: string) => any;
   schema: ILayoutSchema;

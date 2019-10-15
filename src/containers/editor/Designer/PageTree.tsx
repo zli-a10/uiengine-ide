@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 import { TreeBase } from "./TreeBase";
 import { FileLoader } from "../../../helpers";
+import { SchemasContext } from "../../Context";
 
 export const PageTree = () => {
+  const { refresh } = useContext(SchemasContext);
   // schemas fetch
   const fileLoader = FileLoader.getInstance();
   const [schemaTreeChildren, setSchemaTreeChildren] = useState([]);
@@ -38,7 +40,7 @@ export const PageTree = () => {
   ];
   return (
     <div className="pagetree">
-      <TreeBase tree={schemaTree} openKeys={["pages"]} />
+      <TreeBase tree={schemaTree} openKeys={["pages"]} refresh={refresh} />
     </div>
   );
 };

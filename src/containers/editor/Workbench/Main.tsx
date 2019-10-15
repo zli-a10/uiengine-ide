@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo, useContext } from "react";
 
 import { Switch, Icon, Modal } from "antd";
 import { UINode } from "uiengine";
@@ -8,11 +8,14 @@ import {
   getActiveUINode,
   FileLoader,
   saveFile,
-  saveFileStatus
+  saveFileStatus,
+  cleanSchema
 } from "../../../helpers";
 import { StagingFileTree } from "./StagingFileTree";
 
 export const Main = (props: any) => {
+  const { toggleRefresh } = useContext(SchemasContext);
+
   const { datasource } = props;
 
   // header collpase state
@@ -97,28 +100,31 @@ export const Main = (props: any) => {
   const handleOk = useCallback(() => {
     // save files using sockets
     const fileLoader = FileLoader.getInstance();
-
-    files.forEach((statusNode: IUploadFile) => {
+    console.log("saving...", files);
+    files.forEach(async (statusNode: IUploadFile) => {
       const { path, type, status } = statusNode;
       if (
         status &&
         (status.status === "removed" || status.status === "renamed")
       ) {
-        console.log(status, "directly send out");
-        const promise = saveFile(statusNode);
+        await saveFile(statusNode);
         // update file status
-        promise.then(() => {
-          saveFileStatus(path, type, "dropped");
-        });
+        saveFileStatus(path, type, "dropped");
+        fileLoader.removeFile(path, type);
+        fileLoader.storage.remove(`file_tree.${type}`);
+        const tree = await fileLoader.loadFileTree(type);
+        console.log(tree);
+        toggleRefresh();
       } else {
-        fileLoader.loadFile(path, type).then((data: any) => {
-          statusNode.data = data;
-          const promise = saveFile(statusNode);
-          // update file status
-          promise.then(() => {
-            saveFileStatus(path, type, "dropped");
-          });
-        });
+        let data = await fileLoader.loadFile(path, type);
+        if (type === "schema") data = cleanSchema(data);
+        statusNode.data = data;
+        await saveFile(statusNode);
+        // update file status
+        saveFileStatus(path, type, "dropped");
+        // fileLoader.storage.remove(`file_tree.${type}`);
+        // fileLoader.loadFileTree(type);
+        toggleRefresh();
       }
     });
 
@@ -134,6 +140,7 @@ export const Main = (props: any) => {
   }, []);
 
   const onCheckFiles = useCallback((files: any) => {
+    console.log(files, "files...");
     setFiles(files);
   }, []);
 
