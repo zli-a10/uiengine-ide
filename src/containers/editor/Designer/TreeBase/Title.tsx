@@ -24,13 +24,17 @@ export const Title = (props: any) => {
   if (!_.isEmpty(statusObj)) {
     if (!_.isString(statusObj)) {
       status = statusObj.status;
-      newPath = statusObj.newPath.replace(/\.\w+$/, "");
-      newTitle = `${title} -> ${newPath}`;
-      title = newPath;
+      if (statusObj.newPath) {
+        newPath = statusObj.newPath.replace(/\.\w+$/, "");
+        newTitle = `${title} -> ${newPath}`;
+        title = newPath;
+      }
     } else {
       status = statusObj;
     }
   }
+
+  // console.log(status, newTitle, title);
   // dnd
   let drag;
   if (!_.isEmpty(dataRef._path_)) {
@@ -64,6 +68,7 @@ export const Title = (props: any) => {
     (e: any) => {
       const title = e.target.value;
       const path = resourceActions.save(dataRef, title);
+      onRefresh();
       // select on tree
       onSelect([path]);
     },

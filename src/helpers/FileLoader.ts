@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { StorageAdapter } from "./StorageAdapter";
 import * as commands from "./websocket";
-import { saveFileStatus } from "./utils";
+import { saveFileStatus, loadFileStatus } from "./utils";
 
 export class FileLoader implements IFileLoader {
   static storageType: EStorageType = "Local";
@@ -52,8 +52,7 @@ export class FileLoader implements IFileLoader {
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree,
-    status: EStatus = "changed"
+    treeRoot?: IFileTree
   ): boolean {
     console.log("saving ...", path);
     // store tree
@@ -68,7 +67,11 @@ export class FileLoader implements IFileLoader {
     this.storage.save(`${type}/${path}`, content);
 
     // save file status
-    saveFileStatus(path, type, status);
+    const statusObj = loadFileStatus(type, path);
+    const list = ["new", "renamed", "removed"];
+    if (statusObj && list.indexOf(statusObj.status) === -1) {
+      saveFileStatus(path, type, "changed");
+    }
     return true;
   }
 

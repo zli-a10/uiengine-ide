@@ -22,11 +22,7 @@ export const StagingFileTree = (props: any) => {
   // }, [treeData]);
 
   return (
-    <Tree
-      checkable
-      onCheck={onCheck}
-      defaultCheckedKeys={Object.keys(treeData)}
-    >
+    <Tree checkable onCheck={onCheck}>
       {Object.entries(treeData).map((entry: any) => {
         const [type, files] = entry;
         return (
@@ -43,7 +39,7 @@ export const StagingFileTree = (props: any) => {
                       {file}
                       {newPath ? " -> " : " "}
                       {newPath}
-                      <i className={`node-modified-${status}`}>{status}</i>
+                      <i className={`node-modified-${status}`}> {status}</i>
                     </a>
                   }
                   key={`${type}/${file}`}

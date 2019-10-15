@@ -569,7 +569,13 @@ export function loadFileStatus(type?: EResourceType, file?: string) {
   if (type) {
     const fs = fileStatus[type];
     if (file && fs) {
-      return fs[file];
+      const obj = fs[file];
+      if (_.isString(obj)) {
+        return { status: obj };
+      } else {
+        if (obj === undefined) return {};
+        return obj;
+      }
     }
     return fs;
   }

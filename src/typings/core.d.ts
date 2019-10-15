@@ -18,8 +18,7 @@ interface IFileLoader {
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree,
-    status: EStatus = "changed"
+    treeRoot?: IFileTree
   ): boolean;
   loadFileTree(type: EResourceType, isTemplate?: boolean);
   loadFile(path: string, type: EResourceType, isTemplate?: boolean);

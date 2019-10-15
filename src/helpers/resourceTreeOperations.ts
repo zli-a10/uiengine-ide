@@ -30,9 +30,9 @@ export const DeleteResourceNode = (
   revert: boolean = false
 ) => {
   const { type } = dstNode;
-  const status = loadFileStatus(type, dstNode._path_);
-  console.log(status, type, dstNode._path_, ".....");
-  if (status === "new") {
+  const statusObj = loadFileStatus(type, dstNode._path_);
+  // console.log(statusObj, type, dstNode._path_, ".....");
+  if (statusObj && statusObj.status === "new") {
     const fileLoader = FileLoader.getInstance();
     const srcNodes = _.get(dstNode, `_parent_.children`, []);
     _.remove(srcNodes, (d: any) => {
@@ -87,7 +87,8 @@ export const CloneResourceNode = (
   // console.log(content, dstNode._path_, type);
   if (content instanceof Promise) {
     content.then((data: any) => {
-      fileLoader.saveFile(newName, data, type, getTreeRoot(dstNode), "new");
+      fileLoader.saveFile(newName, data, type, getTreeRoot(dstNode));
+      saveFileStatus(newName, type, "new");
     });
   }
   return newName;
@@ -105,9 +106,7 @@ export const saveToResourceNode = (
   const fileLoader = FileLoader.getInstance();
   let name = _.snakeCase(value);
   const { _editing_: editing, type } = dstNode;
-  //   const jsonSuffixTypes = ['datasource', 'schema'];
-  //  const tsSuffixTypes = ['plugin', 'listener'];
-  //   const suffix = jsonSuffixTypes.indexOf(type) > -1 ? '.json' : tsSuffixTypes.indexOf(type) ? '.ts' : '.tsx';
+
   const suffix = getFileSuffix(dstNode);
   name = name.indexOf(suffix) > -1 ? name : `${name}${suffix}`;
   const oldPath = dstNode._path_;
@@ -133,26 +132,38 @@ export const saveToResourceNode = (
 
   _.merge(dstNode, newAttrs);
 
-  console.log(oldPath, type, path);
+  // console.log(oldPath, type, path);
   if (editing === "rename") {
-    // const content = fileLoader.loadFile(oldPath, type);
-    // fileLoader.removeFile(oldPath, type);
-    // fileLoader.saveFile(
-    //   path,
-    //   content || defaultEmptyLayoutSchema,
-    //   type,
-    //   getTreeRoot(dstNode),
-    //   status
-    // );
-    saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
+    const statusObj = loadFileStatus(type, oldPath);
+    if (!_.isEmpty(statusObj)) {
+      if (statusObj.status !== "new") {
+        saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
+      } else {
+        const content = fileLoader.loadFile(oldPath, type);
+        content.then((data: any) => {
+          fileLoader.removeFile(oldPath, type);
+          fileLoader.saveFile(
+            path,
+            data || defaultEmptyLayoutSchema,
+            type,
+            getTreeRoot(dstNode)
+          );
+        });
+        saveFileStatus(oldPath, type, "dropped");
+        saveFileStatus(path, type, "new");
+      }
+    } else {
+      // remote file
+      saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
+    }
   } else {
     fileLoader.saveFile(
       path,
       defaultEmptyLayoutSchema,
       type,
-      getTreeRoot(dstNode),
-      status
+      getTreeRoot(dstNode)
     );
+    saveFileStatus(path, type, { status });
   }
 
   return path;

@@ -59,7 +59,7 @@ export const ActionMenu = (props: any) => {
           <a>Add</a>
         </Menu.Item>
       ) : null}
-      {status !== "removed" ? (
+      {dataRef.nodeType === "root" ? null : status !== "removed" ? (
         <Menu.Item key="delete">
           <a>Delete</a>
         </Menu.Item>
@@ -68,10 +68,12 @@ export const ActionMenu = (props: any) => {
           <a>Undelete</a>
         </Menu.Item>
       )}
-      <Menu.Item key="clone">
-        <a>Clone</a>
-      </Menu.Item>
-      {status !== "removed" ? (
+      {dataRef.nodeType === "root" ? null : (
+        <Menu.Item key="clone">
+          <a>Clone</a>
+        </Menu.Item>
+      )}
+      {dataRef.nodeType !== "root" && status !== "removed" ? (
         <Menu.Item key="rename">
           <a>Rename</a>
         </Menu.Item>
