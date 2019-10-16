@@ -23,13 +23,24 @@ export const ActionMenu = (props: any) => {
           expandKeys.push(dataRef._key_);
         }
 
+        // console.log(expandKeys, dataRef);
+        onExpandKeys(_.cloneDeep(expandKeys));
+        onAutoExpandParent(true);
+      },
+      addFolder: () => {
+        console.log("add folder");
+        resourceActions.addFolder(dataRef);
+        if (expandKeys.indexOf(dataRef._key_) === -1) {
+          expandKeys.push(dataRef._key_);
+        }
         onExpandKeys(_.cloneDeep(expandKeys));
         onAutoExpandParent(true);
       },
       delete: () => {
         resourceActions.delete(dataRef);
-        const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
-        onSelect(selectedKeys);
+        // const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
+        // onSelect(selectedKeys);
+        onRefresh();
       },
       undelete: () => {
         resourceActions.delete(dataRef, true);
@@ -47,18 +58,29 @@ export const ActionMenu = (props: any) => {
     [dataRef, expandKeys, status]
   );
 
-  const onClick = useCallback((e: any) => {
-    const actionName = e.key;
-    return actionmMap[actionName].call();
-  }, []);
+  const onClick = useCallback(
+    (e: any) => {
+      e.domEvent.stopPropagation();
+      const actionName = e.key;
+      return actionmMap[actionName].call();
+    },
+    [dataRef]
+  );
 
+  const isFolder = dataRef.nodeType === "folder" || dataRef.nodeType === "root";
   return (
     <Menu onClick={onClick}>
-      {status !== "removed" ? (
+      {status !== "removed" && isFolder ? (
         <Menu.Item key="add">
-          <a>Add</a>
+          <a>Add File</a>
         </Menu.Item>
       ) : null}
+      {status !== "removed" && isFolder ? (
+        <Menu.Item key="addFolder">
+          <a>Add Folder</a>
+        </Menu.Item>
+      ) : null}
+
       {dataRef.nodeType === "root" ? null : status !== "removed" ? (
         <Menu.Item key="delete">
           <a>Delete</a>
@@ -68,7 +90,7 @@ export const ActionMenu = (props: any) => {
           <a>Undelete</a>
         </Menu.Item>
       )}
-      {dataRef.nodeType === "root" ? null : (
+      {isFolder ? null : (
         <Menu.Item key="clone">
           <a>Clone</a>
         </Menu.Item>

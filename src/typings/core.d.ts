@@ -20,7 +20,7 @@ interface IFileLoader {
     type: EResourceType,
     treeRoot?: IFileTree
   ): boolean;
-  loadFileTree(type: EResourceType, isTemplate?: boolean);
+  loadFileTree(type: EResourceType, isTemplate?: boolean, remoteOnly?: boolean);
   loadFile(path: string, type: EResourceType, isTemplate?: boolean);
   removeFile(path: string, type: EResourceType, treeRoot?: IFileTree);
 }
@@ -115,7 +115,13 @@ type EStorageType = "Local" | "Session" | "File";
 type EEditingType = "add" | "edit" | "clone" | "rename" | boolean;
 type EStatus = "changed" | "new" | "removed" | "normal" | "renamed" | "dropped";
 type EFullStatus = { [key: string]: any; status: EStatus };
-type ENodeType = "root" | "category";
+type ENodeType = "root" | "file" | "folder";
+
+interface IFileStatusGroup {
+  type: EResourceType;
+  file: string;
+  status: EStatus | EFullStatus;
+}
 
 // copy from websocket server side command options
 interface ICommandOptions {
@@ -135,8 +141,8 @@ interface IResourceTreeNode {
   type: EResourceType;
   name: string;
   title: string;
+  nodeType: ENodeType;
   children?: Array<IResourceTreeNode>;
-  nodeType?: ENodeType;
   isTemplate?: boolean = false;
   _path_: string;
   _key_: string;

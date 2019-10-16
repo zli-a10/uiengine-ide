@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import _ from "lodash";
 import { TreeBase } from "./TreeBase";
 import { FileLoader, getPluginTree } from "../../../helpers";
 import { PluginManager } from "uiengine";
+import { SchemasContext } from "../../Context";
 
 export const ResourceTree = () => {
+  const { refresh } = useContext(SchemasContext);
+
   // schemas fetch
   const fileLoader = FileLoader.getInstance();
   const [pluginsChildren, setPluginsChildren] = useState([]);

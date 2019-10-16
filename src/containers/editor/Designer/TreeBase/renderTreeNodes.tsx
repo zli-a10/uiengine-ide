@@ -36,6 +36,7 @@ export const renderTreeNodes = (
         if (item.children) {
           return (
             <TreeNode
+              isLeaf={item.nodeType === "file"}
               title={
                 <Title dataRef={item} {...props}>
                   {title}
@@ -51,6 +52,7 @@ export const renderTreeNodes = (
         }
         return (
           <TreeNode
+            isLeaf={item.nodeType === "file"}
             title={
               <Title dataRef={item} {...props}>
                 {title}

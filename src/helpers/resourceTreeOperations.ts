@@ -4,12 +4,16 @@ import { FileLoader } from "./FileLoader";
 import { defaultEmptyLayoutSchema } from "./configLayoutWrappers";
 import { saveFileStatus, getFileSuffix, loadFileStatus } from "./utils";
 
-export const AddResourceNode = (dstNode: IResourceTreeNode) => {
+export const AddResourceNode = (
+  dstNode: IResourceTreeNode,
+  nodeType: ENodeType = "file"
+) => {
   const { type } = dstNode;
   const newItem: IResourceTreeNode = {
     type,
     name: "",
     title: "",
+    nodeType,
     _key_: _.uniqueId("tree-node-"),
     _path_: "",
     _editing_: "add",
@@ -23,6 +27,10 @@ export const AddResourceNode = (dstNode: IResourceTreeNode) => {
     dstNode.children = [newItem];
   }
   return dstNode;
+};
+
+export const AddResourceFolder = (dstNode: IResourceTreeNode) => {
+  return AddResourceNode(dstNode, "folder");
 };
 
 export const DeleteResourceNode = (
@@ -39,17 +47,26 @@ export const DeleteResourceNode = (
       return d._key_ === dstNode._key_;
     });
     fileLoader.removeFile(dstNode._path_, type, getTreeRoot(dstNode));
-    saveFileStatus(dstNode._path_, type, "dropped");
+    saveFileStatus(dstNode._path_, type, {
+      status: "dropped",
+      nodeType: dstNode.nodeType
+    });
   } else {
     if (!revert) {
       // instead remove, just record the stauts
       dstNode._status_ = "removed";
-      saveFileStatus(dstNode._path_, type, "removed");
+      saveFileStatus(dstNode._path_, type, {
+        status: "removed",
+        nodeType: dstNode.nodeType
+      });
     } else {
       // instead remove, just record the stauts
       const { type } = dstNode;
       dstNode._status_ = "normal";
-      saveFileStatus(dstNode._path_, type, "dropped");
+      saveFileStatus(dstNode._path_, type, {
+        status: "dropped",
+        nodeType: dstNode.nodeType
+      });
     }
   }
 
@@ -72,6 +89,7 @@ export const CloneResourceNode = (
     type,
     name: newName,
     title: newName,
+    nodeType: "file",
     _key_: _.uniqueId("tree-node-"),
     _path_: newName,
     _editing_: "clone",
@@ -88,7 +106,7 @@ export const CloneResourceNode = (
   if (content instanceof Promise) {
     content.then((data: any) => {
       fileLoader.saveFile(newName, data, type, getTreeRoot(dstNode));
-      saveFileStatus(newName, type, "new");
+      saveFileStatus(newName, type, { status: "new", nodeType: "file" });
     });
   }
   return newName;
@@ -107,11 +125,16 @@ export const saveToResourceNode = (
   let name = _.snakeCase(value);
   const { _editing_: editing, type } = dstNode;
 
-  const suffix = getFileSuffix(dstNode);
-  name = name.indexOf(suffix) > -1 ? name : `${name}${suffix}`;
+  let parentPath = dstNode._parent_._path_;
+  if (dstNode.nodeType === "file") {
+    const suffix = getFileSuffix(dstNode);
+    name = name.indexOf(suffix) > -1 ? name : `${name}${suffix}`;
+    // const regExp = new RegExp(`${suffix}$`);
+    // parentPath = parentPath.replace(regExp, "");
+  }
+
   const oldPath = dstNode._path_;
-  const regExp = new RegExp(`${suffix}$`);
-  const parentPath = dstNode._parent_._path_.replace(regExp, "");
+  const nodeType = dstNode.nodeType;
   let path =
     dstNode._parent_ && dstNode._parent_.nodeType !== "root"
       ? `${parentPath}/${name}`
@@ -137,24 +160,34 @@ export const saveToResourceNode = (
     const statusObj = loadFileStatus(type, oldPath);
     if (!_.isEmpty(statusObj)) {
       if (statusObj.status !== "new") {
-        saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
-      } else {
-        const content = fileLoader.loadFile(oldPath, type);
-        content.then((data: any) => {
-          fileLoader.removeFile(oldPath, type);
-          fileLoader.saveFile(
-            path,
-            data || defaultEmptyLayoutSchema,
-            type,
-            getTreeRoot(dstNode)
-          );
+        saveFileStatus(oldPath, type, {
+          newPath: path,
+          status: "renamed",
+          nodeType
         });
-        saveFileStatus(oldPath, type, "dropped");
-        saveFileStatus(path, type, "new");
+      } else {
+        if (dstNode.nodeType === "file") {
+          const content = fileLoader.loadFile(oldPath, type);
+          content.then((data: any) => {
+            fileLoader.removeFile(oldPath, type);
+            fileLoader.saveFile(
+              path,
+              data || defaultEmptyLayoutSchema,
+              type,
+              getTreeRoot(dstNode)
+            );
+          });
+        }
+        saveFileStatus(oldPath, type, { status: "dropped", nodeType });
+        saveFileStatus(path, type, { status: "new", nodeType });
       }
     } else {
       // remote file
-      saveFileStatus(oldPath, type, { newPath: path, status: "renamed" });
+      saveFileStatus(oldPath, type, {
+        newPath: path,
+        status: "renamed",
+        nodeType
+      });
     }
   } else {
     fileLoader.saveFile(
@@ -163,7 +196,7 @@ export const saveToResourceNode = (
       type,
       getTreeRoot(dstNode)
     );
-    saveFileStatus(path, type, { status });
+    saveFileStatus(path, type, { status, nodeType });
   }
 
   return path;
@@ -171,6 +204,7 @@ export const saveToResourceNode = (
 
 export const resourceActions = {
   add: AddResourceNode,
+  addFolder: AddResourceFolder,
   delete: DeleteResourceNode,
   rename: RenameResourceNode,
   clone: CloneResourceNode,

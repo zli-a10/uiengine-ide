@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import _ from "lodash";
 import { TreeBase } from "./TreeBase";
 import { FileLoader } from "../../../helpers";
@@ -40,7 +40,7 @@ export const PageTree = () => {
   ];
   return (
     <div className="pagetree">
-      <TreeBase tree={schemaTree} openKeys={["pages"]} refresh={refresh} />
+      <TreeBase tree={schemaTree} openKeys={["pages"]} />
     </div>
   );
 };

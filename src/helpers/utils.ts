@@ -508,11 +508,6 @@ export function loadFileAndRefresh(
 /**
  * Save file status tree
  */
-interface IFileStatusGroup {
-  type: EResourceType;
-  file: string;
-  status: EStatus | EFullStatus;
-}
 export function saveFileStatus(
   file: string,
   type: EResourceType,
@@ -532,13 +527,13 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
 
   files.forEach((f: IFileStatusGroup) => {
     const { type, file, status } = f;
-
     if (type) {
       if (fileStatus[type] && fileStatus[type][file]) {
-        if (status === "dropped") {
+        // console.log(status, fileStatus);
+        const s = _.get(status, "status", status);
+        if (s === "dropped") {
           delete fileStatus[type][file];
         } else {
-          const s = _.get(status, "status", status);
           if (
             (fileStatus[type][file] !== "new" &&
               fileStatus[type][file] !== "renamed") ||
@@ -561,11 +556,9 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
 
 export function loadFileStatus(type?: EResourceType, file?: string) {
   let fileStatus = {};
-
   if (localStorage.fileStatus) {
     fileStatus = JSON.parse(localStorage.fileStatus);
   }
-
   if (type) {
     const fs = fileStatus[type];
     if (file && fs) {
@@ -579,7 +572,7 @@ export function loadFileStatus(type?: EResourceType, file?: string) {
     }
     return fs;
   }
-  return fileStatus;
+  return fileStatus || {};
 }
 
 export const getFileSuffix = (dstNode: IResourceTreeNode) => {

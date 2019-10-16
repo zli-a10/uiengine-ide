@@ -6,13 +6,22 @@ import { useDrag } from "react-dnd";
 import {
   DND_IDE_NODE_TYPE,
   resourceActions,
-  loadFileStatus
+  loadFileStatus,
+  FileLoader
 } from "../../../../helpers";
 // import { SchemasContext } from "../../../Context";
 import { ActionMenu } from "./ActionMenu";
 
 export const Title = (props: any) => {
-  const { dataRef, children, type, onSelect, onRefresh, ...rest } = props;
+  const {
+    dataRef,
+    children,
+    type,
+    onSelect,
+    onRefresh,
+    onRefreshChildren,
+    ...rest
+  } = props;
   let statusObj: any = {};
   if (dataRef.type && dataRef._path_) {
     statusObj = loadFileStatus(dataRef.type, dataRef._path_);
@@ -67,10 +76,12 @@ export const Title = (props: any) => {
   const saveSchema = useCallback(
     (e: any) => {
       const title = e.target.value;
-      const path = resourceActions.save(dataRef, title);
-      onRefresh();
-      // select on tree
-      onSelect([path]);
+      if (_.trim(title)) {
+        const path = resourceActions.save(dataRef, title);
+        // select on tree
+        onSelect([path]);
+        onRefresh();
+      }
     },
     [dataRef]
   );

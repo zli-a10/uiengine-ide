@@ -8,11 +8,12 @@ const { TreeNode } = Tree;
 export const StagingFileTree = (props: any) => {
   const { onChange } = props;
 
-  const onCheck = (checkedKeys: any, info: any) => {
+  const onCheck = useCallback((checkedKeys: any, info: any) => {
     const keys: any = [];
     info.checkedNodes.forEach((node: any) => {
       if (_.has(node, `props.dataRef`)) {
         const [path, status] = _.get(node, `props.dataRef`);
+        console.log(path, status, "..................... were checked");
         if (
           _.isString(status) ||
           (_.isObject(status) && _.has(status, "status"))
@@ -27,18 +28,21 @@ export const StagingFileTree = (props: any) => {
       }
     });
     onChange(keys);
-  };
+    setCheckedKeys(checkedKeys);
+  }, []);
 
   const treeData = useMemo(() => {
     const files = loadFileStatus();
     return files;
   }, [localStorage.fileStatus]);
 
-  // useEffect(() => {
-  // }, [treeData]);
+  const [checkedKeys, setCheckedKeys] = useState([]);
+  useEffect(() => {
+    setCheckedKeys([]);
+  }, [localStorage.fileStatus]);
 
   return (
-    <Tree checkable onCheck={onCheck}>
+    <Tree checkable onCheck={onCheck} checkedKeys={checkedKeys}>
       {Object.entries(treeData).map((entry: any) => {
         const [type, files] = entry;
         return (

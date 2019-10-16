@@ -13,10 +13,13 @@ export const TreeBase = (props: any) => {
   const { tree, openKeys } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
-  const onExpand = useCallback((expandKeys: string[]) => {
-    setExpandKeys(expandKeys);
-    setAutoExpandParent(false);
-  }, []);
+  const onExpand = useCallback(
+    (expandKeys: string[]) => {
+      setExpandKeys(expandKeys);
+      setAutoExpandParent(false);
+    },
+    [tree]
+  );
 
   const onRefresh = useCallback(() => {
     toggleRefresh();
@@ -24,33 +27,39 @@ export const TreeBase = (props: any) => {
 
   let defaultExpandedKeys: any = [];
 
-  const onSelect = useCallback((keys: string[], treeNode?: any) => {
-    if (!_.has(treeNode, "node.props.dataRef._editing_")) {
-      const dataRef = _.get(treeNode, "node.props.dataRef");
-      const type = _.get(dataRef, "type", "schema");
-      const isTemplate = _.get(dataRef, "isTemplate", false);
-      if (keys.length) {
-        const promise = loadFileAndRefresh(keys[0], type, isTemplate);
-        promise.then((data: any) => {
-          setContent(data);
-        });
+  const onSelect = useCallback(
+    (keys: string[], treeNode?: any) => {
+      if (!_.has(treeNode, "node.props.dataRef._editing_")) {
+        const dataRef = _.get(treeNode, "node.props.dataRef");
+        const type = _.get(dataRef, "type", "schema");
+        const nodeType = _.get(dataRef, "nodeType");
+        const isTemplate = _.get(dataRef, "isTemplate", false);
+        if (keys.length && nodeType === "file") {
+          const promise = loadFileAndRefresh(keys[0], type, isTemplate);
+          promise.then((data: any) => {
+            setContent(data);
+          });
+        }
+        setSelectedKey(keys, dataRef);
       }
-      setSelectedKey(keys, dataRef);
-    }
-  }, []);
+    },
+    [tree]
+  );
 
   const followProps = {
     onSelect,
-    onExpandKeys: setExpandKeys,
+    onExpandKeys: (keys: any) => {
+      setExpandKeys(keys);
+    },
     onAutoExpandParent: setAutoExpandParent,
     onRefresh: onRefresh,
     expandKeys: expandKeys
   };
 
-  console.log(selectedKeys);
+  console.log("tree ", tree, "updated");
   return (
     <div className="pagetree">
-      <Tree
+      <Tree.DirectoryTree
         showLine
         onExpand={onExpand}
         onSelect={onSelect}
@@ -60,7 +69,7 @@ export const TreeBase = (props: any) => {
         selectedKeys={selectedKeys}
       >
         {renderTreeNodes(tree, followProps)}
-      </Tree>
+      </Tree.DirectoryTree>
     </div>
   );
 };

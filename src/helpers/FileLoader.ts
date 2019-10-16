@@ -68,23 +68,33 @@ export class FileLoader implements IFileLoader {
 
     // save file status
     const statusObj = loadFileStatus(type, path);
-    const list = ["new", "renamed", "removed"];
-    if (statusObj && list.indexOf(statusObj.status) === -1) {
-      saveFileStatus(path, type, { status: "changed" });
+    // const list = ["new", "renamed", "removed"];
+    if (statusObj) {
+      saveFileStatus(path, type, {
+        status: statusObj.status || "changed",
+        nodeType: "file"
+      });
     }
     return true;
   }
 
-  loadFileTree(type: EResourceType = "schema", isTemplate: boolean = false) {
+  loadFileTree(
+    type: EResourceType = "schema",
+    isTemplate: boolean = false,
+    remoteOnly: boolean = false
+  ) {
     const promise = new Promise((resolve: any) => {
       if (!isTemplate) {
-        const fileTreeJson = this.storage.get(`file_tree.${type}`);
         let result: any = [];
-        if (fileTreeJson) {
-          try {
-            result = JSON.parse(fileTreeJson);
-          } catch (e) {
-            result = [];
+
+        if (!remoteOnly) {
+          const fileTreeJson = this.storage.get(`file_tree.${type}`);
+          if (fileTreeJson) {
+            try {
+              result = JSON.parse(fileTreeJson);
+            } catch (e) {
+              result = [];
+            }
           }
         }
         const promise = commands.getFileList(type, isTemplate);

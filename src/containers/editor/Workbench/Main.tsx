@@ -14,7 +14,7 @@ import {
 import { StagingFileTree } from "./StagingFileTree";
 
 export const Main = (props: any) => {
-  const { toggleRefresh } = useContext(SchemasContext);
+  const { refresh, toggleRefresh } = useContext(SchemasContext);
 
   const { datasource } = props;
 
@@ -100,7 +100,7 @@ export const Main = (props: any) => {
   const handleOk = useCallback(() => {
     // save files using sockets
     const fileLoader = FileLoader.getInstance();
-    console.log("saving...", files);
+    console.log(files, " files to be handeled");
     files.forEach(async (statusNode: IUploadFile) => {
       const { path, type, status } = statusNode;
       if (
@@ -109,19 +109,21 @@ export const Main = (props: any) => {
       ) {
         await saveFile(statusNode);
         // update file status
-        saveFileStatus(path, type, "dropped");
+        saveFileStatus(path, type, { status: "dropped" });
         fileLoader.removeFile(path, type);
-        fileLoader.storage.remove(`file_tree.${type}`);
-        const tree = await fileLoader.loadFileTree(type);
-        console.log(tree);
+        localStorage.removeItem(`file_tree.${type}`);
+        console.log("get type tree", localStorage[`file_tree.${type}`]);
+        const tree = await fileLoader.loadFileTree(type, false, true);
+        console.log("tree just loaded", tree);
         toggleRefresh();
+        console.log("refreshed triggeled");
       } else {
         let data = await fileLoader.loadFile(path, type);
         if (type === "schema") data = cleanSchema(data);
         statusNode.data = data;
         await saveFile(statusNode);
         // update file status
-        saveFileStatus(path, type, "dropped");
+        saveFileStatus(path, type, { status: "dropped" });
         // fileLoader.storage.remove(`file_tree.${type}`);
         // fileLoader.loadFileTree(type);
         toggleRefresh();
@@ -171,6 +173,14 @@ export const Main = (props: any) => {
                     <em>(Last Saved: {savedTime})</em>
                   </div>
                 ) : null}
+                <Modal
+                  title="Choose Saving Files"
+                  visible={visible}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                >
+                  <StagingFileTree onChange={onCheckFiles} refresh={refresh} />
+                </Modal>
               </>
             )}
           </SchemasContext.Consumer>
@@ -197,14 +207,7 @@ export const Main = (props: any) => {
           <div className="brand">UIEngine</div>
         </div>
       </div>
-      <Modal
-        title="Choose Saving Files"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <StagingFileTree onChange={onCheckFiles} />
-      </Modal>
+
       {props.children}
     </GlobalContext.Provider>
   );

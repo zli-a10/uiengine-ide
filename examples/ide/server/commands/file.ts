@@ -16,7 +16,7 @@ interface ICommandOptions {
 
 function getPath(options: ICommandOptions, rootOnly: boolean = false) {
   const { type, path, isTemplate = false } = options;
-  console.log("Read options: %s", options);
+  // console.log("Read options: %s", options);
   let root = isTemplate ? "templates" : "paths";
   const config = websockets as any;
   const readpath = get(config, `${root}.${type}`);
@@ -39,10 +39,12 @@ const walkSync = (dir: any, type: string, isTemplate: boolean = false) => {
         value: file,
         name: file,
         title: file,
+        nodeType: "file",
         children: []
       };
       if (fs.statSync(dir + "/" + file).isDirectory()) {
         const tmpFiles = walkSync(dir + "/" + file, type);
+        node.nodeType = "folder";
         node.children = tmpFiles;
         // filelist.push(tmpFiles);
       }
@@ -63,7 +65,6 @@ export function getFileList(options: ICommandOptions) {
   let result: any;
   try {
     result = walkSync(readpath, type, isTemplate);
-    console.log(result);
   } catch (e) {
     console.warn(e.message);
     result = [];
@@ -93,6 +94,22 @@ function rewriteIndex(type: string, newFileName: string, oldFileName?: string) {
   }
 }
 
+function deleteFolderRecursive(path: string) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function(file: any, index: any) {
+      var curPath = path + "/" + file;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+}
+
 /**
  *
  * @param options {"name": "writeFile", "options":{ "type": "schema",  "path": "any.json", "options": { "data": "{}" }, "isTemplate": false  }}
@@ -104,6 +121,7 @@ export function writeFile(options: ICommandOptions) {
     try {
       const status = get(options, "status.status");
       const type = get(options, "type");
+      const nodeType = get(options, "status.nodeType");
       if (status === "renamed") {
         const newName = get(options, "status.newPath");
         const newPath = `${getPath(options, true)}/${newName}`;
@@ -113,29 +131,40 @@ export function writeFile(options: ICommandOptions) {
           rewriteIndex(type, newPath, readpath);
         });
       } else if (status === "removed") {
-        fs.unlink(readpath, function() {
-          console.log("file %s was removed", readpath);
+        if (nodeType === "file") {
+          fs.unlinkSync(readpath);
           rewriteIndex(type, readpath);
-        });
+        } else {
+          // fs.rmdirSync(readpath, { recursive: true });
+          deleteFolderRecursive(readpath);
+        }
+        console.log("%s %s was removed", nodeType, readpath);
       } else {
         let data = get(options, `data`);
         if (typeof data === "object") {
           data = JSON.stringify(data, null, "\t");
         }
         // recursive save
-        const folderSegs = trim(readpath, "/").split("/");
-        if (folderSegs.length > 1) folderSegs.pop();
-        const folder = folderSegs.join("/");
+        let folder = readpath;
+        if (nodeType === "file") {
+          const folderSegs = trim(readpath, "/").split("/");
+          if (folderSegs.length > 1) folderSegs.pop();
+          folder = folderSegs.join("/");
+        }
+
         if (!fs.existsSync(folder)) {
           try {
             console.log("new folder %s is creating", folder);
-            fs.mkdirSync(folder);
+            fs.mkdirSync(folder, { recursive: true });
           } catch {
             console.warn("mkdir %s failed", folder);
           }
         }
-        result = fs.writeFileSync(readpath, data, "utf8");
-        rewriteIndex(type, readpath);
+
+        if (nodeType === "file") {
+          result = fs.writeFileSync(readpath, data, "utf8");
+          rewriteIndex(type, readpath);
+        }
       }
     } catch (e) {
       console.warn(e.message);
