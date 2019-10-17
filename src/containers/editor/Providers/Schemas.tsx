@@ -11,8 +11,8 @@ export const Schemas = (props: any) => {
   const [currentData, setCurrentData] = useState();
   const onSetCurrentData = useCallback((data: IResourceTreeNode) => {
     setCurrentData(data);
-    const { _parent_, children, ...rest } = data;
-    localStorage["currentEditNode"] = JSON.stringify(rest);
+    // const { _parent_, children, ...rest } = data;
+    // localStorage["currentEditNode"] = JSON.stringify(rest);
   }, []);
 
   const [selectedKeys, setSelectedKeys] = useState([]);

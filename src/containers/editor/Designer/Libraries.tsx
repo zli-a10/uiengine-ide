@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import { Input, Collapse, Row, Col, Button } from "antd";
 import _ from "lodash";
-const Search = Input.Search;
-const Panel = Collapse.Panel;
 
 import { Widgets } from "..";
+import { useCreateFile } from "../../../helpers";
+// import { IDEEditorContext } from "../../Context";
+
+const Panel = Collapse.Panel;
 
 export const Libraries: React.FC<IComponents> = props => {
+  // const { activeTab } = useContext(IDEEditorContext);
+
   const { list } = props;
 
   function callback() {}
@@ -36,6 +40,10 @@ export const Libraries: React.FC<IComponents> = props => {
     }
   };
 
+  // const createComponent = useCallback(() => {
+  //   useCreateFile("component");
+  // }, []);
+
   return (
     <div className="ide-libraries">
       <div className="search-bar">
@@ -44,7 +52,12 @@ export const Libraries: React.FC<IComponents> = props => {
             <Input.Search onSearch={search} />
           </Col>
           <Col span={4}>
-            <Button type="primary" icon="plus" shape="circle" />
+            <Button
+              type="primary"
+              icon="plus"
+              shape="circle"
+              onClick={useCreateFile("component")}
+            />
           </Col>
         </Row>
       </div>

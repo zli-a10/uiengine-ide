@@ -2,8 +2,13 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
 import { Collapse, Form, Icon, TreeSelect } from "antd";
 import { PropItem } from "./PropItem";
-import { IDEEditorContext, GlobalContext } from "../../Context";
-import { IDERegister, formatTitle, DndNodeManager } from "../../../helpers";
+import { IDEEditorContext } from "../../Context";
+import {
+  IDERegister,
+  formatTitle,
+  DndNodeManager,
+  useCreateFile
+} from "../../../helpers";
 
 const Panel = Collapse.Panel;
 
@@ -42,13 +47,8 @@ export const Props: React.FC = (props: any) => {
     }
   };
 
-  const genExtra = (icons: string = "plus") => (
-    <Icon
-      type={icons}
-      onClick={event => {
-        event.stopPropagation();
-      }}
-    />
+  const genExtra = (icons: string, resourceType: EResourceType) => (
+    <Icon type={icons} onClick={useCreateFile(resourceType)} />
   );
 
   const [treeValue, selectTreeValue] = useState(component);
@@ -125,7 +125,11 @@ export const Props: React.FC = (props: any) => {
             />
           </Form>
         </Panel>
-        <Panel header="Data Source" key="data-source" extra={genExtra()}>
+        <Panel
+          header="Data Source"
+          key="data-source"
+          extra={genExtra("plus", "datasource")}
+        >
           <Form {...formItemLayout}>
             <PropItem
               section="datasource"
@@ -136,7 +140,11 @@ export const Props: React.FC = (props: any) => {
           </Form>
         </Panel>
         {!_.isEmpty(allEvents) ? (
-          <Panel header="Events" key="events" extra={genExtra()}>
+          <Panel
+            header="Events"
+            key="events"
+            extra={genExtra("plus", "listener")}
+          >
             <Form {...formItemLayout}>
               {allEvents.map((name: any) => (
                 <PropItem

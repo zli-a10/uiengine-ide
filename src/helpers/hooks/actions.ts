@@ -5,7 +5,8 @@ import {
   cloneUINode,
   FileLoader,
   getTreeRoot,
-  removeDepsSchema
+  removeDepsSchema,
+  getFileSuffix
 } from "../../helpers";
 import { SchemasContext, IDEEditorContext } from "../../containers/Context";
 import { IUINode } from "uiengine/typings";
@@ -83,5 +84,23 @@ export const useCloneNode = (uinode: IUINode) => {
   return (pos: string) => async () => {
     await cloneUINode(uinode, pos);
     chooseEditNode(uinode);
+  };
+};
+
+export const useCreateFile = (type: EResourceType, templateName?: string) => {
+  const { setContent, activeTab } = useContext(IDEEditorContext);
+  const { setCurrentData } = useContext(SchemasContext);
+  return async (event: any) => {
+    if (event) {
+      event.stopPropagation();
+    }
+    const fileLoader = FileLoader.getInstance();
+    templateName = templateName || `index${getFileSuffix(type)}`;
+    const data = await fileLoader.loadFile(templateName, type, true);
+    // console.log("template %s content %s", templateName, data);
+    setContent(data);
+    activeTab("codeeditor");
+
+    setCurrentData({ type });
   };
 };

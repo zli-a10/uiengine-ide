@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { StorageAdapter } from "./StorageAdapter";
 import * as commands from "./websocket";
-import { saveFileStatus, loadFileStatus } from "./utils";
+import { saveFileStatus, loadFileStatus, cleanSchema } from "./utils";
 
 export class FileLoader implements IFileLoader {
   static storageType: EStorageType = "Local";
@@ -61,6 +61,7 @@ export class FileLoader implements IFileLoader {
     }
 
     if (type === "schema" || type === "datasource") {
+      content = cleanSchema(content, true);
       content = JSON.stringify(content);
     }
 
@@ -69,12 +70,10 @@ export class FileLoader implements IFileLoader {
     // save file status
     const statusObj = loadFileStatus(type, path);
     // const list = ["new", "renamed", "removed"];
-    if (statusObj) {
-      saveFileStatus(path, type, {
-        status: statusObj.status || "changed",
-        nodeType: "file"
-      });
-    }
+    saveFileStatus(path, type, {
+      status: _.get(statusObj, "status", "changed"),
+      nodeType: "file"
+    });
     return true;
   }
 

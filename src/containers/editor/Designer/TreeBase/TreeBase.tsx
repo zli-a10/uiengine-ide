@@ -9,7 +9,7 @@ export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey, toggleRefresh } = useContext(
     SchemasContext
   );
-  const { setContent } = useContext(IDEEditorContext);
+  const { setContent, activeTab } = useContext(IDEEditorContext);
   const { tree, openKeys } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
@@ -38,6 +38,11 @@ export const TreeBase = (props: any) => {
           const promise = loadFileAndRefresh(keys[0], type, isTemplate);
           promise.then((data: any) => {
             setContent(data);
+            if (type === "schema") {
+              activeTab("drawingboard");
+            } else {
+              activeTab("codeeditor");
+            }
           });
         }
         setSelectedKey(keys, dataRef);

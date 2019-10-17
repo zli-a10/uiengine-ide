@@ -33,7 +33,7 @@ export const CodeEditor: React.FC = (props: any) => {
     // load remote data
     if (currentData) {
       const { type } = currentData;
-      if (type === "schema") {
+      if (type === "schema" || type === "datasource") {
         setLanguage("json");
       } else {
         setLanguage("typescript");
@@ -41,29 +41,10 @@ export const CodeEditor: React.FC = (props: any) => {
     }
   }, [currentData]);
 
-  // const [currentFile, setCurrentFile] = useState(
-  //   localStorage["currentEditNode"]
-  // );
-  // const changedFile: boolean = useMemo(() => {
-  //   if (localStorage["currentEditNode"]) {
-  //     const currentNode = JSON.parse(localStorage["currentEditNode"]);
-  //     const { _path_: path } = currentNode;
-  //     setCurrentFile(path);
-  //     return currentFile === path;
-  //   }
-  //   return true;
-  // }, [localStorage["currentEditNode"]]);
-
-  // useEffect(() => {
-  //   setCurrentFile(localStorage["currentEditNode"]);
-  // }, [localStorage["currentEditNode"]]);
-
   const debounceFunc = useCallback(
     _.debounce((value: any) => {
-      if (localStorage["currentEditNode"]) {
-        // why can't directly use current Data, because I can't get the current
-        // Data right here, why??
-        const currentNode = JSON.parse(localStorage["currentEditNode"]);
+      if (currentData) {
+        const currentNode = currentData;
         const fileLoader = FileLoader.getInstance();
         const { _path_: path, type } = currentNode;
         fileLoader.saveFile(path, value, type);
@@ -82,7 +63,7 @@ export const CodeEditor: React.FC = (props: any) => {
         }
       }
     }, 1000),
-    []
+    [currentData]
   );
 
   const onEditorChange = useCallback(

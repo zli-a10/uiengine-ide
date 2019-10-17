@@ -3,6 +3,7 @@ import * as _ from "lodash";
 import { Tree, Input, Row, Col, Button } from "antd";
 import { GlobalContext } from "../../Context";
 import DataSourceTree from "./DataSourceTree";
+import { useCreateFile } from "../../../helpers";
 
 const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
   const { datasource } = useContext(GlobalContext);
@@ -20,7 +21,12 @@ const DataSource: React.FC<IDataSourceProps> = (props: IDataSourceProps) => {
             <Input.Search onSearch={onSearch} />
           </Col>
           <Col span={4}>
-            <Button type="primary" icon="plus" shape="circle" />
+            <Button
+              type="primary"
+              icon="plus"
+              shape="circle"
+              onClick={useCreateFile("datasource")}
+            />
           </Col>
         </Row>
       </div>

@@ -47,6 +47,8 @@ export function cleanSchema(schema: any, exporting: boolean = false) {
     if (exporting) {
       _.unset(schema, IDE_ID);
       _.unset(schema, "_id");
+      _.unset(schema, IDE_DEP_COLORS);
+      _.unset(schema, IDE_COLOR);
     }
 
     if (_.has(schema, "children")) {
@@ -575,8 +577,8 @@ export function loadFileStatus(type?: EResourceType, file?: string) {
   return fileStatus || {};
 }
 
-export const getFileSuffix = (dstNode: IResourceTreeNode) => {
-  const { type } = dstNode;
+export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
+  let type = _.isString(dstNode) ? dstNode : dstNode.type;
 
   const jsonSuffixTypes = ["datasource", "schema"];
   const tsSuffixTypes = ["plugin", "listener"];

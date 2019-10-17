@@ -1,0 +1,8 @@
+{
+  "endpoints": {
+    "default": "your/api/path"
+  },
+  "fields": [{
+    "any-key": "any value"
+  }]
+}
