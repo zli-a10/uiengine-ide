@@ -26,9 +26,9 @@ export class FileLoader implements IFileLoader {
     );
   }
 
-  private clearTree(treeRoot: IFileTree) {
+  private clearTree(treeRoot: IResourceTreeNode) {
     let root = treeRoot;
-    const newNode = {} as IFileTree;
+    const newNode = {} as IResourceTreeNode;
     _.forIn(root, (value: any, key: any) => {
       if (key[0] !== "_") {
         newNode[key] = value;
@@ -36,14 +36,14 @@ export class FileLoader implements IFileLoader {
     });
 
     if (root.children && root.children.length) {
-      root.children.forEach((node: IFileTree, i: number) => {
-        root.children[i] = this.clearTree(node);
+      root.children.forEach((node: IResourceTreeNode, i: number) => {
+        if (root.children) root.children[i] = this.clearTree(node);
       });
     }
     return newNode;
   }
 
-  saveTree(treeRoot: IFileTree, type: EResourceType) {
+  saveTree(treeRoot: IResourceTreeNode, type: EResourceType) {
     const clearNodes = this.clearTree(treeRoot);
     this.storage.save(`file_tree.${type}`, JSON.stringify(clearNodes.children));
   }
@@ -52,7 +52,7 @@ export class FileLoader implements IFileLoader {
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree
+    treeRoot?: IResourceTreeNode
   ): boolean {
     console.log("saving ...", path);
     // store tree
@@ -149,18 +149,42 @@ export class FileLoader implements IFileLoader {
     return newPromise;
   }
 
+  private removeTreeNode(treeRoot: any, path: string) {
+    if (treeRoot.name === path) return treeRoot;
+    if (!_.isEmpty(treeRoot.children)) {
+      treeRoot.children.forEach((node: IResourceTreeNode, index: number) => {
+        if (node.name === path) {
+          treeRoot.children.splice(index, 1);
+        } else if (!_.isEmpty(node.children)) {
+          this.removeTreeNode(node, path);
+        }
+      });
+    }
+  }
+
   removeFile(
     path: string,
     type: EResourceType = "schema",
-    treeRoot?: IFileTree
+    treeRoot?: IResourceTreeNode
   ): boolean {
     if (type === "schema" || type === "datasource") {
-      if (this.isTempStorage() && treeRoot) {
-        this.saveTree(treeRoot, type);
+      if (this.isTempStorage()) {
+        if (!treeRoot) {
+          let treeRootString = this.storage.get(`file_tree.${type}`);
+          if (treeRootString) treeRoot = JSON.parse(treeRootString);
+        }
+
+        let tree: any = treeRoot;
+        if (_.isArray(treeRoot)) {
+          tree = { children: treeRoot };
+        }
+
+        if (tree) {
+          this.removeTreeNode(tree, path);
+          this.saveTree(tree, type);
+        }
       }
     }
-    // console.log(path, type);
-    // saveFileStatus(path, type, "removed");
     return this.storage.remove(`${type}/${path}`);
   }
 }

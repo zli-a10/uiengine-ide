@@ -111,12 +111,12 @@ export const Main = (props: any) => {
         // update file status
         saveFileStatus(path, type, { status: "dropped" });
         fileLoader.removeFile(path, type);
-        localStorage.removeItem(`file_tree.${type}`);
-        console.log("get type tree", localStorage[`file_tree.${type}`]);
-        const tree = await fileLoader.loadFileTree(type, false, true);
-        console.log("tree just loaded", tree);
+        // localStorage.removeItem(`file_tree.${type}`);
+        // console.log("get type tree", localStorage[`file_tree.${type}`]);
+        // const tree = await fileLoader.loadFileTree(type, false, true);
+        // console.log("tree just loaded", tree);
         toggleRefresh();
-        console.log("refreshed triggeled");
+        // console.log("refreshed triggeled");
       } else {
         let data = await fileLoader.loadFile(path, type);
         if (type === "schema") data = cleanSchema(data);

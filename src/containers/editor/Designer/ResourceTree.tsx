@@ -28,7 +28,7 @@ export const ResourceTree = () => {
     fileLoader.loadFileTree("plugin", false).then((data: any) => {
       setPluginsChildren(data);
     });
-  }, []);
+  }, [refresh]);
 
   // const [tree, setTree] = useState(treeStructure)
   const resourceTree: any = [

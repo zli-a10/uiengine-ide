@@ -13,16 +13,16 @@ interface IFileTree {
 interface IFileLoader {
   storage: IStorage;
   editingFile: string;
-  saveTree(treeRoot: IFileTree, type: EResourceType);
+  saveTree(treeRoot: IResourceTreeNode, type: EResourceType);
   saveFile(
     path: string,
     content: any,
     type: EResourceType,
-    treeRoot?: IFileTree
+    treeRoot?: IResourceTreeNode
   ): boolean;
   loadFileTree(type: EResourceType, isTemplate?: boolean, remoteOnly?: boolean);
   loadFile(path: string, type: EResourceType, isTemplate?: boolean);
-  removeFile(path: string, type: EResourceType, treeRoot?: IFileTree);
+  removeFile(path: string, type: EResourceType, treeRoot?: IResourceTreeNode);
 }
 
 interface IStorage {
@@ -137,7 +137,7 @@ interface IWebsocketCommands {
   response?: any;
 }
 
-interface IResourceTreeNode {
+interface IResourceTreeNode extends IFileTree {
   type: EResourceType;
   name: string;
   title: string;

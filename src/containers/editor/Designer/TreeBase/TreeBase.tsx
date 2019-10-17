@@ -56,7 +56,6 @@ export const TreeBase = (props: any) => {
     expandKeys: expandKeys
   };
 
-  console.log("tree ", tree, "updated");
   return (
     <div className="pagetree">
       <Tree.DirectoryTree

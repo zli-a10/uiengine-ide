@@ -18,7 +18,7 @@ export const PageTree = () => {
     fileLoader.loadFileTree("schema", true).then((data: any) => {
       setTemplateSchemaChildren(data);
     });
-  }, []);
+  }, [refresh]);
 
   const schemaTree = [
     {

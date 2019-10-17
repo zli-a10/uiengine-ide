@@ -1,0 +1,16 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "antd:Input",
+			"props": {},
+			"_ide_id_": "_ide_id__new_109"
+		}
+	],
+	"_ide_id_": "_ide_id_-108",
+	"_ide_color_": "rgba(39,65, 124, 0.6)"
+}
