@@ -16,5 +16,7 @@ export const SchemasContext = React.createContext<ISchemasContext>({
   setSavedTime: (savedTime: string) => {},
   // for schema replace
   schema: {},
-  updateSchema: (schema: ILayoutSchema) => {}
+  updateSchema: (schema: ILayoutSchema) => {},
+  editingResource: {} as IResourceTreeNode,
+  setEditingResource: (editingResource: IResourceTreeNode) => {}
 });

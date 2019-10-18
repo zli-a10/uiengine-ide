@@ -13,5 +13,15 @@ export const GlobalContext = React.createContext<IGlobalContext>({
   toggleHeaderCollapsed: (collapsed: boolean) => {},
   componentCollapsed: false,
   toggleComponentCollapsed: (collapsed: boolean) => {},
-  datasource: {}
+  datasource: {},
+  resourceTree: {
+    listener: [],
+    datasource: [],
+    plugin: [],
+    component: [],
+    schema: []
+  },
+  setResourceTree: (resourceTree: any, type?: EResourceType) => {},
+  fileStatus: {},
+  setFileStatus: (status: IFileStatusGroup) => {}
 });

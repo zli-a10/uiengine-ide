@@ -10,6 +10,14 @@ interface IFileTree {
   children: Array<IFileTree>;
 }
 
+interface IResourceTreeObjects {
+  listener?: Array<IResourceTreeNode>;
+  datasource?: Array<IResourceTreeNode>;
+  plugin?: Array<IResourceTreeNode>;
+  component?: Array<IResourceTreeNode>;
+  schema?: Array<IResourceTreeNode>;
+}
+
 interface IFileLoader {
   storage: IStorage;
   editingFile: string;
@@ -129,6 +137,7 @@ interface ICommandOptions {
   path?: string;
   isTemplate?: boolean;
   options?: any;
+  [key: string]: any;
 }
 
 interface IWebsocketCommands {

@@ -11,6 +11,10 @@ interface IGlobalContext {
   componentCollapsed: boolean;
   toggleComponentCollapsed: (collapsed: boolean) => any;
   datasource: any;
+  resourceTree: IResourceTreeObjects;
+  setResourceTree: (resourceTree: any, type?: EResourceType) => any;
+  fileStatus: { [type: string]: { [file: string]: EFullStatus } };
+  setFileStatus: (status: IFileStatusGroup) => any;
 }
 
 interface ISchemasContext {
@@ -29,6 +33,8 @@ interface ISchemasContext {
   schema: ILayoutSchema;
   updateSchema: (schema: ILayoutSchema) => any;
   //data sourcely
+  editingResource: IResourceTreeNode;
+  setEditingResource: (editingResource: IResourceTreeNode) => any;
 }
 
 interface IComponentsContext {

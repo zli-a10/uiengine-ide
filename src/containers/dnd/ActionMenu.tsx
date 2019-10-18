@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import _ from "lodash";
 import { Menu, Dropdown, Icon } from "antd";
 
-import { SchemasContext, IDEEditorContext } from "../Context";
+import { GlobalContext, IDEEditorContext, SchemasContext } from "../Context";
 import {
   IDE_ID,
   useDeleteNode,
@@ -14,7 +14,7 @@ import {
 } from "../../helpers";
 
 const ActionMenu = (props: any) => {
-  const { currentData } = useContext(SchemasContext);
+  const { editingResource } = useContext(SchemasContext);
   const { collapsedNodes } = useContext(IDEEditorContext);
   const { children, uinode } = props;
 
@@ -32,7 +32,7 @@ const ActionMenu = (props: any) => {
           </a>
         )}
       </Menu.Item>
-      {!currentData ? null : (
+      {!editingResource ? null : (
         <Menu.Item
           key="unit-save-as-template"
           onClick={useSaveTemplate(uinode)}

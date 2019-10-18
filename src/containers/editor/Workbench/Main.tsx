@@ -55,6 +55,14 @@ export const Main = (props: any) => {
     setPreview(status);
   };
 
+  const [resourceTree, setResourceTree] = useState({
+    listener: [],
+    datasource: [],
+    plugin: [],
+    component: [],
+    schema: []
+  });
+  const [fileStatus, setFileStatus] = useState();
   const contextValue = useMemo<IGlobalContext>(
     () => ({
       preview,
@@ -76,9 +84,31 @@ export const Main = (props: any) => {
       toggleComponentCollapsed: (collapsed: boolean) => {
         toggleComponentCollapse(collapsed);
       },
-      datasource
+      datasource,
+      resourceTree,
+      setResourceTree: (tree: any, type?: EResourceType) => {
+        let copyTree: any = _.clone(resourceTree);
+        if (_.isArray(tree) && type) {
+          copyTree[type] = tree;
+        } else if (_.isObject(tree)) {
+          copyTree = _.assign(copyTree, tree);
+        }
+        setResourceTree(copyTree);
+      },
+      fileStatus,
+      setFileStatus: (status: IFileStatusGroup) => {
+        setFileStatus(status);
+      }
     }),
-    [headerCollapsed, propsCollapsed, componentCollapsed, preview, datasource]
+    [
+      headerCollapsed,
+      propsCollapsed,
+      componentCollapsed,
+      preview,
+      datasource,
+      resourceTree,
+      fileStatus
+    ]
   );
 
   const hideAll = useCallback(() => {
@@ -159,14 +189,14 @@ export const Main = (props: any) => {
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
-            {({ currentData, savedTime }) => (
+            {({ savedTime, editingResource }) => (
               <>
                 <a
                   className="button-menu"
                   onClick={() => toggleComponentCollapse(!componentCollapsed)}
                 >
                   <Icon type="menu" /> Editing{" "}
-                  {_.get(currentData, "title", "...")}
+                  {_.get(editingResource, "title", "...")}
                 </a>
                 {savedTime ? (
                   <div className="page-name">

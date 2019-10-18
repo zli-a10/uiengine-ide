@@ -62,7 +62,11 @@ export class FileLoader implements IFileLoader {
 
     if (type === "schema" || type === "datasource") {
       if (_.isString(content)) {
-        content = JSON.parse(content);
+        try {
+          content = JSON.parse(content);
+        } catch {
+          console.log("type %s parsed error", type);
+        }
       }
       content = cleanSchema(content, true);
       content = JSON.stringify(content, null, "\t");
@@ -124,10 +128,12 @@ export class FileLoader implements IFileLoader {
     const newPromise = new Promise((resolve: any) => {
       let content = this.storage.get(`${type}/${path}`);
       if (content) {
-        try {
-          content = JSON.parse(content);
-        } catch {
-          content = [];
+        if (type === "schema" || type === "datasource") {
+          try {
+            content = JSON.parse(content);
+          } catch {
+            content = [];
+          }
         }
         resolve(content);
       } else {

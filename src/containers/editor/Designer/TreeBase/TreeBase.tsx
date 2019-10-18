@@ -29,11 +29,11 @@ export const TreeBase = (props: any) => {
 
   const onSelect = useCallback(
     (keys: string[], treeNode?: any) => {
+      const dataRef = _.get(treeNode, "node.props.dataRef");
+      const type = _.get(dataRef, "type", "schema");
+      const nodeType = _.get(dataRef, "nodeType");
+      const isTemplate = _.get(dataRef, "isTemplate", false);
       if (!_.has(treeNode, "node.props.dataRef._editing_")) {
-        const dataRef = _.get(treeNode, "node.props.dataRef");
-        const type = _.get(dataRef, "type", "schema");
-        const nodeType = _.get(dataRef, "nodeType");
-        const isTemplate = _.get(dataRef, "isTemplate", false);
         if (keys.length && nodeType === "file") {
           const promise = loadFileAndRefresh(keys[0], type, isTemplate);
           promise.then((data: any) => {
@@ -45,6 +45,7 @@ export const TreeBase = (props: any) => {
             }
           });
         }
+
         setSelectedKey(keys, dataRef);
       }
     },

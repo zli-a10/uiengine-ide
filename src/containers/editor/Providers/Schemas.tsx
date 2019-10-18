@@ -9,11 +9,7 @@ export const Schemas = (props: any) => {
   const [schema, setSchema] = useState();
   // for showing
   const [currentData, setCurrentData] = useState();
-  const onSetCurrentData = useCallback((data: IResourceTreeNode) => {
-    setCurrentData(data);
-    // const { _parent_, children, ...rest } = data;
-    // localStorage["currentEditNode"] = JSON.stringify(rest);
-  }, []);
+  const [editingResource, setEditingResource] = useState();
 
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [time, setTime] = useState(Date.now());
@@ -22,12 +18,16 @@ export const Schemas = (props: any) => {
     () => ({
       currentData,
       setCurrentData: (data: IResourceTreeNode) => {
-        onSetCurrentData(data);
+        setCurrentData(data);
       },
       selectedKeys,
       setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
         if (treeNode) {
-          onSetCurrentData(treeNode);
+          const { type } = treeNode;
+          if (type === "schema") {
+            setCurrentData(treeNode);
+          }
+          setEditingResource(treeNode);
         }
         let keys: any = _.clone(selectedKeys);
         if (_.isArray(key)) {
@@ -55,6 +55,10 @@ export const Schemas = (props: any) => {
         // Bug to fix: sometimes dnd not working
         const allSchema = getActiveUINode(true);
         setContent(allSchema);
+      },
+      editingResource,
+      setEditingResource: (editingResource: IResourceTreeNode) => {
+        setEditingResource(editingResource);
       }
     }),
     [schema, currentData, selectedKeys, time]

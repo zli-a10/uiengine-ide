@@ -11,8 +11,12 @@ import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
 import { FileLoader, getActiveUINode, cleanSchema } from "../../../helpers";
 
+// on change always used the old value , even editingResource changed
+// to fix this bug, declared this global static varaible
+let currentNode: any;
 export const CodeEditor: React.FC = (props: any) => {
-  const { currentData } = useContext(SchemasContext);
+  const { editingResource } = useContext(SchemasContext);
+  currentNode = editingResource;
   const { content, setContent } = useContext(IDEEditorContext);
   // const { layouts, config = {} } = props;
   const options = {
@@ -31,52 +35,47 @@ export const CodeEditor: React.FC = (props: any) => {
 
   useEffect(() => {
     // load remote data
-    if (currentData) {
-      const { type } = currentData;
+    if (editingResource) {
+      const { type } = editingResource;
       if (type === "schema" || type === "datasource") {
         setLanguage("json");
       } else {
         setLanguage("typescript");
       }
     }
-  }, [currentData]);
-
-  const debounceFunc = useCallback(
-    _.debounce((value: any) => {
-      if (currentData) {
-        const currentNode = currentData;
-        const fileLoader = FileLoader.getInstance();
-        const { _path_: path, type } = currentNode;
-        fileLoader.saveFile(path, value, type);
-        if (type === "schema") {
-          try {
-            const schema = JSON.parse(value);
-            if (schema) {
-              const uiNode = getActiveUINode();
-              uiNode.schema = schema;
-              uiNode.updateLayout();
-              uiNode.sendMessage(true);
-            }
-          } catch (e) {
-            console.warn("Your UI JSON is not correct %s", value);
-          }
-        }
-      }
-    }, 1000),
-    [currentData]
-  );
+  }, [editingResource]);
 
   const onEditorChange = useCallback(
     (ev: any, value: any) => {
+      const debounceFunc = _.debounce((value: any) => {
+        if (currentNode) {
+          const fileLoader = FileLoader.getInstance();
+          const { _path_: path, type } = currentNode;
+          fileLoader.saveFile(path, value, type);
+          if (type === "schema") {
+            try {
+              const schema = JSON.parse(value);
+              if (schema) {
+                const uiNode = getActiveUINode();
+                uiNode.schema = schema;
+                uiNode.updateLayout();
+                uiNode.sendMessage(true);
+              }
+            } catch (e) {
+              console.warn("Your UI JSON is not correct %s", value);
+            }
+          }
+        }
+      }, 1000);
       debounceFunc(value);
       return value;
     },
-    [currentData]
+    [currentNode]
   );
 
   const cleanContent = useCallback(
     (value: any) => {
-      if (value && _.get(currentData, "type") === "schema") {
+      if (value && _.get(editingResource, "type") === "schema") {
         try {
           value = JSON.parse(value);
           value = cleanSchema(value, true);
@@ -85,7 +84,7 @@ export const CodeEditor: React.FC = (props: any) => {
       }
       return value;
     },
-    [content, currentData]
+    [content, editingResource]
   );
 
   return (
