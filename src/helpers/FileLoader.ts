@@ -61,8 +61,11 @@ export class FileLoader implements IFileLoader {
     }
 
     if (type === "schema" || type === "datasource") {
+      if (_.isString(content)) {
+        content = JSON.parse(content);
+      }
       content = cleanSchema(content, true);
-      content = JSON.stringify(content);
+      content = JSON.stringify(content, null, "\t");
     }
 
     this.storage.save(`${type}/${path}`, content);

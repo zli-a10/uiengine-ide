@@ -9,7 +9,7 @@ import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
 import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
-import { FileLoader, getActiveUINode } from "../../../helpers";
+import { FileLoader, getActiveUINode, cleanSchema } from "../../../helpers";
 
 export const CodeEditor: React.FC = (props: any) => {
   const { currentData } = useContext(SchemasContext);
@@ -74,11 +74,25 @@ export const CodeEditor: React.FC = (props: any) => {
     [currentData]
   );
 
+  const cleanContent = useCallback(
+    (value: any) => {
+      if (value && _.get(currentData, "type") === "schema") {
+        try {
+          value = JSON.parse(value);
+          value = cleanSchema(value, true);
+          value = JSON.stringify(value, null, "\t");
+        } catch {}
+      }
+      return value;
+    },
+    [content, currentData]
+  );
+
   return (
     <div className="editor code-editor">
       <ControlledEditor
         language={language}
-        value={content}
+        value={cleanContent(content)}
         theme="dark"
         onChange={onEditorChange}
         options={options}

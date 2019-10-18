@@ -33,16 +33,10 @@
 										"source": "slb.virtual-server:ip-address",
 										"schema": "slb.virtual-server:ip-address",
 										"autoload": true
-									},
-									"_id": "UINode-340",
-									"_ide_id_": "_ide_id_-122",
-									"_ide_color_": "rgba(140,93, 89, 0.6)"
+									}
 								}
 							],
-							"_id": "UINode-337",
-							"datasource": "$dummy.UINode-337",
-							"_ide_id_": "_ide_id_-121",
-							"_ide_color_": "rgba(94,27, 117, 0.6)"
+							"datasource": "$dummy.UINode-337"
 						},
 						{
 							"component": "antd:Col",
@@ -54,67 +48,83 @@
 									"component": "antd:Form",
 									"children": [
 										{
-											"component": "antd:Form.Item",
+											"component": "antd:Row",
 											"props": {
-												"label": "Name3"
-											},
-											"children": [
-												{
-													"component": "antd:Input",
-													"_id": "UINode-741",
-													"datasource": "$dummy.UINode-741",
-													"_ide_id_": "_ide_id_-1218",
-													"_ide_color_": "rgba(233,12, 152, 0.6)"
+												"gutter": 16,
+												"type": "flex",
+												"align": "top",
+												"style": {
+													"display": "flex",
+													"flex": 1
 												}
-											],
-											"_id": "UINode-738",
-											"datasource": "$dummy.UINode-738",
-											"_ide_id_": "_ide_id_-1217",
-											"_ide_color_": "rgba(202,144, 238, 0.6)"
-										},
-										{
-											"component": "antd:Form.Item",
-											"props": {
-												"label": "Password"
 											},
 											"children": [
 												{
-													"component": "antd:Input.Password",
-													"_id": "UINode-749",
-													"datasource": "$dummy.UINode-749",
-													"_ide_id_": "_ide_id_-1220",
-													"_ide_color_": "rgba(16,182, 46, 0.6)"
-												},
-												{
-													"type": "field",
-													"name": "fqdn-name",
-													"component": "antd:Form.Item",
+													"component": "antd:Col",
 													"props": {
-														"label": "FQDN Name"
+														"style": {
+															"flex": 1
+														}
 													},
 													"children": [
 														{
-															"component": "antd:Input",
-															"datasource": {
-																"source": "slb.server:fqdn-name",
-																"schema": "slb.server:fqdn-name",
-																"autoload": true
+															"component": "antd:Form.Item",
+															"props": {
+																"label": "Password"
 															},
-															"_id": "UINode-234",
-															"_ide_id_": "_ide_id_-119",
-															"_ide_color_": "rgba(151,208, 219, 0.6)"
+															"children": [
+																{
+																	"component": "antd:Input.Password",
+																	"datasource": "$dummy.UINode-749"
+																},
+																{
+																	"type": "field",
+																	"name": "fqdn-name",
+																	"component": "antd:Form.Item",
+																	"props": {
+																		"label": "FQDN Name"
+																	},
+																	"children": [
+																		{
+																			"component": "antd:Input",
+																			"datasource": {
+																				"source": "slb.server:fqdn-name",
+																				"schema": "slb.server:fqdn-name",
+																				"autoload": true
+																			}
+																		}
+																	],
+																	"datasource": "$dummy.UINode-231"
+																}
+															],
+															"datasource": "$dummy.UINode-746"
 														}
-													],
-													"_id": "UINode-231",
-													"datasource": "$dummy.UINode-231",
-													"_ide_id_": "_ide_id_-118",
-													"_ide_color_": "rgba(152,170, 190, 0.6)"
+													]
+												},
+												{
+													"component": "antd:Col",
+													"props": {
+														"style": {
+															"flex": 1
+														}
+													},
+													"children": [
+														{
+															"component": "antd:Form.Item",
+															"props": {
+																"label": "Name3"
+															},
+															"children": [
+																{
+																	"component": "antd:Input",
+																	"datasource": "$dummy.UINode-741"
+																}
+															],
+															"datasource": "$dummy.UINode-738"
+														}
+													]
 												}
-											],
-											"_id": "UINode-746",
-											"datasource": "$dummy.UINode-746",
-											"_ide_id_": "_ide_id_-1219",
-											"_ide_color_": "rgba(186,145, 193, 0.6)"
+											]
 										},
 										{
 											"component": "antd:Form.Item",
@@ -127,16 +137,10 @@
 													"props": {
 														"type": "textarea"
 													},
-													"_id": "UINode-757",
-													"datasource": "$dummy.UINode-757",
-													"_ide_id_": "_ide_id_-1222",
-													"_ide_color_": "rgba(109,231, 137, 0.6)"
+													"datasource": "$dummy.UINode-757"
 												}
 											],
-											"_id": "UINode-754",
-											"datasource": "$dummy.UINode-754",
-											"_ide_id_": "_ide_id_-1221",
-											"_ide_color_": "rgba(45,207, 183, 0.6)"
+											"datasource": "$dummy.UINode-754"
 										},
 										{
 											"component": "antd:Form.Item",
@@ -153,7 +157,6 @@
 															"props": {
 																"value": "item1"
 															},
-															"_id": "UINode-768",
 															"datasource": "$dummy.UINode-768"
 														},
 														{
@@ -162,20 +165,13 @@
 															"props": {
 																"value": "item2"
 															},
-															"_id": "UINode-772",
 															"datasource": "$dummy.UINode-772"
 														}
 													],
-													"_id": "UINode-765",
-													"datasource": "$dummy.UINode-765",
-													"_ide_id_": "_ide_id_-1224",
-													"_ide_color_": "rgba(138,192, 156, 0.6)"
+													"datasource": "$dummy.UINode-765"
 												}
 											],
-											"_id": "UINode-762",
-											"datasource": "$dummy.UINode-762",
-											"_ide_id_": "_ide_id_-1223",
-											"_ide_color_": "rgba(149,56, 22, 0.6)"
+											"datasource": "$dummy.UINode-762"
 										},
 										{
 											"component": "antd:Form.Item",
@@ -185,22 +181,13 @@
 											"children": [
 												{
 													"component": "antd:Input",
-													"_id": "UINode-781",
-													"datasource": "$dummy.UINode-781",
-													"_ide_id_": "_ide_id_-1226",
-													"_ide_color_": "rgba(35,187, 250, 0.6)"
+													"datasource": "$dummy.UINode-781"
 												}
 											],
-											"_id": "UINode-778",
-											"datasource": "$dummy.UINode-778",
-											"_ide_id_": "_ide_id_-1225",
-											"_ide_color_": "rgba(84,133, 23, 0.6)"
+											"datasource": "$dummy.UINode-778"
 										}
 									],
-									"_id": "UINode-735",
-									"datasource": "$dummy.UINode-735",
-									"_ide_id_": "_ide_id_-1216",
-									"_ide_color_": "rgba(20,41, 74, 0.6)"
+									"datasource": "$dummy.UINode-735"
 								},
 								{
 									"component": "antd:Button",
@@ -245,30 +232,16 @@
 											}
 										]
 									},
-									"_ide_id_": "_ide_id__new_1227",
-									"_id": "UINode-924",
-									"datasource": "$dummy.UINode-924",
-									"_ide_color_": "rgba(83,37, 130, 0.6)"
+									"datasource": "$dummy.UINode-924"
 								}
 							],
-							"_id": "UINode-732",
-							"datasource": "$dummy.UINode-732",
-							"_ide_id_": "_ide_id_-1215",
-							"_ide_color_": "rgba(40,237, 103, 0.6)"
+							"datasource": "$dummy.UINode-732"
 						}
 					],
-					"_id": "UINode-729",
-					"datasource": "$dummy.UINode-729",
-					"_ide_id_": "_ide_id_-1214",
-					"_ide_color_": "rgba(248,179, 203, 0.6)"
+					"datasource": "$dummy.UINode-729"
 				}
 			],
-			"_id": "UINode-164",
-			"datasource": "$dummy.UINode-164",
-			"_ide_id_": "_ide_id_-1213",
-			"_ide_color_": "rgba(247,119, 150, 0.6)"
+			"datasource": "$dummy.UINode-164"
 		}
-	],
-	"_ide_id_": "_ide_id_-116",
-	"_ide_color_": "rgba(243,98, 146, 0.6)"
+	]
 }
