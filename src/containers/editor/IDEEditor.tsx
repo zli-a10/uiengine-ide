@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import * as _ from "lodash";
-import { Tabs, Icon, Row, Col, Menu, Dropdown } from "antd";
 import { IUINode } from "uiengine/typings";
-import { Main, DesignManager, PropManager, DrawingBoard, CodeEditor } from "./";
+import { Main, DesignManager, PropManager } from "./";
 import { IDEEditorContext } from "../Context";
 import { UIEngineDndProvider } from "../dnd";
 import * as Providers from "./Providers";
@@ -10,52 +9,58 @@ import { IDE_ID } from "../../helpers";
 import "./styles/index.less";
 import ErrorBoundary from "./ErrorBoundary";
 import { Start } from "./Helper";
-const { TabPane } = Tabs;
-
-const WindowSizeDown = (props: any) => {
-  const { onSplitWindow, onMenuClick, onSave, saved } = props;
-
-  const menu = (
-    <Menu onClick={onMenuClick}>
-      <Menu.Item key="12:12">1:1</Menu.Item>
-      <Menu.Item key="8:16">1:2</Menu.Item>
-      <Menu.Item key="6:18">1:3</Menu.Item>
-      <Menu.Item key="16:8">2:1</Menu.Item>
-      <Menu.Item key="18:6">3:1</Menu.Item>
-    </Menu>
-  );
-
-  return (
-    <div className="tab-action">
-      <Icon
-        type="save"
-        style={{ marginRight: "20px" }}
-        onClick={onSave}
-        className="splitter"
-      />
-      <Dropdown overlay={menu}>
-        <Icon
-          type="layout"
-          style={{ marginRight: "20px" }}
-          onClick={onSplitWindow}
-          className="splitter"
-        />
-      </Dropdown>
-    </div>
-  );
-};
+import { EditorTabs } from "./Workbench/EditorTabs";
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [currentTab, setCurrentTab] = useState("drawingboard");
+  const [tabs, setTabs] = useState([]);
   const [editNode, setEditNode] = useState();
   const [content, setContent] = useState();
   const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
 
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
     () => ({
+      tabs,
       showTab: currentTab,
-      activeTab: (tab: string) => {
-        setCurrentTab(tab);
+      activeTab: (tab: string, language?: string) => {
+        const newTabs: any = _.cloneDeep(tabs);
+        let current: string = tab;
+        const db = "drawingboard";
+        if (!_.find(tabs, { tab }) && db !== tab) {
+          if (tab.indexOf(db) !== -1) {
+            const tabs_1 = tab.split(":");
+            if (tabs_1[1]) current = tabs_1[1];
+          }
+          if (current) {
+            // if (newTabs.indexOf(db) === -1) {
+            //   newTabs.push({ tab: db, language });
+            // }
+            newTabs.push({ tab: current, language });
+            setTabs(newTabs);
+          }
+        }
+        if (tab.indexOf(db) !== -1) {
+          setCurrentTab(db);
+        } else {
+          setCurrentTab(current);
+        }
+      },
+      removeTab: (tab: string) => {
+        const newTabs: any = _.cloneDeep(tabs);
+        const index: any = _.findIndex(newTabs, { tab });
+        if (index > -1) {
+          let current = newTabs[index + 1]
+            ? newTabs[index + 1]
+            : newTabs[index - 1];
+          newTabs.splice(index, 1);
+          setTabs(newTabs);
+          if (!current) {
+            current = "drawingboard";
+          } else {
+            current = current.tab;
+          }
+          setCurrentTab(current);
+        }
       },
       layout: "",
       setLayout: (path: string) => {},
@@ -92,44 +97,12 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         setContent(content);
       }
     }),
-    [editNode, collapsedNodes, content]
+    [editNode, collapsedNodes, content, tabs]
   );
-
-  // split window
-  const [splitted, setSpitted] = useState(false);
-  const onSplitWindow = useCallback(() => {
-    setSpitted(!splitted);
-    if (!splitted) {
-      localStorage["drawingBoardLayout"] = "12:12";
-    } else {
-      localStorage["drawingBoardLayout"] = "";
-    }
-  }, [splitted]);
-
-  const [leftSpan, setLeftSpan] = useState(12);
-  const [rightSpan, setRightSpan] = useState(12);
-  const onMenuClick = useCallback((e: any) => {
-    const { key } = e;
-    const [left, right] = key.split(":");
-    setLeftSpan(left);
-    setRightSpan(right);
-    setSpitted(true);
-    localStorage["drawingBoardLayout"] = key;
-  }, []);
-
-  const [saved, setSaved] = useState(true);
-  const onSave = useCallback(() => {
-    setSaved(true);
-  }, [splitted]);
 
   // show start ?
   const [showGuide, setShowGuide] = useState(false);
   useEffect(() => {
-    if (localStorage["drawingBoardLayout"]) {
-      onMenuClick({ key: localStorage["drawingBoardLayout"] });
-    }
-    setSpitted(!!localStorage["drawingBoardLayout"]);
-
     // show guide
     const showGuideStatus =
       localStorage["showGuide"] === undefined
@@ -145,10 +118,6 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     localStorage["showGuide"] = false;
   }, []);
 
-  const onChange = useCallback((activeKey: any) => {
-    setCurrentTab(activeKey);
-  }, []);
-
   return (
     <ErrorBoundary>
       <IDEEditorContext.Provider value={ideEditorContextValue}>
@@ -160,55 +129,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             <Main datasource={props.datasource}>
               <div className="ide-editor">
                 <DesignManager datasource={props.datasource} />
-                {!splitted ? (
-                  <Tabs
-                    defaultActiveKey="drawingboard"
-                    activeKey={currentTab}
-                    onChange={onChange}
-                    tabBarExtraContent={
-                      <WindowSizeDown
-                        saved={saved}
-                        onMenuClick={onMenuClick}
-                        onSplitWindow={onSplitWindow}
-                        onSave={onSave}
-                      />
-                    }
-                  >
-                    <TabPane tab="Drawing Board" key="drawingboard">
-                      <DrawingBoard {...props} />
-                    </TabPane>
-                    <TabPane tab="Code Editor" key="codeeditor">
-                      <CodeEditor />
-                    </TabPane>
-                  </Tabs>
-                ) : (
-                  <Row>
-                    <Col span={leftSpan}>
-                      <Tabs defaultActiveKey="drawingboard">
-                        <TabPane tab="Drawing Board" key="drawingboard">
-                          <DrawingBoard {...props} />
-                        </TabPane>
-                      </Tabs>
-                    </Col>
-                    <Col span={rightSpan}>
-                      <Tabs
-                        defaultActiveKey="codeeditor"
-                        tabBarExtraContent={
-                          <WindowSizeDown
-                            onMenuClick={onMenuClick}
-                            onSplitWindow={onSplitWindow}
-                            saved={saved}
-                            onSave={onSave}
-                          />
-                        }
-                      >
-                        <TabPane tab="Code Editor" key="codeeditor">
-                          <CodeEditor />
-                        </TabPane>
-                      </Tabs>
-                    </Col>
-                  </Row>
-                )}
+                <EditorTabs {...props} activeKey={currentTab} tabs={tabs} />
                 <PropManager {...props} />
               </div>
             </Main>

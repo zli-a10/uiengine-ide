@@ -50,7 +50,9 @@ interface IComponentsContext {
 
 interface IIDEEditorContext {
   showTab: string;
-  activeTab: (tab: string) => any;
+  tabs: Array<{ tab: string; language: string }>;
+  activeTab: (tab: string, language?: string) => any;
+  removeTab: (tab: string) => any;
   layout: string;
   setLayout: (path: string) => any;
   focusMode: { isFocus: false; topSchema: {} };

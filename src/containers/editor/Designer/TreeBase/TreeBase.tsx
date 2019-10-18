@@ -39,9 +39,9 @@ export const TreeBase = (props: any) => {
           promise.then((data: any) => {
             setContent(data);
             if (type === "schema") {
-              activeTab("drawingboard");
+              activeTab(`drawingboard:${keys[0]}`, type);
             } else {
-              activeTab("codeeditor");
+              activeTab(keys[0], type);
             }
           });
         }
@@ -49,7 +49,7 @@ export const TreeBase = (props: any) => {
         setSelectedKey(keys, dataRef);
       }
     },
-    [tree]
+    [tree, activeTab]
   );
 
   const followProps = {

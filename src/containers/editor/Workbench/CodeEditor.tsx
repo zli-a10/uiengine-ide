@@ -3,20 +3,16 @@ import React, {
   useContext,
   useEffect,
   useCallback,
-  useMemo
+  useRef
 } from "react";
 import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
-import { ControlledEditor } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
 import { FileLoader, getActiveUINode, cleanSchema } from "../../../helpers";
 
-// on change always used the old value , even editingResource changed
-// to fix this bug, declared this global static varaible
-let currentNode: any;
 export const CodeEditor: React.FC = (props: any) => {
   const { editingResource } = useContext(SchemasContext);
-  currentNode = editingResource;
   const { content, setContent } = useContext(IDEEditorContext);
   // const { layouts, config = {} } = props;
   const options = {
@@ -45,12 +41,27 @@ export const CodeEditor: React.FC = (props: any) => {
     }
   }, [editingResource]);
 
+  const editorRef = useRef();
+  const valueGetter = useRef();
+  const handleEditorDidMount = useCallback(
+    (getter: any, editor: any) => {
+      editorRef.current = editor;
+      valueGetter.current = getter;
+      editor.onDidChangeModelContent((e: any) => {
+        // console.log(e, editingResource);
+      });
+      // Now you can use the instance of monaco editor
+      // in this component whenever you want
+    },
+    [editingResource]
+  );
+
   const onEditorChange = useCallback(
     (ev: any, value: any) => {
       const debounceFunc = _.debounce((value: any) => {
-        if (currentNode) {
+        if (editingResource) {
           const fileLoader = FileLoader.getInstance();
-          const { _path_: path, type } = currentNode;
+          const { _path_: path, type } = editingResource;
           fileLoader.saveFile(path, value, type);
           if (type === "schema") {
             try {
@@ -70,7 +81,7 @@ export const CodeEditor: React.FC = (props: any) => {
       debounceFunc(value);
       return value;
     },
-    [currentNode]
+    [editingResource]
   );
 
   const cleanContent = useCallback(
@@ -87,14 +98,20 @@ export const CodeEditor: React.FC = (props: any) => {
     [content, editingResource]
   );
 
+  // function listenEditorChagnes() {
+  //   editorRef.current.onDidChangeModelContent(ev => {
+  //     console.log(editorRef.current.getValue());
+  //   });
+  // }
+
   return (
     <div className="editor code-editor">
-      <ControlledEditor
+      <Editor
         language={language}
         value={cleanContent(content)}
         theme="dark"
-        onChange={onEditorChange}
         options={options}
+        editorDidMount={handleEditorDidMount}
       />
     </div>
   );

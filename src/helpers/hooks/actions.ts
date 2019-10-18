@@ -8,11 +8,7 @@ import {
   removeDepsSchema,
   getFileSuffix
 } from "../../helpers";
-import {
-  SchemasContext,
-  IDEEditorContext,
-  GlobalContext
-} from "../../containers/Context";
+import { SchemasContext, IDEEditorContext } from "../../containers/Context";
 import { IUINode } from "uiengine/typings";
 
 export const useDeleteNode = (uinode: IUINode) => {
@@ -103,7 +99,8 @@ export const useCreateFile = (type: EResourceType, templateName?: string) => {
     const data = await fileLoader.loadFile(templateName, type, true);
     // console.log("template %s content %s", templateName, data);
     setContent(data);
-    activeTab("codeeditor");
+    const tabName = _.uniqueId(type);
+    activeTab(tabName, type);
 
     setEditingResource({ type } as IResourceTreeNode);
   };
