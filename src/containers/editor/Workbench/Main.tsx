@@ -3,7 +3,7 @@ import React, { useCallback, useState, useMemo, useContext } from "react";
 import { Switch, Icon, Modal } from "antd";
 import { UINode } from "uiengine";
 import _ from "lodash";
-import { GlobalContext, SchemasContext } from "../../Context";
+import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
 import {
   getActiveUINode,
   FileLoader,
@@ -14,6 +14,7 @@ import {
 import { StagingFileTree } from "./StagingFileTree";
 
 export const Main = (props: any) => {
+  const { activeTab } = useContext(IDEEditorContext);
   const { refresh, toggleRefresh } = useContext(SchemasContext);
 
   const { datasource } = props;
@@ -53,6 +54,7 @@ export const Main = (props: any) => {
     await rootNode.updateLayout();
     rootNode.sendMessage(true);
     setPreview(status);
+    activeTab("drawingboard");
   };
 
   const [resourceTree, setResourceTree] = useState({

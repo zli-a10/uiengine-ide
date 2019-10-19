@@ -69,11 +69,14 @@ export const EditorTabs = (props: any) => {
     setSaved(true);
   }, [splitted]);
 
-  const onEdit = (targetKey: any, action: string) => {
-    if (action === "remove") {
-      removeTab(targetKey);
-    }
-  };
+  const onEdit = useCallback(
+    (targetKey: any, action: string) => {
+      if (action === "remove") {
+        removeTab(targetKey);
+      }
+    },
+    [removeTab, tabs]
+  );
 
   const [data, setData] = useState({});
   const onChange = useCallback(
@@ -92,9 +95,13 @@ export const EditorTabs = (props: any) => {
     if (localStorage["drawingBoardLayout"]) {
       onMenuClick({ key: localStorage["drawingBoardLayout"] });
     }
-    setSpitted(!!localStorage["drawingBoardLayout"]);
+    if (tabs.length) {
+      setSpitted(!!localStorage["drawingBoardLayout"]);
+    } else {
+      setSpitted(false);
+    }
     onChange(activeKey);
-  }, [activeKey]);
+  }, [activeKey, tabs]);
 
   return !splitted ? (
     <Tabs
@@ -105,12 +112,14 @@ export const EditorTabs = (props: any) => {
       type="editable-card"
       onEdit={onEdit}
       tabBarExtraContent={
-        <WindowSizeDown
-          saved={saved}
-          onMenuClick={onMenuClick}
-          onSplitWindow={onSplitWindow}
-          onSave={onSave}
-        />
+        tabs && tabs.length ? (
+          <WindowSizeDown
+            saved={saved}
+            onMenuClick={onMenuClick}
+            onSplitWindow={onSplitWindow}
+            onSave={onSave}
+          />
+        ) : null
       }
     >
       <TabPane tab="Drawing Board" key="drawingboard">
@@ -139,11 +148,13 @@ export const EditorTabs = (props: any) => {
           type="editable-card"
           defaultActiveKey={activeKey}
           tabBarExtraContent={
-            <WindowSizeDown
-              onMenuClick={onMenuClick}
-              onSplitWindow={onSplitWindow}
-              onSave={onSave}
-            />
+            tabs && tabs.length ? (
+              <WindowSizeDown
+                onMenuClick={onMenuClick}
+                onSplitWindow={onSplitWindow}
+                onSave={onSave}
+              />
+            ) : null
           }
         >
           {tabs.map((tab: any) => (

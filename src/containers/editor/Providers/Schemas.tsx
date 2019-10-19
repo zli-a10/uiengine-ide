@@ -56,8 +56,8 @@ export const Schemas = (props: any) => {
         const allSchema = getActiveUINode(true);
         setContent({
           content: allSchema,
-          file: currentData.name,
-          type: currentData.type
+          file: _.get(currentData, "name", "unknown"),
+          type: _.get(currentData, "type", "schema")
         });
       },
       editingResource,
