@@ -40,7 +40,7 @@ const WindowSizeDown = (props: any) => {
 
 export const EditorTabs = (props: any) => {
   const { activeKey, tabs } = props;
-  const { activeTab, removeTab } = useContext(IDEEditorContext);
+  const { activeTab, removeTab, content } = useContext(IDEEditorContext);
   const [leftSpan, setLeftSpan] = useState(12);
   const [rightSpan, setRightSpan] = useState(12);
 
@@ -75,19 +75,26 @@ export const EditorTabs = (props: any) => {
     }
   };
 
+  const [data, setData] = useState({});
+  const onChange = useCallback(
+    (activeKey: any) => {
+      activeTab(activeKey);
+      // search content
+      const tabContent = _.find(content, {
+        file: activeKey
+      });
+      if (tabContent) setData(tabContent);
+    },
+    [activeTab]
+  );
+
   useEffect(() => {
     if (localStorage["drawingBoardLayout"]) {
       onMenuClick({ key: localStorage["drawingBoardLayout"] });
     }
     setSpitted(!!localStorage["drawingBoardLayout"]);
-  }, []);
-
-  const onChange = useCallback(
-    (activeKey: any) => {
-      activeTab(activeKey);
-    },
-    [activeTab]
-  );
+    onChange(activeKey);
+  }, [activeKey]);
 
   return !splitted ? (
     <Tabs
@@ -112,7 +119,7 @@ export const EditorTabs = (props: any) => {
 
       {tabs.map((tab: any) => (
         <TabPane tab={tab.tab} key={tab.tab}>
-          <CodeEditor />
+          <CodeEditor data={data} />
         </TabPane>
       ))}
     </Tabs>
@@ -141,7 +148,7 @@ export const EditorTabs = (props: any) => {
         >
           {tabs.map((tab: any) => (
             <TabPane tab={tab.tab} key={tab.tab}>
-              <CodeEditor />
+              <CodeEditor data={data} />
             </TabPane>
           ))}
         </Tabs>

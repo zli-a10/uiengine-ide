@@ -37,7 +37,7 @@ export const TreeBase = (props: any) => {
         if (keys.length && nodeType === "file") {
           const promise = loadFileAndRefresh(keys[0], type, isTemplate);
           promise.then((data: any) => {
-            setContent(data);
+            setContent({ content: data, file: keys[0], type });
             if (type === "schema") {
               activeTab(`drawingboard:${keys[0]}`, type);
             } else {

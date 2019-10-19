@@ -54,7 +54,11 @@ export const Schemas = (props: any) => {
         // fetch latest version of schema
         // Bug to fix: sometimes dnd not working
         const allSchema = getActiveUINode(true);
-        setContent(allSchema);
+        setContent({
+          content: allSchema,
+          file: currentData.name,
+          type: currentData.type
+        });
       },
       editingResource,
       setEditingResource: (editingResource: IResourceTreeNode) => {

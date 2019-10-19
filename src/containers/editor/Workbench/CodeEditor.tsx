@@ -7,13 +7,14 @@ import React, {
 } from "react";
 import _ from "lodash";
 // import MonacoEditor from "react-monaco-editor";
-import Editor from "@monaco-editor/react";
+import { ControlledEditor } from "@monaco-editor/react";
 import { SchemasContext, IDEEditorContext } from "../../Context";
 import { FileLoader, getActiveUINode, cleanSchema } from "../../../helpers";
 
-export const CodeEditor: React.FC = (props: any) => {
-  const { editingResource } = useContext(SchemasContext);
-  const { content, setContent } = useContext(IDEEditorContext);
+export const CodeEditor = (props: any) => {
+  const { data: editingResource } = props;
+  // const { editingResource } = useContext(SchemasContext);
+  // const { content, setContent } = useContext(IDEEditorContext);
   // const { layouts, config = {} } = props;
   const options = {
     selectOnLineNumbers: true,
@@ -95,7 +96,7 @@ export const CodeEditor: React.FC = (props: any) => {
       }
       return value;
     },
-    [content, editingResource]
+    [editingResource]
   );
 
   // function listenEditorChagnes() {
@@ -106,11 +107,12 @@ export const CodeEditor: React.FC = (props: any) => {
 
   return (
     <div className="editor code-editor">
-      <Editor
+      <ControlledEditor
         language={language}
-        value={cleanContent(content)}
+        value={cleanContent(editingResource.content)}
         theme="dark"
         options={options}
+        height="100%"
         editorDidMount={handleEditorDidMount}
       />
     </div>

@@ -15,7 +15,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [currentTab, setCurrentTab] = useState("drawingboard");
   const [tabs, setTabs] = useState([]);
   const [editNode, setEditNode] = useState();
-  const [content, setContent] = useState();
+  const [content, setContent] = useState([]);
   const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
 
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
@@ -90,11 +90,19 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         setCollapsedNodes(_.clone(collapsedNodes));
       },
       content,
-      setContent: (content: any) => {
-        if (_.isObject(content)) {
-          content = JSON.stringify(content, null, "\t");
+      setContent: (data: IContentList) => {
+        const newContentList: any = _.clone(content);
+        const { file, type, content: newContent } = data;
+        if (_.isObject(newContent)) {
+          data.content = JSON.stringify(newContent, null, "\t");
         }
-        setContent(content);
+        const index = _.findIndex(newContentList, { type, file });
+        if (index > -1) {
+          newContentList[index] = data;
+        } else {
+          newContentList.push(data);
+        }
+        setContent(newContentList);
       }
     }),
     [editNode, collapsedNodes, content, tabs]

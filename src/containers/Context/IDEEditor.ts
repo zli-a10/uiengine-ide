@@ -3,8 +3,9 @@ import { IUINode } from "uiengine/typings";
 
 export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   showTab: "",
-  activeTab: (tab: string, language?: string) => {},
   tabs: [],
+  activeTab: (tab: string, language?: string) => {},
+  removeTab: (tab: string) => {},
   layout: "",
   setLayout: (path: string) => {},
   focusMode: { isFocus: false, topSchema: {} },
@@ -17,6 +18,6 @@ export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   chooseEditNode: (editNode?: IUINode) => {},
   collapsedNodes: [],
   setCollapsedNode: (uiNode: IUINode) => {},
-  content: "",
-  setContent: (content: string) => {}
+  content: [],
+  setContent: (content: IContentList) => {}
 });

@@ -98,8 +98,8 @@ export const useCreateFile = (type: EResourceType, templateName?: string) => {
     templateName = templateName || `index${getFileSuffix(type)}`;
     const data = await fileLoader.loadFile(templateName, type, true);
     // console.log("template %s content %s", templateName, data);
-    setContent(data);
     const tabName = _.uniqueId(type);
+    setContent({ content: data, type, file: tabName });
     activeTab(tabName, type);
 
     setEditingResource({ type } as IResourceTreeNode);

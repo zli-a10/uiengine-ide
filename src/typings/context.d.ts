@@ -48,9 +48,14 @@ interface IComponentsContext {
   activeTab: (tab: string) => any;
 }
 
+interface IContentList {
+  file: string;
+  type: string;
+  content: string;
+}
 interface IIDEEditorContext {
   showTab: string;
-  tabs: Array<{ tab: string; language: string }>;
+  tabs: Array<{ tab: string; language: string; treeNode?: IResourceTreeNode }>;
   activeTab: (tab: string, language?: string) => any;
   removeTab: (tab: string) => any;
   layout: string;
@@ -65,8 +70,8 @@ interface IIDEEditorContext {
   chooseEditNode: (editNode: IUINode) => any;
   collapsedNodes: Array<string>;
   setCollapsedNode: (uiNode: IUINode) => any;
-  content: any;
-  setContent: (content: any) => any;
+  content: Array<IContentList>;
+  setContent: (content: IContentList) => any;
 }
 
 interface IPropsContext {
