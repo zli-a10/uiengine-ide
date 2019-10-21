@@ -3,13 +3,13 @@ import { Client } from "../Client";
 
 export async function getFileList(
   type: EResourceType,
-  isTemplate: boolean = false
+  isTemplate: boolean = false,
+  folderOnly: boolean = false
 ) {
   const command: IWebsocketCommands = {
     name: "getFileList",
-    options: { type, isTemplate }
+    options: { type, isTemplate, folderOnly }
   };
-
   return await Client.connect(command);
 }
 

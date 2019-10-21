@@ -23,12 +23,33 @@ function getPath(options: ICommandOptions, rootOnly: boolean = false) {
   return path && !rootOnly ? `${readpath}/${path}` : readpath;
 }
 
-const walkSync = (dir: any, type: string, isTemplate: boolean = false) => {
+const walkSync = (
+  dir: any,
+  type: string,
+  isTemplate: boolean = false,
+  folderOnly: boolean = false
+) => {
   var fs: any = fs || require("fs"),
     files = fs.readdirSync(dir);
   let filelist: any = [];
   files.forEach((file: any) => {
-    if (file.indexOf("index.") !== 0) {
+    if (fs.statSync(dir + "/" + file).isDirectory()) {
+      const tmpFiles = walkSync(dir + "/" + file, type, isTemplate, folderOnly);
+      const p = dir ? `${dir}/${file}` : file;
+      const node = {
+        type,
+        isTemplate,
+        server: true,
+        key: file,
+        path: p,
+        value: file,
+        name: file,
+        title: file,
+        nodeType: "folder",
+        children: tmpFiles
+      };
+      filelist.push(node);
+    } else if (!folderOnly && file.indexOf("index.") !== 0) {
       const p = dir ? `${dir}/${file}` : file;
       const node = {
         type,
@@ -42,12 +63,6 @@ const walkSync = (dir: any, type: string, isTemplate: boolean = false) => {
         nodeType: "file",
         children: []
       };
-      if (fs.statSync(dir + "/" + file).isDirectory()) {
-        const tmpFiles = walkSync(dir + "/" + file, type);
-        node.nodeType = "folder";
-        node.children = tmpFiles;
-        // filelist.push(tmpFiles);
-      }
       filelist.push(node);
     }
   });
@@ -62,9 +77,10 @@ export function getFileList(options: ICommandOptions) {
   const readpath = getPath(options);
   const type = get(options, "type");
   const isTemplate = get(options, "isTemplate");
+  const folderOnly = get(options, "folderOnly");
   let result: any;
   try {
-    result = walkSync(readpath, type, isTemplate);
+    result = walkSync(readpath, type, isTemplate, folderOnly);
   } catch (e) {
     console.warn(e.message);
     result = [];

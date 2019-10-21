@@ -26,9 +26,12 @@ export class FileLoader implements IFileLoader {
     );
   }
 
-  private clearTree(treeRoot: IResourceTreeNode) {
+  private clearTree(treeRoot: IResourceTreeNode, folderOnly: boolean = false) {
     let root = treeRoot;
     const newNode = {} as IResourceTreeNode;
+    if (folderOnly && root.nodeType !== "folder") {
+      return newNode;
+    }
     _.forIn(root, (value: any, key: any) => {
       if (key[0] !== "_") {
         newNode[key] = value;
@@ -87,7 +90,8 @@ export class FileLoader implements IFileLoader {
   loadFileTree(
     type: EResourceType = "schema",
     isTemplate: boolean = false,
-    remoteOnly: boolean = false
+    remoteOnly: boolean = false,
+    folderOnly: boolean = false
   ) {
     const promise = new Promise((resolve: any) => {
       if (!isTemplate) {
@@ -98,12 +102,15 @@ export class FileLoader implements IFileLoader {
           if (fileTreeJson) {
             try {
               result = JSON.parse(fileTreeJson);
+              if (folderOnly) {
+                result = this.clearTree(result, folderOnly);
+              }
             } catch (e) {
               result = [];
             }
           }
         }
-        const promise = commands.getFileList(type, isTemplate);
+        const promise = commands.getFileList(type, isTemplate, folderOnly);
         promise.then((tree: any) => {
           result = _.unionBy(result, tree, "name");
           // cache to local storage
@@ -111,7 +118,7 @@ export class FileLoader implements IFileLoader {
           resolve(result);
         });
       } else {
-        const promise = commands.getFileList(type, isTemplate);
+        const promise = commands.getFileList(type, isTemplate, folderOnly);
         promise.then((tree: any) => {
           if (tree) {
             resolve(tree);

@@ -2,8 +2,6 @@ import React from "react";
 import { ILayoutSchema } from "uiengine/typings";
 
 export const SchemasContext = React.createContext<ISchemasContext>({
-  currentData: {},
-  setCurrentData: (dataRef: any) => {},
   selectedKeys: [],
   setSelectedKey: (key: any, treeNode?: any, type?: string) => {},
   help: "",

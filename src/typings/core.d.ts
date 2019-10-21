@@ -28,7 +28,12 @@ interface IFileLoader {
     type: EResourceType,
     treeRoot?: IResourceTreeNode
   ): boolean;
-  loadFileTree(type: EResourceType, isTemplate?: boolean, remoteOnly?: boolean);
+  loadFileTree(
+    type: EResourceType,
+    isTemplate?: boolean,
+    remoteOnly?: boolean,
+    folderOnly?: boolean
+  );
   loadFile(path: string, type: EResourceType, isTemplate?: boolean);
   removeFile(path: string, type: EResourceType, treeRoot?: IResourceTreeNode);
 }

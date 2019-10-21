@@ -8,7 +8,6 @@ export const Schemas = (props: any) => {
   const { setContent } = useContext(IDEEditorContext);
   const [schema, setSchema] = useState();
   // for showing
-  const [currentData, setCurrentData] = useState();
   const [editingResource, setEditingResource] = useState();
 
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -16,17 +15,9 @@ export const Schemas = (props: any) => {
 
   const schemasContextValue = useMemo<ISchemasContext>(
     () => ({
-      currentData,
-      setCurrentData: (data: IResourceTreeNode) => {
-        setCurrentData(data);
-      },
       selectedKeys,
       setSelectedKey: (key: any, treeNode?: IResourceTreeNode) => {
         if (treeNode) {
-          const { type } = treeNode;
-          if (type === "schema") {
-            setCurrentData(treeNode);
-          }
           setEditingResource(treeNode);
         }
         let keys: any = _.clone(selectedKeys);
@@ -56,8 +47,8 @@ export const Schemas = (props: any) => {
         const allSchema = getActiveUINode(true);
         setContent({
           content: allSchema,
-          file: _.get(currentData, "name", "unknown"),
-          type: _.get(currentData, "type", "schema")
+          file: _.get(editingResource, "name", "unknown"),
+          type: _.get(editingResource, "type", "schema")
         });
       },
       editingResource,
@@ -65,7 +56,7 @@ export const Schemas = (props: any) => {
         setEditingResource(editingResource);
       }
     }),
-    [schema, currentData, selectedKeys, time]
+    [schema, editingResource, selectedKeys, time]
   );
   return (
     <SchemasContext.Provider value={schemasContextValue}>

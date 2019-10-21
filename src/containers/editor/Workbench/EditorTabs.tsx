@@ -1,12 +1,45 @@
 import React, { useState, useCallback, useEffect, useContext } from "react";
 import * as _ from "lodash";
-import { Tabs, Icon, Row, Col, Menu, Dropdown } from "antd";
+import {
+  Tabs,
+  Icon,
+  Row,
+  Col,
+  Menu,
+  Dropdown,
+  Modal,
+  Form,
+  Input,
+  TreeSelect
+} from "antd";
 import { DrawingBoard, CodeEditor } from "./../";
-import { IDEEditorContext } from "../../Context";
+import { IDEEditorContext, GlobalContext } from "../../Context";
+import { loadFileStatus, getFileSuffix, FileLoader } from "../../../helpers";
 const { TabPane } = Tabs;
 
 const WindowSizeDown = (props: any) => {
-  const { onSplitWindow, onMenuClick, onSave } = props;
+  const {
+    onSplitWindow,
+    onMenuClick,
+    onSave,
+    activeKey,
+    type = "schema"
+  } = props;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fileName, setFileName] = useState(activeKey);
+  const [folder, setFolder] = useState();
+  const handleOk = useCallback(() => {
+    onSave(folder, fileName, type);
+    setModalVisible(false);
+  }, [activeKey]);
+
+  const handleCancel = useCallback((e: any) => {
+    setModalVisible(false);
+  }, []);
+
+  const showModal = useCallback((e: any) => {
+    setModalVisible(true);
+  }, []);
 
   const menu = (
     <Menu onClick={onMenuClick}>
@@ -18,12 +51,50 @@ const WindowSizeDown = (props: any) => {
     </Menu>
   );
 
+  const [treeData, setTreeData] = useState();
+  useEffect(() => {
+    setFileName(activeKey);
+    const loadTreeData = async () => {
+      const fileLoader = FileLoader.getInstance();
+      const data = await fileLoader.loadFileTree(type, false, false, true);
+
+      const tree = [
+        {
+          title: type,
+          value: `root_${type}`,
+          key: type,
+          children: data
+        }
+      ];
+      return tree;
+    };
+
+    if (type) {
+      const treePromise = loadTreeData();
+      treePromise.then((tree: any) => {
+        setTreeData(tree);
+        setFolder(`root_${type}`);
+      });
+    }
+  }, [activeKey, type]);
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 16 }
+    }
+  };
+
   return (
     <div className="tab-action">
       <Icon
         type="save"
         style={{ marginRight: "20px" }}
-        onClick={onSave}
+        onClick={showModal}
         className="splitter"
       />
       <Dropdown overlay={menu}>
@@ -34,6 +105,35 @@ const WindowSizeDown = (props: any) => {
           className="splitter"
         />
       </Dropdown>
+      <Modal
+        title="Save File"
+        visible={modalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Form {...formItemLayout}>
+          <Form.Item label="FileName">
+            <Input
+              defaultValue={activeKey}
+              value={fileName}
+              onChange={(e: any) => {
+                setFileName(e.target.value);
+              }}
+            />
+          </Form.Item>
+          <Form.Item label="Folder">
+            <TreeSelect
+              style={{ width: 300 }}
+              value={folder}
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+              treeData={treeData}
+              placeholder="Please select"
+              treeDefaultExpandAll
+              onChange={(value: any) => setFolder(value)}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
@@ -41,6 +141,8 @@ const WindowSizeDown = (props: any) => {
 export const EditorTabs = (props: any) => {
   const { activeKey, tabs } = props;
   const { activeTab, removeTab } = useContext(IDEEditorContext);
+  const { setResourceTree } = useContext(GlobalContext);
+
   const [leftSpan, setLeftSpan] = useState(12);
   const [rightSpan, setRightSpan] = useState(12);
 
@@ -64,10 +166,12 @@ export const EditorTabs = (props: any) => {
     localStorage["drawingBoardLayout"] = key;
   }, []);
 
-  const [saved, setSaved] = useState(true);
-  const onSave = useCallback(() => {
-    setSaved(true);
-  }, [splitted]);
+  const onSave = useCallback(
+    (folder: string, fileName: string, type: EResourceType) => {
+      // save nwe
+    },
+    [splitted]
+  );
 
   const onEdit = useCallback(
     (targetKey: any, action: string) => {
@@ -98,6 +202,30 @@ export const EditorTabs = (props: any) => {
     }
   }, [tabs]);
 
+  const createTabTitle = useCallback(
+    (tabObject: any) => {
+      const { tab, language } = tabObject;
+      const status = loadFileStatus(language, tab);
+      const suffix = getFileSuffix(language);
+      let tabTitle: any;
+      // this is not the final solution
+      const isNew = tab.indexOf(suffix) === -1;
+      if (_.has(status, "status") || isNew) {
+        const s = _.get(status, "status", isNew ? "new" : "normal");
+        tabTitle = <span className={`node-modified-${s}`}>*{tab}</span>;
+      } else {
+        tabTitle = <span>{tab}</span>;
+      }
+      return tabTitle;
+    },
+    [localStorage.fileStatus]
+  );
+
+  // load active key type
+  const tab = _.find(tabs, { tab: activeKey });
+  let type = "";
+  if (tab) type = _.get(tab, "language");
+
   return !splitted ? (
     <Tabs
       defaultActiveKey="drawingboard"
@@ -109,10 +237,11 @@ export const EditorTabs = (props: any) => {
       tabBarExtraContent={
         tabs && tabs.length ? (
           <WindowSizeDown
-            saved={saved}
             onMenuClick={onMenuClick}
             onSplitWindow={onSplitWindow}
             onSave={onSave}
+            activeKey={activeKey}
+            type={type}
           />
         ) : null
       }
@@ -123,7 +252,7 @@ export const EditorTabs = (props: any) => {
 
       {tabs.map((tab: any) => {
         return (
-          <TabPane tab={tab.tab} key={tab.tab}>
+          <TabPane tab={createTabTitle(tab)} key={tab.tab}>
             <CodeEditor data={tab} />
           </TabPane>
         );
@@ -150,12 +279,14 @@ export const EditorTabs = (props: any) => {
                 onMenuClick={onMenuClick}
                 onSplitWindow={onSplitWindow}
                 onSave={onSave}
+                activeKey={activeKey}
+                type={type}
               />
             ) : null
           }
         >
           {tabs.map((tab: any) => (
-            <TabPane tab={tab.tab} key={tab.tab}>
+            <TabPane tab={createTabTitle(tab)} key={tab.tab}>
               <CodeEditor data={tab} />
             </TabPane>
           ))}

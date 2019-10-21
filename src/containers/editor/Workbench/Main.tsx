@@ -65,6 +65,12 @@ export const Main = (props: any) => {
     schema: []
   });
   const [fileStatus, setFileStatus] = useState();
+  const saveOpenFileStatus = useCallback((statusObj: IFileStatusGroup) => {
+    // setFileStatus(statusObj);
+    const { file, type, status } = statusObj;
+    saveFileStatus(file, type, status);
+  }, []);
+
   const contextValue = useMemo<IGlobalContext>(
     () => ({
       preview,
@@ -99,7 +105,7 @@ export const Main = (props: any) => {
       },
       fileStatus,
       setFileStatus: (status: IFileStatusGroup) => {
-        setFileStatus(status);
+        saveOpenFileStatus(status);
       }
     }),
     [
@@ -141,25 +147,15 @@ export const Main = (props: any) => {
       ) {
         await saveFile(statusNode);
         // update file status
-        saveFileStatus(path, type, { status: "dropped" });
         fileLoader.removeFile(path, type);
-        // localStorage.removeItem(`file_tree.${type}`);
-        // console.log("get type tree", localStorage[`file_tree.${type}`]);
-        // const tree = await fileLoader.loadFileTree(type, false, true);
-        // console.log("tree just loaded", tree);
-        toggleRefresh();
-        // console.log("refreshed triggeled");
       } else {
         let data = await fileLoader.loadFile(path, type);
         if (type === "schema") data = cleanSchema(data);
         statusNode.data = data;
         await saveFile(statusNode);
-        // update file status
-        saveFileStatus(path, type, { status: "dropped" });
-        // fileLoader.storage.remove(`file_tree.${type}`);
-        // fileLoader.loadFileTree(type);
-        toggleRefresh();
       }
+      saveOpenFileStatus({ file: path, type, status });
+      toggleRefresh();
     });
 
     changeVisible(false);

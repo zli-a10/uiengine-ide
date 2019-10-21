@@ -6,7 +6,8 @@ import {
   FileLoader,
   getTreeRoot,
   removeDepsSchema,
-  getFileSuffix
+  getFileSuffix,
+  saveFileStatus
 } from "../../helpers";
 import { SchemasContext, IDEEditorContext } from "../../containers/Context";
 import { IUINode } from "uiengine/typings";
@@ -44,18 +45,18 @@ export const useRemoveChildren = (uinode: IUINode) => {
 };
 
 export const useSaveTemplate = (uinode: IUINode) => {
-  const { currentData, setSelectedKey } = useContext(SchemasContext);
+  const { editingResource, setSelectedKey } = useContext(SchemasContext);
   return async () => {
-    if (!currentData) return;
+    if (!editingResource) return;
     const fileLoader = FileLoader.getInstance();
     const schema = uinode.schema;
 
     // save file
     const name = _.uniqueId("saved_template_");
-    const newPath = `${_.get(currentData, "_path_")}/${name}`;
+    const newPath = `${_.get(editingResource, "_path_")}/${name}`;
 
     // and update the tree
-    const children = _.get(currentData, "children", []);
+    const children: any = _.get(editingResource, "children", []);
     children.push({
       _path_: newPath,
       _key_: newPath,
@@ -63,8 +64,8 @@ export const useSaveTemplate = (uinode: IUINode) => {
       title: name,
       _editing_: true
     });
-    currentData.children = children;
-    const treeRoot = getTreeRoot(currentData);
+    editingResource.children = children;
+    const treeRoot = getTreeRoot(editingResource);
     fileLoader.saveFile(newPath, schema, "schema", treeRoot);
 
     // refresh the tree
@@ -89,7 +90,7 @@ export const useCloneNode = (uinode: IUINode) => {
 
 export const useCreateFile = (type: EResourceType, templateName?: string) => {
   const { setContent, activeTab } = useContext(IDEEditorContext);
-  const { setEditingResource } = useContext(SchemasContext);
+  // const { setEditingResource } = useContext(SchemasContext);
   return async (event: any) => {
     if (event) {
       event.stopPropagation();
@@ -100,8 +101,13 @@ export const useCreateFile = (type: EResourceType, templateName?: string) => {
     // console.log("template %s content %s", templateName, data);
     const tabName = _.uniqueId(type);
     setContent({ content: data, type, file: tabName });
+    // saveFileStatus(tabName, type, {
+    //   status: "new",
+    //   nodeType: "file",
+    //   isTemple: true
+    // });
     activeTab(tabName, type);
 
-    setEditingResource({ type } as IResourceTreeNode);
+    // setEditingResource({ type, _status_: "new" } as IResourceTreeNode);
   };
 };

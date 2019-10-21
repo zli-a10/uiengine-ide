@@ -18,8 +18,6 @@ interface IGlobalContext {
 }
 
 interface ISchemasContext {
-  currentData: any;
-  setCurrentData: (data: any) => any;
   selectedKeys;
   setSelectedKey: (key: any, treeNode?: any, type?: string) => any;
   savedTime: string;
