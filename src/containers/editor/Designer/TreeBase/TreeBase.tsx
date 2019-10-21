@@ -9,7 +9,7 @@ export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey, toggleRefresh } = useContext(
     SchemasContext
   );
-  const { setContent, activeTab } = useContext(IDEEditorContext);
+  const { setContent, activeTab, tabs } = useContext(IDEEditorContext);
   const { tree, openKeys } = props;
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
@@ -28,24 +28,23 @@ export const TreeBase = (props: any) => {
   let defaultExpandedKeys: any = [];
 
   const onSelect = useCallback(
-    (keys: string[], treeNode?: any) => {
+    async (keys: string[], treeNode?: any) => {
       const dataRef = _.get(treeNode, "node.props.dataRef");
       const type = _.get(dataRef, "type", "schema");
       const nodeType = _.get(dataRef, "nodeType");
       const isTemplate = _.get(dataRef, "isTemplate", false);
       if (!_.has(treeNode, "node.props.dataRef._editing_")) {
         if (keys.length && nodeType === "file") {
-          const promise = loadFileAndRefresh(keys[0], type, isTemplate);
-          promise.then((data: any) => {
+          if (!_.find(tabs, { tab: keys[0] })) {
+            const data = await loadFileAndRefresh(keys[0], type, isTemplate);
             setContent({ content: data, file: keys[0], type });
-            if (type === "schema") {
-              activeTab(`drawingboard:${keys[0]}`, type);
-            } else {
-              activeTab(keys[0], type);
-            }
-          });
+          }
+          if (type === "schema") {
+            activeTab(`drawingboard:${keys[0]}`, type);
+          } else {
+            activeTab(keys[0], type);
+          }
         }
-
         setSelectedKey(keys, dataRef);
       }
     },

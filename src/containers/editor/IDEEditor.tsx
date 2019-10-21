@@ -26,18 +26,13 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         const newTabs: any = _.cloneDeep(tabs);
         let current: string = tab;
         const db = "drawingboard";
-        if (!_.find(tabs, { tab }) && db !== tab) {
-          if (tab.indexOf(db) !== -1) {
-            const tabs_1 = tab.split(":");
-            if (tabs_1[1]) current = tabs_1[1];
-          }
-          if (current) {
-            // if (newTabs.indexOf(db) === -1) {
-            //   newTabs.push({ tab: db, language });
-            // }
-            newTabs.push({ tab: current, language });
-            setTabs(newTabs);
-          }
+        if (tab.indexOf(db) !== -1) {
+          const segs = tab.split(":");
+          if (segs[1]) current = segs[1];
+        }
+        if (!_.find(tabs, { tab: current }) && db !== current) {
+          newTabs.push({ tab: current, language });
+          setTabs(newTabs);
         }
         if (tab.indexOf(db) !== -1) {
           setCurrentTab(db);
@@ -60,6 +55,14 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             current = current.tab;
           }
           setCurrentTab(current);
+        }
+
+        // remove content
+        const newContentList: any = _.clone(content);
+        const conentIndex = _.findIndex(newContentList, { file: tab });
+        if (conentIndex > -1) {
+          newContentList.splice(conentIndex, 1);
+          setContent(newContentList);
         }
       },
       layout: "",
