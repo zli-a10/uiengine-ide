@@ -1,7 +1,9 @@
 {
   "version": "3.0.0#Autoform v1.5",
-  "endpoints": {
-    "default": "/axapi/v3/slb/virtual-server/{name}"
+  "endpoint": {
+    "default": {
+      "path": "/axapi/v3/slb/virtual-server/{name}"
+    }
   },
   "cm-branch": "",
   "cm-lineage": "slb.virtual-server",

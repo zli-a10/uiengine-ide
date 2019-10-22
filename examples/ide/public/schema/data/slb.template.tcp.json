@@ -1,7 +1,9 @@
 {
   "version": "3.0.0#Autoform v1.5",
-  "endpoints": {
-    "default": "/axapi/v3/slb/template/tcp/{name}"
+  "endpoint": {
+    "default": {
+      "path": "/axapi/v3/slb/template/tcp/{name}"
+    }
   },
   "cm-branch": "",
   "cm-lineage": "slb.template.tcp",

@@ -16,6 +16,7 @@ export const DataSelect = (props: any) => {
       setAssocs(_.get(data, datasource.replace(":", ".")));
     });
   }
+  
   return (
     <Select {...rest}>
       {assocs &&
