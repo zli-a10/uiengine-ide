@@ -46,9 +46,17 @@ export class FileLoader implements IFileLoader {
     return newNode;
   }
 
-  saveTree(treeRoot: IResourceTreeNode, type: EResourceType) {
-    const clearNodes = this.clearTree(treeRoot);
-    this.storage.save(`file_tree.${type}`, JSON.stringify(clearNodes.children));
+  saveTree(treeRoot: any, type: EResourceType) {
+    let nodes: any;
+    if (_.isArray(treeRoot)) {
+      nodes = treeRoot.map((data: any) => {
+        return this.clearTree(data);
+      });
+    } else {
+      nodes = this.clearTree(treeRoot);
+      nodes = _.get(nodes, "children");
+    }
+    this.storage.save(`file_tree.${type}`, JSON.stringify(nodes));
   }
 
   saveFile(
@@ -114,7 +122,9 @@ export class FileLoader implements IFileLoader {
         promise.then((tree: any) => {
           result = _.unionBy(result, tree, "name");
           // cache to local storage
-          this.storage.save(`file_tree.${type}`, JSON.stringify(result));
+          if (!folderOnly) {
+            this.storage.save(`file_tree.${type}`, JSON.stringify(result));
+          }
           resolve(result);
         });
       } else {

@@ -6,27 +6,27 @@ import { PluginManager } from "uiengine";
 import { SchemasContext, GlobalContext } from "../../Context";
 
 export const ResourceTree = () => {
-  const { refresh } = useContext(SchemasContext);
+  // const { refresh } = useContext(SchemasContext);
   const { resourceTree, setResourceTree } = useContext(GlobalContext);
 
   // schemas fetch
-  const fileLoader = FileLoader.getInstance();
+  // const fileLoader = FileLoader.getInstance();
 
-  useEffect(() => {
-    const loadData = async () => {
-      const tree = {};
-      const listener = await fileLoader.loadFileTree("listener", false);
-      tree["listener"] = listener;
-      const datasource = await fileLoader.loadFileTree("datasource", false);
-      tree["datasource"] = datasource;
-      const components = await fileLoader.loadFileTree("component", false);
-      tree["component"] = components;
-      const plugins = await fileLoader.loadFileTree("plugin", false);
-      tree["plugin"] = plugins;
-      setResourceTree(tree);
-    };
-    loadData();
-  }, [refresh]);
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     const tree = {};
+  //     const listener = await fileLoader.loadFileTree("listener", false);
+  //     tree["listener"] = listener;
+  //     const datasource = await fileLoader.loadFileTree("datasource", false);
+  //     tree["datasource"] = datasource;
+  //     const components = await fileLoader.loadFileTree("component", false);
+  //     tree["component"] = components;
+  //     const plugins = await fileLoader.loadFileTree("plugin", false);
+  //     tree["plugin"] = plugins;
+  //     setResourceTree(tree);
+  //   };
+  //   loadData();
+  // }, [refresh]);
 
   const tree = useMemo(() => {
     return [

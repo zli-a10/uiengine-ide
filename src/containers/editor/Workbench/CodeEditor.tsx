@@ -90,6 +90,7 @@ export class CodeEditor extends React.Component<any, any> {
       if (tabContent) {
         const fileLoader = FileLoader.getInstance();
         const { file, type } = tabContent;
+        tabContent.content = value;
         fileLoader.saveFile(file, value, type as EResourceType);
         if (type === "schema") {
           try {

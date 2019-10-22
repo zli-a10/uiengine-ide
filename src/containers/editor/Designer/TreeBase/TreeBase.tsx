@@ -11,6 +11,7 @@ export const TreeBase = (props: any) => {
   );
   const { setContent, activeTab, tabs } = useContext(IDEEditorContext);
   const { tree, openKeys } = props;
+
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
   const [autoExpandParent, setAutoExpandParent] = useState(false);
   const onExpand = useCallback(

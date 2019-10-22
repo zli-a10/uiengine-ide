@@ -23,8 +23,8 @@ export const Title = (props: any) => {
     ...rest
   } = props;
   let statusObj: any = {};
-  if (dataRef.type && dataRef._path_) {
-    statusObj = loadFileStatus(dataRef.type, dataRef._path_);
+  if (dataRef.type && dataRef.name) {
+    statusObj = loadFileStatus(dataRef.type, dataRef.name);
   }
   let status = "normal",
     newPath = "";
@@ -46,9 +46,9 @@ export const Title = (props: any) => {
   // console.log(status, newTitle, title);
   // dnd
   let drag;
-  if (!_.isEmpty(dataRef._path_)) {
+  if (!_.isEmpty(dataRef.name)) {
     const templateSchema = {
-      $template: dataRef._path_, // this will be parsed on ide's template parser
+      $template: dataRef.name, // this will be parsed on ide's template parser
       isSysTemplate: dataRef.isTemplate //system preserved template path
     };
     const uinode = { schema: templateSchema };

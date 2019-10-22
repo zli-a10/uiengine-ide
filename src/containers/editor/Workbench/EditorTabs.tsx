@@ -14,7 +14,12 @@ import {
 } from "antd";
 import { DrawingBoard, CodeEditor } from "./../";
 import { IDEEditorContext, GlobalContext } from "../../Context";
-import { loadFileStatus, getFileSuffix, FileLoader } from "../../../helpers";
+import {
+  loadFileStatus,
+  getFileSuffix,
+  FileLoader,
+  saveFileStatus
+} from "../../../helpers";
 const { TabPane } = Tabs;
 
 const WindowSizeDown = (props: any) => {
@@ -29,9 +34,14 @@ const WindowSizeDown = (props: any) => {
   const [fileName, setFileName] = useState(activeKey);
   const [folder, setFolder] = useState();
   const handleOk = useCallback(() => {
-    onSave(folder, fileName, type);
+    const fileSuffix = getFileSuffix(type);
+    let file = fileName;
+    if (fileName.indexOf(fileSuffix) === -1) {
+      file = `${fileName}${fileSuffix}`;
+    }
+    onSave(folder, file, type);
     setModalVisible(false);
-  }, [activeKey]);
+  }, [activeKey, folder, fileName, type]);
 
   const handleCancel = useCallback((e: any) => {
     setModalVisible(false);
@@ -140,9 +150,10 @@ const WindowSizeDown = (props: any) => {
 
 export const EditorTabs = (props: any) => {
   const { activeKey, tabs } = props;
-  const { activeTab, removeTab } = useContext(IDEEditorContext);
-  const { setResourceTree } = useContext(GlobalContext);
+  const { activeTab, removeTab, content } = useContext(IDEEditorContext);
+  const { resourceTree, setResourceTree } = useContext(GlobalContext);
 
+  // console.log(resourceTree, "resource tree");
   const [leftSpan, setLeftSpan] = useState(12);
   const [rightSpan, setRightSpan] = useState(12);
 
@@ -166,11 +177,77 @@ export const EditorTabs = (props: any) => {
     localStorage["drawingBoardLayout"] = key;
   }, []);
 
+  const searchNode = useCallback((folder: string, nodes: Array<any>): any => {
+    let node;
+    if (nodes && _.isArray(nodes)) {
+      for (let key in nodes) {
+        node = nodes[key];
+        if (node.key === folder) {
+          break;
+        } else if (node.children) {
+          node = searchNode(folder, node.children);
+        }
+      }
+    }
+    return node;
+  }, []);
+
+  // value getter for code editor
+  // const [getter, setGetter] = useState();
+  // const onSetGetter = useCallback((getter:any) => {
+  //   setGetter(getter);
+  // }, []);
+
   const onSave = useCallback(
     (folder: string, fileName: string, type: EResourceType) => {
       // save nwe
+      const isRoot = folder.indexOf("root_") !== -1;
+      let data: any;
+      if (type === "schema") {
+        data = _.get(resourceTree, `${type}[1]`);
+      } else {
+        data = _.get(resourceTree, type);
+      }
+
+      let targetNode;
+      if (isRoot) {
+        targetNode = data;
+      } else {
+        targetNode = searchNode(folder, data);
+        if (!targetNode.children) {
+          targetNode.children = [];
+        }
+        targetNode = targetNode.children;
+      }
+
+      if (_.isArray(targetNode)) {
+        const file = `${isRoot ? "" : folder + "/"}${fileName}`;
+        const newNode = {
+          isTemplate: false,
+          key: file,
+          name: file,
+          nodeType: "file",
+          path: file,
+          server: true,
+          title: fileName,
+          type,
+          value: file
+        };
+        targetNode.push(newNode);
+        // console.log("file: %s path: %s type: %s", file, folder, type);
+        const fileLoader = FileLoader.getInstance();
+        const text = _.find(content, { file: activeKey });
+        const changedTypeObject = _.get(resourceTree, type);
+        if (text) {
+          fileLoader.saveFile(file, text.content, type, changedTypeObject);
+          text.file = fileName;
+          saveFileStatus(file, type, "new");
+          activeTab(file, type, activeKey);
+          setResourceTree({ [type]: changedTypeObject });
+        }
+      }
     },
-    [splitted]
+    [splitted, resourceTree, activeTab, setResourceTree, activeKey]
   );
 
   const onEdit = useCallback(

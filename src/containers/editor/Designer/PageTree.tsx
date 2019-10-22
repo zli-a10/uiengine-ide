@@ -7,40 +7,45 @@ import { SchemasContext, GlobalContext } from "../../Context";
 export const PageTree = () => {
   const { refresh } = useContext(SchemasContext);
   const { resourceTree, setResourceTree } = useContext(GlobalContext);
-  // schemas fetch
-  const fileLoader = FileLoader.getInstance();
-  // const [schemaTreeChildren, setSchemaTreeChildren] = useState([]);
-  // const [templateSchemaChildren, setTemplateSchemaChildren] = useState([]);
 
   useEffect(() => {
-    const schemaTree = [
-      {
-        name: "templates",
-        title: "Templates",
-        nodeType: "root",
-        isTemplate: true,
-        children: []
-      },
-      {
-        key: "root",
-        name: "pages",
-        title: "Pages",
-        nodeType: "root",
-        isTemplate: false,
-        type: "schema",
-        children: []
-      }
-    ];
-    fileLoader.loadFileTree("schema", false).then((data: any) => {
-      // setSchemaTreeChildren(data);
-      schemaTree[1]["children"] = data;
-      setResourceTree(schemaTree, "schema");
-    });
-    fileLoader.loadFileTree("schema", true).then((data: any) => {
-      // setTemplateSchemaChildren(data);
-      schemaTree[0]["children"] = data;
-      setResourceTree(schemaTree, "schema");
-    });
+    const loadData = async () => {
+      const fileLoader = FileLoader.getInstance();
+      const tree = {};
+      const schemaTree = [
+        {
+          name: "templates",
+          title: "Templates",
+          nodeType: "root",
+          isTemplate: true,
+          children: []
+        },
+        {
+          key: "root",
+          name: "pages",
+          title: "Pages",
+          nodeType: "root",
+          isTemplate: false,
+          type: "schema",
+          children: []
+        }
+      ];
+      const schemaTpls = await fileLoader.loadFileTree("schema", true);
+      schemaTree[0]["children"] = schemaTpls;
+      const schemas = await fileLoader.loadFileTree("schema", false);
+      schemaTree[1]["children"] = schemas;
+      tree["schema"] = schemaTree;
+      const listener = await fileLoader.loadFileTree("listener", false);
+      tree["listener"] = listener;
+      const datasource = await fileLoader.loadFileTree("datasource", false);
+      tree["datasource"] = datasource;
+      const components = await fileLoader.loadFileTree("component", false);
+      tree["component"] = components;
+      const plugins = await fileLoader.loadFileTree("plugin", false);
+      tree["plugin"] = plugins;
+      setResourceTree(tree);
+    };
+    loadData();
   }, [refresh]);
 
   return (

@@ -4,7 +4,7 @@ import { IUINode } from "uiengine/typings";
 export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   showTab: "",
   tabs: [],
-  activeTab: (tab: string, language?: string) => {},
+  activeTab: (tab: string, language?: string, oldTabName?: string) => {},
   removeTab: (tab: string) => {},
   layout: "",
   setLayout: (path: string) => {},

@@ -29,6 +29,9 @@ const walkSync = (
   isTemplate: boolean = false,
   folderOnly: boolean = false
 ) => {
+  let root = isTemplate ? "templates" : "paths";
+  const config = websockets as any;
+  const readpath = get(config, `${root}.${type}`) + "/";
   var fs: any = fs || require("fs"),
     files = fs.readdirSync(dir);
   let filelist: any = [];
@@ -36,14 +39,16 @@ const walkSync = (
     if (fs.statSync(dir + "/" + file).isDirectory()) {
       const tmpFiles = walkSync(dir + "/" + file, type, isTemplate, folderOnly);
       const p = dir ? `${dir}/${file}` : file;
+      const key = p.replace(readpath, "");
+      console.log(key);
       const node = {
         type,
         isTemplate,
         server: true,
-        key: file,
-        path: p,
-        value: file,
-        name: file,
+        key,
+        path: key,
+        value: key,
+        name: key,
         title: file,
         nodeType: "folder",
         children: tmpFiles
@@ -51,14 +56,16 @@ const walkSync = (
       filelist.push(node);
     } else if (!folderOnly && file.indexOf("index.") !== 0) {
       const p = dir ? `${dir}/${file}` : file;
+      const key = p.replace(readpath, "");
+      console.log(key);
       const node = {
         type,
         isTemplate,
         server: true,
-        key: file,
-        path: p,
-        value: file,
-        name: file,
+        key,
+        path: key,
+        value: key,
+        name: key,
         title: file,
         nodeType: "file",
         children: []

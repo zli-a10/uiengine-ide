@@ -22,26 +22,34 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
     () => ({
       tabs,
       showTab: currentTab,
-      activeTab: (tab: string, language?: string) => {
-        const newTabs: any = _.cloneDeep(tabs);
+      activeTab: (tab: string, language?: string, oldTabName?: string) => {
+        const newTabs: any = _.clone(tabs);
         let current: string = tab;
-        const db = "drawingboard";
-        if (tab.indexOf(db) !== -1) {
+        const drawingBoard = "drawingboard";
+        if (tab.indexOf(drawingBoard) !== -1) {
           const segs = tab.split(":");
           if (segs[1]) current = segs[1];
         }
-        if (!_.find(tabs, { tab: current }) && db !== current) {
+        if (oldTabName) {
+          const tabOld = _.find(newTabs, { tab: oldTabName });
+          if (!tabOld) return;
+          if (_.isObject(tabOld)) _.set(tabOld, "tab", current);
+        } else if (
+          !_.find(tabs, { tab: current }) &&
+          drawingBoard !== current
+        ) {
           newTabs.push({ tab: current, language });
           setTabs(newTabs);
         }
-        if (tab.indexOf(db) !== -1) {
-          setCurrentTab(db);
+
+        if (tab.indexOf(drawingBoard) !== -1) {
+          setCurrentTab(drawingBoard);
         } else {
           setCurrentTab(current);
         }
       },
       removeTab: (tab: string) => {
-        const newTabs: any = _.cloneDeep(tabs);
+        const newTabs: any = _.clone(tabs);
         const index: any = _.findIndex(newTabs, { tab });
         if (index > -1) {
           let current = newTabs[index + 1]
