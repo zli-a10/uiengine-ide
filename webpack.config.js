@@ -79,9 +79,24 @@ const config = {
     extensions: ['.json', '.js', '.ts', '.tsx']
   },
   externals: {
-    react: 'react',
-    'react-dom': 'react-dom',
-    uiengine: 'uiengine'
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      amd: 'react',
+      commonjs: 'react'
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      amd: 'react-dom',
+      commonjs: 'react-dom'
+    },
+    uiengine: {
+      root: 'UIEngine',
+      commonjs2: 'uiengine',
+      amd: 'uiengine',
+      commonjs: 'uiengine'
+    }
   }
 };
 
