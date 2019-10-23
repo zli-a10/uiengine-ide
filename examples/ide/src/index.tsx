@@ -22,7 +22,9 @@ IDERegister.registerWebsocket(websocketOptions);
 
 ReactDOM.render(
   <IDEEditor
-    layouts={["schema/ui/simple.json"]}
+    layouts={[
+      { layout: "schema/ui/simple.json", workingMode: { mode: "new" } }
+    ]}
     config={config}
     datasource={{
       getDataSource: getDataSourceJson,

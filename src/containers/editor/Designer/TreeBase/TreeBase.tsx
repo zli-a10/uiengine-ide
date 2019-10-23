@@ -3,13 +3,13 @@ import _ from "lodash";
 import { Tree } from "antd";
 import { renderTreeNodes } from "./renderTreeNodes";
 import { SchemasContext, IDEEditorContext } from "../../../Context";
-import { loadFileAndRefresh } from "../../../../helpers";
+import { loadFileAndRefresh, getActiveUINode } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey, toggleRefresh } = useContext(
     SchemasContext
   );
-  const { setContent, activeTab, tabs } = useContext(IDEEditorContext);
+  const { content, setContent, activeTab, tabs } = useContext(IDEEditorContext);
   const { tree, openKeys } = props;
 
   const [expandKeys, setExpandKeys] = useState<string[]>(openKeys);
@@ -36,9 +36,27 @@ export const TreeBase = (props: any) => {
       const isTemplate = _.get(dataRef, "isTemplate", false);
       if (!_.has(treeNode, "node.props.dataRef._editing_")) {
         if (keys.length && nodeType === "file") {
-          if (!_.find(tabs, { tab: keys[0] })) {
+          const tabContent = _.find(tabs, { tab: keys[0] });
+          if (!tabContent) {
             const data = await loadFileAndRefresh(keys[0], type, isTemplate);
             setContent({ content: data, file: keys[0], type });
+          } else {
+            if (type === "schema") {
+              const text = _.find(content, { file: keys[0] });
+              if (text) {
+                if (_.isString(text.content)) {
+                  try {
+                    const schema = JSON.parse(text.content);
+                    const uiNode = getActiveUINode();
+                    uiNode.schema = schema;
+                    uiNode.updateLayout();
+                    uiNode.sendMessage(true);
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }
+              }
+            }
           }
           if (type === "schema") {
             activeTab(`drawingboard:${keys[0]}`, type);
@@ -49,7 +67,7 @@ export const TreeBase = (props: any) => {
         setSelectedKey(keys, dataRef);
       }
     },
-    [tree, activeTab]
+    [tree, activeTab, tabs]
   );
 
   const followProps = {
