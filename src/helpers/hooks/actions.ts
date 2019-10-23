@@ -52,22 +52,32 @@ export const useSaveTemplate = (uinode: IUINode) => {
     const schema = uinode.schema;
 
     // save file
-    const name = _.uniqueId("saved_template_");
-    const newPath = `${_.get(editingResource, "_path_")}/${name}`;
+    let targetResource = _.cloneDeep(editingResource)
+    if (_.get(editingResource, "nodeType", "") === "file") {
+      targetResource = _.get(editingResource, "_parent_", {} as IResourceTreeNode)
+    }
+    const name = _.uniqueId("saved_template_") + '.json';
+    // const newPath = `${_.get(targetResource, "_path_")}/${name}`;
+    const newPath = `${name}`;
 
     // and update the tree
-    const children: any = _.get(editingResource, "children", []);
+    const children: any = _.get(targetResource, "children", []);
     children.push({
       _path_: newPath,
       _key_: newPath,
       name,
       title: name,
-      _editing_: true
+      _editing_: true,
+      isTemplate: false,
+      nodeType: "file",
+      value: name,
+      server: true,
+      type: "schema"
     });
-    editingResource.children = children;
-    const treeRoot = getTreeRoot(editingResource);
+    targetResource.children = children;
+    const treeRoot = getTreeRoot(targetResource);
     fileLoader.saveFile(newPath, schema, "schema", treeRoot);
-
+    saveFileStatus(name, "schema", "new");
     // refresh the tree
     setSelectedKey(newPath);
   };
