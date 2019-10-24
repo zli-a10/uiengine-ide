@@ -61,7 +61,6 @@ const steps = [
       );
     },
     action: (node: any) => {
-      console.log(node);
       node.click();
     }
   },
@@ -105,7 +104,7 @@ const steps = [
   },
   {
     selector:
-      "#root > div.ide-editor > div.ant-tabs.ant-tabs-top.ant-tabs-line > div.ant-tabs-bar.ant-tabs-top-bar > div.ant-tabs-nav-container > div > div > div > div:nth-child(1) > div.ant-tabs-tab-active.ant-tabs-tab",
+      "#root > div.ide-editor > div.ant-tabs.ant-tabs-top.ant-tabs-card.ant-tabs-editable-card.ant-tabs-no-animation > div.ant-tabs-bar.ant-tabs-top-bar.ant-tabs-card-bar > div > div > div > div > div:nth-child(1) > div > div",
     content: (params: any) => {
       return (
         <div className="tour-tips">
@@ -156,7 +155,7 @@ const steps = [
     }
   },
   {
-    selector: `#drawingboard > div.wrapper.with-datasource.wrapper-container > section > div > main > div > div.ant-row > div > div.ant-col.ant-col-24 > div > form > div:nth-child(1) > div.component-action.ant-dropdown-trigger`,
+    selector: `#drawingboard > div.wrapper.with-datasource.wrapper-container > section > div > main > div > div.ant-row-input > div:nth-child(2) > div.ant-col.ant-col-24 > div.wrapper.wrapper-container > form > div:nth-child(1) > div.ant-row-flex.ant-row-flex-top > div:nth-child(1) > div.component-action.ant-dropdown-trigger > div.component-name`,
     content: (params: any) => {
       return (
         <div className="tour-tips">
@@ -243,29 +242,29 @@ const steps = [
     },
     action: (node: any) => node.click()
   },
-  {
-    selector: `#root > div.ide-editor > div.ant-tabs.ant-tabs-top.ant-tabs-line > div.ant-tabs-bar.ant-tabs-top-bar > div.ant-tabs-nav-container > div > div > div > div:nth-child(1) > div:nth-child(2)`,
-    content: (params: any) => {
-      return (
-        <div className="tour-tips">
-          <div className="describe">
-            Code Editor will sync source code from backend in time by connecting
-            Websocket,
-          </div>
+  // {
+  //   selector: `#root > div.ide-editor > div.ant-tabs.ant-tabs-top.ant-tabs-line > div.ant-tabs-bar.ant-tabs-top-bar > div.ant-tabs-nav-container > div > div > div > div:nth-child(1) > div:nth-child(2)`,
+  //   content: (params: any) => {
+  //     return (
+  //       <div className="tour-tips">
+  //         <div className="describe">
+  //           Code Editor will sync source code from backend in time by connecting
+  //           Websocket,
+  //         </div>
 
-          <div className="tip">
-            <Icon type="bulb" className="icon" /> Operation Tips:
-            <ol>
-              <li>Try to click a page schema from right Schemas Tab </li>
-              <li>Try to click any source code from right Resources Tab </li>
-              <li>Try to type some words on it... </li>
-            </ol>
-          </div>
-        </div>
-      );
-    },
-    action: (node: any) => node.click()
-  },
+  //         <div className="tip">
+  //           <Icon type="bulb" className="icon" /> Operation Tips:
+  //           <ol>
+  //             <li>Try to click a page schema from right Schemas Tab </li>
+  //             <li>Try to click any source code from right Resources Tab </li>
+  //             <li>Try to type some words on it... </li>
+  //           </ol>
+  //         </div>
+  //       </div>
+  //     );
+  //   },
+  //   action: (node: any) => node.click()
+  // },
   // {
   //   selector: `.splitter`,
   //   content: (params: any) => {
