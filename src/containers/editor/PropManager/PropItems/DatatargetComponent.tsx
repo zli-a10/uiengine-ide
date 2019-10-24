@@ -114,12 +114,12 @@ const TargetItem = (props: any) => {
               mode="multiple"
             >
               <Select.Option value="">None</Select.Option>
-              {treeFields[dataSource]
-                ? treeFields[dataSource].map((value: any, index: number) => (
-                    <Select.Option value={value} key={index}>
-                      {value}
-                    </Select.Option>
-                  ))
+              {treeFields[dataSource.split(':').shift()]
+                ? treeFields[dataSource.split(':').shift()].map((value: any, index: number) => (
+                  <Select.Option value={value} key={index}>
+                    {value}
+                  </Select.Option>
+                ))
                 : null}
             </Select>
           </Form.Item>

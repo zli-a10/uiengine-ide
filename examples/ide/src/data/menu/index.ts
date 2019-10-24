@@ -9,7 +9,7 @@ export default [
         "name": "slb",
         "children": [
           {
-            "name": "servers",
+            "name": "server",
             "children": server,
             "type": "file",
             "component": "antd:Col"

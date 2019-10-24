@@ -8,7 +8,7 @@ import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function(result: any, value, key) {
+    return _.transform(object, function (result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -136,18 +136,15 @@ export function getDataSourceFields(schema: any = {}) {
   if (_.isArray(schema.children)) {
     schema.children.forEach((s: any) => {
       const cResults = getDataSourceFields(s);
-      if (domain) {
-        if (results[domain] && cResults[domain]) {
-          results[domain] = results[domain].concat(cResults[domain]);
+      Object.keys(cResults).forEach((key: string) => {
+        if (results[key]) {
+          results[key] = results[key].concat(cResults[key]);
         } else {
-          results = _.assign(results, cResults);
+          results[key] = _.cloneDeep(cResults[key])
         }
-      } else {
-        results = cResults;
-      }
+      })
     });
   }
-
   return results;
 }
 
@@ -586,7 +583,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
       : tsSuffixTypes.indexOf(type)
-      ? ".ts"
-      : ".tsx";
+        ? ".ts"
+        : ".tsx";
   return suffix;
 };
