@@ -21,7 +21,35 @@ function getDefaultEventConfig(component: string, type: string) {
     listener: "updateData"
   };
 
-  if (_.isString(type)) {
+  if (_.isString(component) && component) {
+    if (component.includes("antd:")) {
+      switch (true) {
+        case component === "antd:Input":
+        case component.includes("antd:Input."):
+        case component === "antd:Checkbox":
+        case component === "antd:Radio.Group":
+          return [onChangeWithEvent];
+        case component === "antd:InputNumber":
+        case component === "antd:Checkbox.Group":
+        case component === "antd:Switch":
+        case component === "antd:Select":
+          return [onChangeWithValue];
+        default:
+          return [];
+      }
+    } else if (component.includes("my:")) {
+      switch (true) {
+        case component === "my:FormItem":
+          break
+        default:
+          return [];
+      }
+    } else {
+      return [onChangeWithValue];
+    }
+  }
+
+  if (_.isString(type) && type) {
     if (type === "input-number") {
       type = "InputNumber";
     }
