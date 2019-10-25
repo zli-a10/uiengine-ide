@@ -1,8 +1,9 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useContext } from "react";
 import _ from "lodash";
 
 import { Menu } from "antd";
 import { resourceActions } from "../../../../helpers";
+import { IDEEditorContext } from "../../../Context";
 
 export const ActionMenu = (props: any) => {
   const {
@@ -14,6 +15,8 @@ export const ActionMenu = (props: any) => {
     onAutoExpandParent,
     onRefresh
   } = props;
+
+  const { removeTab } = useContext(IDEEditorContext);
 
   const actionmMap: any = useMemo(
     () => ({
@@ -40,10 +43,12 @@ export const ActionMenu = (props: any) => {
         resourceActions.delete(dataRef);
         // const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
         // onSelect(selectedKeys);
+        removeTab(dataRef._key_)
         onRefresh();
       },
       undelete: () => {
         resourceActions.delete(dataRef, true);
+        onRefresh();
       },
       clone: () => {
         const newName = resourceActions.clone(dataRef);
@@ -86,10 +91,10 @@ export const ActionMenu = (props: any) => {
           <a>Delete</a>
         </Menu.Item>
       ) : (
-        <Menu.Item key="undelete">
-          <a>Undelete</a>
-        </Menu.Item>
-      )}
+          <Menu.Item key="undelete">
+            <a>Undelete</a>
+          </Menu.Item>
+        )}
       {isFolder ? null : (
         <Menu.Item key="clone">
           <a>Clone</a>

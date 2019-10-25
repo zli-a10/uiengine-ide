@@ -11,7 +11,7 @@ export const PageTree = () => {
   useEffect(() => {
     const loadData = async () => {
       const fileLoader = FileLoader.getInstance();
-      const tree = {};
+      let tree = {};
       const schemaTree = [
         {
           name: "templates",
@@ -43,6 +43,7 @@ export const PageTree = () => {
       tree["component"] = components;
       const plugins = await fileLoader.loadFileTree("plugin", false);
       tree["plugin"] = plugins;
+      tree = _.merge(resourceTree, tree);
       setResourceTree(tree);
     };
     loadData();

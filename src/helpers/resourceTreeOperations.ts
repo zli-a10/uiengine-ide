@@ -84,7 +84,8 @@ export const CloneResourceNode = (
   const fileLoader = FileLoader.getInstance();
   const suffix = getFileSuffix(dstNode);
   const regExp = new RegExp(`${suffix}$`);
-  const newName = dstNode._path_.replace(regExp, `_copy${suffix}`);
+  const nameUniqueId = _.uniqueId("_copy");
+  const newName = dstNode._path_.replace(regExp, `${nameUniqueId}${suffix}`);
   const newItem: IResourceTreeNode = {
     type,
     name: newName,
@@ -92,7 +93,7 @@ export const CloneResourceNode = (
     nodeType: "file",
     _key_: _.uniqueId("tree-node-"),
     _path_: newName,
-    _editing_: "clone",
+    _editing_: false,
     _status_: "new",
     _parent_: dstNode._parent_,
     children: []
