@@ -429,14 +429,14 @@ export const getPluginTree = (plugins: any) => {
     if (_.isObject(plugin)) {
       if (plugin.type) {
         let name = _.get(plugin, "name", plugin.type);
-        result = { name: plugin.type, title: name };
+        result = { name: plugin.type, title: name, isTemplate: true };
       } else {
         let children: any = [];
         for (let k in plugin) {
           const p = plugin[k];
           children.push(getPluginSubTree(k, p));
         }
-        result = { key: _.uniqueId(key), name: key, title: key, children };
+        result = { key: _.uniqueId(key), name: key, title: key, children, isTemplate: true };
       }
     }
     if (!_.isEmpty(result)) results.push(result);
@@ -445,7 +445,7 @@ export const getPluginTree = (plugins: any) => {
 };
 
 const getPluginSubTree = (key: string, plugins: any) => {
-  const result: any = { key: _.uniqueId(key), name: key, title: key };
+  const result: any = { key: _.uniqueId(key), name: key, title: key, isTemplate: true };
   if (!plugins.type) {
     const children = getPluginTree(plugins);
     if (!_.isEmpty(children)) result.children = children;

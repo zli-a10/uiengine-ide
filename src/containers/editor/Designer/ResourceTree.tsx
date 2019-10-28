@@ -38,6 +38,7 @@ export const ResourceTree = () => {
           {
             name: "running-plugins",
             title: "Running Plugins",
+            nodeType: "category",
             children: getPluginTree(
               PluginManager.getInstance().getPlugins("global")
             )
