@@ -193,7 +193,30 @@ export function formatTitle(wording: string) {
   }
   return "";
 }
-
+export function checkDuplicate(treeNode: any, name: string) {
+  let duplicate = false;
+  if (treeNode.children && treeNode.children.length) {
+    treeNode.children.some((item: any) => {
+      duplicate = checkDuplicate(item, name)
+      if (duplicate) return true;
+    });
+  } else {
+    if (treeNode.name.split('.')[0] === name) {
+      duplicate = true;
+    }
+  }
+  return duplicate;
+}
+export function checkDuplicateTreeLeaf(treeNode: any, name: string) {
+  debugger
+  let treeRoot = getTreeRoot(treeNode);
+  let duplicate = false;
+  treeRoot.children.some((item: any) => {
+    duplicate = checkDuplicate(item, name)
+    if (duplicate) return true;
+  });
+  return duplicate;
+}
 /**
  * Format arbitary schema to stardard one
  *
