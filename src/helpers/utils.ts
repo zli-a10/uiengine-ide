@@ -8,7 +8,7 @@ import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function (result: any, value, key) {
+    return _.transform(object, function(result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -140,9 +140,9 @@ export function getDataSourceFields(schema: any = {}) {
         if (results[key]) {
           results[key] = results[key].concat(cResults[key]);
         } else {
-          results[key] = _.cloneDeep(cResults[key])
+          results[key] = _.cloneDeep(cResults[key]);
         }
-      })
+      });
     });
   }
   return results;
@@ -197,22 +197,21 @@ export function checkDuplicate(treeNode: any, name: string) {
   let duplicate = false;
   if (treeNode.children && treeNode.children.length) {
     treeNode.children.some((item: any) => {
-      duplicate = checkDuplicate(item, name)
+      duplicate = checkDuplicate(item, name);
       if (duplicate) return true;
     });
   } else {
-    if (treeNode.name.split('.')[0] === name) {
+    if (treeNode.name.split(".")[0] === name) {
       duplicate = true;
     }
   }
   return duplicate;
 }
 export function checkDuplicateTreeLeaf(treeNode: any, name: string) {
-  debugger
   let treeRoot = getTreeRoot(treeNode);
   let duplicate = false;
   treeRoot.children.some((item: any) => {
-    duplicate = checkDuplicate(item, name)
+    duplicate = checkDuplicate(item, name);
     if (duplicate) return true;
   });
   return duplicate;
@@ -459,7 +458,13 @@ export const getPluginTree = (plugins: any) => {
           const p = plugin[k];
           children.push(getPluginSubTree(k, p));
         }
-        result = { key: _.uniqueId(key), name: key, title: key, children, isTemplate: true };
+        result = {
+          key: _.uniqueId(key),
+          name: key,
+          title: key,
+          children,
+          isTemplate: true
+        };
       }
     }
     if (!_.isEmpty(result)) results.push(result);
@@ -468,7 +473,12 @@ export const getPluginTree = (plugins: any) => {
 };
 
 const getPluginSubTree = (key: string, plugins: any) => {
-  const result: any = { key: _.uniqueId(key), name: key, title: key, isTemplate: true };
+  const result: any = {
+    key: _.uniqueId(key),
+    name: key,
+    title: key,
+    isTemplate: true
+  };
   if (!plugins.type) {
     const children = getPluginTree(plugins);
     if (!_.isEmpty(children)) result.children = children;
@@ -606,7 +616,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
       : tsSuffixTypes.indexOf(type)
-        ? ".ts"
-        : ".tsx";
+      ? ".ts"
+      : ".tsx";
   return suffix;
 };

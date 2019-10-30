@@ -107,7 +107,7 @@ export const ChildrenComponent = (props: any) => {
 
   return (
     <div className="children-setting">
-      <Form.Item label="Template">
+      <Form.Item label={_.get(props, "name", "Template")}>
         <Row gutter={12}>
           <Col span={20}>
             <TreeSelect

@@ -72,14 +72,35 @@ export default [
             component: "my:Table.Tr",
             title: "Row",
             isContainer: true,
-            schema: {},
+            schema: {
+              subRow: "children",
+              datasource: "datasource"
+            },
             defaultProps: {}
           },
           {
             component: "my:Table.Td",
             title: "Column",
             isContainer: true,
-            schema: {},
+            schema: {
+              title: "string",
+              actions: [
+                {
+                  delete: "string",
+                  add: "string"
+                }
+              ]
+            },
+            defaultProps: {}
+          },
+          {
+            component: "my:Table.CellContent",
+            title: "Cell Content",
+            isContainer: false,
+            schema: {
+              text: "string",
+              datasource: "datasource"
+            },
             defaultProps: {}
           }
         ]
@@ -116,9 +137,7 @@ export default [
           defaultValue: "string",
           value: "string",
           radioOptions: "string",
-          events: [
-            "onChange",
-          ]
+          events: ["onChange"]
         }
       }
     ]

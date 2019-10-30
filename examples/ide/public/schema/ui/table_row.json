@@ -1,0 +1,71 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "my:Table.Tr",
+			"props": {
+				"subRow": "login.json"
+			},
+			"datasource": "$dummy.UINode-159",
+			"children": [
+				{
+					"component": "my:Table.Td",
+					"props": {},
+					"datasource": "$dummy.UINode-271",
+					"children": [
+						{
+							"component": "my:Table.CellContent",
+							"props": {
+								"text": "Text"
+							},
+							"datasource": "$dummy.UINode-287"
+						}
+					]
+				},
+				{
+					"component": "my:Table.Td",
+					"props": {},
+					"datasource": "$dummy.UINode-326",
+					"children": [
+						{
+							"component": "antd:Input",
+							"props": {},
+							"datasource": "$dummy.UINode-432"
+						}
+					]
+				},
+				{
+					"component": "my:Table.Td",
+					"props": {},
+					"datasource": "$dummy.UINode-326",
+					"children": [
+						{
+							"component": "antd:Input",
+							"props": {},
+							"datasource": "$dummy.UINode-432"
+						}
+					]
+				},
+				{
+					"component": "my:Table.Td",
+					"props": {},
+					"datasource": "$dummy.UINode-326",
+					"children": [
+						{
+							"component": "antd:Button",
+							"content": "Button",
+							"props": {
+								"content": "Button"
+							},
+							"datasource": "$dummy.UINode-657"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,10 +1,14 @@
 import React from "react";
 import _ from "lodash";
-import "./index.less";
+import CellContent from "./CellContent";
 
 const Td = (props: any) => {
   let { children, ...rest } = props;
-  return <td>{children}</td>;
+  return (
+    <td className="my-table-col" {...rest}>
+      <CellContent>{children}</CellContent>
+    </td>
+  );
 };
 
 export default Td;
