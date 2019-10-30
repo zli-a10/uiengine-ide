@@ -32,28 +32,45 @@ export class FileLoader implements IFileLoader {
     if (folderOnly && root.nodeType !== "folder") {
       return newNode;
     }
-    _.forIn(root, (value: any, key: any) => {
-      if (key[0] !== "_") {
-        newNode[key] = value;
-      }
-    });
+    if (!(root.name === '' ||
+      (root._editing_ && (root._editing_ === 'add' || root._editing_ === 'rename'))
+    )) {
+      _.forIn(root, (value: any, key: any) => {
+        if (key[0] !== "_") {
+          newNode[key] = value;
+        }
+      });
+    }
 
     if (root.children && root.children.length) {
+      let ignoreNodeIndexList = [] as any;
       root.children.forEach((node: IResourceTreeNode, i: number) => {
-        if (root.children) root.children[i] = this.clearTree(node);
+        if (root.children) {
+          let clearedTreeNode = this.clearTree(node);
+          if (_.isEmpty(clearedTreeNode)) {
+            ignoreNodeIndexList.push(i);
+          }
+          root.children[i] = clearedTreeNode;
+        };
       });
+      if (ignoreNodeIndexList.length) {
+        for (let i = ignoreNodeIndexList.length - 1; i >= 0; i--) {
+          root.children.splice(ignoreNodeIndexList[i], 1);
+        }
+      }
     }
     return newNode;
   }
 
   saveTree(treeRoot: any, type: EResourceType) {
     let nodes: any;
-    if (_.isArray(treeRoot)) {
-      nodes = treeRoot.map((data: any) => {
+    let saveTreeRoot = _.cloneDeep(treeRoot);
+    if (_.isArray(saveTreeRoot)) {
+      nodes = saveTreeRoot.map((data: any) => {
         return this.clearTree(data);
       });
     } else {
-      nodes = this.clearTree(treeRoot);
+      nodes = this.clearTree(saveTreeRoot);
       nodes = _.get(nodes, "children");
     }
     this.storage.save(`file_tree.${type}`, JSON.stringify(nodes));

@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from "react";
 import _ from "lodash";
 
-import { Input, Icon, Dropdown } from "antd";
+import { Input, Icon, Dropdown, message } from "antd";
 import { useDrag } from "react-dnd";
 import {
   DND_IDE_NODE_TYPE,
   resourceActions,
   loadFileStatus,
-  FileLoader
+  FileLoader,
+  checkDuplicateTreeLeaf
 } from "../../../../helpers";
 // import { SchemasContext } from "../../../Context";
 import { ActionMenu } from "./ActionMenu";
@@ -77,10 +78,15 @@ export const Title = (props: any) => {
     (e: any) => {
       const title = e.target.value;
       if (_.trim(title)) {
-        const path = resourceActions.save(dataRef, title);
-        // select on tree
-        onSelect([path]);
-        onRefresh();
+        if (!checkDuplicateTreeLeaf(dataRef, title)) {
+          const path = resourceActions.save(dataRef, title);
+          // select on treeS
+          // activeTab(path, dataRef.type)
+          onSelect([path], dataRef);
+          onRefresh();
+        } else {
+          message.error('Duplicate name');
+        }
       }
     },
     [dataRef]
@@ -109,28 +115,28 @@ export const Title = (props: any) => {
           <Icon type="close" onClick={cancelEdit} />
         </>
       ) : (
-        <a
-          className={`ant-dropdown-link node-title node-modified-${status}`}
-          href="#"
-        >
-          {newTitle}
-          {dataRef.isTemplate || dataRef.nodeType === "category" ? null : (
-            <Dropdown
-              overlay={
-                <ActionMenu
-                  onSelect={onSelect}
-                  dataRef={dataRef}
-                  onRefresh={onRefresh}
-                  {...rest}
-                  status={status}
-                />
-              }
-            >
-              <Icon type="more" />
-            </Dropdown>
-          )}
-        </a>
-      )}
+          <a
+            className={`ant-dropdown-link node-title node-modified-${status}`}
+            href="#"
+          >
+            {newTitle}
+            {dataRef.isTemplate || dataRef.nodeType === "category" ? null : (
+              <Dropdown
+                overlay={
+                  <ActionMenu
+                    onSelect={onSelect}
+                    dataRef={dataRef}
+                    onRefresh={onRefresh}
+                    {...rest}
+                    status={status}
+                  />
+                }
+              >
+                <Icon type="more" />
+              </Dropdown>
+            )}
+          </a>
+        )}
     </div>
   );
 };
