@@ -93,6 +93,7 @@ export default [
             schema: {
               title: "string",
               width: "string",
+              colspan: "number",
               datasource: "datasource",
               actions: [
                 {

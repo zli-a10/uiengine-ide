@@ -7,15 +7,19 @@
   display: table-row-group;
 }
 
-.my-table-row {
+.wrapper {
+  .my-table-row {
+    display: flex;
 
-  // for ide
-  >.wrapper {
-    display: table-cell;
+    // for ide
+    >.wrapper {
+      display: flex;
+      flex: 1;
 
-    >.my-table-col {
-      width: 180px;
-      height: 55px;
+      >.my-table-col {
+        width: 100%;
+        min-height: 55px;
+      }
     }
   }
 }
