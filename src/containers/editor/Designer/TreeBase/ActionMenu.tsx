@@ -22,10 +22,9 @@ export const ActionMenu = (props: any) => {
     () => ({
       add: () => {
         resourceActions.add(dataRef);
-        if (expandKeys.indexOf(dataRef._key_) === -1) {
-          expandKeys.push(dataRef._key_);
+        if (expandKeys.indexOf(dataRef.key) === -1) {
+          expandKeys.push(dataRef.key);
         }
-
         // console.log(expandKeys, dataRef);
         onExpandKeys(_.cloneDeep(expandKeys));
         onAutoExpandParent(true);
@@ -33,8 +32,8 @@ export const ActionMenu = (props: any) => {
       addFolder: () => {
         console.log("add folder");
         resourceActions.addFolder(dataRef);
-        if (expandKeys.indexOf(dataRef._key_) === -1) {
-          expandKeys.push(dataRef._key_);
+        if (expandKeys.indexOf(dataRef.key) === -1) {
+          expandKeys.push(dataRef.key);
         }
         onExpandKeys(_.cloneDeep(expandKeys));
         onAutoExpandParent(true);
@@ -43,7 +42,7 @@ export const ActionMenu = (props: any) => {
         resourceActions.delete(dataRef);
         // const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
         // onSelect(selectedKeys);
-        removeTab(dataRef._key_)
+        removeTab(dataRef.key)
         onRefresh();
       },
       undelete: () => {
@@ -51,16 +50,18 @@ export const ActionMenu = (props: any) => {
         onRefresh();
       },
       clone: () => {
-        const newName = resourceActions.clone(dataRef);
-        const selectedKeys = [newName];
-        onSelect(selectedKeys);
+        const data = resourceActions.clone(dataRef);
+        data.then((newNode: IResourceTreeNode) => {
+          onSelect([newNode.name], newNode);
+          onRefresh();
+        })
       },
       rename: () => {
         dataRef._editing_ = "rename";
         onRefresh();
       }
     }),
-    [dataRef, expandKeys, status]
+    [dataRef, expandKeys, status, removeTab]
   );
 
   const onClick = useCallback(
@@ -69,7 +70,7 @@ export const ActionMenu = (props: any) => {
       const actionName = e.key;
       return actionmMap[actionName].call();
     },
-    [dataRef]
+    [dataRef, removeTab]
   );
 
   const isFolder = dataRef.nodeType === "folder" || dataRef.nodeType === "root";

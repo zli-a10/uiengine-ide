@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import _ from "lodash";
 
 import { Input, Icon, Dropdown, message } from "antd";
@@ -25,7 +25,7 @@ export const Title = (props: any) => {
   } = props;
   let statusObj: any = {};
   if (dataRef.type && dataRef.name) {
-    statusObj = loadFileStatus(dataRef.type, dataRef.name);
+    statusObj = loadFileStatus(dataRef.type, dataRef.key);
   }
   let status = "normal",
     newPath = "";
@@ -66,7 +66,7 @@ export const Title = (props: any) => {
       case "clone":
       case "add":
         _.remove(dataRef._parent_.children, (d: any) => {
-          return d._key_ === dataRef._key_;
+          return d.key === dataRef.key;
         });
         break;
     }
@@ -101,16 +101,28 @@ export const Title = (props: any) => {
     [dataRef]
   );
 
+  useEffect(() => {
+    if (dataRef._editing_) {
+      const newList = document.querySelectorAll('.newSchemaClass');
+      if (newList.length) {
+        const focusNode = newList[newList.length - 1]
+        focusNode.focus();
+      }
+    }
+  }, [dataRef]);
+
   return (
     <div ref={drag}>
       {dataRef._editing_ ? (
         <>
           <Input
+            className='newSchemaClass'
             size="small"
             placeholder="new-schema"
             defaultValue={title}
             onPressEnter={saveSchema}
             onKeyDown={keyDown}
+            onBlur={saveSchema}
           />
           <Icon type="close" onClick={cancelEdit} />
         </>

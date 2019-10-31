@@ -30,12 +30,13 @@ export const TreeBase = (props: any) => {
 
   const onSelect = useCallback(
     async (keys: string[], treeNode?: any) => {
-      console.log(keys, " are selecting...");
-      if (!_.has(treeNode, "node.props.dataRef._editing_")) {
-        const dataRef = _.get(treeNode, "node.props.dataRef");
-        const type = _.get(dataRef, "type", "schema");
-        const nodeType = _.get(dataRef, "nodeType");
-        const isTemplate = _.get(dataRef, "isTemplate", false);
+      const dataRef = _.get(treeNode, "node.props.dataRef", treeNode);
+      const type = _.get(dataRef, "type", "schema");
+      const nodeType = _.get(dataRef, "nodeType");
+      const isTemplate = _.get(dataRef, "isTemplate", false);
+      const name = _.get(dataRef, "name", "");
+      if ((!_.has(treeNode, "node.props.dataRef._editing_") || treeNode.node.props.dataRef._editing_ === false) &&
+        name !== "") {
         if (keys.length && nodeType === "file") {
           const tabContent = _.find(tabs, { tab: keys[0] });
           if (!tabContent) {

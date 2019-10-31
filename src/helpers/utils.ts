@@ -8,7 +8,7 @@ import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function(result: any, value, key) {
+    return _.transform(object, function (result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -201,7 +201,7 @@ export function checkDuplicate(treeNode: any, name: string) {
       if (duplicate) return true;
     });
   } else {
-    if (treeNode.name.split(".")[0] === name) {
+    if (treeNode._editing_ != 'rename' && treeNode.name.split(".")[0] === name) {
       duplicate = true;
     }
   }
@@ -556,7 +556,6 @@ export function saveFileStatus(
  */
 export function updateFileStatus(files: Array<IFileStatusGroup>) {
   let fileStatus = loadFileStatus();
-
   files.forEach((f: IFileStatusGroup) => {
     const { type, file, status } = f;
     if (type) {
@@ -616,7 +615,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
       : tsSuffixTypes.indexOf(type)
-      ? ".ts"
-      : ".tsx";
+        ? ".ts"
+        : ".tsx";
   return suffix;
 };
