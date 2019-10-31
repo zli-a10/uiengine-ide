@@ -63,8 +63,7 @@ export const useSaveTemplate = (uinode: IUINode) => {
     // and update the tree
     const children: any = _.get(targetResource, "children", []);
     children.push({
-      _path_: newPath,
-      _key_: newPath,
+      key: newPath,
       name,
       title: name,
       _editing_: true,
