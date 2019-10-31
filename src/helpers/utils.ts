@@ -63,7 +63,8 @@ export function getActiveUINode(
   copySchema: boolean = false
 ) {
   const nodeController = NodeController.getInstance();
-  const uiNode = nodeController.getUINode(nodeController.activeLayout, true);
+  const uiNode = nodeController.getUINode("drawingboard", true);
+
   if (schemaOnly) {
     let result = (uiNode as IUINode).schema;
     if (!copySchema) {
@@ -367,6 +368,10 @@ export const droppable = (uiNode: IUINode) => {
     return false;
   }
 
+  // if (_.get(uiNode, "props.isTable") !== undefined) {
+  //   _.set(uiNode, `props.ide_droppable`, 3);
+  //   return false;
+  // }
   return true;
 };
 
@@ -467,6 +472,7 @@ export const getPluginTree = (plugins: any) => {
         };
       }
     }
+    console.log(result);
     if (!_.isEmpty(result)) results.push(result);
   }
   return results;

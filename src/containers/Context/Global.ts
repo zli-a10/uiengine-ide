@@ -2,6 +2,7 @@ import React from "react";
 import { any } from "prop-types";
 
 export const GlobalContext = React.createContext<IGlobalContext>({
+  ideMode: true,
   preview: false,
   togglePreview: (preview: boolean) => {},
   saved: false,
@@ -13,7 +14,6 @@ export const GlobalContext = React.createContext<IGlobalContext>({
   toggleHeaderCollapsed: (collapsed: boolean) => {},
   componentCollapsed: false,
   toggleComponentCollapsed: (collapsed: boolean) => {},
-  datasource: {},
   resourceTree: {
     listener: [],
     datasource: [],

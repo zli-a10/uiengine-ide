@@ -43,7 +43,7 @@ export const UIEngineDndWrapper = (props: any) => {
     collapsedNodes,
     setCollapsedNode
   } = useContext(IDEEditorContext);
-  const { schema, updateSchema } = useContext(SchemasContext);
+  const { updateSchema } = useContext(SchemasContext);
 
   const { children, uinode } = props;
   let componentInfo = IDERegister.getComponentInfo(

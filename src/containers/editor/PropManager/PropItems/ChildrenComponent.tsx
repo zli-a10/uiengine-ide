@@ -36,6 +36,7 @@ const formatDataSource = (children: ILayoutSchema[]) => {
 };
 
 export const ChildrenComponent = (props: any) => {
+  const { remoteTree = false } = props;
   const [visible, changeVisible] = useState(false);
 
   const handleOk = useCallback((e: any) => {
@@ -91,18 +92,26 @@ export const ChildrenComponent = (props: any) => {
   // listen editNode
   useEffect(() => {
     selectItem(value);
-
-    // should also load from fileLoader
-    let fileTreeJson = localStorage[`file_tree.schema`];
-    if (fileTreeJson) {
-      try {
-        fileTreeJson = JSON.parse(fileTreeJson);
-      } catch (e) {
-        fileTreeJson = [];
+    const loadTree = async () => {
+      // should also load from fileLoader
+      let fileTreeJson;
+      if (remoteTree) {
+        fileTreeJson = await fileLoader.loadFileTree("schema", false, true);
+        console.log(fileTreeJson);
+      } else {
+        fileTreeJson = localStorage[`file_tree.schema`];
       }
-    }
-    const formattedTree = formatTree(_.cloneDeep(fileTreeJson));
-    setMemoTree(formattedTree);
+      if (fileTreeJson && _.isString(fileTreeJson)) {
+        try {
+          fileTreeJson = JSON.parse(fileTreeJson);
+        } catch (e) {
+          fileTreeJson = [];
+        }
+      }
+      const formattedTree = formatTree(_.cloneDeep(fileTreeJson));
+      setMemoTree(formattedTree);
+    };
+    loadTree();
   }, [value, uinode]);
 
   return (

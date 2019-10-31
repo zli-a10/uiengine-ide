@@ -1,5 +1,6 @@
 import Table from "./Table";
 import Tr from "./Tr";
+import TrGroup from "./TrGroup";
 import Td from "./Td";
 import THead from "./THeader";
 import TBody from "./TBody";
@@ -12,6 +13,7 @@ export default {
   TBody,
   TFoot,
   Tr,
+  TrGroup,
   Td,
   CellContent
 };

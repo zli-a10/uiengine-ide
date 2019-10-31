@@ -36,7 +36,7 @@ export const PropItem = (props: IComponentSchema) => {
 
   useEffect(() => {
     setValue(data);
-  }, [data]);
+  }, [data, uinode]);
 
   // disable the element if it's template
   const disabled = _.has(uinode, "props.ide_droppable") || preview;

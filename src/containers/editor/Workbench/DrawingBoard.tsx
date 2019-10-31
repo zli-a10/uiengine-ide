@@ -18,7 +18,8 @@ export const DrawingBoard: React.FC = (props: any) => {
   const { updateSchema } = useContext(SchemasContext);
   const { editNode } = useContext(IDEEditorContext);
   const { layouts, config = {} } = props;
-  let schemas = layouts;
+  const schemas = layouts;
+  schemas[0].id = "drawingboard";
 
   let productWrapper = useMemo(
     () => _.get(config, `widgetConfig.componentWrapper`),

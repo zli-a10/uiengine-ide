@@ -64,16 +64,24 @@ export default [
       {
         component: "my:Table.Table",
         title: "Table",
-        isContainer: false,
+        isContainer: true,
         schema: {},
-        defaultProps: {},
+        defaultProps: {
+          isTable: true
+        },
         children: [
+          {
+            component: "my:Table.TrGroup",
+            title: "Row Group",
+            isContainer: true,
+            schema: {},
+            defaultProps: {}
+          },
           {
             component: "my:Table.Tr",
             title: "Row",
             isContainer: true,
             schema: {
-              subRow: "children",
               datasource: "datasource"
             },
             defaultProps: {}
@@ -84,6 +92,8 @@ export default [
             isContainer: true,
             schema: {
               title: "string",
+              width: "string",
+              datasource: "datasource",
               actions: [
                 {
                   delete: "string",

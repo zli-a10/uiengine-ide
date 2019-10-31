@@ -1,38 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Icon } from "antd";
-import { UIEngine } from "uiengine";
 import _ from "lodash";
 import Td from "./Td";
-import config from "../../../config";
+import { GlobalContext } from "uiengine-ide";
 
 const Tr = (props: any) => {
-  let { children, uinode, subRow, ...rest } = props;
-  const [expanded, setExpanded] = useState(false);
-  const layout = `schema/ui/${subRow}`;
-  const schemas = [{ layout }];
+  const { ideMode, preview } = useContext(GlobalContext);
+  let { children, expanded, onExpandSubRow, mainRow } = props;
 
-  return (
-    <>
-      <tr className="ant-table-row ant-table-row-level-0 my-table-row">
-        {subRow ? (
-          <Td>
-            <Icon
-              type={expanded ? "caret-down" : "caret-right"}
-              onClick={() => setExpanded(!expanded)}
-            />
-          </Td>
-        ) : null}
-        {children}
-      </tr>
-      {subRow && expanded ? (
-        <tr className="ant-table-row ant-table-row-level-0 my-table-row my-table-subrow ">
-          <Td colSpan={children.length + 1}>
-            <UIEngine layouts={schemas} config={config} />
-          </Td>
-        </tr>
+  return expanded || mainRow || (ideMode && !preview) ? (
+    <tr className="ant-table-row ant-table-row-level-0 my-table-row">
+      {mainRow ? (
+        <Td>
+          <Icon
+            type={expanded ? "caret-down" : "caret-right"}
+            onClick={() => onExpandSubRow(!expanded)}
+          />
+        </Td>
       ) : null}
-    </>
-  );
+      {children}
+    </tr>
+  ) : null;
 };
 
 export default Tr;

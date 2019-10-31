@@ -15,3 +15,4 @@ export * from "./RegionDetector";
 export * from "./VersionControl";
 export * from "./configLayoutWrappers";
 export * from "./DataMocker";
+export * from "./MemoStore";
