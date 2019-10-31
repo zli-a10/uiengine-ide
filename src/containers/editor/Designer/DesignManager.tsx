@@ -1,20 +1,20 @@
-import React, { useContext } from "react";
-import { Tabs, Icon } from "antd";
-import _ from "lodash";
+import React, { useContext } from 'react'
+import { Tabs, Icon } from 'antd'
+import _ from 'lodash'
 
-import { GlobalContext } from "../../Context";
-import { PageTree, ResourceTree, Libraries } from "..";
-import { DataSource } from "../DataSource";
-import { IDERegister } from "../../../helpers";
-const TabPane = Tabs.TabPane;
+import { GlobalContext } from '../../Context'
+import { PageTree, ResourceTree, Libraries } from '..'
+import { DataSource } from '../DataSource'
+import { IDERegister } from '../../../helpers'
+const TabPane = Tabs.TabPane
 
 export const DesignManager: React.FC<IDesignManager> = props => {
   const { componentCollapsed, toggleComponentCollapsed } = useContext(
     GlobalContext
-  );
+  )
 
   // libraries fetch
-  const librariesData = IDERegister.componentsLibrary;
+  const librariesData = IDERegister.componentsLibrary
 
   return !componentCollapsed ? (
     <>
@@ -43,11 +43,11 @@ export const DesignManager: React.FC<IDesignManager> = props => {
             </TabPane>
 
             <TabPane tab="DataSources" key="DataSources">
-              <DataSource datasource={props.datasource} />
+              <DataSource />
             </TabPane>
           </Tabs>
         </div>
       </div>
     </>
-  ) : null;
-};
+  ) : null
+}

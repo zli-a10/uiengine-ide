@@ -1,5 +1,6 @@
-import _ from "lodash";
-import { Client } from "../Client";
+import _ from 'lodash'
+import { Client } from '../Client'
+import { IObject } from 'uiengine/typings'
 
 export async function getFileList(
   type: EResourceType,
@@ -7,10 +8,10 @@ export async function getFileList(
   folderOnly: boolean = false
 ) {
   const command: IWebsocketCommands = {
-    name: "getFileList",
+    name: 'getFileList',
     options: { type, isTemplate, folderOnly }
-  };
-  return await Client.connect(command);
+  }
+  return await Client.connect(command)
 }
 
 export async function readFile(
@@ -19,17 +20,28 @@ export async function readFile(
   isTemplate: boolean = false
 ) {
   const command: IWebsocketCommands = {
-    name: "readFile",
+    name: 'readFile',
     options: { type, path: name, isTemplate }
-  };
+  }
 
-  return await Client.connect(command);
+  return await Client.connect(command)
 }
 
 export function saveFile(fileOptions: IUploadFile) {
   const command: IWebsocketCommands = {
-    name: "writeFile",
+    name: 'writeFile',
     options: fileOptions
-  };
-  return Client.connect(command);
+  }
+  return Client.connect(command)
+}
+
+export async function loadDataSource(options: IObject) {
+  const command: IWebsocketCommands = {
+    name: 'loadDataSource',
+    options: {
+      type: 'datasource',
+      options
+    }
+  }
+  return await Client.connect(command)
 }

@@ -1,141 +1,141 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import * as _ from "lodash";
-import { IUINode } from "uiengine/typings";
-import { Main, DesignManager, PropManager } from "./";
-import { IDEEditorContext } from "../Context";
-import { UIEngineDndProvider } from "../dnd";
-import * as Providers from "./Providers";
-import { IDE_ID } from "../../helpers";
-import "./styles/index.less";
-import ErrorBoundary from "./ErrorBoundary";
-import { Start } from "./Helper";
-import { EditorTabs } from "./Workbench/EditorTabs";
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import * as _ from 'lodash'
+import { IUINode } from 'uiengine/typings'
+import { Main, DesignManager, PropManager } from './'
+import { IDEEditorContext } from '../Context'
+import { UIEngineDndProvider } from '../dnd'
+import * as Providers from './Providers'
+import { IDE_ID } from '../../helpers'
+import './styles/index.less'
+import ErrorBoundary from './ErrorBoundary'
+import { Start } from './Helper'
+import { EditorTabs } from './Workbench/EditorTabs'
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
-  const [currentTab, setCurrentTab] = useState("drawingboard");
-  const [tabs, setTabs] = useState([]);
-  const [editNode, setEditNode] = useState();
-  const [content, setContent] = useState([]);
-  const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
+  const [currentTab, setCurrentTab] = useState('drawingboard')
+  const [tabs, setTabs] = useState([])
+  const [editNode, setEditNode] = useState()
+  const [content, setContent] = useState([])
+  const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([])
 
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
     () => ({
       tabs,
       showTab: currentTab,
       activeTab: (tab: string, language?: string, oldTabName?: string) => {
-        const newTabs: any = _.clone(tabs);
-        let current: string = tab;
-        const drawingBoard = "drawingboard";
+        const newTabs: any = _.clone(tabs)
+        let current: string = tab
+        const drawingBoard = 'drawingboard'
         if (tab.indexOf(drawingBoard) !== -1) {
-          const segs = tab.split(":");
-          if (segs[1]) current = segs[1];
+          const segs = tab.split(':')
+          if (segs[1]) current = segs[1]
         }
         if (oldTabName) {
-          const tabOld = _.find(newTabs, { tab: oldTabName });
-          if (!tabOld) return;
-          if (_.isObject(tabOld)) _.set(tabOld, "tab", current);
+          const tabOld = _.find(newTabs, { tab: oldTabName })
+          if (!tabOld) return
+          if (_.isObject(tabOld)) _.set(tabOld, 'tab', current)
         } else if (
           !_.find(tabs, { tab: current }) &&
           drawingBoard !== current
         ) {
-          newTabs.push({ tab: current, language });
-          setTabs(newTabs);
+          newTabs.push({ tab: current, language })
+          setTabs(newTabs)
         }
 
         if (tab.indexOf(drawingBoard) !== -1) {
-          setCurrentTab(drawingBoard);
+          setCurrentTab(drawingBoard)
         } else {
-          setCurrentTab(current);
+          setCurrentTab(current)
         }
       },
       removeTab: (tab: string) => {
-        const newTabs: any = _.clone(tabs);
-        const index: any = _.findIndex(newTabs, { tab });
+        const newTabs: any = _.clone(tabs)
+        const index: any = _.findIndex(newTabs, { tab })
         if (index > -1) {
           let current = newTabs[index + 1]
             ? newTabs[index + 1]
-            : newTabs[index - 1];
-          newTabs.splice(index, 1);
-          setTabs(newTabs);
+            : newTabs[index - 1]
+          newTabs.splice(index, 1)
+          setTabs(newTabs)
           if (!current) {
-            current = "drawingboard";
+            current = 'drawingboard'
           } else {
-            current = current.tab;
+            current = current.tab
           }
-          setCurrentTab(current);
+          setCurrentTab(current)
         }
 
         // remove content
-        const newContentList: any = _.clone(content);
-        const conentIndex = _.findIndex(newContentList, { file: tab });
+        const newContentList: any = _.clone(content)
+        const conentIndex = _.findIndex(newContentList, { file: tab })
         if (conentIndex > -1) {
-          newContentList.splice(conentIndex, 1);
-          setContent(newContentList);
+          newContentList.splice(conentIndex, 1)
+          setContent(newContentList)
         }
       },
-      layout: "",
+      layout: '',
       setLayout: (path: string) => {},
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
-      help: "",
+      help: '',
       setHelp: (help: string) => {},
-      refresh: "",
+      refresh: '',
       toggleRefresh: (refresh: string) => {},
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
-        setEditNode(editNode);
+        setEditNode(editNode)
       },
       collapsedNodes,
       setCollapsedNode: (uiNode: IUINode) => {
-        let id = _.get(uiNode.schema, IDE_ID, _.uniqueId(IDE_ID));
-        const index = collapsedNodes.indexOf(id);
+        let id = _.get(uiNode.schema, IDE_ID, _.uniqueId(IDE_ID))
+        const index = collapsedNodes.indexOf(id)
 
         if (index === -1) {
-          _.set(uiNode.schema, IDE_ID, id);
-          collapsedNodes.push(id);
+          _.set(uiNode.schema, IDE_ID, id)
+          collapsedNodes.push(id)
         } else {
-          _.unset(uiNode.schema, IDE_ID);
-          collapsedNodes.splice(index, 1);
+          _.unset(uiNode.schema, IDE_ID)
+          collapsedNodes.splice(index, 1)
         }
         // console.log("collapsedNodes", collapsedNodes);
-        setCollapsedNodes(_.clone(collapsedNodes));
+        setCollapsedNodes(_.clone(collapsedNodes))
       },
       content,
       setContent: (data: IContentList) => {
-        const newContentList: any = _.clone(content);
-        const { file, type, content: newContent } = data;
+        const newContentList: any = _.clone(content)
+        const { file, type, content: newContent } = data
         if (_.isObject(newContent)) {
-          data.content = JSON.stringify(newContent, null, "\t");
+          data.content = JSON.stringify(newContent, null, '\t')
         }
-        const index = _.findIndex(newContentList, { type, file });
+        const index = _.findIndex(newContentList, { type, file })
         if (index > -1) {
-          newContentList[index] = data;
+          newContentList[index] = data
         } else {
-          newContentList.push(data);
+          newContentList.push(data)
         }
-        setContent(newContentList);
+        setContent(newContentList)
       }
     }),
     [editNode, collapsedNodes, content, tabs]
-  );
+  )
 
   // show start ?
-  const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(false)
   useEffect(() => {
     // show guide
     const showGuideStatus =
-      localStorage["showGuide"] === undefined
+      localStorage['showGuide'] === undefined
         ? true
-        : localStorage["showGuide"] === "false"
+        : localStorage['showGuide'] === 'false'
         ? false
-        : true;
-    setShowGuide(showGuideStatus);
-  }, [localStorage["drawingBoardLayout"], localStorage["showGuide"]]);
+        : true
+    setShowGuide(showGuideStatus)
+  }, [localStorage['drawingBoardLayout'], localStorage['showGuide']])
 
   const onCloseGuide = useCallback(() => {
-    setShowGuide(false);
-    localStorage["showGuide"] = false;
-  }, []);
+    setShowGuide(false)
+    localStorage['showGuide'] = false
+  }, [])
 
   return (
     <ErrorBoundary>
@@ -145,9 +145,9 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             {/*
             <Providers.Props>
               <Providers.Components> */}
-            <Main datasource={props.datasource}>
+            <Main>
               <div className="ide-editor">
-                <DesignManager datasource={props.datasource} />
+                <DesignManager />
                 <EditorTabs {...props} activeKey={currentTab} tabs={tabs} />
                 <PropManager {...props} />
               </div>
@@ -161,5 +161,5 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         </UIEngineDndProvider>
       </IDEEditorContext.Provider>
     </ErrorBoundary>
-  );
-};
+  )
+}
