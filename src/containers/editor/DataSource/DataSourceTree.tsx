@@ -93,8 +93,9 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
 
   const onSelectNode = useCallback(
     (selectedKeys: string[], e: any) => {
-      // const treeNode = e.node
-      // const dataRef: any = treeNode.props.dataRef
+      const treeNode = e.node
+      const dataRef: any = treeNode.props.dataRef
+      console.log(dataRef)
       // if (onChange) {
       //   onChange(dataRef)
       // }

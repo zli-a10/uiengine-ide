@@ -1,19 +1,19 @@
-import React, { useEffect, useCallback, useState, useContext } from "react";
-import * as _ from "lodash";
-import { TreeSelect, Icon, Input, Col, Button } from "antd";
-import { convertNodes } from "../../../helpers";
-import { GlobalContext } from "../../Context";
+import React, { useEffect, useCallback, useState, useContext } from 'react'
+import * as _ from 'lodash'
+import { TreeSelect, Icon, Input, Col, Button } from 'antd'
+import { convertNodes } from '../../../helpers'
+import { loadDataSource } from '../../../helpers/DataSourceLoader'
 
 const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
-  const { onChange, searchText, value, disabled } = props;
-  const { datasource: { getDataSource } = {} as any } = useContext(
-    GlobalContext
-  );
+  const { onChange, searchText, value, disabled } = props
+  // const { datasource: { getDataSource } = {} as any } = useContext(
+  //   GlobalContext
+  // );
 
-  const [nodes, setNodes] = useState([] as any[]);
-  const [saveSearchText, setSaveSearchText] = useState("");
+  const [nodes, setNodes] = useState([] as any[])
+  const [saveSearchText, setSaveSearchText] = useState('')
 
   // const onAddFields = useCallback(
   //   async (dataRef: any) => {
@@ -70,40 +70,37 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   const onSelect = useCallback(
     (value: string) => {
       if (onChange) {
-        if (!value) value = "";
-        onChange(value);
+        if (!value) value = ''
+        onChange(value)
       }
     },
     [onChange]
-  );
+  )
 
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(false)
   const switchEdit = useCallback(() => {
-    setShowInput(!showInput);
-  }, [showInput]);
+    setShowInput(!showInput)
+  }, [showInput])
 
   useEffect(() => {
     const initDataSource = async () => {
-      if (
-        (nodes.length === 0 && getDataSource) ||
-        saveSearchText !== searchText
-      ) {
-        let newNodes = (await getDataSource(searchText)) || [];
+      if (nodes.length === 0 || saveSearchText !== searchText) {
+        let newNodes = (await loadDataSource({ searchText })) || []
 
-        newNodes = convertNodes(newNodes);
-        setNodes(newNodes);
-        setSaveSearchText(searchText as string);
+        newNodes = convertNodes(newNodes)
+        setNodes(newNodes)
+        setSaveSearchText(searchText as string)
       }
-    };
-    initDataSource();
-  }, [nodes, searchText, getDataSource, saveSearchText]);
+    }
+    initDataSource()
+  }, [nodes, searchText, saveSearchText])
   const renderFieldNode = useCallback((item: any) => {
     return (
       <TreeSelect.TreeNode
         // dataRef={item}
         title={
           <div className="datasource-select">
-            <span className="field-bar">{item.children ? "Fs" : "F"}</span>
+            <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
             {item.name}
           </div>
         }
@@ -112,8 +109,8 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
       >
         {item.children ? renderNode(item.children) : null}
       </TreeSelect.TreeNode>
-    );
-  }, []);
+    )
+  }, [])
 
   const renderFileNode = useCallback((item: any) => {
     return (
@@ -133,24 +130,24 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         ) : (
           <TreeSelect.TreeNode
             title="Loading ..."
-            value={_.uniqueId("loading")}
-            key={_.uniqueId("loading")}
+            value={_.uniqueId('loading')}
+            key={_.uniqueId('loading')}
           />
         )}
       </TreeSelect.TreeNode>
-    );
-  }, []);
+    )
+  }, [])
   const renderNode = useCallback((data: any[]) => {
     return data.map((item: any) => {
-      if (item.type === "file") {
-        return renderFileNode(item);
+      if (item.type === 'file') {
+        return renderFileNode(item)
       }
-      if (item.type === "field") {
-        return renderFieldNode(item);
+      if (item.type === 'field') {
+        return renderFieldNode(item)
       }
-      return null;
-    });
-  }, []);
+      return null
+    })
+  }, [])
   // onTreeExpand={onExpandNode}
 
   return (
@@ -161,7 +158,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
             {...(value ? { value } : {})}
             disabled={disabled}
             onChange={(e: any) => {
-              onChange && onChange(e.target.value);
+              onChange && onChange(e.target.value)
             }}
           />
         ) : (
@@ -183,12 +180,12 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
         <Button
           type="primary"
           size="small"
-          icon={showInput ? "search" : "edit"}
+          icon={showInput ? 'search' : 'edit'}
           onClick={switchEdit}
         />
       </Col>
     </div>
-  );
-};
+  )
+}
 
-export default DataSourceTreeSelector;
+export default DataSourceTreeSelector
