@@ -29,15 +29,15 @@ export const Schemas = (props: any) => {
         setSelectedKeys(keys);
       },
       help: "",
-      setHelp: (help: string) => {},
+      setHelp: (help: string) => { },
       refresh: time,
       toggleRefresh: () => {
         setTime(Date.now());
       },
       showTab: "",
-      activeTab: (tab: string) => {},
+      activeTab: (tab: string) => { },
       savedTime: "",
-      setSavedTime: (savedTime: string) => {},
+      setSavedTime: (savedTime: string) => { },
       // for schema replace
       schema,
       updateSchema: (schema: ILayoutSchema) => {
@@ -47,7 +47,7 @@ export const Schemas = (props: any) => {
         const allSchema = getActiveUINode(true);
         setContent({
           content: allSchema,
-          file: _.get(editingResource, "name", "unknown"),
+          file: _.get(editingResource, "key", "unknown"),
           type: _.get(editingResource, "type", "schema")
         });
       },

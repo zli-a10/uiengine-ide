@@ -14,8 +14,8 @@ export const AddResourceNode = (
     name: "",
     title: "",
     nodeType,
-    _key_: _.uniqueId("tree-node-"),
-    _path_: "",
+    key: _.uniqueId("tree-node-"),
+    value: "",
     _editing_: "add",
     _parent_: dstNode,
     children: []
@@ -38,16 +38,16 @@ export const DeleteResourceNode = (
   revert: boolean = false
 ) => {
   const { type } = dstNode;
-  const statusObj = loadFileStatus(type, dstNode._path_);
+  const statusObj = loadFileStatus(type, dstNode.key);
   // console.log(statusObj, type, dstNode._path_, ".....");
   if (statusObj && statusObj.status === "new") {
     const fileLoader = FileLoader.getInstance();
     const srcNodes = _.get(dstNode, `_parent_.children`, []);
     _.remove(srcNodes, (d: any) => {
-      return d._key_ === dstNode._key_;
+      return d.key === dstNode.key;
     });
-    fileLoader.removeFile(dstNode._path_, type, getTreeRoot(dstNode));
-    saveFileStatus(dstNode._path_, type, {
+    fileLoader.removeFile(dstNode.key, type, getTreeRoot(dstNode));
+    saveFileStatus(dstNode.key, type, {
       status: "dropped",
       nodeType: dstNode.nodeType
     });
@@ -55,7 +55,7 @@ export const DeleteResourceNode = (
     if (!revert) {
       // instead remove, just record the stauts
       dstNode._status_ = "removed";
-      saveFileStatus(dstNode._path_, type, {
+      saveFileStatus(dstNode.key, type, {
         status: "removed",
         nodeType: dstNode.nodeType
       });
@@ -63,7 +63,7 @@ export const DeleteResourceNode = (
       // instead remove, just record the stauts
       const { type } = dstNode;
       dstNode._status_ = "normal";
-      saveFileStatus(dstNode._path_, type, {
+      saveFileStatus(dstNode.key, type, {
         status: "dropped",
         nodeType: dstNode.nodeType
       });
@@ -77,7 +77,7 @@ export const DeleteResourceNode = (
   }
 };
 
-export const CloneResourceNode = (
+export const CloneResourceNode = async (
   dstNode: IResourceTreeNode,
   type: EResourceType = "schema"
 ) => {
@@ -85,14 +85,14 @@ export const CloneResourceNode = (
   const suffix = getFileSuffix(dstNode);
   const regExp = new RegExp(`${suffix}$`);
   const nameUniqueId = _.uniqueId("_copy");
-  const newName = dstNode._path_.replace(regExp, `${nameUniqueId}${suffix}`);
+  const newName = dstNode.key.replace(regExp, `${nameUniqueId}${suffix}`);
   const newItem: IResourceTreeNode = {
     type,
     name: newName,
     title: newName,
     nodeType: "file",
-    _key_: _.uniqueId("tree-node-"),
-    _path_: newName,
+    key: newName,
+    value: newName,
     _editing_: false,
     _status_: "new",
     _parent_: dstNode._parent_,
@@ -102,15 +102,11 @@ export const CloneResourceNode = (
   if (children) {
     children.push(newItem);
   }
-  const content = fileLoader.loadFile(dstNode._path_, type);
+  const content = await fileLoader.loadFile(dstNode.key, type);
   // console.log(content, dstNode._path_, type);
-  if (content instanceof Promise) {
-    content.then((data: any) => {
-      fileLoader.saveFile(newName, data, type, getTreeRoot(dstNode));
-      saveFileStatus(newName, type, { status: "new", nodeType: "file" });
-    });
-  }
-  return newName;
+  fileLoader.saveFile(newName, content, type, getTreeRoot(dstNode));
+  saveFileStatus(newName, type, { status: "new", nodeType: "file" });
+  return newItem;
 };
 
 export const RenameResourceNode = (dstNode: IResourceTreeNode) => {
@@ -125,8 +121,7 @@ export const saveToResourceNode = (
   const fileLoader = FileLoader.getInstance();
   let name = _.snakeCase(value);
   const { _editing_: editing, type } = dstNode;
-
-  let parentPath = dstNode._parent_._path_;
+  let parentPath = dstNode._parent_.key;
   if (dstNode.nodeType === "file") {
     const suffix = getFileSuffix(dstNode);
     name = name.indexOf(suffix) > -1 ? name : `${name}${suffix}`;
@@ -134,7 +129,7 @@ export const saveToResourceNode = (
     // parentPath = parentPath.replace(regExp, "");
   }
 
-  const oldPath = dstNode._path_;
+  const oldPath = dstNode.key;
   const nodeType = dstNode.nodeType;
   let path =
     dstNode._parent_ && dstNode._parent_.nodeType !== "root"
@@ -148,8 +143,6 @@ export const saveToResourceNode = (
     title: value,
     value: path,
     key: path,
-    _path_: path,
-    _key_: path,
     _status_: status,
     _editing_: false
   };

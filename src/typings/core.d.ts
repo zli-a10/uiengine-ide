@@ -156,8 +156,8 @@ interface IResourceTreeNode extends IFileTree {
   nodeType: ENodeType
   children?: Array<IResourceTreeNode>
   isTemplate?: boolean = false
-  _path_: string
-  _key_: string
+  value: string
+  key: string
   _parent_: IResourceTreeNode
   _status_?: EStatus
   _editing_: EEditingType
