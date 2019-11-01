@@ -448,32 +448,55 @@ export const removeDepsSchema = (uiNode: IUINode) => {
 };
 
 export const getPluginTree = (plugins: any) => {
-  // console.log(PluginManager.plugins);
   let results: any[] = [];
   for (let key in plugins) {
-    let result: any = {};
-    const plugin: { type?: any } = plugins[key];
-    if (_.isObject(plugin)) {
-      if (plugin.type) {
-        let name = _.get(plugin, "name", plugin.type);
-        result = { name: plugin.type, title: name, isTemplate: true };
-      } else {
-        let children: any = [];
-        for (let k in plugin) {
-          const p = plugin[k];
-          children.push(getPluginSubTree(k, p));
+    if (key !== "execution") {
+      let result: any = {};
+      const plugin: { type?: any } = plugins[key];
+      if (_.isObject(plugin)) {
+        if (plugin.type) {
+          let name = _.get(plugin, "name", plugin.type);
+          result = { name: plugin.type, title: name, isTemplate: true };
+        } else {
+          let children: any = [];
+          for (let k in plugin) {
+            const p = plugin[k];
+            if (_.isObject(p)) {
+              children.push(getPluginSubTree(k, p));
+            } else {
+              children.push({
+                key: _.uniqueId(k),
+                name: plugin[k],
+                title: plugin[k],
+                children: [],
+                isTemplate: true,
+                nodeType: 'file',
+                type: 'plugin'
+              })
+            }
+          }
+          result = {
+            key: _.uniqueId(key),
+            name: key,
+            title: key,
+            children,
+            isTemplate: true,
+            type: 'plugin'
+          };
         }
+      } else {
         result = {
           key: _.uniqueId(key),
           name: key,
           title: key,
-          children,
-          isTemplate: true
+          children: [],
+          isTemplate: true,
+          nodeType: 'file',
+          type: 'plugin'
         };
       }
+      if (!_.isEmpty(result)) results.push(result);
     }
-    console.log(result);
-    if (!_.isEmpty(result)) results.push(result);
   }
   return results;
 };
@@ -483,7 +506,8 @@ const getPluginSubTree = (key: string, plugins: any) => {
     key: _.uniqueId(key),
     name: key,
     title: key,
-    isTemplate: true
+    isTemplate: true,
+    type: 'plugin'
   };
   if (!plugins.type) {
     const children = getPluginTree(plugins);
