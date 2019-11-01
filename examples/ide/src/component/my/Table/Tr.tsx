@@ -6,7 +6,7 @@ import { GlobalContext } from "uiengine-ide";
 
 const Tr = (props: any) => {
   const { ideMode, preview } = useContext(GlobalContext);
-  let { children, expanded, onExpandSubRow, mainRow } = props;
+  let { children, expanded, onExpandSubRow, mainRow, colCount } = props;
 
   return expanded || mainRow || (ideMode && !preview) ? (
     <tr className="ant-table-row ant-table-row-level-0 my-table-row">
@@ -18,7 +18,7 @@ const Tr = (props: any) => {
           />
         </Td>
       ) : null}
-      {children}
+      {children.map((child: any) => React.cloneElement(child, { colCount }))}
     </tr>
   ) : null;
 };

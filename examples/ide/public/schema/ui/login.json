@@ -1,20 +1,13 @@
 {
-  "component": "antd:Form",
-  "props": {
-    "title": "Login"
-  },
-  "children": [{
-      "component": "my:FormItem",
-      "props": {
-        "type": "antd:Input"
-      }
-    },
-    {
-      "component": "my:FormItem",
-      "defaultvalue": "a10",
-      "props": {
-        "type": "antd:Input.Password"
-      }
-    }
-  ]
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "my:Table.Table",
+			"props": {}
+		}
+	]
 }

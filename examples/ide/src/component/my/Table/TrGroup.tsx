@@ -10,10 +10,14 @@ const TrGroup = (props: any) => {
         const newProps = {
           mainRow: false,
           onExpandSubRow: (value: boolean) => setExpanded(value),
-          expanded
+          expanded,
+          colCount: 1
         };
         if (index === 0) {
           newProps.mainRow = children.length > 1;
+        } else {
+          newProps.colCount =
+            _.get(children[0], "props.uiNode.children", []).length + 1;
         }
         return React.cloneElement(child, newProps);
       })

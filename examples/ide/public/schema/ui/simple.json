@@ -7,9 +7,110 @@
 	"children": [
 		{
 			"component": "my:Table.Table",
-			"props": {},
-			"datasource": "$dummy.UINode-3349",
-			"$$children": "table_row.json"
+			"props": {
+				"isTable": true
+			},
+			"datasource": "$dummy.UINode-215",
+			"children": [
+				{
+					"component": "my:Table.TrGroup",
+					"props": {},
+					"datasource": "$dummy.UINode-76",
+					"children": [
+						{
+							"component": "my:Table.Tr",
+							"props": {},
+							"datasource": "$dummy.UINode-219",
+							"children": [
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "test",
+										"width": "40%"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "aa",
+										"width": "40%"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test2"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "bb"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test3"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "cc"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test4"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								}
+							]
+						},
+						{
+							"component": "my:Table.Tr",
+							"props": {},
+							"datasource": "$dummy.UINode-219",
+							"children": [
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"formatter": {
+											"max": 2,
+											"suffix": "...>>"
+										}
+									},
+									"datasource": "$dummy.UINode-1721",
+									"children": []
+								}
+							]
+						}
+					]
+				}
+			]
 		}
 	]
 }
