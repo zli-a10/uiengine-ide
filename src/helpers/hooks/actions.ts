@@ -66,7 +66,7 @@ export const useSaveTemplate = (uinode: IUINode) => {
       key: newPath,
       name,
       title: name,
-      _editing_: true,
+      _editing_: 'rename',
       isTemplate: false,
       nodeType: "file",
       value: name,

@@ -29,7 +29,10 @@ export const Title = (props: any) => {
   }
   let status = "normal",
     newPath = "";
-  let title = dataRef.title.replace(/\.\w+$/, "");
+  let title = dataRef.title
+  if (dataRef.type !== 'plugin') {
+    title = dataRef.title.replace(/\.\w+$/, "");
+  }
   let newTitle = title;
   if (!_.isEmpty(statusObj)) {
     if (!_.isString(statusObj)) {
