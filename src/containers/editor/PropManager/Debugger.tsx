@@ -54,6 +54,7 @@ export const Debugger: React.FC = (props: any) => {
       const uiNode = getActiveUINode(true);
       uiJson = _.get(uiNode, "schema", {});
     }
+    console.log(uiJson, "are updating");
     setStateUIJson(uiJson);
     setStateDataJson(dataJson);
   };

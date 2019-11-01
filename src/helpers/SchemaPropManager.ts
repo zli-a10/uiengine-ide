@@ -41,13 +41,15 @@ export class SchemaPropManager implements ISchemaPropManager {
     if (schemaEntries.length) {
       schemaEntries.forEach((schema: any) => {
         const [name, info] = schema;
-        const finalSchema = schemaGenerators[type](
-          name,
-          info,
-          value,
-          extraInfo
-        );
-        result = _.merge(result, finalSchema);
+        if (schemaGenerators[type]) {
+          const finalSchema = schemaGenerators[type](
+            name,
+            info,
+            value,
+            extraInfo
+          );
+          result = _.merge(result, finalSchema);
+        }
       });
     }
     return result;

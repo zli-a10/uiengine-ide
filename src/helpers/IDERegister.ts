@@ -25,6 +25,7 @@ export class IDERegister {
   // for easier to fetch component schemas
   static componentsList: any = {};
   static websocketOptions: IServerOptions;
+  static formatters: any = [];
 
   static registerComponentsInfo(componentInfos: any) {
     if (componentInfos) {
@@ -85,5 +86,9 @@ export class IDERegister {
 
   static registerWebsocket(options: IServerOptions) {
     IDERegister.websocketOptions = options;
+  }
+
+  static registerFormatters(formatters: any) {
+    IDERegister.formatters = formatters;
   }
 }

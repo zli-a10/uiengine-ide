@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import _ from "lodash";
 import { DataSourceSelector } from "../../DataSource";
 import { Switch, Form, Input, Row, Col, Icon, Select, InputNumber } from "antd";
+import { IDERegister, DndNodeManager } from "../../../../helpers";
+import { PropItem } from "../PropItem";
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, value, name, uinode, disabled, ...rest } = props;
@@ -82,13 +84,30 @@ export const DatasourceComponent = (props: any) => {
     onChange(dataSource);
   };
 
+  const [formatter, setFormatter] = useState();
+  const changeFormatter = useCallback((formatterName: string) => {
+    setFormatter(formatterName);
+    const finalResult = _.get(uinode, "schema", {});
+    if (!formatterName) {
+      _.unset(finalResult, "props.formatter");
+    } else {
+      _.set(finalResult, "props.formatter.name", formatterName);
+    }
+    uinode.updateLayout();
+    uinode.sendMessage(true);
+    const dndNodeManager = DndNodeManager.getInstance();
+    dndNodeManager.pushVersion();
+  }, []);
+
   // const [ds, changeDs] = useState(dataSource);
   useEffect(() => {
     changeSource(_.get(dataSource, "source"));
     changeSchema(_.get(dataSource, "schema"));
     changeAutoload(_.get(dataSource, "autoload"));
     changeDefaultValue(_.get(dataSource, "defaultValue"));
-  }, [dataSource]);
+    const formatterName = _.get(uinode, "schema.props.formatter.name");
+    setFormatter(formatterName);
+  }, [dataSource, formatter, uinode]);
 
   return (
     <>
@@ -166,6 +185,45 @@ export const DatasourceComponent = (props: any) => {
               </Col>
             </Row>
           </Form.Item>
+          {!_.isEmpty(IDERegister.formatters) ? (
+            <>
+              <Form.Item label="Formatter">
+                <Select
+                  defaultValue=""
+                  value={formatter}
+                  onChange={changeFormatter}
+                >
+                  <Select.Option value="">----</Select.Option>
+                  {Object.entries(IDERegister.formatters).map(
+                    (formatter: any) => (
+                      <Select.Option value={formatter[0]}>
+                        {formatter[1].name}
+                      </Select.Option>
+                    )
+                  )}
+                </Select>
+              </Form.Item>
+              {_.has(IDERegister.formatters, `${formatter}.params`)
+                ? Object.entries(IDERegister.formatters[formatter].params).map(
+                    (entry: any) => {
+                      return (
+                        <PropItem
+                          section="prop"
+                          name={`formatter.${entry[0]}`}
+                          schema={entry[1]}
+                          key={`key-${entry[0]}`}
+                          uinode={uinode}
+                          data={_.get(
+                            uinode,
+                            `schema.props.formatter.${entry[0]}`
+                          )}
+                        />
+                      );
+                    }
+                  )
+                : null}
+            </>
+          ) : null}
         </>
       )}
     </>

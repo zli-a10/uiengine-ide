@@ -305,7 +305,7 @@ export const UIEngineDndWrapper = (props: any) => {
           <div className="component-name">
             {uinode.schema.component}
             {/* <strong>{myId}</strong> */}
-            <span>{actionName}</span>
+            {/* <span>{actionName}</span> */}
             <Icon type="more" />
           </div>
           <div className="component-deps">

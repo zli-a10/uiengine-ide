@@ -3,11 +3,10 @@ import _ from "lodash";
 import CellContent from "./CellContent";
 
 const Td = (props: any) => {
-  let { children, ...rest } = props;
-  console.log(props);
+  let { children, value, ...rest } = props;
   return (
     <td className="my-table-col" {...rest}>
-      <CellContent>{children}</CellContent>
+      {children ? <CellContent>{children}</CellContent> : value}
     </td>
   );
 };
