@@ -20,10 +20,14 @@ export function difference(object: any, base: any) {
   return changes(object, base);
 }
 
-export function cleanSchema(schema: any, exporting: boolean = false) {
+export function cleanSchema(
+  schema: any,
+  exporting: boolean = false,
+  parent?: any
+) {
   if (_.isArray(schema)) {
     schema.forEach((child: any) => {
-      cleanSchema(child, exporting);
+      cleanSchema(child, exporting, schema);
     });
   } else {
     // remove $$children && $$template
@@ -51,8 +55,15 @@ export function cleanSchema(schema: any, exporting: boolean = false) {
       _.unset(schema, IDE_COLOR);
     }
 
+    // remove empty node
+    if (_.isEmpty(schema) && parent) {
+      for (let name in parent) {
+        if (parent[name] === schema) _.unset(parent, name);
+      }
+    }
+
     if (_.has(schema, "children")) {
-      cleanSchema(schema.children, exporting);
+      cleanSchema(schema.children, exporting, schema);
     }
   }
   return schema;

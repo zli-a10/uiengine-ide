@@ -1,62 +1,90 @@
 import React, { useState, useCallback, useEffect } from "react";
-// import { IDEEditorContext } from "../../../Context";
 import _ from "lodash";
 import { Input, Select } from "antd";
 import { Form } from "antd";
-// import { IDERegister } from "../../../../helpers";
+import { ControlledEditor } from "@monaco-editor/react";
+import { editorOptions } from "../../Workbench/CodeEditor";
+const displayValues = [
+  "inherit",
+  "flex",
+  "none",
+  "block",
+  "inline",
+  "inline-block",
+  "list-item",
+  "run-in",
+  "compact",
+  "marker",
+  "table",
+  "inline-table",
+  "table-row-group",
+  "table-header-group",
+  "table-footer-group",
+  "table-row",
+  "table-column-group",
+  "table-column",
+  "table-cell",
+  "table-caption"
+];
 
 export const LayoutComponent = (props: any) => {
   const { uinode, onChange: onChangeProps, disabled } = props;
   let anyData = _.get(uinode, "schema.layout", {}) as any;
+  const [css, setCss] = useState("{}");
+  const onChangeCss = useCallback(
+    (v: any) => {
+      if (v) {
+        let myCss = `.css ${JSON.stringify(v, null, "\t")}`;
+        onChangeProps(v);
+        setCss(myCss);
+      }
+    },
+    [uinode, anyData]
+  );
 
-  // const { name, disabled, onChange: onChangeProps } = props;
-  const [display, setDisplay] = useState(_.get(anyData, "display"));
+  const onEditorChange = useCallback(
+    (ev: any, value: any) => {
+      const debounceFunc = _.debounce((value: any) => {
+        // let myCss = value.replace(/\.*?(\{.*?\})/, "$1");
+        let myCss = `(${value.replace(".css ", "")})`;
+        try {
+          let json = eval(myCss);
+          onChangeProps(json);
+          _.merge(anyData, json);
+          console.log(anyData, "any data");
+        } catch (e) {
+          console.error(e.message);
+        }
+      }, 1000);
+      debounceFunc(value);
+      return value;
+    },
+    [uinode, anyData]
+  );
+
   const onChangeDisplay = useCallback(
     (v: any) => {
-      setDisplay(v);
       _.set(anyData, "display", v);
-      onChangeProps(anyData);
+      onChangeCss(anyData);
     },
     [uinode, anyData]
   );
 
-  const [flex, setFlex] = useState(_.get(anyData, "flex"));
   const onChangeFlex = useCallback(
     (e: any) => {
-      setFlex(e.target.value);
       _.set(anyData, "flex", e.target.value);
-      onChangeProps(anyData);
+      onChangeCss(anyData);
     },
     [uinode, anyData]
   );
 
-  const displayValues = [
-    "inherit",
-    "flex",
-    "none",
-    "block",
-    "inline",
-    "inline-block",
-    "list-item",
-    "run-in",
-    "compact",
-    "marker",
-    "table",
-    "inline-table",
-    "table-row-group",
-    "table-header-group",
-    "table-footer-group",
-    "table-row",
-    "table-column-group",
-    "table-column",
-    "table-cell",
-    "table-caption"
-  ];
-
   useEffect(() => {
-    setDisplay(_.get(anyData, "display"));
-    setFlex(_.get(anyData, "flex"));
+    setCss(`.css ${JSON.stringify(anyData, null, "\t")}`);
   }, [anyData, uinode]);
+
+  const editorOpts: any = _.cloneDeep(editorOptions);
+  editorOpts.lineNumbers = "off";
+  editorOpts.minimap = { enabled: false };
 
   return (
     <div className="layout-editor">
@@ -65,7 +93,7 @@ export const LayoutComponent = (props: any) => {
           onChange={onChangeDisplay}
           size="small"
           defaultValue={"inherit"}
-          value={display}
+          value={_.get(anyData, "display")}
           disabled={disabled}
         >
           {displayValues.map((value: any, index: number) => (
@@ -80,11 +108,25 @@ export const LayoutComponent = (props: any) => {
         <Input
           type="number"
           disabled={disabled}
-          value={flex}
+          value={_.get(anyData, "flex")}
           onChange={onChangeFlex}
           min={1}
           max={24}
         />
+      </Form.Item>
+
+      <Form.Item label="CSS">
+        <div style={{ border: "1px solid #eee" }}>
+          <ControlledEditor
+            language={"css"}
+            value={css}
+            theme="light"
+            options={editorOpts}
+            onChange={onEditorChange}
+            height="200px"
+            loading="Loading..."
+          />
+        </div>
       </Form.Item>
     </div>
   );

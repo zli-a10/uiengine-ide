@@ -18,7 +18,8 @@ const Tr = (props: any) => {
           />
         </Td>
       ) : null}
-      {children.map((child: any) => React.cloneElement(child, { colCount }))}
+      {children &&
+        children.map((child: any) => React.cloneElement(child, { colCount }))}
     </tr>
   ) : null;
 };

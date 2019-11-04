@@ -115,7 +115,7 @@ export const Props: React.FC = (props: any) => {
             </Form>
           </Panel>
         ) : null}
-        <Panel header="Component Layout" key="layout">
+        <Panel header="Layout and CSS" key="layout">
           <Form {...formItemLayout}>
             <PropItem
               section="layout"
