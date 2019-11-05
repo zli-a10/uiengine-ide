@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import _ from "lodash";
 import THeader from "./THeader";
 import TBody from "./TBody";
@@ -25,6 +25,12 @@ const Table = (props: any) => {
     columns = row;
   }
 
+  // callback for selector
+  const [selectedItems, setSelectedItems] = useState([]);
+  const selectAll = useCallback(() => {
+    console.log("select all");
+  }, [selectedItems]);
+
   return (
     <div className="ant-table-wrapper">
       <div className="ant-spin-nested-loading">
@@ -33,7 +39,13 @@ const Table = (props: any) => {
             <div className="ant-table-content">
               <div className="ant-table-body">
                 <table className="my-table">
-                  {ideMode && preview ? <THeader columns={columns} /> : null}
+                  {ideMode && preview ? (
+                    <THeader
+                      columns={columns}
+                      onSelectAll={selectAll}
+                      allSelected={false}
+                    />
+                  ) : null}
                   <TBody>{children}</TBody>
                   <TFooter></TFooter>
                 </table>

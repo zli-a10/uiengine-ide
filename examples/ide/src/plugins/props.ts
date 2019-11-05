@@ -40,7 +40,7 @@ function getDefaultEventConfig(component: string, type: string) {
     } else if (component.includes("my:")) {
       switch (true) {
         case component === "my:FormItem":
-          break
+          break;
         default:
           return [];
       }
@@ -81,11 +81,11 @@ function getDefaultEventConfig(component: string, type: string) {
 }
 
 const execution: IPluginExecution = async (directParam: IPluginParam) => {
-  const uiNode: IUINode = _.get(directParam, "uiNode");
+  const uiNode: IUINode = _.get(directParam, "props.uinode");
 
   const schema = uiNode.getSchema();
   const component: any = _.get(schema, "component");
-  const props: any = _.get(schema, "props");
+  const schemaProps: any = _.get(schema, "props");
 
   const dataNode = uiNode.dataNode;
   // load label & type from data schema
@@ -108,7 +108,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
 
   let eventConfigs: IEventConfig[] = [];
   // assign user defined props
-  if (_.isObject(props)) {
+  if (_.isObject(schemaProps)) {
     let {
       label = dataLabel,
       type = inputType,
@@ -117,7 +117,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
       style,
       $events,
       ...rest
-    } = props as any;
+    } = schemaProps as any;
 
     // get event configs
     if (_.isArray($events) && $events.length > 0) {
@@ -149,30 +149,37 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         listener
       } = config;
 
-      return {
+      const a = {
         eventName: _.isString(eventName) ? eventName : "",
         receiveParams: _.isArray(receiveParams) ? receiveParams : [],
         defaultParams: {
           ...(_.isObject(defaultParams) ? defaultParams : {}),
+          props: result,
           uiNode
         },
         target: _.isString(target) ? target : uiNode.id,
         listener: _.isString(listener) ? listener : ""
       };
+
+      return a;
     })
   );
   if (!_.isEmpty(eventFuncs)) {
     result = { ...result, ...eventFuncs };
   }
 
-  uiNode.props = result;
-  return result;
+  // uiNode.props = result;
+  // merge result into component props
+  const newProps = _.merge(directParam.props, result);
+  return newProps;
 };
 
 export const props: IPlugin = {
   name: "props-parser",
-  categories: ["ui.parser"],
-  paramKeys: ["uiNode"],
+  // categories: ["ui.parser"],
+  // paramKeys: ["uiNode"],
+  categories: ["component.props.get"],
+  paramKeys: ["props"],
   execution,
   priority: 200
 };

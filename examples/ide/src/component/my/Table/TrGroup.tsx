@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 
 const TrGroup = (props: any) => {
-  let { children, uinode, expandable = true, ...rest } = props;
+  let { children, uinode, expandable = true, value } = props;
   const [expanded, setExpanded] = useState(false);
 
   return children
@@ -11,7 +11,8 @@ const TrGroup = (props: any) => {
           mainRow: false,
           onExpandSubRow: (value: boolean) => setExpanded(value),
           expanded,
-          colCount: 1
+          colCount: 1,
+          rowGroupData: value
         };
         if (index === 0 && expandable) {
           newProps.mainRow = children.length > 1;

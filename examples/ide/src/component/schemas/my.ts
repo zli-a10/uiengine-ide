@@ -44,7 +44,7 @@ export default [
         title: "FormItem",
         isContainer: false,
         schema: {
-          type: "string",
+          type: "component",
           label: "string",
           extra: "string",
           labelCol: [
@@ -98,7 +98,7 @@ export default [
               title: "string",
               width: "string",
               colspan: "number",
-              datasource: "datasource"
+              selectAll: "boolean"
             },
             defaultProps: {}
           },

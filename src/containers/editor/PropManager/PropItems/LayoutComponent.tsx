@@ -85,6 +85,7 @@ export const LayoutComponent = (props: any) => {
   const editorOpts: any = _.cloneDeep(editorOptions);
   editorOpts.lineNumbers = "off";
   editorOpts.minimap = { enabled: false };
+  editorOpts.readOnly = disabled;
 
   return (
     <div className="layout-editor">
