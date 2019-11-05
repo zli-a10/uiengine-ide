@@ -93,13 +93,13 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
   const dataLabel: string = dataNode.getSchema("label");
   const inputType: string = dataNode.getSchema("type") || "input";
   // get data value
-  const value = dataNode.data;
+  const value = _.cloneDeep(dataNode.data);
   const valueKey = _.get(props, "$valueKey", "value");
   // get error validation info
   const error = dataNode.errorInfo;
 
   // assign all default props
-  let result = {
+  let result: any = {
     key: uiNode.id,
     label: dataLabel,
     type: inputType,
@@ -150,7 +150,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         listener
       } = config;
 
-      const a = {
+      return {
         eventName: _.isString(eventName) ? eventName : "",
         receiveParams: _.isArray(receiveParams) ? receiveParams : [],
         defaultParams: {
@@ -160,8 +160,6 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         target: _.isString(target) ? target : uiNode.id,
         listener: _.isString(listener) ? listener : ""
       };
-
-      return a;
     })
   );
   if (!_.isEmpty(eventFuncs)) {
@@ -169,8 +167,6 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
   }
 
   uiNode.props = result;
-  // merge result into component props
-  // const newProps = _.merge(directParam.props, result);
   return result;
 };
 

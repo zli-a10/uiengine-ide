@@ -6,7 +6,9 @@ const CellContent = (props: any) => {
   let { children, text, value, ...rest } = props;
 
   return (
-    <div className="my-table-cell-content">{children || value || text}</div>
+    <div className="my-table-cell-content" {...rest}>
+      {children || value || text}
+    </div>
   );
 };
 
