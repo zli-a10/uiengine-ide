@@ -81,7 +81,8 @@ function getDefaultEventConfig(component: string, type: string) {
 }
 
 const execution: IPluginExecution = async (directParam: IPluginParam) => {
-  const uiNode: IUINode = _.get(directParam, "props.uinode");
+  // const uiNode: IUINode = _.get(directParam, "props.uinode");
+  const uiNode: IUINode = _.get(directParam, "uiNode");
 
   const schema = uiNode.getSchema();
   const component: any = _.get(schema, "component");
@@ -154,7 +155,6 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         receiveParams: _.isArray(receiveParams) ? receiveParams : [],
         defaultParams: {
           ...(_.isObject(defaultParams) ? defaultParams : {}),
-          props: result,
           uiNode
         },
         target: _.isString(target) ? target : uiNode.id,
@@ -168,18 +168,18 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
     result = { ...result, ...eventFuncs };
   }
 
-  // uiNode.props = result;
+  uiNode.props = result;
   // merge result into component props
-  const newProps = _.merge(directParam.props, result);
-  return newProps;
+  // const newProps = _.merge(directParam.props, result);
+  return result;
 };
 
 export const props: IPlugin = {
   name: "props-parser",
   // categories: ["ui.parser"],
-  // paramKeys: ["uiNode"],
-  categories: ["component.props.get"],
-  paramKeys: ["props"],
+  paramKeys: ["uiNode"],
+  categories: ["ui.parser"],
+  // paramKeys: ["props"],
   execution,
   priority: 200
 };

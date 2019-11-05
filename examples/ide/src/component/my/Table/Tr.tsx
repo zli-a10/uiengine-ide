@@ -30,13 +30,13 @@ const Tr = (props: any) => {
       ) : null}
       {children &&
         children.map((child: any) => {
-          if (_.has(child, `props.uiNode.schema.props.selectAll`)) {
-            return (
-              <Td width="40">
-                <Checkbox checked={false} onChange={selectItem} />
-              </Td>
-            );
-          }
+          // if (_.has(child, `props.uiNode.schema.props.selectAll`)) {
+          //   return (
+          //     React.cloneElement(child, {
+
+          //     }, <Checkbox checked={false} onChange={selectItem} />))
+
+          // }
 
           return React.cloneElement(child, {
             colCount,
