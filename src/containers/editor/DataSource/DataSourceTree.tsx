@@ -3,8 +3,15 @@ import * as _ from 'lodash'
 import { useDrag } from 'react-dnd'
 import { Tree } from 'antd'
 import { GlobalContext } from '../../Context'
+import { FileLoader, formatTree } from '../../../helpers'
 
-import { loadDataSource } from '../../../helpers/DataSourceLoader'
+// schemas fetch
+const fileLoader = FileLoader.getInstance()
+
+import {
+  analysisDataSourceFields,
+  analysisDataSource
+} from '../../../helpers/DataSourceLoader'
 import { DND_IDE_SCHEMA_TYPE, DND_IDE_NODE_TYPE } from '../../../helpers'
 
 const getChildrenUiSchema = (data: any) => {
@@ -70,10 +77,12 @@ const WidgetItem = (props: any) => {
 const DataSourceTree: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
-  // const { datasource: { expandDataSource } = {} as any } = useContext(
-  //   GlobalContext
-  // )
+  const data = useContext(GlobalContext)
+  const { resourceTree: { datasource = [] } = {} } = data
+  analysisDataSource(datasource)
+
   const [nodes, setNodes] = useState([] as any[])
+  const [updateState, setUpdateState] = useState(new Date().getTime())
   const [saveSearchText, setSaveSearchText] = useState('')
   const { onChange, searchText } = props
 
@@ -96,26 +105,37 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
       const treeNode = e.node
       const dataRef: any = treeNode.props.dataRef
       console.log(dataRef)
-      // if (onChange) {
-      //   onChange(dataRef)
-      // }
-      // if (dataRef.type === 'field') {
-      //   return
-      // }
-      // onAddFields(dataRef)
+      const { files } = dataRef
+      if (files && files.length === 1) {
+        const [schemaJsonName] = files
+        console.log(schemaJsonName)
+        const schemaProsmise = fileLoader.loadFile(schemaJsonName, 'datasource')
+        schemaProsmise.then((schema: any) => {
+          const [sources, topUiSchema] = analysisDataSourceFields(schema)
+          console.log(dataRef)
+          dataRef.children = sources
+          dataRef.uiSchema = topUiSchema
+          setUpdateState(new Date().getTime())
+        })
+      }
     },
     [onChange]
   )
 
+  console.log(datasource)
+
   useEffect(() => {
     const initDataSource = async () => {
-      if (nodes.length === 0 || saveSearchText !== searchText) {
-        setNodes((await loadDataSource({ searchText })) || [])
+      if (
+        (nodes.length === 0 || saveSearchText !== searchText) &&
+        datasource.length !== 0
+      ) {
+        setNodes((await analysisDataSource(datasource)) || [])
         setSaveSearchText(searchText as string)
       }
     }
     initDataSource()
-  }, [nodes, searchText, saveSearchText])
+  }, [nodes, searchText, saveSearchText, datasource])
   const renderFieldNode = useCallback((item: any) => {
     return (
       <Tree.TreeNode

@@ -77,7 +77,6 @@ const getDataSource = (field: any) => {
 
 export const expandDataSource = async (uiJson: string) => {
   const schema = (await getSchema('schema/json/schema.json')) || { fields: [] }
-  console.log('=asdfasdfasdf', schema)
   const analysisFields = (fields: any[]): any[] => {
     return fields.map((field: any) => {
       return {
