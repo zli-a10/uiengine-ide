@@ -1,17 +1,22 @@
 import React, { useEffect, useCallback, useState, useContext } from 'react'
 import * as _ from 'lodash'
 import { TreeSelect, Icon, Input, Col, Button } from 'antd'
-import { convertNodes } from '../../../helpers'
-import { loadDataSource } from '../../../helpers/DataSourceLoader'
+import { GlobalContext } from '../../Context'
+import { FileLoader } from '../../../helpers'
+import {
+  analysisDataSourceFields,
+  analysisDataSource
+} from '../../../helpers/DataSourceLoader'
 
+// schemas fetch
+const fileLoader = FileLoader.getInstance()
 const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
   const { onChange, searchText, value, disabled } = props
-  // const { datasource: { getDataSource } = {} as any } = useContext(
-  //   GlobalContext
-  // );
-
+  const data = useContext(GlobalContext)
+  const { resourceTree: { datasource = [] } = {} } = data
+  const [updateState, setUpdateState] = useState(new Date().getTime())
   const [nodes, setNodes] = useState([] as any[])
   const [saveSearchText, setSaveSearchText] = useState('')
 
@@ -68,10 +73,18 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   // );
 
   const onSelect = useCallback(
-    (value: string) => {
-      if (onChange) {
-        if (!value) value = ''
-        onChange(value)
+    (selectedKeys: string[], treeNode: any) => {
+      const dataRef: any = treeNode.props.dataRef
+      const { files } = dataRef
+      if (files && files.length === 1) {
+        const [schemaJsonName] = files
+        const schemaProsmise = fileLoader.loadFile(schemaJsonName, 'datasource')
+        schemaProsmise.then((schema: any) => {
+          const [sources, topUiSchema] = analysisDataSourceFields(schema)
+          dataRef.children = sources
+          dataRef.uiSchema = topUiSchema
+          setUpdateState(new Date().getTime())
+        })
       }
     },
     [onChange]
@@ -84,20 +97,20 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
 
   useEffect(() => {
     const initDataSource = async () => {
-      if (nodes.length === 0 || saveSearchText !== searchText) {
-        let newNodes = (await loadDataSource({ searchText })) || []
-
-        newNodes = convertNodes(newNodes)
-        setNodes(newNodes)
+      if (
+        (nodes.length === 0 || saveSearchText !== searchText) &&
+        datasource.length !== 0
+      ) {
+        setNodes((await analysisDataSource(datasource)) || [])
         setSaveSearchText(searchText as string)
       }
     }
     initDataSource()
-  }, [nodes, searchText, saveSearchText])
+  }, [nodes, searchText, saveSearchText, datasource])
   const renderFieldNode = useCallback((item: any) => {
     return (
       <TreeSelect.TreeNode
-        // dataRef={item}
+        dataRef={item}
         title={
           <div className="datasource-select">
             <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
@@ -115,7 +128,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
   const renderFileNode = useCallback((item: any) => {
     return (
       <TreeSelect.TreeNode
-        // dataRef={item}
+        dataRef={item}
         title={
           <div className="datasource-select">
             <span className="file-bar">{_.toUpper(item.name)[0]}</span>
@@ -170,7 +183,7 @@ const DataSourceTreeSelector: React.FC<IDataSourceTreeProps> = (
             onSelect={onSelect}
             showSearch
             size="small"
-            onChange={onSelect}
+            // onChange={onSelect}
           >
             {renderNode(nodes)}
           </TreeSelect>

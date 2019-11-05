@@ -3,15 +3,15 @@ import * as _ from 'lodash'
 import { useDrag } from 'react-dnd'
 import { Tree } from 'antd'
 import { GlobalContext } from '../../Context'
-import { FileLoader, formatTree } from '../../../helpers'
+import { FileLoader } from '../../../helpers'
+import {
+  analysisDataSource,
+  analysisDataSourceFields
+} from '../../../helpers/DataSourceLoader'
 
 // schemas fetch
 const fileLoader = FileLoader.getInstance()
 
-import {
-  analysisDataSourceFields,
-  analysisDataSource
-} from '../../../helpers/DataSourceLoader'
 import { DND_IDE_SCHEMA_TYPE, DND_IDE_NODE_TYPE } from '../../../helpers'
 
 const getChildrenUiSchema = (data: any) => {
@@ -79,7 +79,6 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
 ) => {
   const data = useContext(GlobalContext)
   const { resourceTree: { datasource = [] } = {} } = data
-  analysisDataSource(datasource)
 
   const [nodes, setNodes] = useState([] as any[])
   const [updateState, setUpdateState] = useState(new Date().getTime())
@@ -104,15 +103,12 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
     (selectedKeys: string[], e: any) => {
       const treeNode = e.node
       const dataRef: any = treeNode.props.dataRef
-      console.log(dataRef)
       const { files } = dataRef
       if (files && files.length === 1) {
         const [schemaJsonName] = files
-        console.log(schemaJsonName)
         const schemaProsmise = fileLoader.loadFile(schemaJsonName, 'datasource')
         schemaProsmise.then((schema: any) => {
           const [sources, topUiSchema] = analysisDataSourceFields(schema)
-          console.log(dataRef)
           dataRef.children = sources
           dataRef.uiSchema = topUiSchema
           setUpdateState(new Date().getTime())
@@ -121,8 +117,6 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
     },
     [onChange]
   )
-
-  console.log(datasource)
 
   useEffect(() => {
     const initDataSource = async () => {
