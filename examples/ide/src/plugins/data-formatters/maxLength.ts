@@ -1,7 +1,6 @@
 function formatterMaxLength(value: string, params: any) {
   const { max = 10, suffix = "..." } = params;
-  console.log(value, params);
-  return `${value.substr(0, max)}${suffix}`;
+  return value.length > max ? `${value.substr(0, max)}${suffix}` : value;
 }
 
 export const maxLength = {

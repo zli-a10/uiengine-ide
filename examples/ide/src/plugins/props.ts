@@ -40,7 +40,7 @@ function getDefaultEventConfig(component: string, type: string) {
     } else if (component.includes("my:")) {
       switch (true) {
         case component === "my:FormItem":
-          break
+          break;
         default:
           return [];
       }
@@ -81,11 +81,12 @@ function getDefaultEventConfig(component: string, type: string) {
 }
 
 const execution: IPluginExecution = async (directParam: IPluginParam) => {
+  // const uiNode: IUINode = _.get(directParam, "props.uinode");
   const uiNode: IUINode = _.get(directParam, "uiNode");
 
   const schema = uiNode.getSchema();
   const component: any = _.get(schema, "component");
-  const props: any = _.get(schema, "props");
+  const schemaProps: any = _.get(schema, "props");
 
   const dataNode = uiNode.dataNode;
   // load label & type from data schema
@@ -108,7 +109,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
 
   let eventConfigs: IEventConfig[] = [];
   // assign user defined props
-  if (_.isObject(props)) {
+  if (_.isObject(schemaProps)) {
     let {
       label = dataLabel,
       type = inputType,
@@ -117,7 +118,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
       style,
       $events,
       ...rest
-    } = props as any;
+    } = schemaProps as any;
 
     // get event configs
     if (_.isArray($events) && $events.length > 0) {
@@ -149,7 +150,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         listener
       } = config;
 
-      return {
+      const a = {
         eventName: _.isString(eventName) ? eventName : "",
         receiveParams: _.isArray(receiveParams) ? receiveParams : [],
         defaultParams: {
@@ -159,6 +160,8 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         target: _.isString(target) ? target : uiNode.id,
         listener: _.isString(listener) ? listener : ""
       };
+
+      return a;
     })
   );
   if (!_.isEmpty(eventFuncs)) {
@@ -166,13 +169,17 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
   }
 
   uiNode.props = result;
+  // merge result into component props
+  // const newProps = _.merge(directParam.props, result);
   return result;
 };
 
 export const props: IPlugin = {
   name: "props-parser",
-  categories: ["ui.parser"],
+  // categories: ["ui.parser"],
   paramKeys: ["uiNode"],
+  categories: ["ui.parser"],
+  // paramKeys: ["props"],
   execution,
   priority: 200
 };

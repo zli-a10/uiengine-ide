@@ -44,7 +44,7 @@ export default [
         title: "FormItem",
         isContainer: false,
         schema: {
-          type: "string",
+          type: "component",
           label: "string",
           extra: "string",
           labelCol: [
@@ -74,15 +74,19 @@ export default [
             component: "my:Table.TrGroup",
             title: "Row Group",
             isContainer: true,
-            schema: {},
-            defaultProps: {}
+            schema: {
+              expandable: "boolean"
+            },
+            defaultProps: {
+              expandable: true
+            }
           },
           {
             component: "my:Table.Tr",
             title: "Row",
             isContainer: true,
             schema: {
-              datasource: "datasource"
+              keys: "fieldselector"
             },
             defaultProps: {}
           },
@@ -94,13 +98,7 @@ export default [
               title: "string",
               width: "string",
               colspan: "number",
-              datasource: "datasource",
-              actions: [
-                {
-                  delete: "string",
-                  add: "string"
-                }
-              ]
+              selectAll: "boolean"
             },
             defaultProps: {}
           },

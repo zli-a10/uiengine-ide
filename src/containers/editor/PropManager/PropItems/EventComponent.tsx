@@ -95,7 +95,7 @@ export const EventComponent = (props: any) => {
           })}
         </Select>
       </Form.Item>
-      {listener && describe ? (
+      {listener && !_.isEmpty(describe) ? (
         <div className="sub-options event-options">
           {Object.entries(describe).map((entry: any) => {
             const [name, listenerSchema] = entry;

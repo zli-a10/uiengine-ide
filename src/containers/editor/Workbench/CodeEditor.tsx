@@ -4,7 +4,7 @@ import _ from "lodash";
 import { ControlledEditor } from "@monaco-editor/react";
 import { IDEEditorContext } from "../../Context";
 import { FileLoader, getActiveUINode, cleanSchema } from "../../../helpers";
-const editorOptions = {
+export const editorOptions = {
   acceptSuggestionOnCommitCharacter: true,
   acceptSuggestionOnEnter: "on",
   accessibilitySupport: "auto",

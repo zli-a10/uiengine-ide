@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 
 const TrGroup = (props: any) => {
-  let { children, uinode, ...rest } = props;
+  let { children, uinode, expandable = true, value } = props;
   const [expanded, setExpanded] = useState(false);
 
   return children
@@ -10,10 +10,15 @@ const TrGroup = (props: any) => {
         const newProps = {
           mainRow: false,
           onExpandSubRow: (value: boolean) => setExpanded(value),
-          expanded
+          expanded,
+          colCount: 1,
+          rowGroupData: value
         };
-        if (index === 0) {
+        if (index === 0 && expandable) {
           newProps.mainRow = children.length > 1;
+        } else {
+          newProps.colCount =
+            _.get(children[0], "props.uiNode.children", []).length + 1;
         }
         return React.cloneElement(child, newProps);
       })

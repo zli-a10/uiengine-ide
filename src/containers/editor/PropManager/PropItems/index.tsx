@@ -4,6 +4,7 @@ export * from "./EnumComponent";
 export * from "./RangeComponent";
 export * from "./StringComponent";
 export * from "./NumberComponent";
+export * from "./FieldselectorComponent";
 // complex component
 export * from "./DependencyComponent";
 export * from "./EventComponent";

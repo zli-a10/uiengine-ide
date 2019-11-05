@@ -1,20 +1,199 @@
 {
-  "component": "antd:Form",
-  "props": {
-    "title": "Login"
-  },
-  "children": [{
-      "component": "my:FormItem",
-      "props": {
-        "type": "antd:Input"
-      }
-    },
-    {
-      "component": "my:FormItem",
-      "defaultvalue": "a10",
-      "props": {
-        "type": "antd:Input.Password"
-      }
-    }
-  ]
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "my:Table.Table",
+			"props": {
+				"isTable": true
+			},
+			"datasource": "$dummy.UINode-215",
+			"children": [
+				{
+					"component": "my:Table.TrGroup",
+					"props": {},
+					"datasource": "$dummy.UINode-76",
+					"children": [
+						{
+							"component": "my:Table.Tr",
+							"props": {},
+							"datasource": "$dummy.UINode-219",
+							"children": [
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "test",
+										"width": "15%"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "aa",
+										"width": "25%"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test2"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "bb",
+										"width": "30%"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test3"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "cc"
+									},
+									"datasource": "$dummy.UINode-235",
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {
+												"text": "Test4"
+											},
+											"datasource": "$dummy.UINode-252"
+										}
+									]
+								}
+							]
+						},
+						{
+							"component": "my:Table.Tr",
+							"props": {},
+							"datasource": "$dummy.UINode-219",
+							"children": [
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"colspan": null
+									},
+									"datasource": "$dummy.UINode-1721",
+									"children": [
+										{
+											"component": "antd:Switch",
+											"props": {
+												"$valueKey": "checked"
+											},
+											"datasource": {
+												"source": "$dummy.wildcard.$dep",
+												"schema": "$dummy.wildcard.$dep",
+												"autoload": true
+											},
+											"id": "UINode-3655"
+										},
+										{
+											"type": "field",
+											"name": "name",
+											"component": "antd:Form.Item",
+											"props": {
+												"label": "Name"
+											},
+											"children": [
+												{
+													"component": "antd:Input",
+													"datasource": {
+														"source": "slb.server:name",
+														"schema": "slb.server:name",
+														"autoload": true
+													}
+												}
+											],
+											"datasource": {
+												"source": "$dummy.wildcard.$.name",
+												"schema": "$dummy.wildcard.$.name",
+												"autoload": true
+											},
+											"state": {
+												"visible": {
+													"deps": [
+														{
+															"selector": {
+																"datasource.source": "$dummy.wildcard.$dep"
+															},
+															"data": true,
+															"dataCompareRule": "isTrue"
+														}
+													]
+												}
+											}
+										},
+										{
+											"type": "field",
+											"name": "host",
+											"component": "antd:Form.Item",
+											"props": {
+												"label": "Host"
+											},
+											"children": [
+												{
+													"component": "antd:Input",
+													"datasource": {
+														"source": "slb.server:host",
+														"schema": "slb.server:host",
+														"autoload": true
+													}
+												}
+											],
+											"datasource": {
+												"source": "$dummy.wildcard.$.host",
+												"schema": "$dummy.wildcard.$.host",
+												"autoload": true
+											},
+											"state": {
+												"visible": {
+													"deps": [
+														{
+															"selector": {
+																"id": "UINode-3655"
+															},
+															"data": false,
+															"dataCompareRule": "isFalse"
+														}
+													]
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
 }
