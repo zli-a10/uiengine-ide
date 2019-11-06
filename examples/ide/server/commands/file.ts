@@ -14,7 +14,7 @@ export interface ICommandOptions {
   options?: any
 }
 
-function getPath(options: ICommandOptions, rootOnly: boolean = false) {
+export function getPath(options: ICommandOptions, rootOnly: boolean = false) {
   const { type, path, isTemplate = false } = options
   // console.log("Read options: %s", options);
   let root = isTemplate ? 'templates' : 'paths'

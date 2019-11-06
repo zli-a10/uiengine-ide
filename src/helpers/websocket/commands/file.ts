@@ -35,12 +35,12 @@ export function saveFile(fileOptions: IUploadFile) {
   return Client.connect(command)
 }
 
-export async function loadDataSource(options: IObject) {
+export async function getDatasourceFields(fileName: string) {
   const command: IWebsocketCommands = {
-    name: 'loadDataSource',
+    name: 'getDataFields',
     options: {
       type: 'datasource',
-      options
+      path: fileName
     }
   }
   return await Client.connect(command)
