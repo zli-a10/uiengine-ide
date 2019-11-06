@@ -37,7 +37,7 @@ export const TreeBase = (props: any) => {
       const name = _.get(dataRef, "name", "");
       if ((!_.has(treeNode, "node.props.dataRef._editing_") || treeNode.node.props.dataRef._editing_ === false) &&
         name !== "") {
-        if (keys.length && nodeType === "file") {
+        if (keys.length && nodeType === "file" && type === 'schema') {
           const tabContent = _.find(tabs, { tab: keys[0] });
           if (!tabContent) {
             const data = await loadFileAndRefresh(keys[0], type, isTemplate);
