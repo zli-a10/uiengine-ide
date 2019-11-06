@@ -16,7 +16,7 @@ export const ActionMenu = (props: any) => {
     onRefresh
   } = props;
 
-  const { removeTab } = useContext(IDEEditorContext);
+  const { removeTab, setContent, tabs } = useContext(IDEEditorContext);
 
   const actionmMap: any = useMemo(
     () => ({
@@ -59,7 +59,17 @@ export const ActionMenu = (props: any) => {
       rename: () => {
         dataRef._editing_ = "rename";
         onRefresh();
-      }
+      },
+      revert: () => {
+        const data = resourceActions.revert(dataRef);
+        debugger
+        data.then((content) => {
+          if (_.find(tabs, { tab: dataRef.key })) {
+            setContent({ content: JSON.stringify(content, null, '\t'), type: 'schema', file: dataRef.key });
+          }
+        })
+        // onRefresh();
+      },
     }),
     [dataRef, expandKeys, status, removeTab]
   );
@@ -70,7 +80,7 @@ export const ActionMenu = (props: any) => {
       const actionName = e.key;
       return actionmMap[actionName].call();
     },
-    [dataRef, removeTab]
+    [dataRef, removeTab, setContent, tabs]
   );
 
   const isFolder = dataRef.nodeType === "folder" || dataRef.nodeType === "root";
@@ -86,7 +96,6 @@ export const ActionMenu = (props: any) => {
           <a>Add Folder</a>
         </Menu.Item>
       ) : null}
-
       {dataRef.nodeType === "root" ? null : status !== "removed" ? (
         <Menu.Item key="delete">
           <a>Delete</a>
@@ -104,6 +113,11 @@ export const ActionMenu = (props: any) => {
       {dataRef.nodeType !== "root" && status !== "removed" ? (
         <Menu.Item key="rename">
           <a>Rename</a>
+        </Menu.Item>
+      ) : null}
+      {status == "changed" && !isFolder ? (
+        <Menu.Item key="revert">
+          <a>Revert</a>
         </Menu.Item>
       ) : null}
     </Menu>

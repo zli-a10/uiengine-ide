@@ -82,7 +82,6 @@ export class FileLoader implements IFileLoader {
     type: EResourceType,
     treeRoot?: IResourceTreeNode
   ): boolean {
-    console.log("saving ...", path);
     // store tree
     if (this.isTempStorage() && treeRoot) {
       this.saveTree(treeRoot, type);
@@ -158,10 +157,10 @@ export class FileLoader implements IFileLoader {
     return promise;
   }
 
-  loadFile(path: string, type: EResourceType = "schema", isTemplate?: boolean) {
+  loadFile(path: string, type: EResourceType = "schema", isTemplate?: boolean, remote?: boolean) {
     const newPromise = new Promise((resolve: any) => {
       let content = this.storage.get(`${type}/${path}`);
-      if (content) {
+      if (content && !remote) {
         if (type === "schema" || type === "datasource") {
           try {
             content = JSON.parse(content);

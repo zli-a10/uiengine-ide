@@ -196,11 +196,27 @@ export const saveToResourceNode = (
   return path;
 };
 
+export const revertResourceNode = async (
+  dstNode: IResourceTreeNode,
+  type: EResourceType = "schema"
+) => {
+  let content = {};
+  const statusObj = loadFileStatus(dstNode.type, dstNode.key);
+  if (!_.isEmpty(statusObj) && statusObj.status === "changed") {
+    const fileLoader = FileLoader.getInstance();
+    content = await fileLoader.loadFile(dstNode.key, type, false, true);
+    fileLoader.saveFile(dstNode.key, content, type, getTreeRoot(dstNode));
+    saveFileStatus(dstNode.key, type, { status: "dropped", nodeType: dstNode.nodeType });
+  }
+  return content;
+};
+
 export const resourceActions = {
   add: AddResourceNode,
   addFolder: AddResourceFolder,
   delete: DeleteResourceNode,
   rename: RenameResourceNode,
   clone: CloneResourceNode,
-  save: saveToResourceNode
+  save: saveToResourceNode,
+  revert: revertResourceNode
 };
