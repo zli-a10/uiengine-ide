@@ -5,7 +5,7 @@ import { Main, DesignManager, PropManager } from './'
 import { IDEEditorContext } from '../Context'
 import { UIEngineDndProvider } from '../dnd'
 import * as Providers from './Providers'
-import { IDE_ID } from '../../helpers'
+import { IDE_ID, getActiveUINode } from '../../helpers'
 import './styles/index.less'
 import ErrorBoundary from './ErrorBoundary'
 import { Start } from './Helper'
@@ -13,19 +13,22 @@ import { EditorTabs } from './Workbench/EditorTabs'
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [currentTab, setCurrentTab] = useState('drawingboard')
+  const [activeTabName, setActiveTabName] = useState('drawingboard')
   const [tabs, setTabs] = useState([])
   const [editNode, setEditNode] = useState()
-  const [content, setContent] = useState([])
+  const [content, setContent] = useState<Array<IContentList>>([])
   const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([])
 
   const ideEditorContextValue = useMemo<IIDEEditorContext>(
     () => ({
       tabs,
       showTab: currentTab,
+      activeTabName: activeTabName,
       activeTab: (tab: string, language?: string, oldTabName?: string) => {
         const newTabs: any = _.clone(tabs)
         let current: string = tab
         const drawingBoard = 'drawingboard'
+        if (!language) language = 'schema'
         if (tab.indexOf(drawingBoard) !== -1) {
           const segs = tab.split(':')
           if (segs[1]) current = segs[1]
@@ -41,9 +44,17 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           newTabs.push({ tab: current, language })
           setTabs(newTabs)
         }
-
-        if (tab.indexOf(drawingBoard) !== -1) {
-          setCurrentTab(drawingBoard)
+        setActiveTabName(current)
+        if (language === 'schema') {
+          if (!!localStorage["drawingBoardLayout"]) {
+            setCurrentTab(current)
+          } else {
+            if (tab.indexOf(drawingBoard) !== -1) {
+              setCurrentTab(drawingBoard)
+            } else {
+              setCurrentTab(current)
+            }
+          }
         } else {
           setCurrentTab(current)
         }
@@ -52,17 +63,39 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         const newTabs: any = _.clone(tabs)
         const index: any = _.findIndex(newTabs, { tab })
         if (index > -1) {
-          let current = newTabs[index + 1]
+          let newCurrentTab = newTabs[index + 1]
             ? newTabs[index + 1]
             : newTabs[index - 1]
           newTabs.splice(index, 1)
           setTabs(newTabs)
-          if (!current) {
-            current = 'drawingboard'
+          if (!newCurrentTab) {
+            setCurrentTab('drawingboard')
           } else {
-            current = current.tab
+            setActiveTabName(newCurrentTab.tab)
+            if (newCurrentTab.language === 'schema') {
+              const text = _.find(content, { file: newCurrentTab.tab });
+              if (text) {
+                if (_.isString(text.content)) {
+                  try {
+                    const schema = JSON.parse(text.content);
+                    const uiNode = getActiveUINode();
+                    uiNode.schema = schema;
+                    uiNode.updateLayout();
+                    uiNode.sendMessage(true);
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }
+              }
+              if (!!localStorage["drawingBoardLayout"]) {
+                setCurrentTab(newCurrentTab.tab)
+              } else {
+                setCurrentTab('drawingboard')
+              }
+            } else {
+              setCurrentTab(newCurrentTab.tab)
+            }
           }
-          setCurrentTab(current)
         }
 
         // remove content
@@ -74,13 +107,13 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         }
       },
       layout: '',
-      setLayout: (path: string) => {},
+      setLayout: (path: string) => { },
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
       help: '',
-      setHelp: (help: string) => {},
+      setHelp: (help: string) => { },
       refresh: '',
-      toggleRefresh: (refresh: string) => {},
+      toggleRefresh: (refresh: string) => { },
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode)
@@ -116,7 +149,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         setContent(newContentList)
       }
     }),
-    [editNode, collapsedNodes, content, tabs]
+    [editNode, collapsedNodes, content, tabs, activeTabName]
   )
 
   // show start ?
@@ -127,8 +160,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       localStorage['showGuide'] === undefined
         ? true
         : localStorage['showGuide'] === 'false'
-        ? false
-        : true
+          ? false
+          : true
     setShowGuide(showGuideStatus)
   }, [localStorage['drawingBoardLayout'], localStorage['showGuide']])
 

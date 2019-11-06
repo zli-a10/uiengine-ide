@@ -53,6 +53,7 @@ interface IContentList {
 }
 interface IIDEEditorContext {
   showTab: string;
+  activeTabName: string;
   tabs: Array<{ tab: string; language: string; treeNode?: IResourceTreeNode }>;
   activeTab: (tab: string, language?: string, oldTabName?: string) => any;
   removeTab: (tab: string) => any;

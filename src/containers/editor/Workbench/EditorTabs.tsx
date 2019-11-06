@@ -10,7 +10,8 @@ import {
   Modal,
   Form,
   Input,
-  TreeSelect
+  TreeSelect,
+  message
 } from "antd";
 import { DrawingBoard, CodeEditor } from "./../";
 import { IDEEditorContext, GlobalContext } from "../../Context";
@@ -18,7 +19,8 @@ import {
   loadFileStatus,
   getFileSuffix,
   FileLoader,
-  saveFileStatus
+  saveFileStatus,
+  getActiveUINode
 } from "../../../helpers";
 const { TabPane } = Tabs;
 
@@ -149,11 +151,15 @@ const WindowSizeDown = (props: any) => {
 };
 
 export const EditorTabs = (props: any) => {
-  const { activeKey, tabs } = props;
-  const { activeTab, removeTab, content } = useContext(IDEEditorContext);
+  const { tabs } = props;
+  const propActiveKey = props['activeKey']
+  const { activeTab, removeTab, content, setContent, activeTabName } = useContext(IDEEditorContext);
   const { resourceTree, setResourceTree } = useContext(GlobalContext);
-
-  // console.log(resourceTree, "resource tree");
+  let activeKey = propActiveKey
+  if (propActiveKey.indexOf('drawingboard') !== -1) {
+    const segs = propActiveKey.split(':')
+    if (segs[1]) activeKey = segs[1]
+  }
   const [leftSpan, setLeftSpan] = useState(12);
   const [rightSpan, setRightSpan] = useState(12);
 
@@ -163,10 +169,12 @@ export const EditorTabs = (props: any) => {
     setSpitted(!splitted);
     if (!splitted) {
       localStorage["drawingBoardLayout"] = "12:12";
+      activeTab(`drawingboard:${activeTabName}`, 'schema');
     } else {
       localStorage["drawingBoardLayout"] = "";
+      activeTab(`drawingboard:${activeKey}`, 'schema');
     }
-  }, [splitted]);
+  }, [splitted, activeTab, activeKey, activeTabName]);
 
   const onMenuClick = useCallback((e: any) => {
     const { key } = e;
@@ -250,10 +258,39 @@ export const EditorTabs = (props: any) => {
     [splitted, resourceTree, activeTab, setResourceTree, activeKey]
   );
 
+  const onTabClick = useCallback(
+    (activeKey: any) => {
+      activeTab(`drawingboard:${activeKey}`, 'schema');
+      const text = _.find(content, { file: activeKey });
+      if (text) {
+        if (_.isString(text.content)) {
+          try {
+            const schema = JSON.parse(text.content);
+            const uiNode = getActiveUINode();
+            uiNode.schema = schema;
+            uiNode.updateLayout();
+            uiNode.sendMessage(true);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+
+    },
+    [activeKey]
+  );
+
   const onEdit = useCallback(
     (targetKey: any, action: string) => {
       if (action === "remove") {
-        removeTab(targetKey);
+        if (targetKey === 'drawingboard') {
+          message.warning('drawingboard can not be closed!');
+        }
+        else if (tabs.length === 1) {
+          message.warning('At least one tab is open so drawingboard could display its content!');
+        } else {
+          removeTab(targetKey);
+        }
       }
     },
     [removeTab, tabs]
@@ -278,6 +315,19 @@ export const EditorTabs = (props: any) => {
       setSpitted(false);
     }
   }, [tabs]);
+
+  useEffect(() => {
+    const initTab = async () => {
+      const tabIndex: any = _.findIndex(tabs, { tab: 'simple.json' })
+      if (tabIndex === -1) {
+        const fileLoader = FileLoader.getInstance();
+        const data = await fileLoader.loadFile('simple.json', 'schema');
+        setContent({ content: JSON.stringify(data, null, '\t'), file: 'simple.json', type: 'schema' })
+        activeTab('simple.json', 'schema');
+      }
+    }
+    initTab()
+  }, [])
 
   const createTabTitle = useCallback(
     (tabObject: any) => {
@@ -311,6 +361,7 @@ export const EditorTabs = (props: any) => {
       hideAdd
       type="editable-card"
       onEdit={onEdit}
+      onTabClick={onTabClick}
       tabBarExtraContent={
         tabs && tabs.length ? (
           <WindowSizeDown
@@ -336,39 +387,42 @@ export const EditorTabs = (props: any) => {
       })}
     </Tabs>
   ) : (
-    <Row>
-      <Col span={leftSpan}>
-        <Tabs defaultActiveKey="drawingboard">
-          <TabPane tab="Drawing Board" key="drawingboard">
-            <DrawingBoard {...props} />
-          </TabPane>
-        </Tabs>
-      </Col>
-      <Col span={rightSpan}>
-        <Tabs
-          onEdit={onEdit}
-          hideAdd
-          type="editable-card"
-          defaultActiveKey={activeKey}
-          tabBarExtraContent={
-            tabs && tabs.length ? (
-              <WindowSizeDown
-                onMenuClick={onMenuClick}
-                onSplitWindow={onSplitWindow}
-                onSave={onSave}
-                activeKey={activeKey}
-                type={type}
-              />
-            ) : null
-          }
-        >
-          {tabs.map((tab: any) => (
-            <TabPane tab={createTabTitle(tab)} key={tab.tab}>
-              <CodeEditor data={tab} />
+      <Row>
+        <Col span={leftSpan}>
+          <Tabs defaultActiveKey="drawingboard">
+            <TabPane tab="Drawing Board" key="drawingboard">
+              <DrawingBoard {...props} />
             </TabPane>
-          ))}
-        </Tabs>
-      </Col>
-    </Row>
-  );
+          </Tabs>
+        </Col>
+        <Col span={rightSpan}>
+          <Tabs
+            onEdit={onEdit}
+            onTabClick={onTabClick}
+            hideAdd
+            type="editable-card"
+            defaultActiveKey={activeKey}
+            activeKey={activeKey}
+
+            tabBarExtraContent={
+              tabs && tabs.length ? (
+                <WindowSizeDown
+                  onMenuClick={onMenuClick}
+                  onSplitWindow={onSplitWindow}
+                  onSave={onSave}
+                  activeKey={activeKey}
+                  type={type}
+                />
+              ) : null
+            }
+          >
+            {tabs.map((tab: any) => (
+              <TabPane tab={createTabTitle(tab)} key={tab.tab}>
+                <CodeEditor data={tab} />
+              </TabPane>
+            ))}
+          </Tabs>
+        </Col>
+      </Row>
+    );
 };

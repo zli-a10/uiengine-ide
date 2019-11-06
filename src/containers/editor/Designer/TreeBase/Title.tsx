@@ -108,7 +108,7 @@ export const Title = (props: any) => {
     if (dataRef._editing_) {
       const newList = document.querySelectorAll('.newSchemaClass');
       if (newList.length) {
-        const focusNode = newList[newList.length - 1]
+        const focusNode = newList[newList.length - 1] as HTMLInputElement
         focusNode.focus();
       }
     }
