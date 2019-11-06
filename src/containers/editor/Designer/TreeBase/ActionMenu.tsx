@@ -68,7 +68,7 @@ export const ActionMenu = (props: any) => {
             setContent({ content: JSON.stringify(content, null, '\t'), type: 'schema', file: dataRef.key });
           }
         })
-        // onRefresh();
+        onRefresh();
       },
     }),
     [dataRef, expandKeys, status, removeTab]
