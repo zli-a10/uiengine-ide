@@ -323,7 +323,7 @@ export const EditorTabs = (props: any) => {
         const fileLoader = FileLoader.getInstance();
         const data = await fileLoader.loadFile('simple.json', 'schema');
         setContent({ content: JSON.stringify(data, null, '\t'), file: 'simple.json', type: 'schema' })
-        activeTab('simple.json', 'schema');
+        activeTab('drawingboard:simple.json', 'schema');
       }
     }
     initTab()
