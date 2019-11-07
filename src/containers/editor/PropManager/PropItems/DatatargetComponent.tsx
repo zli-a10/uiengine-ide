@@ -7,11 +7,7 @@ import {
   convertNodes
 } from '../../../../helpers'
 import { GlobalContext } from '../../../Context'
-import {
-  analysisDataSourceFields,
-  analysisDataSource
-} from '../../../../helpers/DataSourceLoader'
-import { IObject } from 'uiengine/typings'
+import { analysisDataSource } from '../../../../helpers/DataSourceLoader'
 
 const TargetItem = (props: any) => {
   const data = useContext(GlobalContext)
@@ -52,11 +48,11 @@ const TargetItem = (props: any) => {
     [item]
   )
 
-  const [schemas, setSchemas] = useState([] as IObject[])
+  const [schemas, setSchemas] = useState([])
   useEffect(() => {
     const initDataSource = async () => {
-      let newNodes = (await analysisDataSource(datasource)) || ([] as IObject[])
-      newNodes = convertNodes(newNodes, [] as IObject[], true)
+      let newNodes: any = (await analysisDataSource(datasource)) || []
+      newNodes = convertNodes(newNodes, [], true)
       setSchemas(newNodes)
     }
     initDataSource()

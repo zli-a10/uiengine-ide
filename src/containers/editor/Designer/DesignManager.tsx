@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import { GlobalContext } from '../../Context'
 import { PageTree, ResourceTree, Libraries } from '..'
-import { DataSource } from '../DataSource'
+import { DataSource } from './DataSource'
 import { IDERegister } from '../../../helpers'
 const TabPane = Tabs.TabPane
 
