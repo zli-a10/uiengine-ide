@@ -62,7 +62,6 @@ export const ActionMenu = (props: any) => {
       },
       revert: () => {
         const data = resourceActions.revert(dataRef);
-        debugger
         data.then((content) => {
           if (_.find(tabs, { tab: dataRef.key })) {
             setContent({ content: JSON.stringify(content, null, '\t'), type: 'schema', file: dataRef.key });
