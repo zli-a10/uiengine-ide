@@ -84,7 +84,9 @@ const SelectorItem = (props: any) => {
       extra.allCheckedNodes.forEach((node: any) => {
         const key = _.get(node, `node.key`);
         const value = _.get(node, `node.props.value`);
-        selector[key] = value.slice(value.indexOf(":") + 1, value.length);
+        if (value) {
+          selector[key] = value.slice(value.indexOf(":") + 1, value.length);
+        }
       });
       data.selector = selector;
       setSelector(value);
@@ -329,21 +331,21 @@ const SelectorItem = (props: any) => {
             />
           </Form.Item>
         ) : (
-          <Form.Item label="State">
-            <Select
-              disabled={disabled}
-              size="small"
-              value={value ? 1 : 0}
-              onChange={(value: any) => {
-                changeValue(value);
-                setDataValue(value);
-              }}
-            >
-              <Select.Option value={1}>True</Select.Option>
-              <Select.Option value={0}>False</Select.Option>
-            </Select>
-          </Form.Item>
-        )}
+            <Form.Item label="State">
+              <Select
+                disabled={disabled}
+                size="small"
+                value={value ? 1 : 0}
+                onChange={(value: any) => {
+                  changeValue(value);
+                  setDataValue(value);
+                }}
+              >
+                <Select.Option value={1}>True</Select.Option>
+                <Select.Option value={0}>False</Select.Option>
+              </Select>
+            </Form.Item>
+          )}
         <Form.Item label="Del">
           <Button
             disabled={disabled}

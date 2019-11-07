@@ -34,7 +34,7 @@ interface IFileLoader {
     remoteOnly?: boolean,
     folderOnly?: boolean
   )
-  loadFile(path: string, type: EResourceType, isTemplate?: boolean)
+  loadFile(path: string, type: EResourceType, isTemplate?: boolean, remote?: boolean)
   removeFile(path: string, type: EResourceType, treeRoot?: IResourceTreeNode)
 }
 
