@@ -197,8 +197,8 @@ export const DatasourceComponent = (props: any) => {
                 >
                   <Select.Option value="">----</Select.Option>
                   {Object.entries(IDERegister.formatters).map(
-                    (formatter: any) => (
-                      <Select.Option value={formatter[0]}>
+                    (formatter: any, index: any) => (
+                      <Select.Option value={formatter[0]} key={index}>
                         {formatter[1].name}
                       </Select.Option>
                     )

@@ -34,7 +34,12 @@ interface IFileLoader {
     remoteOnly?: boolean,
     folderOnly?: boolean
   )
-  loadFile(path: string, type: EResourceType, isTemplate?: boolean, remote?: boolean)
+  loadFile(
+    path: string,
+    type: EResourceType,
+    isTemplate?: boolean,
+    remote?: boolean
+  )
   removeFile(path: string, type: EResourceType, treeRoot?: IResourceTreeNode)
 }
 
@@ -77,6 +82,7 @@ interface IDataSourceTreeProps {
   value?: any
   searchText?: string
   onChange?: (value: any) => void
+  [name: string]: any
 }
 
 interface IMockTemplates {

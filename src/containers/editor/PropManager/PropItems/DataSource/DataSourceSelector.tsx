@@ -64,7 +64,7 @@ const renderNode = (data: any) => {
 export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
   props: IDataSourceTreeProps
 ) => {
-  const { onChange, value, disabled } = props
+  const { onChange, value, disabled, multipleChecked = false } = props
 
   const data = useContext(GlobalContext)
   const { resourceTree: { datasource = [] } = {} } = data
@@ -126,6 +126,7 @@ export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
           <TreeSelect
             dropdownClassName="cancel-drag"
             disabled={disabled}
+            treeCheckable={multipleChecked}
             allowClear
             {...(value ? { value } : {})}
             showSearch

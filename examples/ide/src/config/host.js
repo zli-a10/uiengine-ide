@@ -1,4 +1,4 @@
 module.exports = {
   dev: 'localhost',
-  apiServer: '192.168.105.54'
+  apiServer: '192.168.105.197'
 }

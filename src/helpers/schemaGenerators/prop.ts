@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash'
 
 export const prop = (
   name: string,
@@ -7,11 +7,11 @@ export const prop = (
   options?: any
 ) => {
   // TODO: validate by info
-  if (name !== "content") {
-    const props = {};
-    _.set(props, name, value);
-    return { props };
+  if (name !== 'content') {
+    const props = {}
+    _.set(props, name, value)
+    return { props }
   } else {
-    return { content: value };
+    return { content: value }
   }
-};
+}
