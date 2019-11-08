@@ -1,22 +1,27 @@
 import * as express from 'express'
 import * as http from 'http'
-import * as WebSocket from 'ws'
-import Commander from './Commander'
+import WebSocketServer from './Server'
+const fs = require('fs')
 
 const app = express()
 
 //initialize a simple http server
 const server = http.createServer(app)
 
-//initialize the WebSocket server instance
-const wss = new WebSocket.Server({ server })
+const s = new WebSocketServer(server)
+// setInterval(() => {
+//   s.sendMessage('hello', 'client-listener')
+// }, 3000)
 
-wss.on('connection', (ws: WebSocket) => {
-  ws.on('message', async (message: string) => {
-    const result = await Commander.executeCommand(message)
-    ws.send(result)
-  })
-})
+// fs.watch(
+//   './public',
+//   { encoding: 'buffer' },
+//   (eventType: any, filename: any) => {
+//     if (filename) {
+//       console.log(filename, eventType)
+//     }
+//   }
+// )
 
 //start our server
 server.listen(process.env.PORT || 3001, () => {
