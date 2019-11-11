@@ -1,59 +1,59 @@
-import Mock from "mockjs";
-import _ from "lodash";
-import { EMPTY_DATA } from "../helpers";
-import { IUINode } from "uiengine/typings";
+import Mock from 'mockjs'
+import _ from 'lodash'
+import { EMPTY_DATA } from '../helpers'
+import { IUINode } from 'uiengine/typings'
 
 export class DataMocker implements IDataMocker {
-  static instance: IDataMocker;
+  static instance: IDataMocker
   static getInstance() {
     if (!DataMocker.instance) {
-      DataMocker.instance = new DataMocker();
+      DataMocker.instance = new DataMocker()
     }
-    return DataMocker.instance;
+    return DataMocker.instance
   }
 
   /**
    * Should convert data schema rules to mockjs definiation
    * @param schema data schema
    */
-  schemaCoverter(schema: any, mode: string = "") {
-    return schema;
+  schemaCoverter(schema: any, mode: string = '') {
+    return schema
   }
 
-  maxRow: number = 5;
-  enable: boolean = true;
-  mode: string = "normal";
-  noCache: boolean = false; // default cache
-  dataCached: any = {}; // see mockjs definiation
+  maxRow: number = 5
+  enable: boolean = true
+  mode: string = 'normal'
+  noCache: boolean = false // default cache
+  dataCached: any = {} // see mockjs definiation
   generate(schema: any) {
-    if (this.mode === EMPTY_DATA) return;
-    if (!this.enable) return;
-    const templates = this.schemaCoverter(schema, this.mode);
-    const key = Object.keys(templates)[0];
+    if (this.mode === EMPTY_DATA) return
+    if (!this.enable) return
+    const templates = this.schemaCoverter(schema, this.mode)
+    const key = Object.keys(templates)[0]
 
-    if (!key) return;
+    if (!key) return
 
     const getValue = (data: any) => {
       if (data) {
-        return Object.values(data)[0];
+        return Object.values(data)[0]
       }
-      return;
-    };
-    let result: any;
+      return
+    }
+    let result: any
     if (this.noCache) {
-      result = Mock.mock(templates);
-      result = getValue(result);
+      result = Mock.mock(templates)
+      result = getValue(result)
     } else {
       if (this.dataCached[key] === undefined) {
-        result = Mock.mock(templates);
-        result = getValue(result);
+        result = Mock.mock(templates)
+        result = getValue(result)
       } else {
-        result = this.dataCached[key];
+        result = this.dataCached[key]
       }
     }
-    this.dataCached[key] = result;
+    this.dataCached[key] = result
 
-    return result;
+    return result
   }
 
   // private async fetchDataSchemasAndSourceListNames(childrenNodeSchemas: any[]) {
@@ -111,14 +111,14 @@ export class DataMocker implements IDataMocker {
   // }
 
   generateTableData(uiNode: IUINode) {
-    const result: any = [];
-    if (this.mode === EMPTY_DATA) return result;
-    if (!this.enable) return result;
-    const children = _.get(uiNode, "schema.$children", []);
+    const result: any = []
+    if (this.mode === EMPTY_DATA) return result
+    if (!this.enable) return result
+    const children = _.get(uiNode, 'schema.$children', [])
     for (let i = 0; i < this.maxRow; i++) {
-      const r = children.map(() => ({}));
-      result.push(r);
+      const r = children.map(() => ({}))
+      result.push(r)
     }
-    return result;
+    return result
   }
 }
