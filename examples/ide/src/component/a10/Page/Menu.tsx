@@ -64,7 +64,7 @@ class MenuComponent extends React.Component<any, any> {
             {/* <AutoComplete placeholder="Search..." /> */}
             <TreeSelect
               showSearch
-              style={{ width: 170 }}
+              style={{ width: 210 }}
               value={this.state.value}
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               placeholder="Please select"

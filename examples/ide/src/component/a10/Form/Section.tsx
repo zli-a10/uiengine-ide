@@ -36,6 +36,7 @@ const SectionComponent = (props: any) => {
   return (
     <div className="a10-collapse-frame">
       <Collapse
+        bordered={false}
         defaultActiveKey={'----'}
         activeKey={activeKey}
         onChange={onCollapse}
@@ -50,9 +51,10 @@ const SectionComponent = (props: any) => {
           style={style}
           className="a10-form-item"
         >
-          {children.map((child: any) => {
-            return React.cloneElement(child, { group: title })
-          })}
+          {children &&
+            children.map((child: any) => {
+              return React.cloneElement(child, { group: title })
+            })}
         </Panel>
       </Collapse>
     </div>

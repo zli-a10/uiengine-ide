@@ -1,12 +1,7 @@
-.more-infor {
-  float: right
-}
-
 .a10-collapse-frame {
-
   .ant-collapse-header {
     background: #fff;
-    border-radius: 4;
+    border-radius: 6px;
     margin-bottom: 24;
     border: 0;
     overflow: hidden;
@@ -14,6 +9,15 @@
 
   .ant-collapse-content {
     border-top: 0;
+  }
+
+  .ant-collapse-borderless>.ant-collapse-item {
+    border-bottom: 0;
+    border-radius: 6px;
+  }
+
+  .ant-collapse-borderless>.ant-collapse-item:last-child .ant-collapse-header {
+    border-radius: 6px;
   }
 }
 

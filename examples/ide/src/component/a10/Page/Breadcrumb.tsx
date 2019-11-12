@@ -26,7 +26,7 @@ const BreadcrumbComponent = (props: any) => {
       <Col span={8} className="breadCrumb-switch">
         <Switch
           checkedChildren="Help"
-          unCheckedChildren="Default"
+          unCheckedChildren="Hide"
           defaultChecked
           onChange={onShowHelp}
         />

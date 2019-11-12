@@ -21,9 +21,7 @@ const FormComponent = (props: any) => {
 
   return (
     <>
-      <Form className="form-container" {...formItemLayout}>
-        {children}
-      </Form>
+      <Form {...formItemLayout}>{children}</Form>
     </>
   )
 }
