@@ -8,5 +8,6 @@ export * from './FormItem'
 export * from './FixedSelect'
 export * from './RadioGroup'
 export * from './Layout'
+export * from './Context'
 
 export { Table, Layout }

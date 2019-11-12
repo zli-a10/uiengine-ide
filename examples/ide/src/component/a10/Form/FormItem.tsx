@@ -1,42 +1,31 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import _ from 'lodash'
-import { Form, Input, Icon, Row, Popover } from 'antd'
-
-import { getComponent } from 'uiengine-ide'
+import { Form, Input } from 'antd'
+// import components from '../';
+import { getComponent } from 'uiengine'
+import { MyContext } from '../../my/Context/Provider'
 
 const { Item } = Form
+
 const FormItemComponent = (props: any) => {
-  let { children, type, error, help, extra, ...rest } = props
+  let { children, type, error, group, help, isAdvance, ...rest } = props
+
+  const { data } = useContext(MyContext)
+  // console.log(data, group, _.get(data, `help[${group}]`))
+
+  const showAdvanced = _.get(data, `advanceOption[${group}]`, false)
+
   let element: any = children
-  let extraInfor: any = children
-  let helpInfor: any = children
-  let labelInfor: any = children
-  helpInfor = (
-    <Row>
-      {help ? (
-        <Popover content={help} title="Title" placement="right">
-          <Icon
-            type="question"
-            className="form-item-help"
-            style={{ marginTop: '9px' }}
-          />
-        </Popover>
-      ) : null}
-    </Row>
-  )
-  extraInfor = (
-    <>{extra ? <Row className="form-item-extra">{extra}</Row> : null}</>
-  )
   if (type) {
     if (type.indexOf(':') === -1) type = 'antd:' + _.upperFirst(type)
     const InputComponent: any = getComponent(type)
-
     if (InputComponent) {
       element = <InputComponent {...rest} />
     } else {
       element = <Input {...rest} />
     }
   }
+
   let e = {}
   if (!_.get(error, 'status', true)) {
     e = {
@@ -45,10 +34,18 @@ const FormItemComponent = (props: any) => {
     }
   }
 
-  return (
-    <Item {...rest} {...e}>
-      {/* {helpInfor}*/}
-      {extraInfor}
+  return isAdvance ? (
+    showAdvanced === true ? (
+      <Item
+        help={_.get(data, 'showHelp') === false ? '' : help}
+        {...rest}
+        {...e}
+      >
+        {element}
+      </Item>
+    ) : null
+  ) : (
+    <Item help={_.get(data, 'showHelp') === false ? '' : help} {...rest} {...e}>
       {element}
     </Item>
   )

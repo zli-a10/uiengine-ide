@@ -1,22 +1,15 @@
 import React from 'react'
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Input,
-  Icon,
-  AutoComplete,
-  Row,
-  Col
-} from 'antd'
+import { Layout, Icon, Row, Col } from 'antd'
 
-const { Header, Content, Footer } = Layout
+const { Header } = Layout
 class HeaderComponent extends React.Component<any, any> {
   render() {
     return (
       <Header className="GUI-header">
         <Row className="flex-bar">
-          <Col span={3} className="logo"></Col>
+          <Col span={3} className="logo">
+            <img src="logo-a10.png" />
+          </Col>
           <Col span={21} className="float-right">
             <Row>
               {/* TODO  */}

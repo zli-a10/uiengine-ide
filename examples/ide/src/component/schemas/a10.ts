@@ -127,6 +127,20 @@ export default [
 
         children: [
           {
+            component: 'a10:Form.Section',
+            title: 'Section',
+            isContainer: true,
+            schema: {
+              active: 'boolean',
+              title: 'string',
+              advanceToggle: 'boolean'
+            },
+            defaultProps: {
+              active: true,
+              title: 'Section 1'
+            }
+          },
+          {
             component: 'a10:Form.InfoCard',
             title: 'Info Card',
             isContainer: true,
@@ -151,8 +165,6 @@ export default [
               label: 'string',
               extra: 'string',
               help: 'string',
-              max: 'number',
-              min: 'number',
               colon: 'boolean',
               labelCol: [
                 {
@@ -161,11 +173,10 @@ export default [
                 }
               ],
               required: 'boolean',
-
               htmlFor: 'string',
               hasFeedback: 'boolean',
               isMore: 'boolean',
-              message: 'string'
+              isAdvance: 'boolean'
             },
             defaultProps: {}
           },
