@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Icon, Row, Col, Menu } from 'antd'
+import { Layout, Icon, Row, Col, Menu, Input } from 'antd'
 
 const { Header } = Layout
 const { SubMenu } = Menu
@@ -16,23 +16,17 @@ const HeaderComponent = (props: any) => {
               <Col span={24} className="system-menu">
                 <Menu mode="horizontal" defaultSelectedKeys={[]}>
                   <SubMenu
-                    key="vcs"
+                    key="backup"
                     title={
                       <span>
                         <Icon type="api" />
-                        <span>VCS Status</span>
+                        <span>Sync</span>
                         <Icon type="right" />
                       </span>
                     }
                   >
-                    <Menu.ItemGroup title="Item 1">
-                      <Menu.Item key="1">Option 1</Menu.Item>
-                      <Menu.Item key="2">Option 2</Menu.Item>
-                    </Menu.ItemGroup>
-                    <Menu.ItemGroup title="Iteom 2">
-                      <Menu.Item key="3">Option 3</Menu.Item>
-                      <Menu.Item key="4">Option 4</Menu.Item>
-                    </Menu.ItemGroup>
+                    <Menu.Item key="heartbeat">Heartbeat</Menu.Item>
+                    <Menu.Item key="avcs">aVCS</Menu.Item>
                   </SubMenu>
                   <SubMenu
                     key="partition"
@@ -44,13 +38,13 @@ const HeaderComponent = (props: any) => {
                       </span>
                     }
                   >
-                    <Menu.ItemGroup title="Item 1">
-                      <Menu.Item key="1">Option 1</Menu.Item>
-                      <Menu.Item key="2">Option 2</Menu.Item>
-                    </Menu.ItemGroup>
-                    <Menu.ItemGroup title="Iteom 2">
-                      <Menu.Item key="3">Option 3</Menu.Item>
-                      <Menu.Item key="4">Option 4</Menu.Item>
+                    <Menu.Item key="search">
+                      <Input.Search />
+                    </Menu.Item>
+                    <Menu.Item key="shared">Shared Partition</Menu.Item>
+                    <Menu.ItemGroup title="Partitions">
+                      <Menu.Item key="pa">Partition A</Menu.Item>
+                      <Menu.Item key="pb">Partition B</Menu.Item>
                     </Menu.ItemGroup>
                   </SubMenu>
                   <SubMenu
@@ -63,14 +57,9 @@ const HeaderComponent = (props: any) => {
                       </span>
                     }
                   >
-                    <Menu.ItemGroup title="Item 1">
-                      <Menu.Item key="1">Option 1</Menu.Item>
-                      <Menu.Item key="2">Option 2</Menu.Item>
-                    </Menu.ItemGroup>
-                    <Menu.ItemGroup title="Iteom 2">
-                      <Menu.Item key="3">Option 3</Menu.Item>
-                      <Menu.Item key="4">Option 4</Menu.Item>
-                    </Menu.ItemGroup>
+                    <Menu.Item key="English">English</Menu.Item>
+                    <Menu.Item key="Chinese">Chinese</Menu.Item>
+                    <Menu.Item key="Japanese">Japanese</Menu.Item>
                   </SubMenu>
                   <Menu.Item key="cli" className="sys-menu-item">
                     <Icon type="code" /> CLI{' '}

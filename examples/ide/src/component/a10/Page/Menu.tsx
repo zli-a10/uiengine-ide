@@ -25,13 +25,17 @@ export const MenuComponent = (props: any) => {
         justify="space-between"
         className="flex-bar"
       >
-        <Col span={12}>
+        <Col span={8}>
           <DropdownComponent />
         </Col>
-        <Col span={12} className="system-menu">
+        <Col span={16} className="system-menu">
           <Row type="flex" align="middle" justify="end">
             <Col span={18}>
-              <Menu mode="horizontal" defaultSelectedKeys={[]}>
+              <Menu
+                mode="horizontal"
+                defaultSelectedKeys={[]}
+                inlineCollapsed={false}
+              >
                 <SubMenu
                   key="dashboard"
                   title={
@@ -42,14 +46,8 @@ export const MenuComponent = (props: any) => {
                     </span>
                   }
                 >
-                  <Menu.ItemGroup title="Item 1">
-                    <Menu.Item key="1">Option 1</Menu.Item>
-                    <Menu.Item key="2">Option 2</Menu.Item>
-                  </Menu.ItemGroup>
-                  <Menu.ItemGroup title="Iteom 2">
-                    <Menu.Item key="3">Option 3</Menu.Item>
-                    <Menu.Item key="4">Option 4</Menu.Item>
-                  </Menu.ItemGroup>
+                  <Menu.Item key="default">Default</Menu.Item>
+                  <Menu.Item key="App">Application</Menu.Item>
                 </SubMenu>
                 <SubMenu
                   key="networking"
@@ -61,14 +59,48 @@ export const MenuComponent = (props: any) => {
                     </span>
                   }
                 >
-                  <Menu.ItemGroup title="Item 1">
-                    <Menu.Item key="1">Option 1</Menu.Item>
-                    <Menu.Item key="2">Option 2</Menu.Item>
-                  </Menu.ItemGroup>
-                  <Menu.ItemGroup title="Iteom 2">
-                    <Menu.Item key="3">Option 3</Menu.Item>
-                    <Menu.Item key="4">Option 4</Menu.Item>
-                  </Menu.ItemGroup>
+                  <SubMenu title="Interfaces">
+                    <Menu.Item key="lan">LAN</Menu.Item>
+                    <Menu.Item key="ve">Virtual Ethernets</Menu.Item>
+                    <Menu.Item key="management">Management</Menu.Item>
+                    <Menu.Item key="Transparent">Transparent</Menu.Item>
+                    <Menu.Item key="Trunks">Trunks</Menu.Item>
+                    <Menu.Item key="LLDP">LLDP</Menu.Item>
+                    <Menu.Item key="General">General</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="VLAN">
+                    <Menu.Item key="vlan">VLAN</Menu.Item>
+                    <Menu.Item key="MAC">MAC</Menu.Item>
+                    <Menu.Item key="General">General</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="ARP">
+                    <SubMenu title="IPv4">
+                      <Menu.Item key="Static">Static</Menu.Item>
+                      <Menu.Item key="Dynamic">Dynamic</Menu.Item>
+                    </SubMenu>
+                    <SubMenu title="IPv6">
+                      <Menu.Item key="Static">Static</Menu.Item>
+                      <Menu.Item key="Dynamic">Dynamic</Menu.Item>
+                    </SubMenu>
+                    <Menu.Item key="General">General</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Routes">
+                    <SubMenu title="IPv4">
+                      <Menu.Item key="Static">Rib</Menu.Item>
+                      <Menu.Item key="Dynamic">BFD</Menu.Item>
+                    </SubMenu>
+                    <SubMenu title="IPv6">
+                      <Menu.Item key="Static">Rib</Menu.Item>
+                      <Menu.Item key="Dynamic">BFD</Menu.Item>
+                    </SubMenu>
+                    <Menu.Item key="General">General</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Other">
+                    <Menu.Item key="lacp">LACP</Menu.Item>
+                    <Menu.Item key="trunk">Trunk</Menu.Item>
+                    <Menu.Item key="BPDU Fwd Groups">BPDU Fwd Groups</Menu.Item>
+                    <Menu.Item key="MDLB">MDLB</Menu.Item>
+                  </SubMenu>
                 </SubMenu>
                 <SubMenu
                   key="system"
@@ -80,14 +112,60 @@ export const MenuComponent = (props: any) => {
                     </span>
                   }
                 >
-                  <Menu.ItemGroup title="Item 1">
-                    <Menu.Item key="1">Option 1</Menu.Item>
-                    <Menu.Item key="2">Option 2</Menu.Item>
-                  </Menu.ItemGroup>
-                  <Menu.ItemGroup title="Iteom 2">
-                    <Menu.Item key="3">Option 3</Menu.Item>
-                    <Menu.Item key="4">Option 4</Menu.Item>
-                  </Menu.ItemGroup>
+                  <SubMenu title="Resources">
+                    <Menu.Item key="files">Files</Menu.Item>
+                    <Menu.Item key="usage">Application Resource</Menu.Item>
+                    <Menu.Item key="resource-system">
+                      {' '}
+                      System Resource
+                    </Menu.Item>
+                    <Menu.Item key="resource-accounting">
+                      Resource Acountting
+                    </Menu.Item>
+                    <Menu.Item key="template">Templates</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Share Objects">
+                    <Menu.Item key="class-list">Class List</Menu.Item>
+                    <Menu.Item key="domain-list">Domain List</Menu.Item>
+                    <Menu.Item key="geo-list">GEO List</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Settings">
+                    <Menu.Item key="time">Time</Menu.Item>
+                    <Menu.Item key="dns">DNS</Menu.Item>
+                    <Menu.Item key="web">Web</Menu.Item>
+                    <Menu.Item key="web-cert">Web Cert</Menu.Item>
+                    <Menu.Item key="terminal">Terminal</Menu.Item>
+                    <Menu.Item key="logging">Logging</Menu.Item>
+                    <Menu.Item key="SMTP">SMTP</Menu.Item>
+                    <Menu.Item key="Sync">Sync</Menu.Item>
+                    <Menu.Item key="Password Policy">Password Policy</Menu.Item>
+                    <Menu.Item key="Cloud">Harmony Controller</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Admin">
+                    <Menu.Item key="Users">Users</Menu.Item>
+                    <Menu.Item key="RBA">RBA</Menu.Item>
+                    <Menu.Item key="Partitions">Partition</Menu.Item>
+                    <Menu.Item key="Lockout">Lockout</Menu.Item>
+                    <Menu.Item key="External-auth">External Auth</Menu.Item>
+                    <Menu.Item key="licensing">Licensing</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Maintenance">
+                    <Menu.Item key="Upgrade">Upgrade</Menu.Item>
+                    <Menu.Item key="Backup">Backup</Menu.Item>
+                    <Menu.Item key="Restore">Restore</Menu.Item>
+                    <Menu.Item key="Hotfix">Hotfix</Menu.Item>
+                    <Menu.Item key="reboot">Reboot</Menu.Item>
+                    <Menu.Item key="shutdown">Shutdown</Menu.Item>
+                  </SubMenu>
+                  <SubMenu title="Debug">
+                    <Menu.Item key="ShowTech">ShowTech</Menu.Item>
+                    <Menu.Item key="ShowCores">Show Cores</Menu.Item>
+                    <Menu.Item key="HTTP-Logs">HTTP Logs</Menu.Item>
+                    <Menu.Item key="Debug-Files">Debug Files</Menu.Item>
+                    <Menu.Item key="Debug-Configs">Debug Configs</Menu.Item>
+                    <Menu.Item key="Audit">Audit Log</Menu.Item>
+                    <Menu.Item key="System Log">System Log</Menu.Item>
+                  </SubMenu>
                 </SubMenu>
               </Menu>
             </Col>
@@ -95,7 +173,7 @@ export const MenuComponent = (props: any) => {
               <TreeSelect
                 showSearch
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                placeholder="Please select"
+                placeholder="Input menu name or object you want to search"
                 allowClear
                 treeDefaultExpandAll
                 className="search-function-menu"

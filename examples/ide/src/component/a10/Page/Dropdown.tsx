@@ -7,6 +7,8 @@ export interface IDropdownState {
   menuLevel?: string
   thirdMenu?: string
 }
+
+const { SubMenu } = Menu
 class DropdownComponent extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
@@ -43,20 +45,41 @@ class DropdownComponent extends React.Component<any, any> {
 
     const appMenu = (
       <Menu onClick={this.handleSecMenuClick} mode="horizontal">
-        <Menu.Item key="1">solutions</Menu.Item>
-        <Menu.Item key="2">ADP Based</Menu.Item>
+        <Menu.Item key="adc">
+          <Icon type="deployment-unit" />
+          ADC
+        </Menu.Item>
+        <SubMenu
+          key="security"
+          title={
+            <span>
+              <Icon type="fire" />
+              <span>Security</span>
+            </span>
+          }
+        >
+          <Menu.Item key="firewall">Firewall</Menu.Item>
+          <Menu.Item key="ipsec">IPSec</Menu.Item>
+          <Menu.Item key="waf">WAF</Menu.Item>
+          <Menu.Item key="Forward-proxy">Forward Proxy</Menu.Item>
+          <Menu.Item key="ddos">DDoS</Menu.Item>
+        </SubMenu>
+        <Menu.Item key="gslb">
+          <Icon type="apartment" />
+          GSLB
+        </Menu.Item>
       </Menu>
     )
     const solutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
-        <Menu.Item key="1">sec1</Menu.Item>
-        <Menu.Item key="2">sec2</Menu.Item>
+        <Menu.Item key="1">solution A</Menu.Item>
+        <Menu.Item key="2">solution B</Menu.Item>
       </Menu>
     )
     const mySolutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
-        <Menu.Item key="1">third1</Menu.Item>
-        <Menu.Item key="2">third2</Menu.Item>
+        <Menu.Item key="1">Deployment A</Menu.Item>
+        <Menu.Item key="2">Deployment B</Menu.Item>
       </Menu>
     )
     return (
@@ -65,7 +88,7 @@ class DropdownComponent extends React.Component<any, any> {
           <Dropdown overlay={appMenu} trigger={['click']}>
             <a className="ant-dropdown-link" href="#">
               <Icon type="solution" style={{ marginRight: '10px' }} />
-              SSLi
+              Applications
               <Icon type="right" className="dropdown-icon" />
             </a>
           </Dropdown>
