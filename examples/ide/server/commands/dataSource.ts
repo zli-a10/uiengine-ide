@@ -10,7 +10,11 @@ const buildFields = (fields: any, fileName: string) => {
       component: 'a10:Form.FormItem',
       title: field.key,
       value,
-      props: { label: field.label },
+      props: {
+        label: field.label,
+        help: get(field, 'cm-meta.help', ''),
+        isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
+      },
       datasource: { source: value }
       // children: [
       //   {
@@ -30,10 +34,12 @@ const buildFields = (fields: any, fileName: string) => {
     //         selector: {
     //           'datasource.source': domainName + ex
     //         },
-    //         dataCompareRule: 'empty'
+    //         data: '',
+    //         dataCompareRule: 'is'
     //       }
     //     })
     //   )
+    //   console.log(deps)
     // }
 
     // condition
