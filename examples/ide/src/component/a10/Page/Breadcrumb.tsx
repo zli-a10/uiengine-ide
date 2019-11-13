@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react'
+import _ from 'lodash'
 import { Breadcrumb, Row, Icon, Switch, Col } from 'antd'
 import { MyContext } from '../../my/Context/Provider'
 
@@ -7,7 +8,13 @@ const BreadcrumbComponent = (props: any) => {
   const { data, dispatch } = useContext(MyContext)
   const onShowHelp = useCallback(
     (value: any) => {
-      dispatch({ name: 'set', params: { showHelp: value } })
+      if (_.isFunction(dispatch)) {
+        dispatch({ name: 'set', params: { showHelp: value } })
+      } else {
+        console.warn(
+          'dispatch not a function, please use my:Provider as your top container to pass by your Context'
+        )
+      }
     },
     [dispatch]
   )

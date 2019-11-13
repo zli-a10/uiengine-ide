@@ -7,18 +7,21 @@ import ContentComponent from './Content'
 import BreadcrumbComponent from './Breadcrumb'
 import MenuComponent from './Menu'
 import FooterComponent from './Footer'
+import Provider from '../../my/Context/Provider'
 
 class PageComponent extends React.Component<any, any> {
   render() {
     const { children } = this.props
     return (
-      <LayoutComponent>
-        <HeaderComponent />
-        <MenuComponent />
-        <BreadcrumbComponent />
-        <ContentComponent>{children}</ContentComponent>
-        <FooterComponent />
-      </LayoutComponent>
+      <Provider>
+        <LayoutComponent>
+          <HeaderComponent />
+          <MenuComponent />
+          <BreadcrumbComponent />
+          <ContentComponent>{children}</ContentComponent>
+          <FooterComponent />
+        </LayoutComponent>
+      </Provider>
     )
   }
 }
