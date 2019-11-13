@@ -45,7 +45,7 @@ const SectionComponent = (props: any) => {
         )}
       >
         <Panel
-          header={title}
+          header={<span className="section-title">{title}</span>}
           key={title}
           extra={genExtra()}
           style={style}

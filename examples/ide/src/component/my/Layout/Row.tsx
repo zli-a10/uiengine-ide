@@ -4,7 +4,7 @@ import classNames from 'classnames'
 const RowComponent = (props: any) => {
   const { style, children, className } = props
   const cls = classNames({
-    'ide-wrapper-row': true,
+    'my-wrapper-row': true,
     ...className
   })
   return (

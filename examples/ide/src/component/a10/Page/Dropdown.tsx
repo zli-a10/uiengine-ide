@@ -41,19 +41,19 @@ class DropdownComponent extends React.Component<any, any> {
     // const menu = this.props;
     const { subMenu, isClick, thirdMenu } = this.state
 
-    const firMenuList = (
+    const appMenu = (
       <Menu onClick={this.handleSecMenuClick} mode="horizontal">
         <Menu.Item key="1">solutions</Menu.Item>
         <Menu.Item key="2">ADP Based</Menu.Item>
       </Menu>
     )
-    const secMenuList = (
+    const solutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
         <Menu.Item key="1">sec1</Menu.Item>
         <Menu.Item key="2">sec2</Menu.Item>
       </Menu>
     )
-    const thirdMenuList = (
+    const mySolutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
         <Menu.Item key="1">third1</Menu.Item>
         <Menu.Item key="2">third2</Menu.Item>
@@ -61,35 +61,36 @@ class DropdownComponent extends React.Component<any, any> {
     )
     return (
       <Row className="a10-dropdown">
-        <Col className="float-left dropdown-menu">
-          <Dropdown overlay={firMenuList} trigger={['click']}>
+        <Col span={8}>
+          <Dropdown overlay={appMenu} trigger={['click']}>
             <a className="ant-dropdown-link" href="#">
               <Icon type="solution" style={{ marginRight: '10px' }} />
               SSLi
-              <Icon type="down" className="dropdown-icon" />
+              <Icon type="right" className="dropdown-icon" />
             </a>
           </Dropdown>
         </Col>
-        <Col className="float-left  dropdown-menu">
-          {subMenu ? (
-            <Dropdown overlay={secMenuList} trigger={['click']}>
+        {subMenu ? (
+          <Col span={8}>
+            <Dropdown overlay={solutionMenu} trigger={['click']}>
               <a className="ant-dropdown-link" href="#">
                 {subMenu}
-                <Icon type="down" className="dropdown-icon" />
+                <Icon type="right" className="dropdown-icon" />
               </a>
             </Dropdown>
-          ) : null}
-        </Col>
-        <Col className="float-left  dropdown-menu">
-          {thirdMenu ? (
-            <Dropdown overlay={thirdMenuList} trigger={['click']}>
+          </Col>
+        ) : null}
+
+        {thirdMenu ? (
+          <Col span={8}>
+            <Dropdown overlay={mySolutionMenu} trigger={['click']}>
               <a className="ant-dropdown-link" href="#">
                 {thirdMenu}
-                <Icon type="down" className="dropdown-icon" />
+                <Icon type="right" className="dropdown-icon" />
               </a>
             </Dropdown>
-          ) : null}
-        </Col>
+          </Col>
+        ) : null}
       </Row>
     )
   }

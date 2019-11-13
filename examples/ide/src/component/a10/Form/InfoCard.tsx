@@ -20,12 +20,12 @@ const InfoCardComponent = (props: any) => {
     <div className="a10-help-info-card">
       {isShowInfor ? (
         <>
-          <div className="form-name">
+          <div className="config">
             Config
             <Switch
               checkedChildren="JSON"
               unCheckedChildren="CLI"
-              className="float-right"
+              className="type-switcher"
               onChange={onChange}
               defaultChecked
             />
@@ -34,7 +34,7 @@ const InfoCardComponent = (props: any) => {
         </>
       ) : null}
       <>
-        <div className="form-name">
+        <div className="help">
           <Icon type="bulb" style={{ color: '#ffc800' }} />
           Tips
         </div>

@@ -6,7 +6,7 @@ const ColComponent = (props: any) => {
   const { style, children, className, uinode } = props
   const flex = _.get(props, 'style.flex', 1)
   const cls = classNames({
-    'ide-wrapper-col': true,
+    'my-wrapper-col': true,
     ...className
   })
   return (

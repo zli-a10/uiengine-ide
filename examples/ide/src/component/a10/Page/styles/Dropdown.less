@@ -2,47 +2,32 @@
 
 .a10-dropdown {
 
-  .ant-dropdown-link,
-  .dropdown-icon {
-    font-size: 13px;
-    // color: @Def-color;
-    margin-left: 5px;
+  .ant-col.ant-col-8 {
+    max-width: 100px;
 
-    .anticon.anticon-down {
-      width: 7px;
-      height: 7px;
+    .ant-dropdown-link,
+    .dropdown-icon {
+      font-size: 13px;
       // color: @Def-color;
+      margin-left: 5px;
+
+      .anticon.anticon-down {
+        width: 7px;
+        height: 7px;
+        // color: @Def-color;
+      }
     }
-  }
 
-  .dropdown-menu {
-    margin-right: 34px;
+    .dropdown-menu {
+      a {
+        color: @Def-color;
+      }
 
-    a {
-      color: @Def-color;
-    }
-
-    a:hover {
-      color: #348cd4;
-    }
-  }
-
-}
-
-.ant-dropdown-placement-bottomLeft {
-  width: 400px;
-
-  .ant-dropdown-menu {
-    height: 200px;
-
-    .ant-dropdown-menu-item {
-      clear: none;
-      float: left;
-
-      &:hover {
-        background: none;
+      a:hover {
         color: #348cd4;
       }
     }
   }
+
+
 }
