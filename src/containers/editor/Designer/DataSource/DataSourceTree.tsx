@@ -48,6 +48,7 @@ const WidgetItem = (props: any) => {
       }
     }
   } else {
+    const { component, props } = data
     dragObj = {
       uinode: { schema: data }
     }

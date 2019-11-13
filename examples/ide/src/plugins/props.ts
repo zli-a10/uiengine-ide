@@ -37,9 +37,9 @@ function getDefaultEventConfig(component: string, type: string) {
         default:
           return []
       }
-    } else if (component.includes('my:')) {
+    } else if (component.includes('a10:')) {
       switch (true) {
-        case component === 'my:FormItem':
+        case component === 'a10:Form.FormItem':
           break
         default:
           return []

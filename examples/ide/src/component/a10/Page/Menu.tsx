@@ -173,7 +173,7 @@ export const MenuComponent = (props: any) => {
               <TreeSelect
                 showSearch
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                placeholder="Input menu name or object you want to search"
+                placeholder="Search features or objects"
                 allowClear
                 treeDefaultExpandAll
                 className="search-function-menu"
