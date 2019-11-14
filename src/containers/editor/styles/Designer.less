@@ -28,30 +28,42 @@
     // border-bottom: 1px solid #ccc;
     .refactorAntTabs();
 
+    .ant-tabs {
+      height: 100%;
+    }
+
     .widgets {
       clear: both;
       height: ~"calc(100% - 242px)";
-
-      .ant-tabs {
-        height: 100%;
-      }
     }
 
     .pages {
       clear: both;
       position: relative;
+      height: 220px;
 
       .ant-tabs-tabpane {
-        min-height: 200px;
-        max-height: 400px;
+        // min-height: 200px;
       }
 
       .closeButton();
 
       .pagetree {
         overflow: auto;
-        height: 220px;
+        height: calc(100% - 20px);
       }
+    }
+  }
+
+  .drag-handler-south {
+    height: 5px;
+    border-top: 1px solid #abc;
+    cursor: s-resize;
+    display: block;
+    background: transparent;
+
+    &:hover {
+      border-top: 1px solid rgb(110, 159, 207);
     }
   }
 }
@@ -75,17 +87,13 @@
   color: #fa14ee;
 }
 
-.ant-tree.ant-tree-directory > li span.ant-tree-node-content-wrapper > span,
-.ant-tree.ant-tree-directory
-  .ant-tree-child-tree
-  > li
-  span.ant-tree-node-content-wrapper
-  > span {
+.ant-tree.ant-tree-directory>li span.ant-tree-node-content-wrapper>span,
+.ant-tree.ant-tree-directory .ant-tree-child-tree>li span.ant-tree-node-content-wrapper>span {
   float: left;
 }
 
 .ant-tree-treenode-selected {
-  > span.ant-tree-switcher {
+  >span.ant-tree-switcher {
     color: #fff;
 
     .anticon {
@@ -98,7 +106,7 @@
   }
 }
 
-.ant-tree-node-selected > .ant-tree-title {
+.ant-tree-node-selected>.ant-tree-title {
   .node-title {
     color: #fff;
   }

@@ -1,26 +1,26 @@
-import _ from "lodash";
-import { XYCoord } from "dnd-core";
+import _ from 'lodash'
+import { XYCoord } from 'dnd-core'
 
 interface ClientRectExt extends ClientRect {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 
 export class RegionDetector {
-  static instance: RegionDetector;
+  static instance: RegionDetector
   static getInstance() {
     if (!RegionDetector.instance) {
-      RegionDetector.instance = new RegionDetector();
+      RegionDetector.instance = new RegionDetector()
     }
-    return RegionDetector.instance;
+    return RegionDetector.instance
   }
 
   //implements IRegionDetector
-  clientOffset?: XYCoord;
-  clientRect?: ClientRect;
+  clientOffset?: XYCoord
+  clientRect?: ClientRect
 
   // inner size ratio
-  innerSizeRatio = 0.8;
+  innerSizeRatio = 0.8
 
   // will caculate the rects
   rects = {
@@ -68,47 +68,47 @@ export class RegionDetector {
       height: 0,
       width: 0
     }
-  };
+  }
 
   // Region: up, left, down, right, center
   setRegionInfo(clientOffset: XYCoord, clientRect: ClientRect) {
-    this.clientOffset = clientOffset;
-    this.clientRect = clientRect;
+    this.clientOffset = clientOffset
+    this.clientRect = clientRect
 
     // caculate the center, at least 10 pixels
-    this.rects.center.width = clientRect.width * this.innerSizeRatio;
-    this.rects.center.height = clientRect.height * this.innerSizeRatio;
-    const gapWidth = (clientRect.width - this.rects.center.width) / 2;
-    const gapHeight = (clientRect.height - this.rects.center.height) / 2;
+    this.rects.center.width = clientRect.width * this.innerSizeRatio
+    this.rects.center.height = clientRect.height * this.innerSizeRatio
+    const gapWidth = (clientRect.width - this.rects.center.width) / 2
+    const gapHeight = (clientRect.height - this.rects.center.height) / 2
     // innerpos
-    this.rects.center.top = clientRect.top + gapHeight;
-    this.rects.center.bottom = clientRect.bottom - gapHeight;
-    this.rects.center.left = clientRect.left + gapWidth;
-    this.rects.center.right = clientRect.right - gapWidth;
+    this.rects.center.top = clientRect.top + gapHeight
+    this.rects.center.bottom = clientRect.bottom - gapHeight
+    this.rects.center.left = clientRect.left + gapWidth
+    this.rects.center.right = clientRect.right - gapWidth
 
     // left Rect
-    this.rects.left.top = clientRect.top + gapHeight + 1;
-    this.rects.left.bottom = clientRect.bottom - gapHeight - 1;
-    this.rects.left.left = clientRect.left;
-    this.rects.left.right = this.rects.center.left - 1;
+    this.rects.left.top = clientRect.top + gapHeight + 1
+    this.rects.left.bottom = clientRect.bottom - gapHeight - 1
+    this.rects.left.left = clientRect.left
+    this.rects.left.right = this.rects.center.left - 1
 
     // right Rect
-    this.rects.right.top = clientRect.top + gapHeight + 1;
-    this.rects.right.bottom = clientRect.bottom - gapHeight - 1;
-    this.rects.right.left = this.rects.center.right + 1;
-    this.rects.right.right = clientRect.right;
+    this.rects.right.top = clientRect.top + gapHeight + 1
+    this.rects.right.bottom = clientRect.bottom - gapHeight - 1
+    this.rects.right.left = this.rects.center.right + 1
+    this.rects.right.right = clientRect.right
 
     // top Rect
-    this.rects.up.top = clientRect.top;
-    this.rects.up.bottom = this.rects.center.top - 1;
-    this.rects.up.left = clientRect.left;
-    this.rects.up.right = clientRect.right;
+    this.rects.up.top = clientRect.top
+    this.rects.up.bottom = this.rects.center.top - 1
+    this.rects.up.left = clientRect.left
+    this.rects.up.right = clientRect.right
 
     // bottom Rect
-    this.rects.down.top = this.rects.center.bottom + 1;
-    this.rects.down.bottom = clientRect.bottom;
-    this.rects.down.left = clientRect.left;
-    this.rects.down.right = clientRect.right;
+    this.rects.down.top = this.rects.center.bottom + 1
+    this.rects.down.bottom = clientRect.bottom
+    this.rects.down.left = clientRect.left
+    this.rects.down.right = clientRect.right
   }
 
   /**
@@ -119,8 +119,8 @@ export class RegionDetector {
    * @param clientRect
    */
   detectCurrentRegion(clientOffset: XYCoord, clientRect: ClientRect) {
-    this.setRegionInfo(clientOffset, clientRect);
-    let rectName = "";
+    this.setRegionInfo(clientOffset, clientRect)
+    let rectName = ''
     _.forIn(this.rects, (rect: ClientRectExt, name: string) => {
       if (
         clientOffset.x > rect.left &&
@@ -128,10 +128,10 @@ export class RegionDetector {
         clientOffset.y > rect.top &&
         clientOffset.y < rect.bottom
       ) {
-        rectName = name;
-        return;
+        rectName = name
+        return
       }
-    });
-    return rectName;
+    })
+    return rectName
   }
 }
