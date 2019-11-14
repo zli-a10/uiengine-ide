@@ -22,18 +22,20 @@ export const DesignManager: React.FC<IDesignManager> = props => {
     const targetHeight = target.offsetHeight
     const widgetLib: any = document.getElementById('widgets-library')
     const widgetLibHeight = widgetLib.offsetHeight
+    const widdgetDatasource: any = document.getElementById('widget-datasource')
+    const widgetDatasourceHeight = widdgetDatasource.offsetHeight
     const Resizer = new Resize('s', target, handler, (w: any) => {
       const offset = targetHeight - w.height
       localStorage.fileListHeightOffset = offset
-      widgetLib.style.height = `${widgetLibHeight + offset + 40}px`
+      widgetLib.style.height = `${widgetLibHeight + offset}px`
+      widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
     })
 
-    if (localStorage.fileListHeightOffset) {
-      target.style.height = `${targetHeight -
-        localStorage.fileListHeightOffset}px`
-      widgetLib.style.height = `${widgetLibHeight +
-        localStorage.fileListHeightOffset +
-        40}px`
+    const offset = parseInt(localStorage.fileListHeightOffset)
+    if (offset) {
+      target.style.height = `${targetHeight - offset}px`
+      widgetLib.style.height = `${widgetLibHeight + offset}px`
+      widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
     }
   }, [localStorage.fileListHeightOffset])
 
@@ -58,7 +60,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         </div>
         <div className="drag-handler-south" id="drag-handler-south" />
 
-        <div className="widgets">
+        <div className="widgets" id="widget-datasource">
           <Tabs defaultActiveKey="1">
             <TabPane tab="Components" key="1">
               <Libraries list={librariesData} />
