@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useMemo, useContext } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useContext,
+  useEffect
+} from "react";
 
 import { Switch, Icon, Modal } from "antd";
 import { UINode } from "uiengine";
@@ -79,7 +85,7 @@ export const Main = (props: any) => {
       },
       saved: false,
       theme: "",
-      toggleTheme: (theme: string) => { },
+      toggleTheme: (theme: string) => {},
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
@@ -132,38 +138,43 @@ export const Main = (props: any) => {
   // file save window
   const [visible, changeVisible] = useState(false);
   const [files, setFiles] = useState([]);
-  const searchNode = useCallback((file: string, nodeTree: IResourceTreeNode): any => {
-    let node = {} as IResourceTreeNode;
-    if (nodeTree && _.isObject(nodeTree)) {
-      if (nodeTree.key === file) {
-        node = nodeTree;
+  const searchNode = useCallback(
+    (file: string, nodeTree: IResourceTreeNode): any => {
+      let node = {} as IResourceTreeNode;
+      if (nodeTree && _.isObject(nodeTree)) {
+        if (nodeTree.key === file) {
+          node = nodeTree;
+        } else if (nodeTree.children && nodeTree.children.length) {
+          nodeTree.children.forEach((item: IResourceTreeNode) => {
+            let findNode = searchNode(file, item);
+            if (!_.isEmpty(findNode)) {
+              node = findNode;
+            }
+          });
+        }
       }
-      else if (nodeTree.children && nodeTree.children.length) {
-        nodeTree.children.forEach((item: IResourceTreeNode) => {
-          let findNode = searchNode(file, item);
-          if (!_.isEmpty(findNode)) {
-            node = findNode;
-          }
-        });
+      return node;
+    },
+    []
+  );
+  const removeNodeFromResourceTree = useCallback(
+    (file: string, type: string) => {
+      let data: IResourceTreeNode;
+      let updatedTree: any = _.clone(resourceTree);
+      if (type === "schema") {
+        data = _.get(updatedTree, `${type}[1]`);
+      } else {
+        data = _.get(updatedTree, type);
       }
-    }
-    return node;
-  }, []);
-  const removeNodeFromResourceTree = useCallback((file: string, type: string) => {
-    let data: IResourceTreeNode;
-    let updatedTree: any = _.clone(resourceTree);
-    if (type === "schema") {
-      data = _.get(updatedTree, `${type}[1]`);
-    } else {
-      data = _.get(updatedTree, type);
-    }
-    let targetNode = searchNode(file, data);
-    const srcNodes = _.get(targetNode, `_parent_.children`, []);
-    _.remove(srcNodes, (d: any) => {
-      return d.key === targetNode.key;
-    });
-    setResourceTree(updatedTree);
-  }, []);
+      let targetNode = searchNode(file, data);
+      const srcNodes = _.get(targetNode, `_parent_.children`, []);
+      _.remove(srcNodes, (d: any) => {
+        return d.key === targetNode.key;
+      });
+      setResourceTree(updatedTree);
+    },
+    []
+  );
   const handleOk = useCallback(() => {
     // save files using sockets
     const fileLoader = FileLoader.getInstance();
@@ -206,6 +217,15 @@ export const Main = (props: any) => {
     console.log(files, "files...");
     setFiles(files);
   }, []);
+
+  useEffect(() => {
+    const ideEditor: any = document.getElementById("ide-editor");
+    if (headerCollapsed) {
+      ideEditor.style.height = "100%";
+    } else {
+      ideEditor.style.height = "calc(100% - 60px)";
+    }
+  }, [headerCollapsed]);
 
   return (
     <GlobalContext.Provider value={contextValue}>

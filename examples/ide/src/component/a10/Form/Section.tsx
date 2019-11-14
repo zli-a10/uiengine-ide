@@ -1,43 +1,48 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
-import { Collapse, Icon, Switch } from 'antd'
-import { MyContext } from '../../my/Context/Provider'
+import React, { useState, useCallback, useEffect, useContext } from "react";
+import { Collapse, Icon, Switch } from "antd";
+import { MyContext } from "../../my/Context/Provider";
 
-const { Panel } = Collapse
+const { Panel } = Collapse;
 
 const SectionComponent = (props: any) => {
-  const { children, title, active, style, advanceToggle = false } = props
-  const [activeKey, setActiveKey] = useState(active ? title : '')
-  const { data, dispatch } = useContext(MyContext)
+  const { children, title, active, style, advanceToggle = false } = props;
+  const [activeKey, setActiveKey] = useState(active ? title : "");
+  const { data, dispatch } = useContext(MyContext);
 
   const onCollapse = useCallback(
     (key: any) => {
-      setActiveKey(key)
+      setActiveKey(key);
     },
     [activeKey]
-  )
+  );
 
   const onShowAdvance = useCallback((value: any, event: any) => {
-    dispatch({ name: 'set', params: { advanceOption: { [title]: value } } })
-    event.stopPropagation()
-  }, [])
+    dispatch({ name: "set", params: { advanceOption: { [title]: value } } });
+    event.stopPropagation();
+  }, []);
 
   const genExtra = useCallback(
     () =>
       advanceToggle ? (
-        <Switch defaultChecked={false} onChange={onShowAdvance} />
+        <Switch
+          defaultChecked={false}
+          onChange={onShowAdvance}
+          checkedChildren="Basic"
+          unCheckedChildren="Advanced"
+        />
       ) : null,
     [advanceToggle]
-  )
+  );
 
   useEffect(() => {
-    setActiveKey(active ? title : '')
-  }, [active])
+    setActiveKey(active ? title : "");
+  }, [active]);
 
   return (
     <div className="a10-collapse-frame">
       <Collapse
         bordered={false}
-        defaultActiveKey={'----'}
+        defaultActiveKey={"----"}
         activeKey={activeKey}
         onChange={onCollapse}
         expandIcon={({ isActive }) => (
@@ -53,12 +58,12 @@ const SectionComponent = (props: any) => {
         >
           {children &&
             children.map((child: any) => {
-              return React.cloneElement(child, { group: title })
+              return React.cloneElement(child, { group: title });
             })}
         </Panel>
       </Collapse>
     </div>
-  )
-}
+  );
+};
 
-export default SectionComponent
+export default SectionComponent;

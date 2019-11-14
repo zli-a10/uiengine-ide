@@ -23,29 +23,11 @@
 							"component": "my:Table.Tr",
 							"props": {},
 							"datasource": {
-								"source": "slb.virtual-server:name",
-								"schema": "slb.virtual-server:name",
+								"source": "slb.virtual-server",
+								"schema": "slb.virtual-server",
 								"autoload": true
 							},
 							"children": [
-								{
-									"component": "my:Table.Td",
-									"props": {
-										"title": "",
-										"width": "80",
-										"selectAll": true
-									},
-									"datasource": "$dummy.UINode-235",
-									"children": [
-										{
-											"component": "antd:Switch",
-											"props": {
-												"$valueKey": "checked"
-											},
-											"datasource": "$dummy.UINode-173"
-										}
-									]
-								},
 								{
 									"component": "my:Table.Td",
 									"props": {
@@ -147,22 +129,24 @@
 											"props": {
 												"content": "Button"
 											},
-											"datasource": "$dummy.UINode-473"
+											"datasource": {
+												"source": "slb.virtual-server",
+												"schema": "slb.virtual-server",
+												"autoload": true
+											}
 										},
 										{
 											"component": "antd:Button",
 											"content": "Delete",
 											"props": {
 												"content": "Button",
-												"type": "danger",
-												"$events": [
-													{
-														"eventName": "onClick",
-														"listener": "deleteRow"
-													}
-												]
+												"type": "danger"
 											},
-											"datasource": "$dummy.UINode-473",
+											"datasource": {
+												"source": "slb.virtual-server",
+												"schema": "slb.virtual-server",
+												"autoload": true
+											},
 											"layout": {
 												"margin-left": 10
 											}
