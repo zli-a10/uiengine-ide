@@ -1,6 +1,9 @@
 import React, { useContext } from 'react'
 import _ from 'lodash'
 import { Form, Input } from 'antd'
+import classnames from 'classnames'
+import { TransitionMotion, spring } from 'react-motion'
+
 // import components from '../';
 import { getComponent } from 'uiengine'
 import { MyContext } from '../../my/Context/Provider'
@@ -34,20 +37,47 @@ const FormItemComponent = (props: any) => {
     }
   }
 
-  return isAdvance ? (
-    showAdvanced === true ? (
-      <Item
-        help={_.get(data, 'showHelp') === false ? '' : help}
-        {...rest}
-        {...e}
-      >
-        {element}
-      </Item>
-    ) : null
-  ) : (
-    <Item help={_.get(data, 'showHelp') === false ? '' : help} {...rest} {...e}>
-      {element}
-    </Item>
+  const cls = classnames({
+    'a10-form-item': true,
+    'advanced-item': isAdvance
+  })
+
+  return (
+    <TransitionMotion
+      styles={
+        !isAdvance || (isAdvance && showAdvanced === true)
+          ? [
+              {
+                key: _.uniqueId('form-item-'),
+                style: { scale: spring(1) }
+              }
+            ]
+          : []
+      }
+      willEnter={() => ({
+        scale: 1
+      })}
+      willLeave={() => ({
+        scale: spring(0)
+      })}
+    >
+      {(inStyles: any) => {
+        return inStyles[0] ? (
+          <Item
+            key={inStyles[0].key}
+            help={_.get(data, 'showHelp') === false ? '' : help}
+            {...rest}
+            {...e}
+            className={cls}
+            style={{
+              transform: `scaleY(${inStyles[0].style.scale})`
+            }}
+          >
+            {element}
+          </Item>
+        ) : null
+      }}
+    </TransitionMotion>
   )
 }
 

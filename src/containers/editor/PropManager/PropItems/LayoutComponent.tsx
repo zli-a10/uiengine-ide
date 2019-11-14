@@ -34,7 +34,7 @@ export const LayoutComponent = (props: any) => {
   const onChangeCss = useCallback(
     (v: any) => {
       if (v) {
-        let myCss = `.css ${JSON.stringify(v, null, '\t')}`
+        let myCss = `${JSON.stringify(v, null, '\t')}`
         onChangeProps(v)
         setCss(myCss)
       }
@@ -44,21 +44,26 @@ export const LayoutComponent = (props: any) => {
 
   const onEditorChange = useCallback(
     // (ev: any, value: any) => {
-    (value: any) => {
-      console.log(value)
-      const debounceFunc = _.debounce((value: any) => {
-        // let myCss = value.replace(/\.*?(\{.*?\})/, "$1");
-        let myCss = `(${value.replace('.css ', '')})`
-        try {
-          let json = eval(myCss)
-          onChangeProps(json)
-          _.merge(anyData, json)
-          console.log(anyData, 'any data')
-        } catch (e) {
-          console.error(e.message)
-        }
-      }, 1000)
-      debounceFunc(value)
+    (e: any) => {
+      const value = e.target.value
+      setCss(value)
+      return value
+    },
+    [uinode, anyData]
+  )
+
+  const onBlur = useCallback(
+    // (ev: any, value: any) => {
+    (e: any) => {
+      const value = e.target.value
+      let myCss = value
+      try {
+        let json = JSON.parse(myCss)
+        onChangeProps(json)
+        anyData = _.merge(anyData, json)
+      } catch (e) {
+        console.error(e.message)
+      }
       return value
     },
     [uinode, anyData]
@@ -81,7 +86,8 @@ export const LayoutComponent = (props: any) => {
   )
 
   useEffect(() => {
-    setCss(`.css ${JSON.stringify(anyData, null, '\t')}`)
+    console.log('effect...')
+    // setCss(`.css ${JSON.stringify(anyData, null, '\t')}`)
   }, [anyData, uinode])
 
   const editorOpts: any = _.cloneDeep(editorOptions)
@@ -129,7 +135,12 @@ export const LayoutComponent = (props: any) => {
             height="200px"
             loading="Loading..."
           /> */}
-          <Input.TextArea autosize value={css} onPressEnter={onEditorChange} />
+          <Input.TextArea
+            autosize
+            value={css}
+            onBlur={onBlur}
+            onChange={onEditorChange}
+          />
         </div>
       </Form.Item>
     </div>

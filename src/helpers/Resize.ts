@@ -12,8 +12,17 @@ export class Resize {
     this.handler = handler
     this.callback = callback
     this.handler.onmousedown = this.onDragDown.bind(this, type)
-    document.onmousemove = this.onDragMove.bind(this)
-    document.onmouseup = this.onDragUp.bind(this)
+    document.addEventListener('mousemove', (e: any) => {
+      if (this.handler) {
+        this.onDragMove.call(this, e)
+      }
+    })
+
+    document.addEventListener('mouseup', (e: any) => {
+      if (this.handler) {
+        this.onDragUp.call(this)
+      }
+    })
   }
 
   getEvent(e: any) {

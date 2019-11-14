@@ -12,3 +12,4 @@ interface IReducerAction {
 }
 
 declare const Actions: ['set']
+declare module 'react-motion'

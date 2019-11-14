@@ -19,25 +19,29 @@ export const DesignManager: React.FC<IDesignManager> = props => {
   useEffect(() => {
     const handler = document.getElementById('drag-handler-south')
     const target: any = document.getElementById('page-list')
-    const targetHeight = target.offsetHeight
-    const widgetLib: any = document.getElementById('widgets-library')
-    const widgetLibHeight = widgetLib.offsetHeight
-    const widdgetDatasource: any = document.getElementById('widget-datasource')
-    const widgetDatasourceHeight = widdgetDatasource.offsetHeight
-    const Resizer = new Resize('s', target, handler, (w: any) => {
-      const offset = targetHeight - w.height
-      localStorage.fileListHeightOffset = offset
-      widgetLib.style.height = `${widgetLibHeight + offset}px`
-      widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
-    })
+    if (target) {
+      const targetHeight = target.offsetHeight
+      const widgetLib: any = document.getElementById('widgets-library')
+      const widgetLibHeight = widgetLib.offsetHeight
+      const widdgetDatasource: any = document.getElementById(
+        'widget-datasource'
+      )
+      const widgetDatasourceHeight = widdgetDatasource.offsetHeight
+      const Resizer = new Resize('s', target, handler, (w: any) => {
+        const offset = targetHeight - w.height
+        localStorage.fileListHeightOffset = offset
+        widgetLib.style.height = `${widgetLibHeight + offset}px`
+        widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
+      })
 
-    const offset = parseInt(localStorage.fileListHeightOffset)
-    if (offset) {
-      target.style.height = `${targetHeight - offset}px`
-      widgetLib.style.height = `${widgetLibHeight + offset}px`
-      widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
+      const offset = parseInt(localStorage.fileListHeightOffset)
+      if (offset) {
+        target.style.height = `${targetHeight - offset}px`
+        widgetLib.style.height = `${widgetLibHeight + offset}px`
+        widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
+      }
     }
-  }, [localStorage.fileListHeightOffset])
+  }, [componentCollapsed, localStorage.fileListHeightOffset])
 
   return !componentCollapsed ? (
     <>
