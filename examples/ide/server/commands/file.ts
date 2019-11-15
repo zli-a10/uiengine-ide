@@ -12,6 +12,7 @@ export interface ICommandOptions {
   path: string
   isTemplate?: boolean
   options?: any
+  [name: string]: any
 }
 
 export function getPath(options: ICommandOptions, rootOnly: boolean = false) {

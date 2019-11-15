@@ -19,5 +19,6 @@
       "./src/typings"
     ]
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["server"]
 }

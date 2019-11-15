@@ -43,41 +43,44 @@ const FormItemComponent = (props: any) => {
   })
 
   return (
-    <TransitionMotion
-      styles={
-        !isAdvance || (isAdvance && showAdvanced === true)
-          ? [
-              {
-                key: _.uniqueId('form-item-'),
-                style: { scale: spring(1) }
-              }
-            ]
-          : []
-      }
-      willEnter={() => ({
-        scale: 1
-      })}
-      willLeave={() => ({
-        scale: spring(0)
-      })}
-    >
-      {(inStyles: any) => {
-        return inStyles[0] ? (
-          <Item
-            key={inStyles[0].key}
-            help={_.get(data, 'showHelp') === false ? '' : help}
-            {...rest}
-            {...e}
-            className={cls}
-            style={{
-              transform: `scaleY(${inStyles[0].style.scale})`
-            }}
-          >
-            {element}
-          </Item>
-        ) : null
-      }}
-    </TransitionMotion>
+    // <TransitionMotion
+    //   styles={
+    //     !isAdvance || (isAdvance && showAdvanced === true)
+    //       ? [
+    //           {
+    //             key: _.uniqueId('form-item-'),
+    //             style: { scale: spring(1) }
+    //           }
+    //         ]
+    //       : []
+    //   }
+    //   willEnter={() => ({
+    //     scale: 1
+    //   })}
+    //   willLeave={() => ({
+    //     scale: spring(0)
+    //   })}
+    // >
+    //   {(inStyles: any) => {
+    //     return inStyles[0] ? (
+    !isAdvance || (isAdvance && showAdvanced === true) ? (
+      <Item
+        // key={inStyles[0].key}
+        help={_.get(data, 'showHelp') === false ? '' : help}
+        {...rest}
+        {...e}
+        className={cls}
+        style={
+          {
+            // transform: `scaleY(${inStyles[0].style.scale})`
+          }
+        }
+      >
+        {element}
+      </Item>
+    ) : null
+    //   }}
+    // </TransitionMotion>
   )
 }
 
