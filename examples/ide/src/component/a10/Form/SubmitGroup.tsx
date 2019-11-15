@@ -2,20 +2,29 @@ import React from 'react'
 import { Row, Button, Col } from 'antd'
 import _ from 'lodash'
 const SubmitGroupComponent = (props: any) => {
-  const { children, ...rest } = props
+  const {
+    children,
+    onSaveClick,
+    onCancelClick,
+    saveText = 'Save',
+    cancelText = 'Cancel',
+    buttonAlign = 'right',
+    ...rest
+  } = props
   return (
-    <Row className="form-submit" style={{}}>
-      <Button className="submit-btn btn-cancel">Cancel</Button>
-      <Button className="submit-btn btn-save" {...rest}>
-        Save
+    <Row className="a10-form-submit" style={{ textAlign: buttonAlign }}>
+      <Button type="primary" size="large" icon="save" onClick={onSaveClick}>
+        {saveText}
+      </Button>
+      <Button
+        type="danger"
+        icon="close-circle"
+        size="large"
+        onClick={onCancelClick}
+      >
+        {cancelText}
       </Button>
     </Row>
-
-    // {_.isArray(children)
-    //   ? children.map((child: any, index: number) => {
-    //       return child;
-    //     })
-    //   : null}
   )
 }
 

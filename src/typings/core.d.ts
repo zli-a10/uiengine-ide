@@ -142,7 +142,7 @@ interface IFileStatusGroup {
 
 // copy from websocket server side command options
 interface ICommandOptions {
-  type: EResourceType
+  type?: EResourceType
   path?: string
   isTemplate?: boolean
   options?: any
@@ -150,6 +150,7 @@ interface ICommandOptions {
 }
 
 interface IWebsocketCommands {
+  socketName?: string
   name: string
   options?: ICommandOptions
   response?: any

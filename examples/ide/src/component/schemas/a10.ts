@@ -165,16 +165,8 @@ export default [
               label: 'string',
               extra: 'string',
               help: 'string',
-              colon: 'boolean',
-              labelCol: [
-                {
-                  span: [1, 24],
-                  offset: [1, 24]
-                }
-              ],
               required: 'boolean',
               htmlFor: 'string',
-              hasFeedback: 'boolean',
               isMore: 'boolean',
               isAdvance: 'boolean'
             },
@@ -185,14 +177,10 @@ export default [
             title: 'SubmitGroup',
             isContainer: false,
             schema: {
-              content: 'string',
-              disabled: 'string',
-              size: ['', 'small', 'large'],
-              loading: 'boolean|number',
-              type: ['', 'primary', 'dashed', 'danger', 'link'],
-              shape: ['', 'circle', 'round'],
-              icon: 'icon',
-              events: ['onClick']
+              saveText: 'string',
+              cancelText: 'string',
+              buttonAlign: ['left', 'center', 'right'],
+              events: ['onSaveClick', 'onCancelClick']
             },
             defaultProps: {}
           }

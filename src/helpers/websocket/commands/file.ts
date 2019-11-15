@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { Client } from '../Client'
-import { IObject } from 'uiengine/typings'
 
 export async function getFileList(
   type: EResourceType,
