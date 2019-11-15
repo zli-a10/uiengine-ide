@@ -23,6 +23,12 @@ IDERegister.registerSchemaConverter(MockJSConverter)
 IDERegister.registerWebsocket(websocketOptions)
 IDERegister.registerLayoutComponentWrapper(configLayoutWrappers)
 
+// hack headers on request
+if (localStorage.token) {
+  config.requestConfig.headers['Authorization'] = `A10 ${localStorage.token}`
+  console.log(config)
+}
+
 ReactDOM.render(
   <IDEEditor
     layouts={[

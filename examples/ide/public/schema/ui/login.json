@@ -27,7 +27,8 @@
 							"datasource": {
 								"source": "credentials:username",
 								"schema": "credentials:username",
-								"autoload": true
+								"autoload": true,
+								"defaultValue": "admin"
 							}
 						},
 						{
@@ -37,20 +38,50 @@
 							"props": {
 								"label": "Password",
 								"help": "Password",
-								"isAdvance": false
+								"isAdvance": false,
+								"type": "Input.Password"
 							},
 							"datasource": {
 								"source": "credentials:password",
 								"schema": "credentials:password",
-								"autoload": true
+								"autoload": true,
+								"defaultValue": "a10"
 							}
 						},
 						{
 							"component": "a10:Form.SubmitGroup",
 							"props": {
-								"buttonAlign": "center"
+								"buttonAlign": "center",
+								"saveText": "Login",
+								"cancelText": "Help",
+								"$events": [
+									{
+										"eventName": "onSaveClick",
+										"listener": "login",
+										"defaultParams": {
+											"target": {
+												"targets": [
+													{
+														"dataSource": {
+															"source": "credentials:"
+														},
+														"dataSchema": {
+															"method": "post"
+														},
+														"dependOn": {}
+													}
+												]
+											}
+										}
+									}
+								]
 							},
-							"datasource": "$dummy.UINode-3709"
+							"datasource": {
+								"source": "$dummy.UINode-3709",
+								"defaultValue": "admin",
+								"schema": "$dummy.UINode-3709",
+								"autoload": true
+							}
 						}
 					],
 					"datasource": "$dummy.UINode-2823"

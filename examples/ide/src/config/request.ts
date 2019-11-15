@@ -1,6 +1,6 @@
 import { dev, apiServer } from './host'
 
-const reqConfig = {
+const reqConfig: any = {
   // axios config
   baseURL: `http://${dev}:3000/`,
   timeout: 1000,

@@ -10,6 +10,9 @@ const Td = (props: any) => {
     rowData,
     colCount = 1,
     mainRow,
+    onExpandSubRow,
+    expanded,
+    rowGroupData,
     ...rest
   } = props
   const TD = useTableElement('td')
@@ -18,9 +21,12 @@ const Td = (props: any) => {
     <TD className="my-table-col" {...rest} colSpan={colSpan || colCount}>
       {_.isArray(children)
         ? children.map((child: any) => {
-            return React.cloneElement(child, {
-              rowData
-            })
+            const componentName = _.get(child, 'props.uiNode.schema.component')
+            return componentName.indexOf('CellContent') > -1
+              ? React.cloneElement(child, {
+                  rowData
+                })
+              : child
           })
         : children || value}
     </TD>

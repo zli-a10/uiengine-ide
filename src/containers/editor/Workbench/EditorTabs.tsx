@@ -397,7 +397,7 @@ export const EditorTabs = (props: any) => {
       })}
     </Tabs>
   ) : (
-    <Row>
+    <Row className="splitted-window">
       <Col span={leftSpan}>
         <Tabs defaultActiveKey="drawingboard">
           <TabPane tab="Drawing Board" key="drawingboard">

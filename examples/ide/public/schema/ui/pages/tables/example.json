@@ -469,116 +469,39 @@
 																	]
 																}
 															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "conn-resume",
-															"value": "slb.server:conn-resume",
-															"props": {
-																"label": "Connection Resume",
-																"help": "Connection Resume",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:conn-resume",
-																"schema": "slb.server:conn-resume",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "weight",
-															"value": "slb.server:weight",
-															"props": {
-																"label": "Weight",
-																"help": "Weight for this Real Server",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:weight",
-																"schema": "slb.server:weight",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "slow-start",
-															"value": "slb.server:slow-start",
-															"props": {
-																"label": "Slow Start",
-																"help": "Slowly ramp up the connection number after server is up (start from 128, then double every 10 sec till 4096)",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:slow-start",
-																"schema": "slb.server:slow-start",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "spoofing-cache",
-															"value": "slb.server:spoofing-cache",
-															"props": {
-																"label": "Spoofing Cache",
-																"help": "This server is a spoofing cache",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:spoofing-cache",
-																"schema": "slb.server:spoofing-cache",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "stats-data-action",
-															"value": "slb.server:stats-data-action",
-															"props": {
-																"label": "Stats Data Action",
-																"help": "Stats data action",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:stats-data-action",
-																"schema": "slb.server:stats-data-action",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "extended-stats",
-															"value": "slb.server:extended-stats",
-															"props": {
-																"label": "Extended Stats",
-																"help": "Enable extended statistics on real server",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:extended-stats",
-																"schema": "slb.server:extended-stats",
-																"autoload": true
-															}
-														},
-														{
-															"component": "a10:Form.FormItem",
-															"title": "alternate-server",
-															"value": "slb.server:alternate-server",
-															"props": {
-																"label": "Alternate Server",
-																"help": "",
-																"isAdvance": true
-															},
-															"datasource": {
-																"source": "slb.server:alternate-server",
-																"schema": "slb.server:alternate-server",
-																"autoload": true
-															}
 														}
 													],
 													"datasource": "$dummy.UINode-9097"
 												}
 											]
+										},
+										{
+											"component": "a10:Form.SubmitGroup",
+											"props": {
+												"$events": [
+													{
+														"eventName": "onSaveClick",
+														"listener": "submitData",
+														"defaultParams": {
+															"target": {
+																"mode": "sync",
+																"targets": [
+																	{
+																		"dataSource": {
+																			"source": "slb.server:"
+																		},
+																		"dataSchema": {
+																			"method": "post"
+																		},
+																		"dependOn": {}
+																	}
+																]
+															}
+														}
+													}
+												]
+											},
+											"datasource": "$dummy.UINode-2594"
 										}
 									],
 									"datasource": "$dummy.UINode-9026",

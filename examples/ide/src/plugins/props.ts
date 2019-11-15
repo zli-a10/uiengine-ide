@@ -77,7 +77,7 @@ function getDefaultEventConfig(component: string, type: string) {
     }
   }
 
-  return []
+  return [onChangeWithValue]
 }
 
 const execution: IPluginExecution = async (directParam: IPluginParam) => {
