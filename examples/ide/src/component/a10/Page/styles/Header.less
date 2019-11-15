@@ -1,0 +1,91 @@
+// Todo Theme
+
+@header-background-color: #0675b6;
+@body-background-color: #f3f3f3;
+
+// common style
+
+body {
+  background: @body-background-color
+}
+
+#root {
+  background: @body-background-color;
+
+  .ant-layout {
+    background: @body-background-color
+  }
+}
+
+// .wrapper {
+.GUI-header {
+  background-color: @header-background-color;
+  height: 60px;
+  line-height: 60px;
+  position: relative;
+  z-index: 999;
+  left: 0;
+  right: 0;
+  padding: 0 36px;
+  width: 100%;
+  margin: auto;
+  min-width: 500px;
+
+  // .logo {
+  //   height: 60px;
+  //   width: 70px;
+  //   background: url('../images/logo-header.png') no-repeat center;
+  //   color: @header-background-color;
+  // }
+
+
+  // .bar-action {
+  //   color: #fff;
+  //   margin: 0 12px;
+
+  //   font-size: 14px;
+
+  //   i {
+  //     margin-right: 10px;
+  //   }
+  // }
+
+  .flex-bar {
+    height: 60px;
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 0 24px;
+    width: 100%;
+    margin: auto;
+    min-width: 500px;
+
+    .logo {
+      display: inline-block;
+      height: 100%;
+      width: 70px;
+      // background: url('../images/logo-header.png') no-repeat center;
+    }
+
+    .bar-action {
+      color: #fff;
+      margin: 0 12px;
+      font-size: 14px;
+      float: right;
+
+      i {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+// }
+
+//ide
+// .wrapper {
+//   .GUI-header {
+//     position: relative;
+//   }
+// }
