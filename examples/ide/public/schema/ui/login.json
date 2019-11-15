@@ -1,0 +1,61 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "a10:Form.Form",
+			"props": {
+				"isCreate": true
+			},
+			"datasource": "$dummy.UINode-2738",
+			"children": [
+				{
+					"component": "div",
+					"children": [
+						{
+							"component": "a10:Form.FormItem",
+							"title": "username",
+							"value": "credentials:username",
+							"props": {
+								"label": "User Name",
+								"help": "User Name",
+								"isAdvance": false
+							},
+							"datasource": {
+								"source": "credentials:username",
+								"schema": "credentials:username",
+								"autoload": true
+							}
+						},
+						{
+							"component": "a10:Form.FormItem",
+							"title": "password",
+							"value": "credentials:password",
+							"props": {
+								"label": "Password",
+								"help": "Password",
+								"isAdvance": false
+							},
+							"datasource": {
+								"source": "credentials:password",
+								"schema": "credentials:password",
+								"autoload": true
+							}
+						},
+						{
+							"component": "a10:Form.SubmitGroup",
+							"props": {
+								"buttonAlign": "center"
+							},
+							"datasource": "$dummy.UINode-3709"
+						}
+					],
+					"datasource": "$dummy.UINode-2823"
+				}
+			]
+		}
+	]
+}
