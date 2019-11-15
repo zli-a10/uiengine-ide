@@ -226,6 +226,7 @@ export const Main = (props: any) => {
       console.log(response)
     })
   }, [resourceTree])
+<<<<<<< HEAD
 
   useEffect(() => {
     const ideEditor: any = document.getElementById('ide-editor')
@@ -235,6 +236,8 @@ export const Main = (props: any) => {
       ideEditor.style.height = 'calc(100% - 60px)'
     }
   }, [headerCollapsed])
+=======
+>>>>>>> 122517598bc1947b7e0d9b1cc2cc261005436a12
 
   return (
     <GlobalContext.Provider value={contextValue}>

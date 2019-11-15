@@ -11,9 +11,15 @@ export default class Commander {
         const value = await callback(options)
         let result: any
         if (typeof value !== 'string') {
+<<<<<<< HEAD
           result = await callback(options)
         } else {
           result = value
+=======
+          result = { command, value: await callback(options) }
+        } else {
+          result = { command, value }
+>>>>>>> 122517598bc1947b7e0d9b1cc2cc261005436a12
         }
         return JSON.stringify(result)
       }
