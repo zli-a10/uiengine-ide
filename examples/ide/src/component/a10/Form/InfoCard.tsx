@@ -1,13 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Switch, Icon } from 'antd'
+import { MyContext } from '../../my/Context/Provider'
 
 const InfoCardComponent = (props: any) => {
-  // const { configs, tipsInfor } = props;
-  const configs = (
-    <code className="config">
-      slb virtual-server v1 ip address 10.10.1.1 netmask 255.255.255.0
-    </code>
-  )
+  const { style } = props
+  const { data } = useContext(MyContext)
+
+  const [showJSON, setShowJSON] = useState(true)
+  // if (checkedChildren) {
+  //   setIsShowInfor(true);
+  // }
+  const onChange = (checked: boolean) => {
+    if (checked) {
+      setShowJSON(true)
+    } else {
+      setShowJSON(false)
+    }
+  }
+
+  const config = showJSON
+    ? `{
+    'slb': {
+      'virtual-server': {
+        'name': 'v1',
+        'ipv4': '10.10.1.1',
+        'netmask': '255.255.255.0'
+      }
+    }
+  }`
+    : `slb virtual-server v1 ip address 10.10.1.1 netmask 255.255.255.0`
+  const configs = <code className="config">{config}</code>
 
   const help = (
     <p className="help">
@@ -16,20 +38,8 @@ const InfoCardComponent = (props: any) => {
     </p>
   )
 
-  const [isShowInfor, setIsShowInfor] = useState(true)
-  // if (checkedChildren) {
-  //   setIsShowInfor(true);
-  // }
-  const onChange = (checked: boolean) => {
-    if (checked) {
-      setIsShowInfor(true)
-    } else {
-      setIsShowInfor(false)
-    }
-  }
-
-  return (
-    <div className="a10-help-info-card">
+  return data.showAssitant ? (
+    <div className="a10-help-info-card" style={style}>
       <>
         <div className="config">
           Config
@@ -41,7 +51,7 @@ const InfoCardComponent = (props: any) => {
             defaultChecked
           />
         </div>
-        {isShowInfor ? <div className="margin-min-top">{configs}</div> : null}
+        <div className="margin-min-top">{configs}</div>
       </>
       <>
         <div className="help">
@@ -51,7 +61,7 @@ const InfoCardComponent = (props: any) => {
         <div className="margin-min-top">{help}</div>
       </>
     </div>
-  )
+  ) : null
 }
 
 export default InfoCardComponent

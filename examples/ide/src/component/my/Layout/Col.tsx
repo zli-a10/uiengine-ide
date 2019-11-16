@@ -9,11 +9,11 @@ const ColComponent = (props: any) => {
     'my-wrapper-col': true,
     ...className
   })
-  return (
+  return children ? (
     <div className={cls} style={style}>
       {children}
     </div>
-  )
+  ) : null
 }
 
 export default ColComponent

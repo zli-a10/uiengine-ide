@@ -9,21 +9,19 @@ import MenuComponent from './Menu'
 import FooterComponent from './Footer'
 import Provider from '../../my/Context/Provider'
 
-class PageComponent extends React.Component<any, any> {
-  render() {
-    const { children } = this.props
-    return (
-      <Provider>
-        <LayoutComponent>
-          <HeaderComponent />
-          <MenuComponent />
-          <BreadcrumbComponent />
-          <ContentComponent>{children}</ContentComponent>
-          <FooterComponent />
-        </LayoutComponent>
-      </Provider>
-    )
-  }
+const PageComponent = (props: any) => {
+  const { children, helpSwitcher } = props
+  return (
+    <Provider>
+      <LayoutComponent>
+        <HeaderComponent />
+        <MenuComponent />
+        <BreadcrumbComponent helpSwitcher={helpSwitcher} />
+        <ContentComponent>{children}</ContentComponent>
+        <FooterComponent />
+      </LayoutComponent>
+    </Provider>
+  )
 }
 
 export default PageComponent

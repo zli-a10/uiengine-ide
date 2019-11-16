@@ -1,16 +1,5 @@
 import React from 'react'
-import {
-  Layout,
-  Menu,
-  Breadcrumb,
-  Input,
-  Icon,
-  AutoComplete,
-  Row,
-  Col,
-  Dropdown,
-  TreeSelect
-} from 'antd'
+import { Menu, Icon, Row, Col, TreeSelect } from 'antd'
 
 import DropdownComponent from './Dropdown'
 const { TreeNode } = TreeSelect

@@ -7,8 +7,12 @@ export default [
         component: 'a10:Page.Page',
         title: 'Page',
         isContainer: true,
-        schema: {},
-        defaultProps: {},
+        schema: {
+          helpSwitcher: 'boolean'
+        },
+        defaultProps: {
+          helpSwitcher: true
+        },
         children: [
           {
             component: 'a10:Page.Layout',
@@ -44,7 +48,8 @@ export default [
             isContainer: false,
 
             schema: {
-              className: 'string'
+              className: 'string',
+              helpSwitcher: 'boolean'
             }
           },
           {

@@ -7,11 +7,11 @@ const RowComponent = (props: any) => {
     'my-wrapper-row': true,
     ...className
   })
-  return (
+  return children ? (
     <div className={cls} style={{ display: 'flex', ...style }}>
       {children}
     </div>
-  )
+  ) : null
 }
 
 export default RowComponent
