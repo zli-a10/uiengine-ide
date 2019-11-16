@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { Tabs, Icon } from 'antd'
 import _ from 'lodash'
 import classnames from 'classnames'
@@ -19,6 +19,12 @@ export const DesignManager: React.FC<IDesignManager> = props => {
   // libraries fetch
   const librariesData = IDERegister.componentsLibrary
   const [isOverDesigner, setIsOverDesigner] = useState(false)
+  const myMouseOver = useCallback(() => {
+    setIsOverDesigner(true)
+  }, [setIsOverDesigner])
+  const myMouseOut = useCallback(() => {
+    setIsOverDesigner(false)
+  }, [setIsOverDesigner])
   useEffect(() => {
     const handler = document.getElementById('drag-handler-south')
     const target: any = document.getElementById('page-list')
@@ -39,6 +45,12 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
       const offset = parseInt(localStorage.fileListHeightOffset)
       if (offset) {
+        console.log(
+          'offset %s target height %s widget height %s',
+          offset,
+          targetHeight - offset,
+          widgetDatasourceHeight + offset
+        )
         target.style.height = `${targetHeight - offset}px`
         widgetLib.style.height = `${widgetLibHeight + offset}px`
         widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
@@ -47,20 +59,20 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
     // component mouse over
     const designManager: any = document.getElementById('ide-design-manager')
-    designManager.style.top = headerCollapsed ? '40px' : '100px'
-
-    designManager.onmouseover = () => {
-      setIsOverDesigner(true)
-    }
-
-    designManager.onmouseout = () => {
-      setIsOverDesigner(false)
+    if (componentCollapsed) {
+      designManager.style.top = headerCollapsed ? '40px' : '100px'
+      designManager.addEventListener('mouseover', myMouseOver)
+      designManager.addEventListener('mouseout', myMouseOut)
+    } else {
+      designManager.style.top = '100px'
+      designManager.removeEventListener('mouseover', myMouseOver)
+      designManager.removeEventListener('mouseout', myMouseOut)
     }
   }, [
-    isOverDesigner,
     headerCollapsed,
     componentCollapsed,
-    localStorage.fileListHeightOffset
+    localStorage.fileListHeightOffset,
+    setIsOverDesigner
   ])
 
   const cls = classnames({
