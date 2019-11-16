@@ -4,12 +4,14 @@ import React, {
   useMemo,
   useContext,
   useEffect
-} from "react";
+} from 'react'
 
-import { Switch, Icon, Modal } from "antd";
-import { UINode } from "uiengine";
-import _ from "lodash";
-import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
+import { Switch, Icon, Modal } from 'antd'
+import { UINode } from 'uiengine'
+import _ from 'lodash'
+import classnames from 'classnames'
+
+import { GlobalContext, SchemasContext, IDEEditorContext } from '../../Context'
 import {
   getActiveUINode,
   FileLoader,
@@ -17,100 +19,100 @@ import {
   saveFileStatus,
   cleanSchema,
   MemoStore
-} from "../../../helpers";
-import { StagingFileTree } from "./StagingFileTree";
+} from '../../../helpers'
+import { StagingFileTree } from './StagingFileTree'
 
 export const Main = (props: any) => {
-  const { activeTab } = useContext(IDEEditorContext);
-  const { refresh, toggleRefresh } = useContext(SchemasContext);
+  const { activeTab } = useContext(IDEEditorContext)
+  const { refresh, toggleRefresh } = useContext(SchemasContext)
 
   // header collpase state
   const [headerCollapsed, setHeaderCollapse] = useState(
-    localStorage.ideHeaderCollapse === "true"
-  );
+    localStorage.ideHeaderCollapse === 'true'
+  )
   const toggleHeaderCollapse = useCallback((status: boolean) => {
-    setHeaderCollapse(status);
-    localStorage.ideHeaderCollapse = status;
-  }, []);
+    setHeaderCollapse(status)
+    localStorage.ideHeaderCollapse = status
+  }, [])
 
   // component collapse state
   const [componentCollapsed, setComponentCollapse] = useState(
-    localStorage.ideComponentCollapse === "true"
-  );
+    localStorage.ideComponentCollapse === 'true'
+  )
 
   const toggleComponentCollapse = useCallback((status: boolean) => {
-    setComponentCollapse(status);
-    localStorage.ideComponentCollapse = status;
-  }, []);
+    setComponentCollapse(status)
+    localStorage.ideComponentCollapse = status
+  }, [])
 
   // props collapse state
   const [propsCollapsed, setPropsCollapse] = useState(
-    localStorage.idePropsCollapse === "true"
-  );
+    localStorage.idePropsCollapse === 'true'
+  )
   const togglePropsCollapse = useCallback((status: boolean) => {
-    setPropsCollapse(status);
-    localStorage.idePropsCollapse = status;
-  }, []);
+    setPropsCollapse(status)
+    localStorage.idePropsCollapse = status
+  }, [])
 
   // preview collaspse state
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState(false)
   const switchPreview = async (status: boolean) => {
-    MemoStore.bucket.preview = status;
-    const rootNode = getActiveUINode() as UINode;
-    await rootNode.updateLayout();
-    rootNode.sendMessage(true);
-    setPreview(status);
-    activeTab("drawingboard");
-  };
+    MemoStore.bucket.preview = status
+    const rootNode = getActiveUINode() as UINode
+    await rootNode.updateLayout()
+    rootNode.sendMessage(true)
+    setPreview(status)
+    activeTab('drawingboard')
+  }
 
   const [resourceTree, setResourceTree] = useState({
     listener: [],
     plugin: [],
     component: [],
     schema: []
-  });
-  const [fileStatus, setFileStatus] = useState();
+  })
+  const [fileStatus, setFileStatus] = useState()
   const saveOpenFileStatus = useCallback((statusObj: IFileStatusGroup) => {
     // setFileStatus(statusObj);
-    const { file, type, status } = statusObj;
-    saveFileStatus(file, type, status);
-  }, []);
+    const { file, type, status } = statusObj
+    saveFileStatus(file, type, status)
+  }, [])
 
   const contextValue = useMemo<IGlobalContext>(
     () => ({
       ideMode: true,
       preview,
       togglePreview: (preview: boolean) => {
-        switchPreview(preview);
+        switchPreview(preview)
       },
       saved: false,
-      theme: "",
+      theme: '',
       toggleTheme: (theme: string) => {},
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
-        togglePropsCollapse(collapsed);
+        togglePropsCollapse(collapsed)
       },
       headerCollapsed,
       toggleHeaderCollapsed: (collapsed: boolean) => {
-        toggleHeaderCollapse(collapsed);
+        toggleHeaderCollapse(collapsed)
       },
       componentCollapsed,
       toggleComponentCollapsed: (collapsed: boolean) => {
-        toggleComponentCollapse(collapsed);
+        toggleComponentCollapse(collapsed)
       },
       resourceTree,
       setResourceTree: (tree: any, type?: EResourceType) => {
-        let copyTree: any = _.clone(resourceTree);
+        let copyTree: any = _.clone(resourceTree)
         if (_.isArray(tree) && type) {
-          copyTree[type] = tree;
+          copyTree[type] = tree
         } else if (_.isObject(tree)) {
-          copyTree = _.assign(copyTree, tree);
+          copyTree = _.assign(copyTree, tree)
         }
-        setResourceTree(copyTree);
+        setResourceTree(copyTree)
       },
       fileStatus,
       setFileStatus: (status: IFileStatusGroup) => {
-        saveOpenFileStatus(status);
+        saveOpenFileStatus(status)
       }
     }),
     [
@@ -121,111 +123,128 @@ export const Main = (props: any) => {
       resourceTree,
       fileStatus
     ]
-  );
+  )
 
   const hideAll = useCallback(() => {
-    toggleComponentCollapse(true);
-    togglePropsCollapse(true);
-    toggleHeaderCollapse(true);
-  }, []);
+    toggleComponentCollapse(true)
+    togglePropsCollapse(true)
+    toggleHeaderCollapse(true)
+  }, [])
 
   const showAll = useCallback(() => {
-    toggleComponentCollapse(false);
-    togglePropsCollapse(false);
-    toggleHeaderCollapse(false);
-  }, []);
+    toggleComponentCollapse(false)
+    togglePropsCollapse(false)
+    toggleHeaderCollapse(false)
+  }, [])
 
   // file save window
-  const [visible, changeVisible] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [visible, changeVisible] = useState(false)
+  const [files, setFiles] = useState([])
   const searchNode = useCallback(
     (file: string, nodeTree: IResourceTreeNode): any => {
-      let node = {} as IResourceTreeNode;
+      let node = {} as IResourceTreeNode
       if (nodeTree && _.isObject(nodeTree)) {
         if (nodeTree.key === file) {
-          node = nodeTree;
+          node = nodeTree
         } else if (nodeTree.children && nodeTree.children.length) {
           nodeTree.children.forEach((item: IResourceTreeNode) => {
-            let findNode = searchNode(file, item);
+            let findNode = searchNode(file, item)
             if (!_.isEmpty(findNode)) {
-              node = findNode;
+              node = findNode
             }
-          });
+          })
         }
       }
-      return node;
+      return node
     },
     []
-  );
+  )
   const removeNodeFromResourceTree = useCallback(
     (file: string, type: string) => {
-      let data: IResourceTreeNode;
-      let updatedTree: any = _.clone(resourceTree);
-      if (type === "schema") {
-        data = _.get(updatedTree, `${type}[1]`);
+      let data: IResourceTreeNode
+      let updatedTree: any = _.clone(resourceTree)
+      if (type === 'schema') {
+        data = _.get(updatedTree, `${type}[1]`)
       } else {
-        data = _.get(updatedTree, type);
+        data = _.get(updatedTree, type)
       }
-      let targetNode = searchNode(file, data);
-      const srcNodes = _.get(targetNode, `_parent_.children`, []);
+      let targetNode = searchNode(file, data)
+      const srcNodes = _.get(targetNode, `_parent_.children`, [])
       _.remove(srcNodes, (d: any) => {
-        return d.key === targetNode.key;
-      });
-      setResourceTree(updatedTree);
+        return d.key === targetNode.key
+      })
+      setResourceTree(updatedTree)
     },
     []
-  );
+  )
   const handleOk = useCallback(() => {
     // save files using sockets
-    const fileLoader = FileLoader.getInstance();
+    const fileLoader = FileLoader.getInstance()
     files.forEach(async (statusNode: IUploadFile) => {
-      const { path, type, status } = statusNode;
+      const { path, type, status } = statusNode
       if (
         status &&
-        (status.status === "removed" || status.status === "renamed")
+        (status.status === 'removed' || status.status === 'renamed')
       ) {
-        await saveFile(statusNode);
+        await saveFile(statusNode)
         // update file status
-        fileLoader.removeFile(path, type);
+        fileLoader.removeFile(path, type)
       } else {
-        let data = await fileLoader.loadFile(path, type);
-        if (type === "schema") data = cleanSchema(data);
-        statusNode.data = data;
-        await saveFile(statusNode);
+        let data = await fileLoader.loadFile(path, type)
+        if (type === 'schema') data = cleanSchema(data)
+        statusNode.data = data
+        await saveFile(statusNode)
       }
       // update file status
-      let updatedStatus = _.cloneDeep(status);
-      updatedStatus.status = "dropped";
-      saveOpenFileStatus({ file: path, type, status: updatedStatus });
+      let updatedStatus = _.cloneDeep(status)
+      updatedStatus.status = 'dropped'
+      saveOpenFileStatus({ file: path, type, status: updatedStatus })
       // remove node from resource tree
-      removeNodeFromResourceTree(path, type);
-      toggleRefresh();
-    });
+      removeNodeFromResourceTree(path, type)
+      toggleRefresh()
+    })
 
-    changeVisible(false);
-  }, [files]);
+    changeVisible(false)
+  }, [files])
 
   const handleCancel = useCallback((e: any) => {
-    changeVisible(false);
-  }, []);
+    changeVisible(false)
+  }, [])
 
   const showSaveWindow = useCallback((e: any) => {
-    changeVisible(true);
-  }, []);
+    changeVisible(true)
+  }, [])
 
   const onCheckFiles = useCallback((files: any) => {
-    console.log(files, "files...");
-    setFiles(files);
-  }, []);
+    console.log(files, 'files...')
+    setFiles(files)
+  }, [])
 
+  const [isOverHeader, setIsOverHeader] = useState(false)
   useEffect(() => {
-    const ideEditor: any = document.getElementById("ide-editor");
+    const ideEditor: any = document.getElementById('ide-editor')
     if (headerCollapsed) {
-      ideEditor.style.height = "100%";
+      ideEditor.style.height = '100%'
     } else {
-      ideEditor.style.height = "calc(100% - 60px)";
+      ideEditor.style.height = 'calc(100% - 60px)'
     }
-  }, [headerCollapsed]);
+
+    // component mouse over
+    const designManager: any = document.getElementById('ide-design-header')
+    designManager.onmouseover = () => {
+      setIsOverHeader(true)
+    }
+
+    designManager.onmouseout = () => {
+      setIsOverHeader(false)
+    }
+  }, [isOverHeader, headerCollapsed])
+
+  const cls = classnames({
+    'ide-header': true,
+    hidden: headerCollapsed,
+    over: isOverHeader
+  })
 
   return (
     <GlobalContext.Provider value={contextValue}>
@@ -234,7 +253,7 @@ export const Main = (props: any) => {
           <Icon type="caret-right" />
         </a>
       ) : null}
-      <div className={headerCollapsed ? "ide-header hide" : "ide-header"}>
+      <div className={cls} id="ide-design-header">
         <div className="left">
           <div className="button-close">
             <Icon type="close" onClick={hideAll} />
@@ -246,8 +265,8 @@ export const Main = (props: any) => {
                   className="button-menu"
                   onClick={() => toggleComponentCollapse(!componentCollapsed)}
                 >
-                  <Icon type="menu" /> Editing{" "}
-                  {_.get(editingResource, "title", "...")}
+                  <Icon type="menu" /> Editing{' '}
+                  {_.get(editingResource, 'title', '...')}
                 </a>
                 {savedTime ? (
                   <div className="page-name">
@@ -291,5 +310,5 @@ export const Main = (props: any) => {
 
       {props.children}
     </GlobalContext.Provider>
-  );
-};
+  )
+}

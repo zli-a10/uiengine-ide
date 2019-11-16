@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Tabs, Icon } from 'antd'
 import _ from 'lodash'
+import classnames from 'classnames'
 
 import { GlobalContext } from '../../Context'
 import { PageTree, ResourceTree, Libraries } from '..'
@@ -9,13 +10,15 @@ import { IDERegister, Resize } from '../../../helpers'
 const TabPane = Tabs.TabPane
 
 export const DesignManager: React.FC<IDesignManager> = props => {
-  const { componentCollapsed, toggleComponentCollapsed } = useContext(
-    GlobalContext
-  )
+  const {
+    componentCollapsed,
+    headerCollapsed,
+    toggleComponentCollapsed
+  } = useContext(GlobalContext)
 
   // libraries fetch
   const librariesData = IDERegister.componentsLibrary
-
+  const [isOverDesigner, setIsOverDesigner] = useState(false)
   useEffect(() => {
     const handler = document.getElementById('drag-handler-south')
     const target: any = document.getElementById('page-list')
@@ -41,11 +44,34 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
       }
     }
-  }, [componentCollapsed, localStorage.fileListHeightOffset])
 
-  return !componentCollapsed ? (
+    // component mouse over
+    const designManager: any = document.getElementById('ide-design-manager')
+    designManager.style.top = headerCollapsed ? '40px' : '100px'
+
+    designManager.onmouseover = () => {
+      setIsOverDesigner(true)
+    }
+
+    designManager.onmouseout = () => {
+      setIsOverDesigner(false)
+    }
+  }, [
+    isOverDesigner,
+    headerCollapsed,
+    componentCollapsed,
+    localStorage.fileListHeightOffset
+  ])
+
+  const cls = classnames({
+    manager: true,
+    hidden: componentCollapsed,
+    over: isOverDesigner
+  })
+
+  return (
     <>
-      <div className="manager">
+      <div className={cls} id="ide-design-manager">
         <div className="pages" id="page-list">
           <a
             className="close-button"
@@ -77,5 +103,5 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         </div>
       </div>
     </>
-  ) : null
+  )
 }
