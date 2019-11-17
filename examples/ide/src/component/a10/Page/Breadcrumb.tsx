@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import _ from 'lodash'
-import { Breadcrumb, Row, Icon, Switch, Col } from 'antd'
+import { Breadcrumb, Row, Icon, Switch, Col, Select } from 'antd'
 import { MyContext } from '../../my/Context/Provider'
 
+const { Option } = Select
 const { Item } = Breadcrumb
 const BreadcrumbComponent = (props: any) => {
   const { helpSwitcher = true } = props
@@ -47,18 +48,48 @@ const BreadcrumbComponent = (props: any) => {
   //   }
   // }, [localStorage.a10ShowAssitant, dispatch])
 
+  const list = (
+    <div className="list-shortcut">
+      <Select
+        showSearch
+        style={{ width: 200 }}
+        placeholder="Select an Entry"
+        optionFilterProp="children"
+        // onChange={onChange}
+        // onFocus={onFocus}
+        // onBlur={onBlur}
+        // onSearch={onSearch}
+        // filterOption={(input, option) =>
+        //   // option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        // }
+      >
+        <Option value="jack">Jack</Option>
+        <Option value="lucy">Lucy</Option>
+        <Option value="tom">Tom</Option>
+      </Select>
+    </div>
+  )
+
   return (
-    <Row className="a10-breadCrumb-container flex-bar">
+    <Row
+      type="flex"
+      className="a10-breadCrumb-container flex-bar"
+      align="middle"
+    >
       <Col span={16}>
-        <Breadcrumb className="a10-breadCrumb">
+        <Breadcrumb className="a10-breadCrumb" separator="/">
           <Item>
-            <Icon
-              className="breadCrumb-Icon"
-              type="menu-unfold"
-              onClick={onShowAssitant}
-            />
-            ADC > Create Virtual Server
+            {helpSwitcher ? (
+              <Icon
+                className="breadCrumb-Icon"
+                type="menu-unfold"
+                onClick={onShowAssitant}
+              />
+            ) : null}
           </Item>
+          <Item>Applications</Item>
+          <Item overlay={list}>ADC</Item>
+          <Item>Create an Virtual Server</Item>
         </Breadcrumb>
       </Col>
 

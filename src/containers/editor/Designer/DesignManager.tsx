@@ -45,12 +45,12 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
       const offset = parseInt(localStorage.fileListHeightOffset)
       if (offset) {
-        console.log(
-          'offset %s target height %s widget height %s',
-          offset,
-          targetHeight - offset,
-          widgetDatasourceHeight + offset
-        )
+        // console.log(
+        //   'offset %s target height %s widget height %s',
+        //   offset,
+        //   targetHeight - offset,
+        //   widgetDatasourceHeight + offset
+        // )
         target.style.height = `${targetHeight - offset}px`
         widgetLib.style.height = `${widgetLibHeight + offset}px`
         widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
@@ -59,6 +59,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
     // component mouse over
     const designManager: any = document.getElementById('ide-design-manager')
+    designManager.style.height = `${window.screen.height - 40}px`
     if (componentCollapsed) {
       designManager.style.top = headerCollapsed ? '40px' : '100px'
       designManager.addEventListener('mouseover', myMouseOver)
