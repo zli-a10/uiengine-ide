@@ -38,7 +38,7 @@ const InfoCardComponent = (props: any) => {
     </p>
   )
 
-  return data.showAssitant ? (
+  return data && data.showAssitant ? (
     <div className="a10-help-info-card" style={style}>
       <>
         <div className="config">

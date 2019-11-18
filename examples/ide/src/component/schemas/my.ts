@@ -14,61 +14,107 @@ export default [
         defaultProps: {}
       },
       {
-        component: 'my:Section',
-        title: 'Section',
+        component: 'my:Form.Form',
+        title: 'Form',
         isContainer: true,
         schema: {
-          active: 'boolean',
-          title: 'string'
+          state: 'string'
         },
-        defaultProps: {
-          active: true,
-          title: 'Section 1'
-        }
-      },
-      {
-        component: 'my:DataSelect',
-        title: 'DataSelect',
-        isContainer: false,
-        schema: {
-          datasource: 'datasource',
-          optionmap: [{ title: 'string' }, { value: 'string' }],
-          open: 'boolean',
-          events: [
-            'onChange',
-            'onBlur',
-            'onDeselect',
-            'onFocus',
-            'onInputKeyDown',
-            'onMouseEnter',
-            'onMouseLeave',
-            'onSearch',
-            'onSelect',
-            'onDropdownVisibleChange'
-          ]
-        }
-      },
-      {
-        component: 'my:FormItem',
-        title: 'FormItem',
-        isContainer: false,
-        schema: {
-          type: 'component',
-          label: 'string',
-          extra: 'string',
-          labelCol: [
-            {
-              span: [1, 24],
-              offset: [1, 24]
+        children: [
+          {
+            component: 'my:Form.Section',
+            title: 'Section',
+            isContainer: true,
+            schema: {
+              active: 'boolean',
+              title: 'string'
+            },
+            defaultProps: {
+              active: true,
+              title: 'Section 1'
             }
-          ],
-          required: 'boolean',
-          htmlFor: 'string',
-          hasFeedback: 'boolean'
-        },
-        defaultProps: {
-          // label: `My Item ${_.uniqueId()}`
-        }
+          },
+          {
+            component: 'my:Form.DataSelect',
+            title: 'DataSelect',
+            isContainer: false,
+            schema: {
+              datasource: 'datasource',
+              optionmap: [{ title: 'string' }, { value: 'string' }],
+              open: 'boolean',
+              events: [
+                'onChange',
+                'onBlur',
+                'onDeselect',
+                'onFocus',
+                'onInputKeyDown',
+                'onMouseEnter',
+                'onMouseLeave',
+                'onSearch',
+                'onSelect',
+                'onDropdownVisibleChange'
+              ]
+            }
+          },
+          {
+            component: 'my:Form.FormItem',
+            title: 'FormItem',
+            isContainer: false,
+            schema: {
+              type: 'component',
+              label: 'string',
+              extra: 'string',
+              labelCol: [
+                {
+                  span: [1, 24],
+                  offset: [1, 24]
+                }
+              ],
+              required: 'boolean',
+              htmlFor: 'string',
+              hasFeedback: 'boolean'
+            },
+            defaultProps: {
+              // label: `My Item ${_.uniqueId()}`
+            }
+          },
+          {
+            component: 'my:Form.FixedSelect',
+            title: 'FixedSelect',
+            isContainer: false,
+            schema: {
+              datasource: 'datasource',
+              optionmap: [{ title: 'string' }, { value: 'string' }],
+              open: 'boolean',
+              userDefinedOptions: 'string',
+              events: [
+                'onChange',
+                'onBlur',
+                'onDeselect',
+                'onFocus',
+                'onInputKeyDown',
+                'onMouseEnter',
+                'onMouseLeave',
+                'onSearch',
+                'onSelect',
+                'onDropdownVisibleChange'
+              ]
+            }
+          },
+          {
+            component: 'my:Form.RadioGroup',
+            title: 'RadioGroup',
+            isContainer: true,
+            schema: {
+              name: 'string',
+              defaultValue: 'string',
+              value: 'string',
+              radioOptions: 'string',
+              events: ['onChange']
+            }
+          }
+        ],
+        defaultProps: {}
       },
       {
         component: 'my:Table.Table',
@@ -122,41 +168,6 @@ export default [
             defaultProps: {}
           }
         ]
-      },
-      {
-        component: 'my:FixedSelect',
-        title: 'FixedSelect',
-        isContainer: false,
-        schema: {
-          datasource: 'datasource',
-          optionmap: [{ title: 'string' }, { value: 'string' }],
-          open: 'boolean',
-          userDefinedOptions: 'string',
-          events: [
-            'onChange',
-            'onBlur',
-            'onDeselect',
-            'onFocus',
-            'onInputKeyDown',
-            'onMouseEnter',
-            'onMouseLeave',
-            'onSearch',
-            'onSelect',
-            'onDropdownVisibleChange'
-          ]
-        }
-      },
-      {
-        component: 'my:RadioGroup',
-        title: 'RadioGroup',
-        isContainer: true,
-        schema: {
-          name: 'string',
-          defaultValue: 'string',
-          value: 'string',
-          radioOptions: 'string',
-          events: ['onChange']
-        }
       }
     ]
   }
