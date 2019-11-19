@@ -18,13 +18,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
   // libraries fetch
   const librariesData = IDERegister.componentsLibrary
-  const [isOverDesigner, setIsOverDesigner] = useState(false)
-  const myMouseOver = useCallback(() => {
-    setIsOverDesigner(true)
-  }, [setIsOverDesigner])
-  const myMouseOut = useCallback(() => {
-    setIsOverDesigner(false)
-  }, [setIsOverDesigner])
+
   useEffect(() => {
     const handler = document.getElementById('drag-handler-south')
     const target: any = document.getElementById('page-list')
@@ -36,8 +30,9 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         'widget-datasource'
       )
       const widgetDatasourceHeight = widdgetDatasource.offsetHeight
-      const Resizer = new Resize('s', target, handler, (w: any) => {
+      new Resize('s', target, handler, (w: any) => {
         const offset = targetHeight - w.height
+        // console.log(w, 'size')
         localStorage.fileListHeightOffset = offset
         widgetLib.style.height = `${widgetLibHeight + offset}px`
         widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
@@ -56,7 +51,18 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
       }
     }
+  }, [localStorage.fileListHeightOffset])
 
+  // mouse event
+  const [isOverDesigner, setIsOverDesigner] = useState(false)
+  const myMouseOver = useCallback(() => {
+    setIsOverDesigner(true)
+  }, [setIsOverDesigner])
+  const myMouseOut = useCallback(() => {
+    setIsOverDesigner(false)
+  }, [setIsOverDesigner])
+
+  useEffect(() => {
     // component mouse over
     const designManager: any = document.getElementById('ide-design-manager')
     designManager.style.height = `${window.screen.height - 40}px`
@@ -69,12 +75,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
       designManager.removeEventListener('mouseover', myMouseOver)
       designManager.removeEventListener('mouseout', myMouseOut)
     }
-  }, [
-    headerCollapsed,
-    componentCollapsed,
-    localStorage.fileListHeightOffset,
-    setIsOverDesigner
-  ])
+  }, [headerCollapsed, componentCollapsed, setIsOverDesigner])
 
   const cls = classnames({
     manager: true,
