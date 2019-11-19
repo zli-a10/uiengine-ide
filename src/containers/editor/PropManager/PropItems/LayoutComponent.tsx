@@ -4,6 +4,7 @@ import { Input, Select } from 'antd'
 import { Form } from 'antd'
 import { ControlledEditor } from '@monaco-editor/react'
 import { editorOptions } from '../../Workbench/CodeEditor'
+import { IUINode } from 'uiengine/typings'
 const displayValues = [
   'inherit',
   'flex',
@@ -29,7 +30,7 @@ const displayValues = [
 
 export const LayoutComponent = (props: any) => {
   const { uinode, onChange: onChangeProps, disabled } = props
-  let anyData = _.get(uinode, 'schema.layout', {}) as any
+  let anyData: any = _.get(uinode, ['schema', 'layout'], {}) as any
   const [css, setCss] = useState('{}')
   const onChangeCss = useCallback(
     (v: any) => {
@@ -79,15 +80,16 @@ export const LayoutComponent = (props: any) => {
 
   const onChangeFlex = useCallback(
     (e: any) => {
-      _.set(anyData, 'flex', e.target.value)
+      // _.set(anyData, 'flex', e.target.value)
+      console.log(anyData)
+      anyData.flex = e.target.value
       onChangeCss(anyData)
     },
     [uinode, anyData]
   )
 
   useEffect(() => {
-    console.log('effect...')
-    // setCss(`.css ${JSON.stringify(anyData, null, '\t')}`)
+    setCss(`${JSON.stringify(anyData, null, '\t')}`)
   }, [anyData, uinode])
 
   const editorOpts: any = _.cloneDeep(editorOptions)

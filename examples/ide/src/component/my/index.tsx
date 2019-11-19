@@ -4,5 +4,6 @@ import * as Form from './Form'
 
 export * from './Layout'
 export * from './Context'
+export { default as TabList } from './TabList'
 
 export { Table, Layout, Form }

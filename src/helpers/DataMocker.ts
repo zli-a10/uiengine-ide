@@ -2,6 +2,7 @@ import Mock from 'mockjs'
 import _ from 'lodash'
 import { EMPTY_DATA } from '../helpers'
 import { IUINode } from 'uiengine/typings'
+// import { DataNode, UINode, Request } from 'uiengine'
 
 export class DataMocker implements IDataMocker {
   static instance: IDataMocker
@@ -57,57 +58,57 @@ export class DataMocker implements IDataMocker {
   }
 
   // private async fetchDataSchemasAndSourceListNames(childrenNodeSchemas: any[]) {
-  //   const schemas: any = {};
+  //   const schemas: any = {}
   //   for (let i in childrenNodeSchemas) {
-  //     const childSchema = childrenNodeSchemas[i];
-  //     let datasource = _.get(childSchema, "datasource");
-  //     let schema = "",
-  //       source = "";
+  //     const childSchema = childrenNodeSchemas[i]
+  //     let datasource = _.get(childSchema, 'datasource')
+  //     let schema = '',
+  //       source = ''
   //     if (datasource) {
-  //       source = _.get(datasource, "source", datasource);
-  //       schema = _.get(datasource, "schema", datasource);
+  //       source = _.get(datasource, 'source', datasource)
+  //       schema = _.get(datasource, 'schema', datasource)
   //     }
-  //     if (schema && schema.indexOf("$dummy") === -1) {
-  //       const request = Request.getInstance();
+  //     if (schema && schema.indexOf('$dummy') === -1) {
+  //       const request = Request.getInstance()
   //       const dataNode = new DataNode(
   //         { schema, source },
   //         new UINode({}, request),
   //         request
-  //       );
-  //       const data = await dataNode.loadData({ schema, source });
-  //       if (!schemas[source]) schemas[source] = [];
-  //       schemas[source].push(dataNode.schema);
+  //       )
+  //       const data = await dataNode.loadData({ schema, source })
+  //       if (!schemas[source]) schemas[source] = []
+  //       schemas[source].push(dataNode.schema)
   //     }
 
   //     if (_.get(childSchema, `children`)) {
   //       _.merge(
   //         schemas,
   //         await this.fetchDataSchemasAndSourceListNames(childSchema.children)
-  //       );
+  //       )
   //     }
   //   }
-  //   return schemas;
+  //   return schemas
   // }
 
   // async _generateTableData(childrenNodeSchemas: any[], lines: number = 15) {
-  //   const result = {};
+  //   const result = {}
   //   const schemaAndSources = await this.fetchDataSchemasAndSourceListNames(
   //     childrenNodeSchemas
-  //   );
-  //   const noCache = this.noCache;
-  //   this.noCache = true;
+  //   )
+  //   const noCache = this.noCache
+  //   this.noCache = true
   //   for (let i = 0; i <= lines; i++) {
   //     for (let source in schemaAndSources) {
-  //       const schemas = schemaAndSources[source];
+  //       const schemas = schemaAndSources[source]
   //       for (let schemaIndex in schemas) {
-  //         const data = this.generate(schemas[schemaIndex]);
-  //         const path = source.replace("$", i.toString());
-  //         _.set(result, path, data);
+  //         const data = this.generate(schemas[schemaIndex])
+  //         const path = source.replace('$', i.toString())
+  //         _.set(result, path, data)
   //       }
   //     }
   //   }
-  //   this.noCache = noCache;
-  //   return result;
+  //   this.noCache = noCache
+  //   return result
   // }
 
   generateTableData(uiNode: IUINode) {

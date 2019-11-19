@@ -35,14 +35,14 @@ function getDefaultEventConfig(component: string, type: string) {
         case component === 'antd:Select':
           return [onChangeWithValue]
         default:
-          return []
+          return [onChangeWithValue]
       }
     } else if (component.includes('a10:')) {
       switch (true) {
         case component === 'a10:Form.FormItem':
           break
         default:
-          return []
+          return [onChangeWithValue]
       }
     } else {
       return [onChangeWithValue]
@@ -70,7 +70,7 @@ function getDefaultEventConfig(component: string, type: string) {
         case type === 'antd:Select':
           return [onChangeWithValue]
         default:
-          return []
+          return [onChangeWithValue]
       }
     } else {
       return [onChangeWithValue]
@@ -124,7 +124,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
       eventConfigs = $events
     }
 
-    const style: any = _.get(schema, 'layout', {})
+    const style: any = _.cloneDeep(_.get(schema, 'layout', {}))
 
     // assign props to result
     result = { ...rest, ...result, label, type, style }

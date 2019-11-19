@@ -14,6 +14,22 @@ export default [
         defaultProps: {}
       },
       {
+        component: 'my:Layout.Row',
+        title: 'Row',
+        isContainer: true,
+        schema: {},
+        children: [
+          {
+            component: 'my:Layout.Col',
+            title: 'Col',
+            isContainer: true,
+            schema: {},
+            defaultProps: {}
+          }
+        ],
+        defaultProps: {}
+      },
+      {
         component: 'my:Form.Form',
         title: 'Form',
         isContainer: true,
@@ -168,6 +184,18 @@ export default [
             defaultProps: {}
           }
         ]
+      },
+      {
+        component: 'my:TabList',
+        title: 'TabList',
+        isContainer: true,
+        schema: {
+          maxTabs: 'number'
+        },
+        defaultProps: {
+          maxTabs: 10,
+          isTable: true
+        }
       }
     ]
   }

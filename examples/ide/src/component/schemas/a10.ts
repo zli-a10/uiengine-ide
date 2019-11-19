@@ -71,50 +71,6 @@ export default [
       },
 
       {
-        component: 'a10:Tabs',
-        title: 'Tabs',
-        isContainer: false,
-        schema: {},
-        defaultProps: {},
-        children: [
-          {
-            component: 'a10:Tabs.Tab',
-            title: 'Tab',
-            isContainer: true,
-            schema: {
-              isTable: 'boolean',
-              sectionName: 'string',
-              activeKey: 'number',
-              defaultActiveKey: 'string',
-              animated: 'boolean',
-              size: 'string',
-              tabPosition: ['top', 'right', 'bottom', 'left'],
-              type: ['line', 'card', 'editable-card'],
-              events: [
-                'onChange',
-                'onEdit',
-                'onNextClick',
-                'onPrevClick',
-                'onTabClick'
-              ]
-            },
-            defaultProps: {
-              type: 'line',
-              isTable: false
-            }
-          },
-          {
-            component: 'a10:Tabs.TabContent',
-            title: 'TabContent',
-            isContainer: true,
-            schema: {
-              tabName: 'string'
-            }
-          }
-        ]
-      },
-
-      {
         component: 'a10:Form.Form',
         title: 'Form',
         isContainer: true,
@@ -138,7 +94,8 @@ export default [
             schema: {
               active: 'boolean',
               title: 'string',
-              advanceToggle: 'boolean'
+              advanceToggle: 'boolean',
+              tabSwitch: 'boolean'
             },
             defaultProps: {
               active: true,
