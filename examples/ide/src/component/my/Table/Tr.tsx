@@ -12,7 +12,8 @@ const Tr = (props: any) => {
     expanded,
     onExpandSubRow,
     value,
-    mainRow,
+    mainRow = true,
+    parentIsTrGroup,
     colCount,
     rowGroupData,
     selectedItems,
@@ -22,9 +23,9 @@ const Tr = (props: any) => {
 
   const TR = useTableElement('tr')
 
-  return expanded || mainRow || (ideMode && !preview) ? (
+  return mainRow || (ideMode && !preview) ? (
     <TR className="my-table-row" {...rest}>
-      {mainRow ? (
+      {mainRow && parentIsTrGroup ? (
         <Td width="40">
           <Icon
             type={expanded ? 'caret-down' : 'caret-right'}

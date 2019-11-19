@@ -4,13 +4,12 @@ import _ from 'lodash'
 
 const ColComponent = (props: any) => {
   const { style, children, className, uinode } = props
-  const flex = _.get(props, 'style.flex', 1)
   const cls = classNames({
     'my-wrapper-col': true,
     ...className
   })
   return children ? (
-    <div className={cls} style={style}>
+    <div className={cls} style={{ overflow: 'hidden', ...style }}>
       {children}
     </div>
   ) : null

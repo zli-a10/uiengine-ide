@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import _ from 'lodash'
-import { Input, Select } from 'antd'
+import { Input, Select, Switch } from 'antd'
 import { Form } from 'antd'
 import { ControlledEditor } from '@monaco-editor/react'
 import { editorOptions } from '../../Workbench/CodeEditor'
@@ -80,9 +80,15 @@ export const LayoutComponent = (props: any) => {
 
   const onChangeFlex = useCallback(
     (e: any) => {
-      // _.set(anyData, 'flex', e.target.value)
-      console.log(anyData)
-      anyData.flex = e.target.value
+      _.set(anyData, 'flex', e.target.value)
+      onChangeCss(anyData)
+    },
+    [uinode, anyData]
+  )
+
+  const onChangeOverflow = useCallback(
+    (v: any) => {
+      _.set(anyData, 'overflow', v)
       onChangeCss(anyData)
     },
     [uinode, anyData]
@@ -123,6 +129,14 @@ export const LayoutComponent = (props: any) => {
           onChange={onChangeFlex}
           min={1}
           max={24}
+        />
+      </Form.Item>
+
+      <Form.Item label="Fixed Size">
+        <Switch
+          checked={_.get(anyData, 'overflow')}
+          onChange={onChangeOverflow}
+          disabled={disabled}
         />
       </Form.Item>
 
