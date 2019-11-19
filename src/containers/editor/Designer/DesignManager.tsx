@@ -30,28 +30,35 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         'widget-datasource'
       )
       const widgetDatasourceHeight = widdgetDatasource.offsetHeight
+      let designerSize = JSON.parse(localStorage.designerSize || '{}')
+
       new Resize('s', target, handler, (w: any) => {
         const offset = targetHeight - w.height
-        // console.log(w, 'size')
-        localStorage.fileListHeightOffset = offset
-        widgetLib.style.height = `${widgetLibHeight + offset}px`
-        widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
+        const newWidgetLibHeight = widgetLibHeight + offset
+        const newWidgetDatasourceHeight = widgetDatasourceHeight + offset
+        widgetLib.style.height = `${newWidgetLibHeight}px`
+        widdgetDatasource.style.height = `${newWidgetDatasourceHeight}px`
+
+        if (_.isEmpty(designerSize)) {
+          designerSize = {
+            offset,
+            widgetLibHeight,
+            filelistHeight: targetHeight
+          }
+        } else {
+          designerSize.offset = offset
+        }
+        // rememeber the resize
+        localStorage.designerSize = JSON.stringify(designerSize)
       })
 
-      const offset = parseInt(localStorage.fileListHeightOffset)
-      if (offset) {
-        // console.log(
-        //   'offset %s target height %s widget height %s',
-        //   offset,
-        //   targetHeight - offset,
-        //   widgetDatasourceHeight + offset
-        // )
-        target.style.height = `${targetHeight - offset}px`
+      if (!_.isEmpty(designerSize)) {
+        const { offset, filelistHeight, widgetLibHeight } = designerSize
+        target.style.height = `${filelistHeight - offset}px`
         widgetLib.style.height = `${widgetLibHeight + offset}px`
-        widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`
       }
     }
-  }, [localStorage.fileListHeightOffset])
+  }, [localStorage.designerSize])
 
   // mouse event
   const [isOverDesigner, setIsOverDesigner] = useState(false)
