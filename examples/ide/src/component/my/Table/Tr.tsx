@@ -12,7 +12,7 @@ const Tr = (props: any) => {
     expanded,
     onExpandSubRow,
     value,
-    mainRow = true,
+    mainRow,
     parentIsTrGroup,
     colCount,
     rowGroupData,
@@ -23,7 +23,7 @@ const Tr = (props: any) => {
 
   const TR = useTableElement('tr')
 
-  return mainRow || (ideMode && !preview) ? (
+  return !parentIsTrGroup || mainRow || (ideMode && !preview) ? (
     <TR className="my-table-row" {...rest}>
       {mainRow && parentIsTrGroup ? (
         <Td width="40">

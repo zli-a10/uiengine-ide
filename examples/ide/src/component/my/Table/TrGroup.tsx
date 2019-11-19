@@ -7,7 +7,7 @@ const TrGroup = (props: any) => {
   return children
     ? children.map((child: any, index: number) => {
         const newProps = {
-          mainRow: true,
+          mainRow: false,
           onExpandSubRow: (value: boolean) => setExpanded(value),
           expanded,
           colCount: 1,
