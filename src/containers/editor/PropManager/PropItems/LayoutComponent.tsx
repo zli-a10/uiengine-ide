@@ -88,7 +88,7 @@ export const LayoutComponent = (props: any) => {
 
   const onChangeOverflow = useCallback(
     (v: any) => {
-      _.set(anyData, 'overflow', v)
+      _.set(anyData, 'overflow', v ? 'hidden' : 'auto')
       onChangeCss(anyData)
     },
     [uinode, anyData]
@@ -134,7 +134,7 @@ export const LayoutComponent = (props: any) => {
 
       <Form.Item label="Fixed Size">
         <Switch
-          checked={_.get(anyData, 'overflow')}
+          checked={_.get(anyData, 'overflow') === 'hidden'}
           onChange={onChangeOverflow}
           disabled={disabled}
         />

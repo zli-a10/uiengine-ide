@@ -29,11 +29,28 @@ if (localStorage.token) {
   console.log(config)
 }
 
+// a sandbox schema
+const sandbox: any = {
+  component: 'div',
+  props: {
+    className: 'sandbox'
+  },
+  children: [
+    {
+      component: 'h1',
+      content: 'Sandbox'
+    },
+    {
+      component: 'p',
+      content:
+        'Please Drag and Drop an element from left Components tab, and then try to edit it on prop window.'
+    }
+  ]
+}
+
 ReactDOM.render(
   <IDEEditor
-    layouts={[
-      { layout: 'schema/ui/simple.json', workingMode: { mode: 'new' } }
-    ]}
+    layouts={[{ layout: sandbox, workingMode: { mode: 'new' } }]}
     config={config}
   />,
   document.getElementById('root')
