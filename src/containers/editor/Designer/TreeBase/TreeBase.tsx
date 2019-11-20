@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Tree } from "antd";
 import { renderTreeNodes } from "./renderTreeNodes";
 import { SchemasContext, IDEEditorContext } from "../../../Context";
-import { loadFileAndRefresh, getActiveUINode } from "../../../../helpers";
+import { loadFileAndRefresh, getActiveUINode, FileLoader, VersionControl } from "../../../../helpers";
 
 export const TreeBase = (props: any) => {
   const { selectedKeys, setSelectedKey, toggleRefresh } = useContext(
@@ -37,12 +37,16 @@ export const TreeBase = (props: any) => {
       const name = _.get(dataRef, "name", "");
       if ((!_.has(treeNode, "node.props.dataRef._editing_") || treeNode.node.props.dataRef._editing_ === false) &&
         name !== "") {
-        if (keys.length && nodeType === "file" && type === 'schema') {
+        if (keys.length && nodeType === "file" && !(type === 'plugin' && isTemplate)) {
           const tabContent = _.find(tabs, { tab: keys[0] });
           if (!tabContent) {
             const data = await loadFileAndRefresh(keys[0], type, isTemplate);
             setContent({ content: data, file: keys[0], type });
           } else {
+            const fileLoader = FileLoader.getInstance()
+            const versionControl = VersionControl.getInstance()
+            versionControl.clearHistories()
+            fileLoader.editingFile = keys[0]
             if (type === "schema") {
               const text = _.find(content, { file: keys[0] });
               if (text) {

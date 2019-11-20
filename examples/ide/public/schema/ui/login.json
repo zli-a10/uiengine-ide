@@ -1,31 +1,92 @@
 {
-  "component": "antd:Form",
-  "props": {
-    "title": "Login"
-  },
-  "children": [{
-      "component": "my:FormItem",
-      "datasource": {
-        "source": "credentials:username",
-        "defaultvalue": "admin",
-        "autoload": false
-      },
-      "props": {
-        "type": "antd:Input"
-      }
-    },
-    {
-      "component": "my:FormItem",
-      "datasource": {
-        "source": "credentials:password",
-        "defaultvalue": "admin",
-        "autoload": false
-      },
-
-      "defaultvalue": "a10",
-      "props": {
-        "type": "antd:Input.Password"
-      }
-    }
-  ]
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "a10:Form.Form",
+			"props": {
+				"isCreate": true
+			},
+			"datasource": "$dummy.UINode-2738",
+			"children": [
+				{
+					"component": "div",
+					"children": [
+						{
+							"component": "a10:Form.FormItem",
+							"title": "username",
+							"value": "credentials:username",
+							"props": {
+								"label": "User Name",
+								"help": "User Name",
+								"isAdvance": false
+							},
+							"datasource": {
+								"source": "credentials:username",
+								"schema": "credentials:username",
+								"autoload": true,
+								"defaultValue": "admin"
+							}
+						},
+						{
+							"component": "a10:Form.FormItem",
+							"title": "password",
+							"value": "credentials:password",
+							"props": {
+								"label": "Password",
+								"help": "Password",
+								"isAdvance": false,
+								"type": "Input.Password"
+							},
+							"datasource": {
+								"source": "credentials:password",
+								"schema": "credentials:password",
+								"autoload": true,
+								"defaultValue": "a10"
+							}
+						},
+						{
+							"component": "a10:Form.SubmitGroup",
+							"props": {
+								"buttonAlign": "center",
+								"saveText": "Login",
+								"cancelText": "Help",
+								"$events": [
+									{
+										"eventName": "onSaveClick",
+										"listener": "login",
+										"defaultParams": {
+											"target": {
+												"targets": [
+													{
+														"dataSource": {
+															"source": "credentials:"
+														},
+														"dataSchema": {
+															"method": "post"
+														},
+														"dependOn": {}
+													}
+												]
+											}
+										}
+									}
+								]
+							},
+							"datasource": {
+								"source": "$dummy.UINode-3709",
+								"defaultValue": "admin",
+								"schema": "$dummy.UINode-3709",
+								"autoload": true
+							}
+						}
+					],
+					"datasource": "$dummy.UINode-2823"
+				}
+			]
+		}
+	]
 }

@@ -1,0 +1,52 @@
+// Todo Theme
+
+@header-background-color: #0675b6;
+@body-background-color: #f3f3f3;
+
+// .wrapper {
+.a10-header {
+  background: @header-background-color;
+
+  .ant-layout-header {
+    background: transparent;
+    padding: 0px;
+  }
+
+  .ant-menu-horizontal {
+    background: transparent;
+    border: 0;
+    color: #fff;
+  }
+
+  .system-menu {
+    text-align: right;
+
+    .sys-menu-item {
+      border-bottom: 0;
+      padding: 5px 10px;
+
+      &:hover {
+        color: rgb(183, 212, 255);
+      }
+
+
+    }
+
+    .ant-menu-submenu-horizontal {
+      border-bottom: 0;
+
+      .ant-menu-submenu-title {
+        margin: 5px;
+        padding: 0;
+
+        &:hover {
+          color: rgb(183, 212, 255);
+        }
+      }
+
+      .anticon-right {
+        margin-left: 5px;
+      }
+    }
+  }
+}

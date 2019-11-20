@@ -1,35 +1,39 @@
-import React, { useContext, useState, useCallback } from "react";
-import _ from "lodash";
-import THeader from "./THeader";
-import TBody from "./TBody";
-import TFooter from "./TFooter";
-import "./index.less";
+import React, { useContext, useState, useCallback } from 'react'
+import _ from 'lodash'
+import THeader from './THeader'
+import TBody from './TBody'
+import TFooter from './TFooter'
+import './index.less'
 
-import { GlobalContext } from "uiengine-ide";
+import { GlobalContext } from 'uiengine-ide'
+import useTableElement from './createElement'
 
 const Table = (props: any) => {
-  const { ideMode, preview } = useContext(GlobalContext);
-  let { children, ...rest } = props;
+  const { ideMode, preview } = useContext(GlobalContext)
+  let { children } = props
+
   // console.log(_.get(props, "uinode.schema.$children.0.props.title"));
-  let row = _.get(props, "uinode.schema.$children");
-  let columns = [];
+  let row = _.get(props, 'uinode.schema.$children')
+  let columns = []
   if (!row) {
-    row = _.get(props, "uinode.schema.children");
+    row = _.get(props, 'uinode.schema.children')
   }
 
-  let rowType = _.get(row, "0.component", "");
+  let rowType = _.get(row, '0.component', '')
   // console.log(rowType, row);
-  if (rowType.indexOf("Table.TrGroup") > -1) {
-    columns = _.get(row, "[0].children");
+  if (rowType.indexOf('Table.TrGroup') > -1) {
+    columns = _.get(row, '[0].children')
   } else {
-    columns = row;
+    columns = row
   }
 
   // callback for selector
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([])
   const selectAll = useCallback(() => {
-    console.log("select all");
-  }, [selectedItems]);
+    console.log('select all')
+  }, [selectedItems])
+
+  const MyTable = useTableElement('table')
 
   return (
     <div className="ant-table-wrapper">
@@ -38,7 +42,7 @@ const Table = (props: any) => {
           <div className="ant-table ant-table-default ant-table-scroll-position-left">
             <div className="ant-table-content">
               <div className="ant-table-body">
-                <table className="my-table">
+                <MyTable className="my-table">
                   {ideMode && preview ? (
                     <THeader
                       columns={columns}
@@ -48,14 +52,14 @@ const Table = (props: any) => {
                   ) : null}
                   <TBody>{children}</TBody>
                   <TFooter></TFooter>
-                </table>
+                </MyTable>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Table;
+export default Table

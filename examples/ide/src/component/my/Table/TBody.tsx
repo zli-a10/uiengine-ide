@@ -1,9 +1,12 @@
-import React from "react";
-import _ from "lodash";
+import React, { useContext } from 'react'
+import _ from 'lodash'
+import useTableElement from './createElement'
 
 const TBody = (props: any) => {
-  let { children, ...rest } = props;
-  return <tbody className="ant-table-tbody my-table-body">{children}</tbody>;
-};
+  const TB = useTableElement('tbody')
 
-export default TBody;
+  let { children } = props
+  return <TB className="ant-table-tbody my-table-body">{children}</TB>
+}
+
+export default TBody

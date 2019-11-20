@@ -1,0 +1,79 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "a10:Form.Section",
+			"props": {
+				"active": true,
+				"title": "Switchable List"
+			},
+			"datasource": "$dummy.UINode-1486",
+			"children": [
+				{
+					"component": "my:Table.Table",
+					"props": {
+						"isTable": true
+					},
+					"datasource": "$dummy.UINode-1515",
+					"children": [
+						{
+							"component": "my:Table.Tr",
+							"props": {},
+							"datasource": "$dummy.UINode-1255",
+							"children": [
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "test"
+									},
+									"datasource": {
+										"source": "slb.server:name",
+										"schema": "slb.server:name",
+										"autoload": true
+									},
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {},
+											"datasource": {
+												"source": "slb.server:name",
+												"schema": "slb.server:name",
+												"autoload": true
+											}
+										}
+									]
+								},
+								{
+									"component": "my:Table.Td",
+									"props": {
+										"title": "abc"
+									},
+									"datasource": {
+										"source": "slb.server:name",
+										"schema": "slb.server:name",
+										"autoload": true
+									},
+									"children": [
+										{
+											"component": "my:Table.CellContent",
+											"props": {},
+											"datasource": {
+												"source": "slb.server:name",
+												"schema": "slb.server:name",
+												"autoload": true
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

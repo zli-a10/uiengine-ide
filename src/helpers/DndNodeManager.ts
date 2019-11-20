@@ -2,15 +2,17 @@ import _ from 'lodash'
 import { NodeController, UINode } from 'uiengine'
 import { VersionControl } from './VersionControl'
 import { IUINode, ILayoutSchema, INodeController } from 'uiengine/typings'
-import { configLayoutWrappers, getActiveUINode } from './'
-import { IDERegister } from '../helpers'
+import { configLayoutWrappers, getActiveUINode, IDERegister } from './'
 
-// TO Fix: Can't drag element into it's child
 export class DndNodeManager implements IDndNodeManager {
   static instance: IDndNodeManager
   static getInstance() {
     if (!DndNodeManager.instance) {
       DndNodeManager.instance = new DndNodeManager()
+    }
+    if (IDERegister.layoutComponentWrapper) {
+      DndNodeManager.instance.layoutWrappers =
+        IDERegister.layoutComponentWrapper
     }
     return DndNodeManager.instance
   }

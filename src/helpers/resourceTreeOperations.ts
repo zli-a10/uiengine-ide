@@ -86,10 +86,11 @@ export const CloneResourceNode = async (
   const regExp = new RegExp(`${suffix}$`);
   const nameUniqueId = _.uniqueId("_copy");
   const newName = dstNode.key.replace(regExp, `${nameUniqueId}${suffix}`);
+  const newTitle = dstNode.title.replace(regExp, `${nameUniqueId}${suffix}`)
   const newItem: IResourceTreeNode = {
     type,
     name: newName,
-    title: newName,
+    title: newTitle,
     nodeType: "file",
     key: newName,
     value: newName,

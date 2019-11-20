@@ -1,0 +1,57 @@
+.a10-collapse-frame {
+  &:nth-child(n+2) {
+    margin-top: 10px;
+  }
+
+  .ant-collapse-header {
+    background: #fff;
+    border-radius: 6px;
+    margin-bottom: 24;
+    border: 0;
+    overflow: hidden;
+  }
+
+  .ant-collapse-content {
+    border-top: 0;
+  }
+
+  .ant-collapse-borderless>.ant-collapse-item {
+    border-bottom: 0;
+    border-radius: 6px;
+  }
+
+  .ant-collapse-borderless>.ant-collapse-item:last-child .ant-collapse-header {
+    border-radius: 6px;
+  }
+
+  .section-title {
+    font-weight: 500;
+    font-size: 14px
+  }
+
+  .ant-collapse-item-active {
+    .section-title {
+      font-weight: 100;
+    }
+  }
+
+}
+
+
+.ant-form {
+  .a10-collapse-frame:nth-child(n+2) {
+    margin-top: 15px;
+  }
+}
+
+
+.a10-form-submit {
+  text-align: right;
+  margin-top: 20px;
+
+  .ant-btn {
+    margin-left: 10px;
+    border-radius: 25px;
+    padding: 0 20px;
+  }
+}

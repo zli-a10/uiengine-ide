@@ -1,0 +1,509 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "a10:Page.Page",
+			"props": {},
+			"datasource": "$dummy.UINode-10088",
+			"children": [
+				{
+					"component": "my:Form.Form",
+					"props": {
+						"isCreate": true
+					},
+					"datasource": "$dummy.UINode-8987",
+					"children": [
+						{
+							"component": "my:Layout.Row",
+							"props": {
+								"gutter": 16,
+								"type": "flex",
+								"align": "top",
+								"style": {
+									"display": "flex",
+									"flex": 1
+								}
+							},
+							"children": [
+								{
+									"component": "a10:Form.InfoCard",
+									"props": {
+										"unCheckedChildren": "Default"
+									},
+									"datasource": "$dummy.UINode-9000",
+									"layout": {
+										"flex": "1"
+									}
+								},
+								{
+									"component": "my:Layout.Col",
+									"props": {
+										"style": {
+											"flex": 1
+										}
+									},
+									"children": [
+										{
+											"component": "my:Form.Section",
+											"props": {
+												"active": true,
+												"title": "Server Basic",
+												"advanceToggle": true
+											},
+											"datasource": "$dummy.UINode-9029",
+											"children": [
+												{
+													"component": "div",
+													"children": [
+														{
+															"component": "my:Form.FormItem",
+															"title": "name",
+															"value": "slb.server:name",
+															"props": {
+																"label": "Name",
+																"help": "Server Name",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:name",
+																"schema": "slb.server:name",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "server-ipv6-addr",
+															"value": "slb.server:server-ipv6-addr",
+															"props": {
+																"label": "Server IPv6 Address",
+																"help": "IPV6 address",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:server-ipv6-addr",
+																"schema": "slb.server:server-ipv6-addr",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:name"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "host",
+															"value": "slb.server:host",
+															"props": {
+																"label": "Host",
+																"help": "IP Address",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:host",
+																"schema": "slb.server:host",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:name"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "fqdn-name",
+															"value": "slb.server:fqdn-name",
+															"props": {
+																"label": "FQDN Name",
+																"help": "Server hostname",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:fqdn-name",
+																"schema": "slb.server:fqdn-name",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:name"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "resolve-as",
+															"value": "slb.server:resolve-as",
+															"props": {
+																"label": "Resolve As",
+																"help": "",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:resolve-as",
+																"schema": "slb.server:resolve-as",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:fqdn-name"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "action",
+															"value": "slb.server:action",
+															"props": {
+																"label": "Action",
+																"help": "",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:action",
+																"schema": "slb.server:action",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "external-ip",
+															"value": "slb.server:external-ip",
+															"props": {
+																"label": "External IP",
+																"help": "External IP address for NAT of GSLB",
+																"isAdvance": true
+															},
+															"datasource": {
+																"source": "slb.server:external-ip",
+																"schema": "slb.server:external-ip",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "ipv6",
+															"value": "slb.server:ipv6",
+															"props": {
+																"label": "IPv6",
+																"help": "IPv6 address Mapping of GSLB",
+																"isAdvance": true
+															},
+															"datasource": {
+																"source": "slb.server:ipv6",
+																"schema": "slb.server:ipv6",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "template",
+															"value": "slb.server:template",
+															"props": {
+																"label": "Template",
+																"help": "Apply template to server",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:template",
+																"schema": "slb.server:template",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "template-server",
+															"value": "slb.server:template-server",
+															"props": {
+																"label": "Template Server",
+																"help": "Server template",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:template-server",
+																"schema": "slb.server:template-server",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:template"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "server-health-check",
+															"value": "slb.server:server-health-check",
+															"props": {
+																"label": "Server Health Check",
+																"help": "Health Check Monitor",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:server-health-check",
+																"schema": "slb.server:server-health-check",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "health-check",
+															"value": "slb.server:health-check",
+															"props": {
+																"label": "Health Check",
+																"help": "Health Check Monitor",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:health-check",
+																"schema": "slb.server:health-check",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:server-health-check"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "p-health-check",
+															"value": "slb.server:p-health-check",
+															"props": {
+																"label": "P Health Check",
+																"help": "Reference a health-check from shared partition",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:p-health-check",
+																"schema": "slb.server:p-health-check",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:server-health-check"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "shared-partition-health-check",
+															"value": "slb.server:shared-partition-health-check",
+															"props": {
+																"label": "Shared Partition Health Check",
+																"help": "Reference a health-check from shared partition",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:shared-partition-health-check",
+																"schema": "slb.server:shared-partition-health-check",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:p-health-check"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "health-check-shared",
+															"value": "slb.server:health-check-shared",
+															"props": {
+																"label": "Health Check Shared",
+																"help": "Health Check Monitor",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:health-check-shared",
+																"schema": "slb.server:health-check-shared",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:shared-partition-health-check"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "health-check-disable",
+															"value": "slb.server:health-check-disable",
+															"props": {
+																"label": "Health Check Disable",
+																"help": "Disable configured health check configuration",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:health-check-disable",
+																"schema": "slb.server:health-check-disable",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "conn-limit",
+															"value": "slb.server:conn-limit",
+															"props": {
+																"label": "Connection Limit",
+																"help": "Connection Limit",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:conn-limit",
+																"schema": "slb.server:conn-limit",
+																"autoload": true
+															}
+														},
+														{
+															"component": "my:Form.FormItem",
+															"title": "no-logging",
+															"value": "slb.server:no-logging",
+															"props": {
+																"label": "No Logging",
+																"help": "Do not log connection over limit event",
+																"isAdvance": false
+															},
+															"datasource": {
+																"source": "slb.server:no-logging",
+																"schema": "slb.server:no-logging",
+																"autoload": true
+															},
+															"state": {
+																"visible": {
+																	"deps": [
+																		{
+																			"selector": {
+																				"datasource.source": "slb.server:conn-limit"
+																			},
+																			"data": "",
+																			"dataCompareRule": "not"
+																		}
+																	]
+																}
+															}
+														}
+													],
+													"datasource": "$dummy.UINode-9097"
+												}
+											]
+										},
+										{
+											"component": "my:Form.SubmitGroup",
+											"props": {
+												"$events": [
+													{
+														"eventName": "onSaveClick",
+														"listener": "submitData",
+														"defaultParams": {
+															"target": {
+																"mode": "sync",
+																"targets": [
+																	{
+																		"dataSource": {
+																			"source": "slb.server:"
+																		},
+																		"dataSchema": {
+																			"method": "post"
+																		},
+																		"dependOn": {}
+																	}
+																]
+															}
+														}
+													}
+												]
+											},
+											"datasource": "$dummy.UINode-2594"
+										}
+									],
+									"datasource": "$dummy.UINode-9026",
+									"layout": {
+										"flex": "4"
+									}
+								}
+							],
+							"datasource": "$dummy.UINode-9016"
+						}
+					]
+				}
+			]
+		}
+	]
+}

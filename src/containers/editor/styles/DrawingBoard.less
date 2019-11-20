@@ -70,14 +70,15 @@
         }
       }
 
-      .ide-editor-list-slider {
-      }
+      .ide-editor-list-slider {}
     }
+
+
   }
 
   #drawingboard {
     .ant-layout {
-      padding: 22px;
+      // padding: 22px;
     }
 
     .with-datasource {
@@ -86,4 +87,27 @@
       }
     }
   }
+
+
+  .ant-tabs.ant-tabs-card .ant-tabs-card-bar {
+    .ant-tabs-tab {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .ant-tabs-tab-active {
+      background: #40a9ff;
+      color: #fff;
+
+      .anticon svg {
+        color: #fff;
+      }
+    }
+  }
+
+  .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-wrap {
+    margin-left: 10px;
+  }
+
 }

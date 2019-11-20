@@ -7,13 +7,27 @@
   // border-bottom: 1px solid #cccccc;
   user-select: none;
   display: flex;
+
   a {
     color: #fff;
     font-size: 16px;
+
+    &:hover {
+      color: #cbcbcb;
+    }
   }
 
-  &.hide {
-    display: none;
+  &.hidden {
+    height: 3px;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    &.over {
+      height: 60px;
+      opacity: 1;
+    }
   }
 
   .left {
@@ -21,22 +35,27 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+
     .button-close {
       padding: 0 8px;
       border-right: solid 1px #cbcbcb;
       margin-right: 5px;
       cursor: pointer;
+
       .anticon-close {
         font-size: 16px;
       }
     }
+
     .button-menu {
       padding: 0 8px;
+
       &:hover {
         background: #3e81d8;
         border-radius: 5px;
       }
     }
+
     .page-name {
       em {
         color: #cbcbcb;
@@ -44,12 +63,14 @@
       }
     }
   }
+
   .right {
     flex: 1;
     justify-content: flex-end;
     align-items: center;
     display: flex;
     padding-right: 10px;
+
     .props {
       border-right: solid 1px #cbcbcb;
       display: flex;
@@ -57,6 +78,7 @@
       align-items: center;
       padding-right: 10px;
       margin-right: 10px;
+
       .settings {
         width: 28px;
         padding: 0 8px;
@@ -70,16 +92,19 @@
         padding: 0 10px;
         font-size: 16px;
       }
+
       .more {
         width: 28px;
         padding: 0 8px;
       }
+
       .ant-switch-inner {
         display: inline-block;
         font-size: 16px;
         margin-right: 10px;
         padding-right: 10px;
       }
+
       .brand {
         width: 100px;
         text-align: center;

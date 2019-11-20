@@ -1,0 +1,47 @@
+// TODO THEME
+@menu-background-color: #fff;
+@Def-color: rgba(50, 58, 70, .8);
+
+.a10-menus-container {
+  background-color: @menu-background-color;
+  box-shadow: 1px 0 3px 0 rgba(0, 0, 0, .2);
+
+  .ant-menu-horizontal {
+    border-bottom: 0;
+
+    i.anticon.anticon-right {
+      margin-left: 10px;
+    }
+
+    .ant-menu-submenu-title {
+      padding: 0 5px;
+    }
+  }
+
+  .search-function {
+    text-align: right;
+  }
+
+  .search-function-menu {
+    max-width: 400px;
+
+    .ant-select-selection {
+      border-radius: 25px;
+      background: #f2f2f2;
+      border: 0;
+
+      &:hover {
+        background: #fff;
+      }
+    }
+
+    .ant-select-selection__placeholder {
+      text-align: center;
+    }
+  }
+
+
+  .system-menu {
+    text-align: right;
+  }
+}

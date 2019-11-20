@@ -19,7 +19,6 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   if (dataNode.schema) {
     // dataMocker.noCache = false;
     let data = dataMocker.generate(dataNode.schema)
-    console.log(dataNode.data)
     dataNode.data = data
   }
 }

@@ -48,7 +48,9 @@ export class SchemaPropManager implements ISchemaPropManager {
             value,
             extraInfo
           )
+          console.log('result1, ', result)
           result = _.merge(result, finalSchema)
+          console.log('result2, ', result)
         }
       })
     }
