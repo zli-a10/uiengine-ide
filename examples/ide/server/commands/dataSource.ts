@@ -7,7 +7,7 @@ const buildFields = (fields: any, fileName: string) => {
     const value = domainName + field.key
     let schema: any = {
       type: 'field',
-      component: 'a10:Form.FormItem',
+      component: 'my:Form.FormItem',
       title: field.key,
       value,
       props: {

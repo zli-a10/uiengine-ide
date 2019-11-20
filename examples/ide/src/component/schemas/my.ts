@@ -40,12 +40,14 @@ export default [
         },
         children: [
           {
-            component: 'my:Form.Section',
+            component: 'a10:Form.Section',
             title: 'Section',
             isContainer: true,
             schema: {
               active: 'boolean',
-              title: 'string'
+              title: 'string',
+              advanceToggle: 'boolean',
+              tabSwitch: 'boolean'
             },
             defaultProps: {
               active: true,
@@ -75,26 +77,20 @@ export default [
             }
           },
           {
-            component: 'my:Form.FormItem',
+            component: 'a10:Form.FormItem',
             title: 'FormItem',
             isContainer: false,
             schema: {
-              type: 'component',
+              type: 'string',
               label: 'string',
               extra: 'string',
-              labelCol: [
-                {
-                  span: [1, 24],
-                  offset: [1, 24]
-                }
-              ],
+              help: 'string',
               required: 'boolean',
               htmlFor: 'string',
-              hasFeedback: 'boolean'
+              isMore: 'boolean',
+              isAdvance: 'boolean'
             },
-            defaultProps: {
-              // label: `My Item ${_.uniqueId()}`
-            }
+            defaultProps: {}
           },
           {
             component: 'my:Form.FixedSelect',
@@ -120,16 +116,16 @@ export default [
             }
           },
           {
-            component: 'my:Form.RadioGroup',
-            title: 'RadioGroup',
-            isContainer: true,
+            component: 'a10:Form.SubmitGroup',
+            title: 'SubmitGroup',
+            isContainer: false,
             schema: {
-              radioOptions: 'string',
-              events: ['onChange']
+              saveText: 'string',
+              cancelText: 'string',
+              buttonAlign: ['left', 'center', 'right'],
+              events: ['onSaveClick', 'onCancelClick']
             },
-            defaultProps: {
-              radioOptions: 'Item1:1,Item2:2,Item3:3'
-            }
+            defaultProps: {}
           }
         ],
         defaultProps: {}

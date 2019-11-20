@@ -11,7 +11,7 @@
 			"datasource": "$dummy.UINode-10088",
 			"children": [
 				{
-					"component": "a10:Form.Form",
+					"component": "my:Form.Form",
 					"props": {
 						"isCreate": true
 					},
@@ -48,7 +48,7 @@
 									},
 									"children": [
 										{
-											"component": "a10:Form.Section",
+											"component": "my:Form.Section",
 											"props": {
 												"active": true,
 												"title": "Server Basic",
@@ -60,7 +60,7 @@
 													"component": "div",
 													"children": [
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "name",
 															"value": "slb.server:name",
 															"props": {
@@ -75,7 +75,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "server-ipv6-addr",
 															"value": "slb.server:server-ipv6-addr",
 															"props": {
@@ -103,7 +103,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "host",
 															"value": "slb.server:host",
 															"props": {
@@ -131,7 +131,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "fqdn-name",
 															"value": "slb.server:fqdn-name",
 															"props": {
@@ -159,7 +159,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "resolve-as",
 															"value": "slb.server:resolve-as",
 															"props": {
@@ -187,7 +187,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "action",
 															"value": "slb.server:action",
 															"props": {
@@ -202,7 +202,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "external-ip",
 															"value": "slb.server:external-ip",
 															"props": {
@@ -217,7 +217,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "ipv6",
 															"value": "slb.server:ipv6",
 															"props": {
@@ -232,7 +232,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "template",
 															"value": "slb.server:template",
 															"props": {
@@ -247,7 +247,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "template-server",
 															"value": "slb.server:template-server",
 															"props": {
@@ -275,7 +275,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "server-health-check",
 															"value": "slb.server:server-health-check",
 															"props": {
@@ -290,7 +290,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "health-check",
 															"value": "slb.server:health-check",
 															"props": {
@@ -318,7 +318,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "p-health-check",
 															"value": "slb.server:p-health-check",
 															"props": {
@@ -346,7 +346,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "shared-partition-health-check",
 															"value": "slb.server:shared-partition-health-check",
 															"props": {
@@ -374,7 +374,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "health-check-shared",
 															"value": "slb.server:health-check-shared",
 															"props": {
@@ -402,7 +402,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "health-check-disable",
 															"value": "slb.server:health-check-disable",
 															"props": {
@@ -417,7 +417,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "conn-limit",
 															"value": "slb.server:conn-limit",
 															"props": {
@@ -432,7 +432,7 @@
 															}
 														},
 														{
-															"component": "a10:Form.FormItem",
+															"component": "my:Form.FormItem",
 															"title": "no-logging",
 															"value": "slb.server:no-logging",
 															"props": {
@@ -465,7 +465,7 @@
 											]
 										},
 										{
-											"component": "a10:Form.SubmitGroup",
+											"component": "my:Form.SubmitGroup",
 											"props": {
 												"$events": [
 													{

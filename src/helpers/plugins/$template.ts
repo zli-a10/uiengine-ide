@@ -26,7 +26,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
       if (!schema) {
         schema = {
           component: 'div',
-          content: `Loaded template ${path}`
+          content: `Load template ${path} failed, please make sure the file was not deleted`
         }
       }
       _.merge(uiNode.schema, schema)

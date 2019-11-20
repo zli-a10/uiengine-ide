@@ -57,51 +57,17 @@ export default [
             title: 'Content',
             isContainer: true,
             schema: {}
-          },
-          {
-            component: 'a10:Dropdown',
-            title: 'Dropdown',
-            isContainer: true,
-
-            schema: {
-              className: 'string'
-            }
           }
         ]
       },
 
       {
-        component: 'a10:Form.Form',
+        component: 'my:Form.Form',
         title: 'Form',
         isContainer: true,
-        schema: {
-          isCreate: 'boolean',
-          formName: 'string',
-          fieldName: 'string',
-          sectionName: 'string',
-          checkedChildren: 'string',
-          unCheckedChildren: 'string'
-        },
-        defaultProps: {
-          isCreate: true
-        },
-
+        schema: {},
+        defaultProps: {},
         children: [
-          {
-            component: 'a10:Form.Section',
-            title: 'Section',
-            isContainer: true,
-            schema: {
-              active: 'boolean',
-              title: 'string',
-              advanceToggle: 'boolean',
-              tabSwitch: 'boolean'
-            },
-            defaultProps: {
-              active: true,
-              title: 'Section 1'
-            }
-          },
           {
             component: 'a10:Form.InfoCard',
             title: 'Info Card',
@@ -116,35 +82,6 @@ export default [
             defaultProps: {
               unCheckedChildren: 'Default'
             }
-          },
-
-          {
-            component: 'a10:Form.FormItem',
-            title: 'FormItem',
-            isContainer: false,
-            schema: {
-              type: 'string',
-              label: 'string',
-              extra: 'string',
-              help: 'string',
-              required: 'boolean',
-              htmlFor: 'string',
-              isMore: 'boolean',
-              isAdvance: 'boolean'
-            },
-            defaultProps: {}
-          },
-          {
-            component: 'a10:Form.SubmitGroup',
-            title: 'SubmitGroup',
-            isContainer: false,
-            schema: {
-              saveText: 'string',
-              cancelText: 'string',
-              buttonAlign: ['left', 'center', 'right'],
-              events: ['onSaveClick', 'onCancelClick']
-            },
-            defaultProps: {}
           }
         ]
       }

@@ -6,7 +6,7 @@ class FooterComponent extends React.Component<any, any> {
   render() {
     return (
       <Footer className="a10-footer  flex-bar">
-        This is ACOS 6.0 version by BJ team
+        Released by A10networks onbox GUI team
       </Footer>
     )
   }
