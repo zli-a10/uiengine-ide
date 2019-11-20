@@ -5,7 +5,7 @@ import { Main, DesignManager, PropManager } from "./";
 import { IDEEditorContext } from "../Context";
 import { UIEngineDndProvider } from "../dnd";
 import * as Providers from "./Providers";
-import { IDE_ID, getActiveUINode } from "../../helpers";
+import { IDE_ID, getActiveUINode, FileLoader, VersionControl } from "../../helpers";
 import "./styles/index.less";
 import ErrorBoundary from "./ErrorBoundary";
 import { Start } from "./Helper";
@@ -68,9 +68,39 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             : newTabs[index - 1];
           newTabs.splice(index, 1);
           setTabs(newTabs);
+          const fileLoader = FileLoader.getInstance()
+          const versionControl = VersionControl.getInstance()
+          versionControl.clearHistories()
           if (!newCurrentTab) {
+            fileLoader.editingFile = ''
             setCurrentTab("drawingboard");
+            const sandbox: any = {
+              component: 'div',
+              props: {
+                className: 'sandbox'
+              },
+              children: [
+                {
+                  component: 'h1',
+                  content: 'Sandbox'
+                },
+                {
+                  component: 'p',
+                  content:
+                    'Please Drag and Drop an element from left Components tab, and then try to edit it on prop window.'
+                }
+              ]
+            }
+            try {
+              const uiNode = getActiveUINode();
+              uiNode.schema = sandbox;
+              uiNode.updateLayout();
+              uiNode.sendMessage(true);
+            } catch (e) {
+              console.error(e);
+            }
           } else {
+            fileLoader.editingFile = newCurrentTab.tab
             setActiveTabName(newCurrentTab.tab);
             if (newCurrentTab.language === "schema") {
               const text = _.find(content, { file: newCurrentTab.tab });
@@ -107,13 +137,13 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         }
       },
       layout: "",
-      setLayout: (path: string) => {},
+      setLayout: (path: string) => { },
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
       help: "",
-      setHelp: (help: string) => {},
+      setHelp: (help: string) => { },
       refresh: "",
-      toggleRefresh: (refresh: string) => {},
+      toggleRefresh: (refresh: string) => { },
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode);
@@ -160,8 +190,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       localStorage["showGuide"] === undefined
         ? true
         : localStorage["showGuide"] === "false"
-        ? false
-        : true;
+          ? false
+          : true;
     setShowGuide(showGuideStatus);
   }, [localStorage["drawingBoardLayout"], localStorage["showGuide"]]);
 

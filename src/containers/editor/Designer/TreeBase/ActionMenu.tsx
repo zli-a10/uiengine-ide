@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useContext } from "react";
 import _ from "lodash";
 
 import { Menu } from "antd";
-import { resourceActions } from "../../../../helpers";
+import { resourceActions, getActiveUINode } from "../../../../helpers";
 import { IDEEditorContext } from "../../../Context";
 
 export const ActionMenu = (props: any) => {
@@ -65,6 +65,14 @@ export const ActionMenu = (props: any) => {
         data.then((content) => {
           if (_.find(tabs, { tab: dataRef.key })) {
             setContent({ content: JSON.stringify(content, null, '\t'), type: 'schema', file: dataRef.key });
+            try {
+              const uiNode = getActiveUINode();
+              uiNode.schema = content;
+              uiNode.updateLayout();
+              uiNode.sendMessage(true);
+            } catch (e) {
+              console.error(e);
+            }
           }
         })
         onRefresh();

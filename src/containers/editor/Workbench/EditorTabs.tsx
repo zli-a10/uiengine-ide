@@ -290,10 +290,6 @@ export const EditorTabs = (props: any) => {
       if (action === 'remove') {
         if (targetKey === 'drawingboard') {
           message.warning('drawingboard can not be closed!')
-        } else if (tabs.length === 1) {
-          message.warning(
-            'At least one tab is open so drawingboard could display its content!'
-          )
         } else {
           removeTab(targetKey)
         }
@@ -321,23 +317,6 @@ export const EditorTabs = (props: any) => {
       setSpitted(false)
     }
   }, [tabs])
-
-  useEffect(() => {
-    const initTab = async () => {
-      const tabIndex: any = _.findIndex(tabs, { tab: 'simple.json' })
-      if (tabIndex === -1) {
-        const fileLoader = FileLoader.getInstance()
-        const data = await fileLoader.loadFile('simple.json', 'schema')
-        setContent({
-          content: JSON.stringify(data, null, '\t'),
-          file: 'simple.json',
-          type: 'schema'
-        })
-        activeTab('drawingboard:simple.json', 'schema')
-      }
-    }
-    initTab()
-  }, [])
 
   const createTabTitle = useCallback(
     (tabObject: any) => {
