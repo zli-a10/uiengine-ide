@@ -19,6 +19,7 @@ import {
   loadFileStatus,
   getFileSuffix,
   FileLoader,
+  VersionControl,
   saveFileStatus,
   getActiveUINode
 } from '../../../helpers'
@@ -266,6 +267,12 @@ export const EditorTabs = (props: any) => {
 
   const onTabClick = useCallback(
     (activeKey: any) => {
+      if (activeKey !== 'drawingboard') {
+        const fileLoader = FileLoader.getInstance()
+        const versionControl = VersionControl.getInstance()
+        versionControl.clearHistories()
+        fileLoader.editingFile = activeKey
+      }
       activeTab(`drawingboard:${activeKey}`, 'schema')
       const text = _.find(content, { file: activeKey })
       if (text) {
