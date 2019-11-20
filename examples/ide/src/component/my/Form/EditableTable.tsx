@@ -1,57 +1,57 @@
-import React from "react";
-import _ from "lodash";
-import { Table, Button, Popconfirm, Form, Icon } from "antd";
+import React from 'react'
+import _ from 'lodash'
+import { Table, Button, Popconfirm, Form, Icon } from 'antd'
 // import { A10Modal } from "./Modal";
 
-import { UIEngineContext, NodeController, ComponentWrapper } from "uiengine";
-import { IWorkingMode } from "uiengine/typings";
-const EditableContext = React.createContext({});
+import { UIEngineContext, NodeController, ComponentWrapper } from 'uiengine'
+import { IWorkingMode } from 'uiengine/typings'
+const EditableContext = React.createContext({})
 
 const EditableRow = (props: any) => (
   <EditableContext.Provider value={props.form}>
     <tr {...props} />
   </EditableContext.Provider>
-);
+)
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableFormRow = Form.create()(EditableRow)
 
 class EditableCell extends React.Component<any, any> {
   state = {
     editing: false
-  };
-  private form: any;
-  private input: any;
+  }
+  private form: any
+  private input: any
 
   toggleEdit = () => {
-    const editing = !this.state.editing;
+    const editing = !this.state.editing
     this.setState({ editing: true }, () => {
       if (editing) {
         try {
-          this.input.focus();
+          this.input.focus()
         } catch {}
       }
-    });
-  };
+    })
+  }
 
   save = (e: any) => {
-    const { record, handleSave } = this.props;
+    const { record, handleSave } = this.props
     this.form.validateFields((error: any, values: any) => {
       if (error && error[e.currentTarget.id]) {
-        return;
+        return
       }
-      this.toggleEdit();
-      handleSave({ ...record, ...values });
-    });
-  };
+      this.toggleEdit()
+      handleSave({ ...record, ...values })
+    })
+  }
 
   renderCell = (form: any) => {
-    this.form = form;
-    const { children, record, index } = this.props;
-    if (!record.uinode) return;
+    this.form = form
+    const { children, record, index } = this.props
+    if (!record.uinode) return
 
-    let editing: any = this.state.editing;
+    let editing: any = this.state.editing
 
-    const uiNode = record.uinode.children[index];
+    const uiNode = record.uinode.children[index]
     return editing ? (
       <Form.Item style={{ margin: 0 }}>
         {/* {form.getFieldDecorator(dataIndex, {
@@ -74,13 +74,13 @@ class EditableCell extends React.Component<any, any> {
     ) : (
       <div
         className="editable-cell-value-wrap"
-        style={{ paddingRight: 24, width: "100%", height: "30px" }}
+        style={{ paddingRight: 24, width: '100%', height: '30px' }}
         onClick={this.toggleEdit}
       >
         {children}
       </div>
-    );
-  };
+    )
+  }
 
   render() {
     const {
@@ -92,7 +92,7 @@ class EditableCell extends React.Component<any, any> {
       handleSave,
       children,
       ...restProps
-    } = this.props;
+    } = this.props
     return (
       <td {...restProps}>
         {editable ? (
@@ -101,39 +101,39 @@ class EditableCell extends React.Component<any, any> {
           children
         )}
       </td>
-    );
+    )
   }
 }
 
-export class EditableTable extends React.Component<any, any> {
-  private columns: any;
-  static contextType = UIEngineContext;
+class EditableTable extends React.Component<any, any> {
+  private columns: any
+  static contextType = UIEngineContext
 
   constructor(props: any) {
-    super(props);
+    super(props)
     this.state = {
       dataSource: this.props.uinode.dataNode.data || [],
       showPopup: false,
       dataKey: 0
-    };
+    }
 
     this.columns = props.uinode.schema.$children.map((node: any) => {
       const datasource =
-        typeof node.datasource === "string"
+        typeof node.datasource === 'string'
           ? node.datasource
-          : node.datasource.source;
+          : node.datasource.source
       return {
         title: node.props.title,
-        dataIndex: datasource.split(".").pop(),
+        dataIndex: datasource.split('.').pop(),
         schema: node,
-        width: "30%",
+        width: '30%',
         editable: true
-      };
-    });
+      }
+    })
 
     this.columns.push({
-      title: "operation",
-      dataIndex: "operation",
+      title: 'operation',
+      dataIndex: 'operation',
       render: (text: any, record: any, index: number) =>
         this.props.uinode.dataNode.data.length >= 1 ? (
           <>
@@ -141,7 +141,7 @@ export class EditableTable extends React.Component<any, any> {
               type="edit"
               theme="twoTone"
               twoToneColor="#428BCA"
-              style={{ paddingRight: "10px" }}
+              style={{ paddingRight: '10px' }}
               onClick={() => this.handleEdit(index)}
             />
 
@@ -153,88 +153,88 @@ export class EditableTable extends React.Component<any, any> {
             </Popconfirm>
           </>
         ) : null
-    });
+    })
   }
 
   handleEdit = (key: any) => {
     // this.setState({ dataKey: key, showPopup: true });
     const {
       modal: { connect }
-    } = this.props;
+    } = this.props
     const workingMode = {
-      mode: "edit-pool",
+      mode: 'edit-pool',
       options: {
         key,
         source: connect
       }
-    };
-    this.openModal(workingMode);
-  };
+    }
+    this.openModal(workingMode)
+  }
 
   handleDelete = async (key: any) => {
-    await this.props.uinode.dataNode.deleteData(key);
-  };
+    await this.props.uinode.dataNode.deleteData(key)
+  }
 
   handleAdd = async () => {
-    this.props.uinode.dataNode.createRow();
-  };
+    this.props.uinode.dataNode.createRow()
+  }
 
   handleAdvanceAdd = async () => {
     const {
       modal: { connect }
-    } = this.props;
+    } = this.props
     const workingMode = {
-      mode: "new",
+      mode: 'new',
       options: {
         source: connect
       }
-    };
-    this.openModal(workingMode);
-  };
+    }
+    this.openModal(workingMode)
+  }
 
   handleCancel = () => {
-    const nodeController = NodeController.getInstance();
+    const nodeController = NodeController.getInstance()
     const {
       modal: { layout }
-    } = this.props;
+    } = this.props
 
     // if (_.has(connect, "source")) {
     //   const dataPool = DataPool.getInstance();
     //   dataPool.clear(_.get(connect, "source"));
     // }
-    nodeController.hideUINode(layout, true);
-  };
+    nodeController.hideUINode(layout, true)
+  }
 
   openModal = (workingMode?: IWorkingMode) => {
-    if (_.has(this.props, "modal.layout")) {
+    if (_.has(this.props, 'modal.layout')) {
       const {
         modal: { layout },
         modal
-      } = this.props;
+      } = this.props
 
       const options = {
         ...modal,
         onClose: this.handleCancel,
         // visible: true,
         parentNode: this.props.uinode
-      };
+      }
       // const workflow = Workflow.getInstance();
-      this.context.controller.setWorkingMode(layout, workingMode);
-      this.context.controller.workflow.activeLayout(layout, options);
+      this.context.controller.setWorkingMode(layout, workingMode)
+      this.context.controller.workflow.activeLayout(layout, options)
     } else {
-      console.error("popup layout not provided on schema");
+      console.error('popup layout not provided on schema')
     }
-  };
+  }
 
   handleSave = (row: any) => {
-    const newData = this.props.uinode.dataNode.data;
-    const dataSource = { dataSource: newData };
-    this.setState(dataSource);
-  };
+    const newData = this.props.uinode.dataNode.data
+    const dataSource = { dataSource: newData }
+    this.setState(dataSource)
+  }
 
   render() {
     // const { dataSource } = this.state;
-    let dataSource = _.cloneDeep(this.props.uinode.dataNode.data);
+    let dataSource = _.cloneDeep(this.props.uinode.dataNode.data)
     // console.log("data Source changed,", this.props.state);
     // const { modal, uinode } = this.props;
     const components = {
@@ -242,17 +242,17 @@ export class EditableTable extends React.Component<any, any> {
         row: EditableFormRow,
         cell: EditableCell
       }
-    };
+    }
     // add the key for each dataSource
     if (dataSource && dataSource.length) {
       dataSource.forEach((record: any, index: number) => {
-        record.key = index;
-        record.uinode = this.props.uinode.children[index];
-      });
+        record.key = index
+        record.uinode = this.props.uinode.children[index]
+      })
     }
     const columns = this.columns.map((col: any, index: number) => {
       if (!col.editable) {
-        return col;
+        return col
       }
       return {
         ...col,
@@ -264,10 +264,10 @@ export class EditableTable extends React.Component<any, any> {
             title: col.title,
             handleSave: this.handleSave,
             index: index
-          };
+          }
         }
-      };
-    });
+      }
+    })
     return (
       <div>
         <Button
@@ -287,12 +287,14 @@ export class EditableTable extends React.Component<any, any> {
         </Button>
         <Table
           components={components}
-          rowClassName={() => "editable-row"}
+          rowClassName={() => 'editable-row'}
           bordered
           dataSource={dataSource}
           columns={columns}
         />
       </div>
-    );
+    )
   }
 }
+
+export default EditableTable

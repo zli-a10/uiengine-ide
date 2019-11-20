@@ -11,7 +11,9 @@ export default [
         schema: {
           state: 'string'
         },
-        defaultProps: {}
+        defaultProps: {
+          state: "{value1: 'abc'}"
+        }
       },
       {
         component: 'my:Layout.Row',
@@ -122,11 +124,11 @@ export default [
             title: 'RadioGroup',
             isContainer: true,
             schema: {
-              name: 'string',
-              defaultValue: 'string',
-              value: 'string',
               radioOptions: 'string',
               events: ['onChange']
+            },
+            defaultProps: {
+              radioOptions: 'Item1:1,Item2:2,Item3:3'
             }
           }
         ],
