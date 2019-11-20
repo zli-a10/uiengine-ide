@@ -8,7 +8,7 @@ import { searchDepsNodes } from 'uiengine'
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function(result: any, value, key) {
+    return _.transform(object, function (result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -658,8 +658,8 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
   const suffix =
     jsonSuffixTypes.indexOf(type) > -1
       ? '.json'
-      : tsSuffixTypes.indexOf(type)
-      ? '.ts'
-      : '.tsx'
+      : tsSuffixTypes.indexOf(type) === 0
+        ? '.ts'
+        : '.tsx'
   return suffix
 }
