@@ -21,6 +21,10 @@ function getDefaultEventConfig(component: string, type: string) {
     listener: 'updateData'
   }
 
+  const isUserComponent =
+    component.includes('a10:') ||
+    component.includes('my:') ||
+    type.includes('a10:')
   if (_.isString(component) && component) {
     if (component.includes('antd:')) {
       switch (true) {
@@ -35,9 +39,9 @@ function getDefaultEventConfig(component: string, type: string) {
         case component === 'antd:Select':
           return [onChangeWithValue]
         default:
-          return [onChangeWithValue]
+          return []
       }
-    } else if (component.includes('a10:')) {
+    } else if (isUserComponent) {
       switch (true) {
         case component === 'a10:Form.FormItem':
           break
@@ -45,7 +49,7 @@ function getDefaultEventConfig(component: string, type: string) {
           return [onChangeWithValue]
       }
     } else {
-      return [onChangeWithValue]
+      return []
     }
   }
 
@@ -57,7 +61,7 @@ function getDefaultEventConfig(component: string, type: string) {
       type = 'antd:' + _.upperFirst(type)
     }
 
-    if (type.includes('antd:')) {
+    if (isUserComponent) {
       switch (true) {
         case type === 'antd:Input':
         case type.includes('antd:Input.'):
@@ -70,14 +74,14 @@ function getDefaultEventConfig(component: string, type: string) {
         case type === 'antd:Select':
           return [onChangeWithValue]
         default:
-          return [onChangeWithValue]
+          return []
       }
     } else {
-      return [onChangeWithValue]
+      return []
     }
   }
 
-  return [onChangeWithValue]
+  return []
 }
 
 const execution: IPluginExecution = async (directParam: IPluginParam) => {

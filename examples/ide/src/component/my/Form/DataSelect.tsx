@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { Select } from "antd";
-import _ from "lodash";
+import React, { useState } from 'react'
+import { Select } from 'antd'
+import _ from 'lodash'
 
-export const DataSelect = (props: any) => {
-  const { children, uinode, select, ...rest } = props;
+const DataSelectComponent = (props: any) => {
+  const { children, uinode, select, ...rest } = props
   // load data
-  const [assocs, setAssocs] = useState([]);
-  const datasource = _.get(select, "datasource");
-  const title = _.get(select, "optionmap.title");
-  const value = _.get(select, "optionmap.value");
+  const [assocs, setAssocs] = useState([])
+  const datasource = _.get(select, 'datasource')
+  const title = _.get(select, 'optionmap.title')
+  const value = _.get(select, 'optionmap.value')
 
   if (datasource) {
-    const source = { source: datasource };
+    const source = { source: datasource }
     uinode.dataNode.dataEngine.loadData(source).then((data: any) => {
-      setAssocs(_.get(data, datasource.replace(":", ".")));
-    });
+      setAssocs(_.get(data, datasource.replace(':', '.')))
+    })
   }
-  
+
   return (
     <Select {...rest}>
       {assocs &&
@@ -25,8 +25,10 @@ export const DataSelect = (props: any) => {
             <Select.Option value={_.get(data, title)} key={index}>
               {_.get(data, value)}
             </Select.Option>
-          );
+          )
         })}
     </Select>
-  );
-};
+  )
+}
+
+export default DataSelectComponent
