@@ -1,46 +1,45 @@
-import React, { useContext } from 'react'
-import _ from 'lodash'
-import { Form, Input } from 'antd'
-import classnames from 'classnames'
-import { TransitionMotion, spring } from 'react-motion'
+import React, { useContext } from "react";
+import _ from "lodash";
+import { Form, Input } from "antd";
+import classnames from "classnames";
+import { TransitionMotion, spring } from "react-motion";
 
 // import components from '../';
-import { getComponent } from 'uiengine'
-import { MyContext } from '../../my/Context/Provider'
+import { getComponent } from "uiengine";
+import { MyContext } from "../../my/Context/Provider";
 
-const { Item } = Form
+const { Item } = Form;
 
 const FormItemComponent = (props: any) => {
-  let { children, type, error, group, help, isAdvance, ...rest } = props
-
-  const { data } = useContext(MyContext)
+  let { children, type, error, group, help, isAdvance, ...rest } = props;
+  const { data } = useContext(MyContext);
   // console.log(data, group, _.get(data, `help[${group}]`))
 
-  const showAdvanced = _.get(data, `advanceOption[${group}]`, false)
+  const showAdvanced = _.get(data, `advanceOption[${group}]`, false);
 
-  let element: any = children
+  let element: any = children;
   if (type) {
-    if (type.indexOf(':') === -1) type = 'antd:' + _.upperFirst(type)
-    const InputComponent: any = getComponent(type)
+    if (type.indexOf(":") === -1) type = "antd:" + _.upperFirst(type);
+    const InputComponent: any = getComponent(type);
     if (InputComponent) {
-      element = <InputComponent {...rest} />
+      element = <InputComponent {...rest} />;
     } else {
-      element = <Input {...rest} />
+      element = <Input {...rest} />;
     }
   }
 
-  let e = {}
-  if (!_.get(error, 'status', true)) {
+  let e = {};
+  if (!_.get(error, "status", true)) {
     e = {
-      validateStatus: _.isString(error.status) ? error.status : 'error',
+      validateStatus: _.isString(error.status) ? error.status : "error",
       help: error.code
-    }
+    };
   }
 
   const cls = classnames({
-    'a10-form-item': true,
-    'advanced-item': isAdvance
-  })
+    "a10-form-item": true,
+    "advanced-item": isAdvance
+  });
 
   return (
     // <TransitionMotion
@@ -66,7 +65,7 @@ const FormItemComponent = (props: any) => {
     !isAdvance || (isAdvance && showAdvanced === true) ? (
       <Item
         // key={inStyles[0].key}
-        help={_.get(data, 'showHelp') === false ? '' : help}
+        help={_.get(data, "showHelp") === false ? "" : help}
         {...rest}
         {...e}
         className={cls}
@@ -81,7 +80,7 @@ const FormItemComponent = (props: any) => {
     ) : null
     //   }}
     // </TransitionMotion>
-  )
-}
+  );
+};
 
-export default FormItemComponent
+export default FormItemComponent;

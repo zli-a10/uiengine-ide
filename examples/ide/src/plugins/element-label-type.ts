@@ -14,7 +14,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
     _.set(uiNode, "props.label", label);
   }
 
-  if (!_.has(uiNode, 'props.type')) {
+  if (!_.has(uiNode, "props.type")) {
     _.set(uiNode, "props.type", inputType);
   }
 };

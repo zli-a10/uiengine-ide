@@ -1,29 +1,29 @@
 // import _ from "lodash";
 export default [
   {
-    id: 'common', // prefix
-    title: 'Project Common Components',
+    id: "common", // prefix
+    title: "Project Common Components",
     children: [
       {
-        component: 'my:Provider',
-        title: 'Provider',
+        component: "my:Provider",
+        title: "Provider",
         isContainer: true,
         schema: {
-          state: 'string'
+          state: "string"
         },
         defaultProps: {
           state: "{value1: 'abc'}"
         }
       },
       {
-        component: 'my:Layout.Row',
-        title: 'Row',
+        component: "my:Layout.Row",
+        title: "Row",
         isContainer: true,
         schema: {},
         children: [
           {
-            component: 'my:Layout.Col',
-            title: 'Col',
+            component: "my:Layout.Col",
+            title: "Col",
             isContainer: true,
             schema: {},
             defaultProps: {}
@@ -32,107 +32,121 @@ export default [
         defaultProps: {}
       },
       {
-        component: 'my:Form.Form',
-        title: 'Form',
+        component: "my:Form.Form",
+        title: "Form",
         isContainer: true,
         schema: {
-          state: 'string'
+          state: "string"
         },
         children: [
           {
-            component: 'a10:Form.Section',
-            title: 'Section',
+            component: "my:Form.Section",
+            title: "Section",
             isContainer: true,
             schema: {
-              active: 'boolean',
-              title: 'string',
-              advanceToggle: 'boolean',
-              tabSwitch: 'boolean'
+              active: "boolean",
+              title: "string",
+              advanceToggle: "boolean",
+              tabSwitch: "boolean"
             },
             defaultProps: {
               active: true,
-              title: 'Section 1'
+              title: "Section 1"
             }
           },
           {
-            component: 'my:Form.DataSelect',
-            title: 'DataSelect',
+            component: "my:Form.FormItem",
+            title: "FormItem",
             isContainer: false,
             schema: {
-              datasource: 'datasource',
-              optionmap: [{ title: 'string' }, { value: 'string' }],
-              open: 'boolean',
-              events: [
-                'onChange',
-                'onBlur',
-                'onDeselect',
-                'onFocus',
-                'onInputKeyDown',
-                'onMouseEnter',
-                'onMouseLeave',
-                'onSearch',
-                'onSelect',
-                'onDropdownVisibleChange'
-              ]
-            }
-          },
-          {
-            component: 'a10:Form.FormItem',
-            title: 'FormItem',
-            isContainer: false,
-            schema: {
-              type: 'string',
-              label: 'string',
-              extra: 'string',
-              help: 'string',
-              required: 'boolean',
-              htmlFor: 'string',
-              isMore: 'boolean',
-              isAdvance: 'boolean'
+              type: "string",
+              label: "string",
+              extra: "string",
+              help: "string",
+              required: "boolean",
+              htmlFor: "string",
+              isMore: "boolean",
+              isAdvance: "boolean"
             },
             defaultProps: {}
           },
           {
-            component: 'my:Form.FixedSelect',
-            title: 'FixedSelect',
+            component: "my:Form.SubmitGroup",
+            title: "SubmitGroup",
             isContainer: false,
             schema: {
-              datasource: 'datasource',
-              optionmap: [{ title: 'string' }, { value: 'string' }],
-              open: 'boolean',
-              userDefinedOptions: 'string',
+              saveText: "string",
+              cancelText: "string",
+              buttonAlign: ["left", "center", "right"],
+              events: ["onSaveClick", "onCancelClick"]
+            },
+            defaultProps: {}
+          },
+          {
+            component: "my:Form.DataSelect",
+            title: "DataSelect",
+            isContainer: false,
+            schema: {
+              datasource: "datasource",
+              optionmap: [{ title: "string" }, { value: "string" }],
+              open: "boolean",
               events: [
-                'onChange',
-                'onBlur',
-                'onDeselect',
-                'onFocus',
-                'onInputKeyDown',
-                'onMouseEnter',
-                'onMouseLeave',
-                'onSearch',
-                'onSelect',
-                'onDropdownVisibleChange'
+                "onChange",
+                "onBlur",
+                "onDeselect",
+                "onFocus",
+                "onInputKeyDown",
+                "onMouseEnter",
+                "onMouseLeave",
+                "onSearch",
+                "onSelect",
+                "onDropdownVisibleChange"
+              ]
+            }
+          },
+
+          {
+            component: "my:Form.FixedSelect",
+            title: "FixedSelect",
+            isContainer: false,
+            schema: {
+              datasource: "datasource",
+              optionmap: [{ title: "string" }, { value: "string" }],
+              open: "boolean",
+              userDefinedOptions: "string",
+              events: [
+                "onChange",
+                "onBlur",
+                "onDeselect",
+                "onFocus",
+                "onInputKeyDown",
+                "onMouseEnter",
+                "onMouseLeave",
+                "onSearch",
+                "onSelect",
+                "onDropdownVisibleChange"
               ]
             }
           },
           {
-            component: 'a10:Form.SubmitGroup',
-            title: 'SubmitGroup',
-            isContainer: false,
+            component: "my:Form.RadioGroup",
+            title: "RadioGroup",
+            isContainer: true,
             schema: {
-              saveText: 'string',
-              cancelText: 'string',
-              buttonAlign: ['left', 'center', 'right'],
-              events: ['onSaveClick', 'onCancelClick']
+              radioOptions: "string",
+              events: ["onChange"],
+              buttonAlign: ["left", "center", "right"]
             },
-            defaultProps: {}
+            defaultProps: {
+              radioOptions: "Item1:1,Item2:2,Item3:3"
+            }
           }
         ],
         defaultProps: {}
       },
       {
-        component: 'my:Table.Table',
-        title: 'Table',
+        component: "my:Table.Table",
+        title: "Table",
         isContainer: true,
         schema: {},
         defaultProps: {
@@ -140,55 +154,55 @@ export default [
         },
         children: [
           {
-            component: 'my:Table.TrGroup',
-            title: 'Row Group',
+            component: "my:Table.TrGroup",
+            title: "Row Group",
             isContainer: true,
             schema: {
-              expandable: 'boolean'
+              expandable: "boolean"
             },
             defaultProps: {
               expandable: true
             }
           },
           {
-            component: 'my:Table.Tr',
-            title: 'Row',
+            component: "my:Table.Tr",
+            title: "Row",
             isContainer: true,
             schema: {
-              keys: 'fieldselector'
+              keys: "fieldselector"
             },
             defaultProps: {}
           },
           {
-            component: 'my:Table.Td',
-            title: 'Column',
+            component: "my:Table.Td",
+            title: "Column",
             isContainer: true,
             schema: {
-              title: 'string',
-              width: 'string',
-              colspan: 'number',
-              selectAll: 'boolean'
+              title: "string",
+              width: "string",
+              colspan: "number",
+              selectAll: "boolean"
             },
             defaultProps: {}
           },
           {
-            component: 'my:Table.CellContent',
-            title: 'Cell Content',
+            component: "my:Table.CellContent",
+            title: "Cell Content",
             isContainer: false,
             schema: {
-              text: 'string',
-              datasource: 'datasource'
+              text: "string",
+              datasource: "datasource"
             },
             defaultProps: {}
           }
         ]
       },
       {
-        component: 'my:TabList',
-        title: 'TabList',
+        component: "my:TabList",
+        title: "TabList",
         isContainer: true,
         schema: {
-          maxTabs: 'number'
+          maxTabs: "number"
         },
         defaultProps: {
           maxTabs: 10,
@@ -197,4 +211,4 @@ export default [
       }
     ]
   }
-]
+];
