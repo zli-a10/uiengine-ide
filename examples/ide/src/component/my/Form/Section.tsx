@@ -11,7 +11,7 @@ const SectionComponent = (props: any) => {
     active,
     style,
     value,
-    onChange,
+    onChangeWithValue,
     advanceToggle = false,
     tabSwitch = false
   } = props
@@ -33,9 +33,9 @@ const SectionComponent = (props: any) => {
   const onSwitchTabs = useCallback(
     (value: any, event: any) => {
       event.stopPropagation()
-      onChange(value, event)
+      onChangeWithValue(value, event)
     },
-    [onChange, value]
+    [onChangeWithValue, value]
   )
 
   const genExtra = useCallback(
