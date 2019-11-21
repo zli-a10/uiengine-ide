@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
-import { Radio } from 'antd'
+import { Radio, Form } from 'antd'
 import _ from 'lodash'
-
+const { Item } = Form
 const RadioGroupComponent = (props: any) => {
-  const { value, onChange, radioOptions } = props
+  const { value, onChange, radioOptions, ...rest } = props
   let radioOptionList: object[] = []
   if (radioOptions) {
     let radioOption = radioOptions.split(',')
@@ -18,14 +18,16 @@ const RadioGroupComponent = (props: any) => {
   }, [])
 
   return (
-    <Radio.Group onChange={onRadioGroupChange} value={value}>
-      {radioOptionList &&
-        radioOptionList.map((data: any) => {
-          return (
-            <Radio value={_.get(data, 'value')}>{_.get(data, 'label')}</Radio>
-          )
-        })}
-    </Radio.Group>
+    <Item {...rest}>
+      <Radio.Group onChange={onRadioGroupChange} value={value}>
+        {radioOptionList &&
+          radioOptionList.map((data: any) => {
+            return (
+              <Radio value={_.get(data, 'value')}>{_.get(data, 'label')}</Radio>
+            )
+          })}
+      </Radio.Group>
+    </Item>
   )
 }
 

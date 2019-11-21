@@ -1,0 +1,160 @@
+{
+	"component": "div",
+	"props": {
+		"className": "uiengine-container",
+		"id": "uiengine-container"
+	},
+	"children": [
+		{
+			"component": "a10:Page.Page",
+			"props": {
+				"helpSwitcher": true
+			},
+			"datasource": "$dummy.UINode-2636",
+			"children": [
+				{
+					"component": "my:Form.Form",
+					"props": {},
+					"datasource": "$dummy.UINode-2650",
+					"children": [
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"label": "Name",
+								"required": true
+							},
+							"datasource": {
+								"source": "slb.virtual-server:name",
+								"schema": "slb.virtual-server:name",
+								"autoload": true
+							}
+						},
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"type": "checkbox",
+								"label": "Wildcard"
+							},
+							"datasource": "$dummy.UINode-2689",
+							"id": "UINode-3078"
+						},
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"type": "switch",
+								"label": "Address Type"
+							},
+							"datasource": "$dummy.UINode-2689"
+						},
+						{
+							"component": "my:Form.RadioGroup",
+							"props": {
+								"radioOptions": " IPv4:1, IPv6:2",
+								"buttonAlign": "center"
+							},
+							"datasource": "$dummy.UINode-4048",
+							"layout": {
+								"display": "list-item"
+							}
+						},
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"type": "input",
+								"label": "IP Address"
+							},
+							"datasource": {
+								"source": "slb.virtual-server:ip-address",
+								"schema": "slb.virtual-server:ip-address",
+								"autoload": true
+							},
+							"state": {
+								"visible": {
+									"deps": [
+										{
+											"selector": {
+												"id": "UINode-3078"
+											},
+											"state": {
+												"visible": false
+											},
+											"stateCompareRule": "is"
+										}
+									]
+								}
+							}
+						},
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"type": "input",
+								"label": "Netmask"
+							},
+							"datasource": {
+								"source": "slb.virtual-server:netmask",
+								"schema": "slb.virtual-server:netmask",
+								"autoload": true
+							},
+							"state": {
+								"visible": {
+									"deps": [
+										{
+											"selector": {
+												"id": "UINode-3078"
+											},
+											"state": {
+												"visible": false
+											},
+											"stateCompareRule": "is"
+										}
+									]
+								}
+							}
+						},
+						{
+							"component": "my:Form.FormItem",
+							"props": {
+								"type": "input",
+								"label": "IPv6 Address"
+							},
+							"datasource": {
+								"source": "slb.virtual-server:ipv6-address",
+								"schema": "slb.virtual-server:ipv6-address",
+								"autoload": true
+							},
+							"state": {
+								"visible": {
+									"deps": [
+										{
+											"selector": {
+												"id": "UINode-3078"
+											},
+											"state": {
+												"visible": false
+											},
+											"stateCompareRule": "is"
+										}
+									]
+								}
+							}
+						},
+						{
+							"component": "my:Form.DataSelect",
+							"props": {},
+							"datasource": {
+								"source": "slb.virtual-server:enable-disable-action",
+								"schema": "slb.virtual-server:enable-disable-action",
+								"autoload": false
+							}
+						},
+						{
+							"component": "my:Form.FixedSelect",
+							"props": {},
+							"datasource": "$dummy.UINode-5176"
+						}
+					]
+				}
+			]
+		}
+	]
+}
