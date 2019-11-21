@@ -202,11 +202,15 @@ export default [
         title: "TabList",
         isContainer: true,
         schema: {
-          maxTabs: "number"
+          maxTabs: "number",
+          titleDataSource: "string",
+          titleMaxLength: "number"
         },
         defaultProps: {
           maxTabs: 10,
-          isTable: true
+          isTable: true,
+          titleDataSource: "foo.bar:baz",
+          titleMaxLength: 10
         }
       }
     ]
