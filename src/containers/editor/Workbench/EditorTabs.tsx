@@ -325,6 +325,27 @@ export const EditorTabs = (props: any) => {
     }
   }, [tabs])
 
+  useEffect(() => {
+    const initTab = async () => {
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      if (!_.isEmpty(cachedActiveTab)) {
+        const tabIndex: any = _.findIndex(tabs, { tab: cachedActiveTab.tabName })
+        if (tabIndex === -1) {
+          const fileLoader = FileLoader.getInstance()
+          const data = await fileLoader.loadFile(cachedActiveTab.tabName, 'schema')
+          setContent({
+            content: JSON.stringify(data, null, '\t'),
+            file: cachedActiveTab.tabName,
+            type: 'schema'
+          })
+          activeTab(`drawingboard:${cachedActiveTab.tabName}`, 'schema')
+        }
+      }
+
+    }
+    initTab()
+  }, [])
+
   const createTabTitle = useCallback(
     (tabObject: any) => {
       const { tab, language } = tabObject

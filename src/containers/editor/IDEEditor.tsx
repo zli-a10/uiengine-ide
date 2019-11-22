@@ -24,7 +24,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       tabs,
       showTab: currentTab,
       activeTabName: activeTabName,
-      activeTab: (tab: string, language?: string, oldTabName?: string) => {
+      activeTab: (tab: string, language?: string, oldTabName?: string, isTemplate?: boolean) => {
         const newTabs: any = _.clone(tabs);
         let current: string = tab;
         const drawingBoard = "drawingboard";
@@ -32,6 +32,9 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         if (tab.indexOf(drawingBoard) !== -1) {
           const segs = tab.split(":");
           if (segs[1]) current = segs[1];
+        }
+        if (current !== drawingBoard && language === 'schema') {
+          localStorage.cachedActiveTab = JSON.stringify({ tabName: current, isTemplate })
         }
         if (oldTabName) {
           const tabOld = _.find(newTabs, { tab: oldTabName });
@@ -72,6 +75,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           const versionControl = VersionControl.getInstance()
           versionControl.clearHistories()
           if (!newCurrentTab) {
+            localStorage.cachedActiveTab = JSON.stringify({ tabName: '', isTemplate: false })
             fileLoader.editingFile = ''
             setCurrentTab("drawingboard");
             const sandbox: any = {
@@ -102,6 +106,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           } else {
             fileLoader.editingFile = newCurrentTab.tab
             setActiveTabName(newCurrentTab.tab);
+            localStorage.cachedActiveTab = JSON.stringify({ tabName: newCurrentTab.tab, isTemplate: false })
             if (newCurrentTab.language === "schema") {
               const text = _.find(content, { file: newCurrentTab.tab });
               if (text) {
