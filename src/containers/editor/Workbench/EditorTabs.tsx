@@ -344,7 +344,7 @@ export const EditorTabs = (props: any) => {
 
     }
     initTab()
-  }, [])
+  }, [activeTab, setContent])
 
   const createTabTitle = useCallback(
     (tabObject: any) => {

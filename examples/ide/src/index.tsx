@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import * as _ from "lodash";
+
 // import App from "./App";
 import config from './config'
 import { UIEngineRegister } from 'uiengine'
@@ -47,15 +47,10 @@ const sandbox: any = {
     }
   ]
 }
-let initLayout = sandbox
-let activeTab = JSON.parse(localStorage.cachedActiveTab || '{}')
-if (!_.isEmpty(activeTab)) {
-  initLayout = activeTab.isTemplate ? 'schema/templates/ui/' + activeTab.tabName : 'schema/ui/' + activeTab.tabName
-}
 
 ReactDOM.render(
   <IDEEditor
-    layouts={[{ layout: initLayout, workingMode: { mode: 'new' } }]}
+    layouts={[{ layout: sandbox, workingMode: { mode: 'new' } }]}
     config={config}
   />,
   document.getElementById('root')
