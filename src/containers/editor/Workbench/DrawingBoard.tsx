@@ -73,6 +73,10 @@ export const DrawingBoard: React.FC = (props: any) => {
     [editNode]
   )
 
+  let activeTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+  if (!_.isEmpty(activeTab)) {
+    schemas[0].layout = activeTab.isTemplate ? 'schema/templates/ui/' + activeTab.tabName : 'schema/ui/' + activeTab.tabName
+  }
   useEffect(() => {
     // Update the document title using the browser API
     window.onkeydown = keyPressActions

@@ -205,30 +205,18 @@ export function formatTitle(wording: string) {
   }
   return ''
 }
-export function checkDuplicate(treeNode: any, name: string) {
+
+export function checkDuplicateTreeLeaf(treeNode: any, name: string) {
   let duplicate = false
-  if (treeNode.children && treeNode.children.length) {
-    treeNode.children.some((item: any) => {
-      duplicate = checkDuplicate(item, name)
+  if (treeNode._parent_) {
+    let treeParent = treeNode._parent_
+    treeParent.children.some((item: any) => {
+      if (item.nodeType === 'file' && treeNode._editing_ != 'rename' && treeNode.title.split('.')[0] === name) {
+        duplicate = true
+      }
       if (duplicate) return true
     })
-  } else {
-    if (
-      treeNode._editing_ != 'rename' &&
-      treeNode.name.split('.')[0] === name
-    ) {
-      duplicate = true
-    }
   }
-  return duplicate
-}
-export function checkDuplicateTreeLeaf(treeNode: any, name: string) {
-  let treeRoot = getTreeRoot(treeNode)
-  let duplicate = false
-  treeRoot.children.some((item: any) => {
-    duplicate = checkDuplicate(item, name)
-    if (duplicate) return true
-  })
   return duplicate
 }
 /**
@@ -641,8 +629,19 @@ export function loadFileStatus(type?: EResourceType, file?: string) {
       if (_.isString(obj)) {
         return { status: obj }
       } else {
-        if (obj === undefined) return {}
-        return obj
+        if (obj === undefined) {
+          if (_.isObject(fs)) {
+            for (let item in fs) {
+              if (_.isObject(fs[item]) && fs[item].status === 'renamed' && fs[item].newPath === file) {
+                return fs[item]
+              }
+            }
+          } else {
+            return {}
+          }
+        } else {
+          return obj
+        }
       }
     }
     return fs
@@ -654,11 +653,11 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
   let type = _.isString(dstNode) ? dstNode : dstNode.type
 
   const jsonSuffixTypes = ['datasource', 'schema']
-  const tsSuffixTypes = ['plugin', 'listener']
+  const tsSuffixTypes = ['plugin', 'listener', 'component']
   const suffix =
     jsonSuffixTypes.indexOf(type) > -1
       ? '.json'
-      : tsSuffixTypes.indexOf(type) === 0
+      : tsSuffixTypes.indexOf(type) > -1
         ? '.ts'
         : '.tsx'
   return suffix

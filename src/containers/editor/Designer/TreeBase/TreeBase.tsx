@@ -35,7 +35,8 @@ export const TreeBase = (props: any) => {
       const nodeType = _.get(dataRef, "nodeType");
       const isTemplate = _.get(dataRef, "isTemplate", false);
       const name = _.get(dataRef, "name", "");
-      if ((!_.has(treeNode, "node.props.dataRef._editing_") || treeNode.node.props.dataRef._editing_ === false) &&
+      if ((!_.has(treeNode, "node.props.dataRef._editing_") ||
+        (_.has(treeNode, "node.props.dataRef._editing_") && treeNode.node.props.dataRef._editing_ === false)) &&
         name !== "") {
         if (keys.length && nodeType === "file" && !(type === 'plugin' && isTemplate)) {
           const tabContent = _.find(tabs, { tab: keys[0] });
@@ -65,9 +66,9 @@ export const TreeBase = (props: any) => {
             }
           }
           if (type === "schema") {
-            activeTab(`drawingboard:${keys[0]}`, type);
+            activeTab(`drawingboard:${keys[0]}`, type, '', isTemplate);
           } else {
-            activeTab(keys[0], type);
+            activeTab(keys[0], type, '', isTemplate);
           }
         }
         setSelectedKey(keys, dataRef);
