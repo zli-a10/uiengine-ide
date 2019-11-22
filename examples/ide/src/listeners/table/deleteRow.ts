@@ -8,24 +8,22 @@ import {
 } from "uiengine/typings";
 
 const listener: IListener = async (directParam: IListenerParam) => {
-  const event: Event = _.get(directParam, "event");
+  // const event: Event = _.get(directParam, "event");
   const uiNode: IUINode = _.get(directParam, "uiNode");
-  const props = _.get(directParam, "props");
-  console.log(props, uiNode);
+  const datasource = _.get(directParam, "datasource");
+  // console.log(datasource, event, uiNode, directParam);
+  // console.log(uiNode.dataNode.data);
+  // uiNode.dataNode.deleteData(datasource);
 };
 
 export const deleteRow: IListenerConfig = {
   name: "deleteRow",
-  paramKeys: ["event", "props", "uiNode"],
+  paramKeys: ["event", "uiNode", "datasource"],
   // debugList: ["options.recirect"],
   debugList: [],
   listener,
   weight: 0,
   describe: {
-    // options: [
-    //   {
-    //     redirect: 'string'
-    //   }
-    // ]
+    datasource: "string"
   }
 };

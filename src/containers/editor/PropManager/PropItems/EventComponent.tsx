@@ -58,9 +58,10 @@ export const EventComponent = (props: any) => {
     [eventIndex]
   );
 
+  // datatarget item only
   const onChangeEvent = useCallback(
     (event: any) => {
-      events[eventIndex] = event;
+      console.log(event);
       onChange(events);
     },
     [eventIndex]
@@ -102,14 +103,15 @@ export const EventComponent = (props: any) => {
             return (
               <PropItem
                 section="event"
-                name={name}
+                name={`defaultParams.${name}`}
+                isSubOptions={true}
                 schema={listenerSchema}
                 key={`key-${name}`}
                 uinode={uinode}
                 dataRef={event}
-                event={name}
+                event={listener}
                 onChangeEvent={onChangeEvent}
-                data={_.get(event, "listener")}
+                data={_.get(event, `defaultParams.${name}`)}
               />
             );
           })}

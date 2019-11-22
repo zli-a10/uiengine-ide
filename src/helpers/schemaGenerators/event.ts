@@ -5,10 +5,18 @@ export const event = (
   value: any,
   options: any = {}
 ) => {
-  if (value && value.length) {
-    _.set(options, "uinode.schema.props.$events", value);
+  const isSubOptions = _.get(options, "isSubOptions");
+  if (!isSubOptions) {
+    if (value && value.length) {
+      _.set(options, "uinode.schema.props.$events", value);
+    } else {
+      _.unset(options, "uinode.schema.props.$events");
+    }
   } else {
-    _.unset(options, "uinode.schema.props.$events");
+    let event = _.get(options, "dataRef");
+    if (!_.isEmpty(event)) {
+      _.set(event, name, value);
+    }
   }
   return {};
 };

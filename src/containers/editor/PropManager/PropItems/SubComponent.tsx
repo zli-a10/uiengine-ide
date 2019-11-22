@@ -5,7 +5,15 @@ import { PropItem } from "../PropItem";
 import { formatTitle } from "../../../../helpers";
 
 export const SubComponent = (props: any) => {
-  const { typeSchema, data, name, uinode, onChange } = props;
+  const {
+    typeSchema,
+    data,
+    name,
+    dataRef,
+    uinode,
+    onChange,
+    section = "prop"
+  } = props;
   const [showSub, setShowSub] = useState(!_.isEmpty(data) ? true : false);
   const onChangeSub = (value: any) => {
     setShowSub(value);
@@ -27,7 +35,9 @@ export const SubComponent = (props: any) => {
             Object.entries(restSchema).map((entry: any) => {
               return (
                 <PropItem
-                  section="prop"
+                  section={section}
+                  isSubOptions={true}
+                  dataRef={dataRef}
                   name={`${name}.${entry[0]}`}
                   schema={entry[1]}
                   key={`key-${entry[0]}`}
