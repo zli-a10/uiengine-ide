@@ -75,7 +75,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           const versionControl = VersionControl.getInstance()
           versionControl.clearHistories()
           if (!newCurrentTab) {
-            localStorage.cachedActiveTab = JSON.stringify({ tabName: '', isTemplate: false })
+            localStorage.cachedActiveTab = JSON.stringify({})
             fileLoader.editingFile = ''
             setCurrentTab("drawingboard");
             const sandbox: any = {

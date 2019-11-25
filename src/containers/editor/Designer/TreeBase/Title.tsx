@@ -46,7 +46,9 @@ export const Title = (props: any) => {
       status = statusObj
     }
   }
-
+  if (newTitle.length > 16) {
+    newTitle = newTitle.substr(0, 16) + '...'
+  }
   // console.log(status, newTitle, title);
   // dnd
   let drag
@@ -56,12 +58,12 @@ export const Title = (props: any) => {
       isSysTemplate: dataRef.isTemplate //system preserved template path
     }
     const uinode = { schema: templateSchema }
-    ;[, drag] = useDrag({
-      item: {
-        type: DND_IDE_NODE_TYPE,
-        uinode
-      }
-    })
+      ;[, drag] = useDrag({
+        item: {
+          type: DND_IDE_NODE_TYPE,
+          uinode
+        }
+      })
   }
 
   const cancelEdit = useCallback(() => {
@@ -130,28 +132,28 @@ export const Title = (props: any) => {
           <Icon type="close" onClick={cancelEdit} />
         </>
       ) : (
-        <a
-          className={`ant-dropdown-link node-title node-modified-${status}`}
-          href="#"
-        >
-          {newTitle}
-          {dataRef.isTemplate || dataRef.nodeType === 'category' ? null : (
-            <Dropdown
-              overlay={
-                <ActionMenu
-                  onSelect={onSelect}
-                  dataRef={dataRef}
-                  onRefresh={onRefresh}
-                  {...rest}
-                  status={status}
-                />
-              }
-            >
-              <Icon type="more" />
-            </Dropdown>
-          )}
-        </a>
-      )}
+          <a
+            className={`ant-dropdown-link node-title node-modified-${status}`}
+            href="#"
+          >
+            {newTitle}
+            {dataRef.isTemplate || dataRef.nodeType === 'category' ? null : (
+              <Dropdown
+                overlay={
+                  <ActionMenu
+                    onSelect={onSelect}
+                    dataRef={dataRef}
+                    onRefresh={onRefresh}
+                    {...rest}
+                    status={status}
+                  />
+                }
+              >
+                <Icon type="more" />
+              </Dropdown>
+            )}
+          </a>
+        )}
     </div>
   )
 }

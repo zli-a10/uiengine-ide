@@ -84,6 +84,13 @@ export const UIEngineDndWrapper = (props: any) => {
       const draggingNode = item.uinode;
       const hoverNode = uinode;
 
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      if (!_.isEmpty(cachedActiveTab)) {
+        if (draggingNode.schema && draggingNode.schema.$template && draggingNode.schema.$template === cachedActiveTab.tabName) {
+          return
+        }
+      }
+
       // Don't replace items with themselves
       if (draggingNode === hoverNode || !isOverCurrent) {
         return;
@@ -154,6 +161,14 @@ export const UIEngineDndWrapper = (props: any) => {
       }
       const draggingNode = item.uinode;
       const targetNode = uinode;
+
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      if (!_.isEmpty(cachedActiveTab)) {
+        if (draggingNode.schema && draggingNode.schema.$template && draggingNode.schema.$template === cachedActiveTab.tabName) {
+          return
+        }
+      }
+
       // Don't replace items with themselves
       if (draggingNode === targetNode || !isOverCurrent) {
         return;
