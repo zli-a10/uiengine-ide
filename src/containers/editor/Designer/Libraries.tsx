@@ -1,42 +1,54 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { Input, Collapse, Row, Col, Button, TreeSelect } from 'antd'
-import _ from 'lodash'
+import React, { useState, useCallback, useEffect } from "react";
+import { Input, Collapse, Row, Col, Button, TreeSelect } from "antd";
+import _ from "lodash";
 
-import { Widgets } from '..'
-import { useCreateFile } from '../../../helpers'
-import { IObject } from 'uiengine/typings'
-import { T } from 'antd/lib/upload/utils'
+import { Widgets } from "..";
+import { useCreateFile } from "../../../helpers";
+import { IObject } from "uiengine/typings";
+import { T } from "antd/lib/upload/utils";
 // import { IDEEditorContext } from "../../Context";
 
-const Panel = Collapse.Panel
-const { TreeNode } = TreeSelect
+const Panel = Collapse.Panel;
+const { TreeNode } = TreeSelect;
 
 export const Libraries: React.FC<IComponents> = props => {
   // const { activeTab } = useContext(IDEEditorContext);
 
-  const { list } = props
+  const { list } = props;
 
-  function callback() {}
+  function callback() { }
 
-  const originComs = list
-  let components = _.cloneDeep(originComs)
-  const [coms, setComs] = useState(components)
-  const [date, setDate] = useState(new Date().getTime())
-  const [selectedLib, setSelectecLib] = useState('')
+  const originComs = list;
+  let components = _.cloneDeep(originComs);
+  const [coms, setComs] = useState(components);
+  const [date, setDate] = useState(new Date().getTime());
+  const [selectedLib, setSelectecLib] = useState({} as {
+    lib: string,
+    isLeaf: boolean
+  })
   const [searchValue, setSearchValue] = useState('')
+  const libs = _.uniq(list.map((lib: IObject) => lib.category) as string[])
+  console.log('libs:', libs)
+  if (_.isEmpty(selectedLib)) {
+    setSelectecLib({
+      lib: libs[0],
+      isLeaf: false
+    })
+  }
 
   useEffect(() => {
-    components = _.cloneDeep(originComs)
-    if (selectedLib) {
-      components = components.filter((com: IObject) => com.id === selectedLib)
+    components = _.cloneDeep(originComs);
+    if (!_.isEmpty(selectedLib)) {
+      if (selectedLib.isLeaf) {
+        components = components.filter((com: IObject) => com.id.replace('-', '').toLowerCase() === selectedLib.lib.toLowerCase())
+      } else if (selectedLib.lib) {
+        components = components.filter((com: IObject) => com.category === selectedLib.lib)
+      }
     }
-    if (_.trim(searchValue) !== '') {
+    if (_.trim(searchValue) !== "") {
       components = components.filter((item: IObject) => {
         if (item.children) {
-          item.children = item.children.filter(
-            (o: IObject) =>
-              o.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
-          )
+          item.children = item.children.filter((o: IObject) => o.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1)
           return item.children.length > 0
         } else {
           return false
@@ -44,38 +56,65 @@ export const Libraries: React.FC<IComponents> = props => {
       })
     }
 
-    setComs(components)
-    setDate(new Date().getTime())
+    setComs(components);
+    setDate(new Date().getTime());
   }, [searchValue, selectedLib])
 
-  const handleNodeChange = useCallback((value: string) => {
-    setSelectecLib(value)
+
+
+  const handleNodeChange = useCallback((value: string, label: string, extra: any) => {
+    const { triggerNode: {
+      isLeaf
+    } } = extra
+    setSelectecLib({
+      lib: value,
+      isLeaf: !!isLeaf ? isLeaf() : false
+    })
   }, [])
 
-  const handleSearch = useCallback(
-    (value: string) => {
-      setSearchValue(value)
-    },
-    [list]
-  )
+  const handleSearch = useCallback((value: string) => {
+    setSearchValue(value)
+  }, [list])
 
   // const createComponent = useCallback(() => {
   //   useCreateFile("component");
   // }, []);
+
   return (
     <div className="ide-libraries">
       <div className="search-bar">
         <Row>
           <Col span={8}>
             <TreeSelect
+              defaultValue={selectedLib.lib || ''}
               showSearch
               style={{ width: '90%' }}
               onChange={handleNodeChange}
             >
-              <TreeNode value="" title="---Clear---" key="" />
-              {list.map((com: IObject) => (
-                <TreeNode value={com.id} title={com.title} key={com.id} />
-              ))}
+              <TreeNode
+                value=""
+                title="All"
+                key=""
+                selectable={false}
+              >
+                {
+                  libs.map((lib: string) => (
+                    <TreeNode
+                      value={lib}
+                      title={lib}
+                      key={lib}
+                    >
+                      {
+                        list.filter((item: IObject) => item.category === lib).map((item: IObject) => <TreeNode
+                          value={item.id}
+                          title={item.title}
+                          key={item.title}
+                        />)
+                      }
+                    </TreeNode>
+                  ))
+                }
+              </TreeNode>
             </TreeSelect>
           </Col>
           <Col span={12}>
@@ -95,7 +134,7 @@ export const Libraries: React.FC<IComponents> = props => {
         <Collapse
           onChange={callback}
           accordion
-          defaultActiveKey={selectedLib ? '1' : '0'}
+          defaultActiveKey='0'
         >
           {coms.map((item: any, key: any) => {
             return (

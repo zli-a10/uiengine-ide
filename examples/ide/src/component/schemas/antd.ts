@@ -2,6 +2,7 @@ export default [
   {
     id: 'general', // prefix
     title: 'General',
+    category: 'antd',
     children: [
       {
         component: 'antd:Icon',
@@ -41,6 +42,7 @@ export default [
   {
     id: 'grid', // prefix
     title: 'Grid',
+    category: 'antd',
     children: [
       {
         component: 'antd:Row',
@@ -127,6 +129,7 @@ export default [
   {
     id: 'navigator', // prefix
     title: 'Navigator',
+    category: 'antd',
     children: [
       {
         component: 'antd:Affix',
@@ -331,6 +334,7 @@ export default [
   {
     id: 'data-input', // prefix
     title: 'Data Input',
+    category: 'antd',
     children: [
       {
         component: 'antd:Form',
@@ -717,6 +721,7 @@ export default [
   {
     id: 'data-display', // prefix
     title: 'Data Display',
+    category: 'antd',
     children: [
       {
         component: 'antd:Avatar',
@@ -989,6 +994,7 @@ export default [
   {
     id: 'feedback', // prefix
     title: 'Feedback',
+    category: 'antd',
     children: [
       {
         component: 'antd:Alert',
@@ -1137,6 +1143,7 @@ export default [
   {
     id: 'other', // prefix
     title: 'Other',
+    category: 'antd',
     children: [
       {
         component: 'antd:Anchor',

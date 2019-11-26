@@ -2,6 +2,7 @@ export default [
   {
     id: 'GUI6x',
     title: 'GUI 6.x Components',
+    category: 'GUI6x',
     children: [
       {
         component: 'a10:Page.Page',
