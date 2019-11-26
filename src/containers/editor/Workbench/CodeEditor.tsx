@@ -98,7 +98,7 @@ export class CodeEditor extends React.Component<any, any> {
             if (schema) {
               const uiNode = getActiveUINode();
               uiNode.schema = schema;
-              uiNode.updateLayout();
+              uiNode.refreshLayout();
               uiNode.sendMessage(true);
             }
           } catch (e) {

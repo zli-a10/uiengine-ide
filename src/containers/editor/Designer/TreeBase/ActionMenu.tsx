@@ -42,7 +42,7 @@ export const ActionMenu = (props: any) => {
         resourceActions.delete(dataRef);
         // const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
         // onSelect(selectedKeys);
-        removeTab(dataRef.key)
+        removeTab(dataRef.key);
         onRefresh();
       },
       undelete: () => {
@@ -54,7 +54,7 @@ export const ActionMenu = (props: any) => {
         data.then((newNode: IResourceTreeNode) => {
           onSelect([newNode.name], newNode);
           onRefresh();
-        })
+        });
       },
       rename: () => {
         dataRef._editing_ = "rename";
@@ -62,21 +62,25 @@ export const ActionMenu = (props: any) => {
       },
       revert: () => {
         const data = resourceActions.revert(dataRef);
-        data.then((content) => {
+        data.then(content => {
           if (_.find(tabs, { tab: dataRef.key })) {
-            setContent({ content: JSON.stringify(content, null, '\t'), type: 'schema', file: dataRef.key });
+            setContent({
+              content: JSON.stringify(content, null, "\t"),
+              type: "schema",
+              file: dataRef.key
+            });
             try {
               const uiNode = getActiveUINode();
               uiNode.schema = content;
-              uiNode.updateLayout();
+              uiNode.refreshLayout();
               uiNode.sendMessage(true);
             } catch (e) {
               console.error(e);
             }
           }
-        })
+        });
         onRefresh();
-      },
+      }
     }),
     [dataRef, expandKeys, status, removeTab]
   );
@@ -108,10 +112,10 @@ export const ActionMenu = (props: any) => {
           <a>Delete</a>
         </Menu.Item>
       ) : (
-          <Menu.Item key="undelete">
-            <a>Undelete</a>
-          </Menu.Item>
-        )}
+        <Menu.Item key="undelete">
+          <a>Undelete</a>
+        </Menu.Item>
+      )}
       {isFolder ? null : (
         <Menu.Item key="clone">
           <a>Clone</a>

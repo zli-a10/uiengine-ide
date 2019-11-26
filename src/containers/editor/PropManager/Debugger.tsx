@@ -177,7 +177,7 @@ export const Debugger: React.FC = (props: any) => {
       const namespace = _.cloneDeep(d.namespace);
       namespace.push(d.name);
       _.set(editNode.schema, namespace, d.new_value);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]
@@ -186,7 +186,7 @@ export const Debugger: React.FC = (props: any) => {
   const onAddTreeSchema = useCallback(
     async (d: any) => {
       _.merge(editNode.schema, d.new_value);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]
@@ -197,7 +197,7 @@ export const Debugger: React.FC = (props: any) => {
       const namespace = _.cloneDeep(d.namespace);
       namespace.push(d.name);
       _.unset(editNode.schema, namespace);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]

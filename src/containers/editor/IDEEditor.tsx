@@ -5,7 +5,12 @@ import { Main, DesignManager, PropManager } from "./";
 import { IDEEditorContext } from "../Context";
 import { UIEngineDndProvider } from "../dnd";
 import * as Providers from "./Providers";
-import { IDE_ID, getActiveUINode, FileLoader, VersionControl } from "../../helpers";
+import {
+  IDE_ID,
+  getActiveUINode,
+  FileLoader,
+  VersionControl
+} from "../../helpers";
 import "./styles/index.less";
 import ErrorBoundary from "./ErrorBoundary";
 import { Start } from "./Helper";
@@ -24,7 +29,12 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       tabs,
       showTab: currentTab,
       activeTabName: activeTabName,
-      activeTab: (tab: string, language?: string, oldTabName?: string, isTemplate?: boolean) => {
+      activeTab: (
+        tab: string,
+        language?: string,
+        oldTabName?: string,
+        isTemplate?: boolean
+      ) => {
         const newTabs: any = _.clone(tabs);
         let current: string = tab;
         const drawingBoard = "drawingboard";
@@ -33,8 +43,11 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           const segs = tab.split(":");
           if (segs[1]) current = segs[1];
         }
-        if (current !== drawingBoard && language === 'schema') {
-          localStorage.cachedActiveTab = JSON.stringify({ tabName: current, isTemplate })
+        if (current !== drawingBoard && language === "schema") {
+          localStorage.cachedActiveTab = JSON.stringify({
+            tabName: current,
+            isTemplate
+          });
         }
         if (oldTabName) {
           const tabOld = _.find(newTabs, { tab: oldTabName });
@@ -71,42 +84,45 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
             : newTabs[index - 1];
           newTabs.splice(index, 1);
           setTabs(newTabs);
-          const fileLoader = FileLoader.getInstance()
-          const versionControl = VersionControl.getInstance()
-          versionControl.clearHistories()
+          const fileLoader = FileLoader.getInstance();
+          const versionControl = VersionControl.getInstance();
+          versionControl.clearHistories();
           if (!newCurrentTab) {
-            localStorage.cachedActiveTab = JSON.stringify({})
-            fileLoader.editingFile = ''
+            localStorage.cachedActiveTab = JSON.stringify({});
+            fileLoader.editingFile = "";
             setCurrentTab("drawingboard");
             const sandbox: any = {
-              component: 'div',
+              component: "div",
               props: {
-                className: 'sandbox'
+                className: "sandbox"
               },
               children: [
                 {
-                  component: 'h1',
-                  content: 'Sandbox'
+                  component: "h1",
+                  content: "Sandbox"
                 },
                 {
-                  component: 'p',
+                  component: "p",
                   content:
-                    'Please Drag and Drop an element from left Components tab, and then try to edit it on prop window.'
+                    "Please Drag and Drop an element from left Components tab, and then try to edit it on prop window."
                 }
               ]
-            }
+            };
             try {
               const uiNode = getActiveUINode();
               uiNode.schema = sandbox;
-              uiNode.updateLayout();
+              uiNode.refreshLayout();
               uiNode.sendMessage(true);
             } catch (e) {
               console.error(e);
             }
           } else {
-            fileLoader.editingFile = newCurrentTab.tab
+            fileLoader.editingFile = newCurrentTab.tab;
             setActiveTabName(newCurrentTab.tab);
-            localStorage.cachedActiveTab = JSON.stringify({ tabName: newCurrentTab.tab, isTemplate: false })
+            localStorage.cachedActiveTab = JSON.stringify({
+              tabName: newCurrentTab.tab,
+              isTemplate: false
+            });
             if (newCurrentTab.language === "schema") {
               const text = _.find(content, { file: newCurrentTab.tab });
               if (text) {
@@ -115,7 +131,7 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                     const schema = JSON.parse(text.content);
                     const uiNode = getActiveUINode();
                     uiNode.schema = schema;
-                    uiNode.updateLayout();
+                    uiNode.refreshLayout();
                     uiNode.sendMessage(true);
                   } catch (e) {
                     console.error(e);
@@ -142,13 +158,13 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         }
       },
       layout: "",
-      setLayout: (path: string) => { },
+      setLayout: (path: string) => {},
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
       help: "",
-      setHelp: (help: string) => { },
+      setHelp: (help: string) => {},
       refresh: "",
-      toggleRefresh: (refresh: string) => { },
+      toggleRefresh: (refresh: string) => {},
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode);
@@ -195,8 +211,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       localStorage["showGuide"] === undefined
         ? true
         : localStorage["showGuide"] === "false"
-          ? false
-          : true;
+        ? false
+        : true;
     setShowGuide(showGuideStatus);
   }, [localStorage["drawingBoardLayout"], localStorage["showGuide"]]);
 
