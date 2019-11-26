@@ -37,13 +37,17 @@ const WindowSizeDown = (props: any) => {
   const [fileName, setFileName] = useState(activeKey)
   const [folder, setFolder] = useState()
   const handleOk = useCallback(() => {
-    const fileSuffix = getFileSuffix(type)
-    let file = fileName
-    if (fileName.indexOf(fileSuffix) === -1) {
-      file = `${fileName}${fileSuffix}`
+    if (fileName === activeKey) {
+      message.warning('Please input a new file name to save as')
+    } else {
+      const fileSuffix = getFileSuffix(type)
+      let file = fileName
+      if (fileName.indexOf(fileSuffix) === -1) {
+        file = `${fileName}${fileSuffix}`
+      }
+      onSave(folder, file, type)
+      setModalVisible(false)
     }
-    onSave(folder, file, type)
-    setModalVisible(false)
   }, [activeKey, folder, fileName, type])
 
   const handleCancel = useCallback((e: any) => {
