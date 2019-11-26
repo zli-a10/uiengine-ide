@@ -13,7 +13,7 @@ const listener: IListener = async (directParam: IListenerParam) => {
   const event: Event = _.get(directParam, 'event')
   const uiNode: IUINode = _.get(directParam, 'uiNode')
   const props = _.get(directParam, 'props')
-  const headers: any = uiNode.request.getConfig('headers')
+  const headers: any = uiNode.request.getConfig().headers
 
   // const uiNode = controller.getUINode(loginLayout);
   const result = submitToAPI([{ source: 'credentials' }])

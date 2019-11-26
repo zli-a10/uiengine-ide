@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { NodeController, UINode } from 'uiengine'
 import { VersionControl } from './VersionControl'
-import { IUINode, ILayoutSchema, INodeController } from 'uiengine/typings'
+import { IUINode, IUISchema, INodeController } from 'uiengine/typings'
 import { configLayoutWrappers, getActiveUINode, IDERegister } from './'
 
 export class DndNodeManager implements IDndNodeManager {
@@ -19,19 +19,19 @@ export class DndNodeManager implements IDndNodeManager {
 
   sourceNode?: IUINode
   sourceIndex: number = -1
-  sourceSchema: ILayoutSchema = {}
-  sourceChildrenSchema: Array<ILayoutSchema> = []
+  sourceSchema: IUISchema = {}
+  sourceChildrenSchema: Array<IUISchema> = []
   sourceParent?: IUINode
-  sourceParentSchema: ILayoutSchema = {}
-  sourceParentChildrenSchema: Array<ILayoutSchema> = []
+  sourceParentSchema: IUISchema = {}
+  sourceParentChildrenSchema: Array<IUISchema> = []
 
   targetNode?: IUINode
   targetIndex: number = -1
-  targetSchema: ILayoutSchema = {}
-  targetChildrenSchema: Array<ILayoutSchema> = []
+  targetSchema: IUISchema = {}
+  targetChildrenSchema: Array<IUISchema> = []
   targetParent?: IUINode
-  targetParentSchema: ILayoutSchema = {}
-  targetParentChildrenSchema: Array<ILayoutSchema> = []
+  targetParentSchema: IUISchema = {}
+  targetParentChildrenSchema: Array<IUISchema> = []
 
   layoutWrappers: IConfigWrappers = configLayoutWrappers
   versionControl: IVersionControl = VersionControl.getInstance()
@@ -45,7 +45,9 @@ export class DndNodeManager implements IDndNodeManager {
       this.sourceChildrenSchema = _.get(this.sourceSchema, 'children', [])
       this.sourceParent = sourceNode.parent
       if (this.sourceParent) {
-        this.sourceIndex = this.sourceParent.children.indexOf(sourceNode)
+        if (this.sourceParent.children) {
+          this.sourceIndex = this.sourceParent.children.indexOf(sourceNode)
+        }
         this.sourceParentSchema = this.sourceParent.schema
         this.sourceParentChildrenSchema = _.get(
           this.sourceParentSchema,
@@ -71,7 +73,9 @@ export class DndNodeManager implements IDndNodeManager {
       this.targetChildrenSchema = _.get(this.targetSchema, 'children', [])
       this.targetParent = targetNode.parent
       if (this.targetParent) {
-        this.targetIndex = this.targetParent.children.indexOf(targetNode)
+        if (this.targetParent.children) {
+          this.targetIndex = this.targetParent.children.indexOf(targetNode)
+        }
         this.targetParentSchema = this.targetParent.schema
         this.targetParentChildrenSchema = _.get(
           this.targetParentSchema,
@@ -127,17 +131,17 @@ export class DndNodeManager implements IDndNodeManager {
 
     let targetNode =
       (this.targetParent as UINode) || (this.targetNode as UINode)
-    if (targetNode && targetNode.updateLayout) {
-      await targetNode.updateLayout()
+    if (targetNode && targetNode.refreshLayout) {
+      await targetNode.refreshLayout()
       targetNode.sendMessage(true) // force refresh
     }
 
     let sourceNode =
       (this.sourceParent as UINode) || (this.sourceNode as UINode)
 
-    if (sourceNode && sourceNode.updateLayout) {
+    if (sourceNode && sourceNode.refreshLayout) {
       // if (!this.inChild(sourceNode, targetNode)) {
-      await sourceNode.updateLayout()
+      await sourceNode.refreshLayout()
       sourceNode.sendMessage(true) // force refresh
       // }
     }
@@ -233,7 +237,7 @@ export class DndNodeManager implements IDndNodeManager {
   }
 
   private async replaceSchema(
-    newSchema: ILayoutSchema,
+    newSchema: IUISchema,
     insertBottom: boolean = false,
     verticalSwitch: boolean = false
   ) {
@@ -262,7 +266,7 @@ export class DndNodeManager implements IDndNodeManager {
 
   private inChild(source: IUINode, target: IUINode) {
     if (source) {
-      if (source.children.indexOf(target) > -1) {
+      if (source.children && source.children.indexOf(target) > -1) {
         return true
       } else {
         for (let i in source.children) {
@@ -348,7 +352,7 @@ export class DndNodeManager implements IDndNodeManager {
     await this.refresh()
   }
 
-  async useSchema(targetNode: IUINode, schema: ILayoutSchema) {
+  async useSchema(targetNode: IUINode, schema: IUISchema) {
     this.selectNode({} as IUINode, targetNode)
     function customizer(objValue: any, srcValue: any) {
       if (_.isArray(objValue) && _.isArray(srcValue)) {

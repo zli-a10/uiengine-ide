@@ -26,7 +26,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
     _.set(uiNode, "schema.$children", schema.children);
     _.set(uiNode, "schema.$_children", $$children);
     _.unset(uiNode, "schema.$$children");
-    await uiNode.updateLayout();
+    await uiNode.refreshLayout();
   }
 };
 

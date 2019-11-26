@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useContext, useCallback } from "react";
 import _ from "lodash";
-import { ILayoutSchema } from "uiengine/typings";
+import { IUISchema } from "uiengine/typings";
 import { SchemasContext, IDEEditorContext } from "../../Context";
 import { getActiveUINode } from "../../../helpers";
 
@@ -40,7 +40,7 @@ export const Schemas = (props: any) => {
       setSavedTime: (savedTime: string) => { },
       // for schema replace
       schema,
-      updateSchema: (schema: ILayoutSchema) => {
+      updateSchema: (schema: IUISchema) => {
         setSchema(schema);
         // fetch latest version of schema
         // Bug to fix: sometimes dnd not working

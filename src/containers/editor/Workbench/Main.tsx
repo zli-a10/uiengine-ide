@@ -59,7 +59,7 @@ export const Main = (props: any) => {
   const switchPreview = async (status: boolean) => {
     MemoStore.bucket.preview = status
     const rootNode = getActiveUINode() as UINode
-    await rootNode.updateLayout()
+    await rootNode.refreshLayout()
     rootNode.sendMessage(true)
     setPreview(status)
     activeTab('drawingboard')

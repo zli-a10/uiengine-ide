@@ -74,7 +74,7 @@ export function getActiveUINode(
   copySchema: boolean = false
 ) {
   const nodeController = NodeController.getInstance()
-  const uiNode = nodeController.getUINode('drawingboard', true)
+  const uiNode = nodeController.getLayout('drawingboard', true)
 
   if (schemaOnly) {
     let result = (uiNode as IUINode).schema
@@ -389,7 +389,7 @@ export const fillWithKeywords = (
   } else if (_.isObject(node)) {
     _.set(node, keywords, value)
     if (_.has(node, 'children')) {
-      fillWithKeywords(node.children, keywords, value)
+      fillWithKeywords(node.children || [], keywords, value)
     }
   }
 }
@@ -406,7 +406,7 @@ export const randColor = (min: number, max: number, alpha: number = 0.2) => {
 }
 
 export const getUINodeLable = (uiNode: IUINode) => {
-  const dataSource = getDataSource(uiNode.schema.datasource)
+  const dataSource = getDataSource(uiNode.schema.datasource || '')
   let myId = dataSource || _.get(uiNode, `schema.id`)
   return myId
 }
@@ -442,7 +442,7 @@ export const removeDepsSchema = (uiNode: IUINode) => {
     depNode.sendMessage(true)
   })
 
-  if (!_.isEmpty(uiNode.children)) {
+  if (_.isArray(uiNode.children) && !_.isEmpty(uiNode.children)) {
     uiNode.children.forEach((node: IUINode) => {
       removeDepsSchema(node)
     })
@@ -535,7 +535,7 @@ export function loadSchemaAndUpdateLayout(path: string, isTemplate: boolean) {
       }
       const uiNode = getActiveUINode() as IUINode
       uiNode.schema = schema
-      uiNode.updateLayout()
+      uiNode.refreshLayout()
       uiNode.sendMessage(true)
     }
   })

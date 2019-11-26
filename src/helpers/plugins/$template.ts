@@ -32,7 +32,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
       _.merge(uiNode.schema, schema)
       _.unset(uiNode.schema, '$template')
       _.set(uiNode.schema, '$$template', path)
-      await uiNode.updateLayout()
+      await uiNode.refreshLayout()
     } catch (e) {
       console.warn(e.message)
     }

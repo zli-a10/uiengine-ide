@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { DndNodeManager } from './DndNodeManager'
-import { IUINode, ILayoutSchema } from 'uiengine/typings'
+import { IUINode, IUISchema } from 'uiengine/typings'
 import * as schemaGenerators from './schemaGenerators'
 
 export class SchemaPropManager implements ISchemaPropManager {
@@ -64,7 +64,7 @@ export class SchemaPropManager implements ISchemaPropManager {
     uiNode: IUINode,
     extraInfo?: any
   ) {
-    const schema: ILayoutSchema = this.generateSchema(
+    const schema: IUISchema = this.generateSchema(
       type,
       componentPropSchema,
       value,

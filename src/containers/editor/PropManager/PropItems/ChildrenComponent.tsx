@@ -4,12 +4,12 @@ import { FileLoader, formatTree } from '../../../../helpers'
 // import { UIEngine } from "uiengine";
 import ReactJson from 'react-json-view'
 import { TreeSelect, Form, Icon, Modal, Row, Col, Button } from 'antd'
-import { ILayoutSchema } from 'uiengine/typings'
+import { IUISchema } from 'uiengine/typings'
 
 // schemas fetch
 const fileLoader = FileLoader.getInstance()
-const formatDataSource = (children: ILayoutSchema[]) => {
-  children.forEach((child: ILayoutSchema) => {
+const formatDataSource = (children: IUISchema[]) => {
+  children.forEach((child: IUISchema) => {
     if (child.datasource) {
       let source = ''
       if (_.isString(child.datasource)) {
@@ -23,7 +23,9 @@ const formatDataSource = (children: ILayoutSchema[]) => {
         let sources = source.split('.')
         sources = sources.splice(sources.length - 2, 0, '$')
         if (_.isString(child.datasource)) {
-          child.datasource = sources.join('.')
+          child.datasource = {
+            source: sources.join('.')
+          }
         } else {
           child.datasource.source = sources.join('.')
         }
