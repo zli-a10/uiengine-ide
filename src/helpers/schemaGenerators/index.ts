@@ -1,3 +1,4 @@
+export * from "./root";
 export * from "./datasource";
 export * from "./dependency";
 export * from "./event";

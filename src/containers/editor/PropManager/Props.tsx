@@ -28,12 +28,13 @@ export const Props: React.FC = (props: any) => {
   } = componentInfo;
 
   let allEvents = [],
-    restSchema;
+    restSchema = {};
   if (schema) {
     const { events, ...rest } = schema;
     allEvents = events;
     restSchema = rest;
   }
+  // default item for inherit props
 
   const formItemLayout = {
     colon: false,
@@ -96,25 +97,31 @@ export const Props: React.FC = (props: any) => {
       />
 
       <Collapse accordion defaultActiveKey={"props"}>
-        {!_.isEmpty(restSchema) ? (
-          <Panel header="Component Props" key="props">
-            <Form
-              {...formItemLayout}
-              style={{ maxHeight: "400px", overflow: "auto" }}
-            >
-              {Object.entries(restSchema).map((entry: any) => (
-                <PropItem
-                  section="prop"
-                  name={entry[0]}
-                  schema={entry[1]}
-                  key={`key-${entry[0]}`}
-                  uinode={editNode}
-                  data={_.get(editNode, `schema.props.${entry[0]}`)}
-                />
-              ))}
-            </Form>
-          </Panel>
-        ) : null}
+        <Panel header="Component Props" key="props">
+          <Form
+            {...formItemLayout}
+            style={{ maxHeight: "400px", overflow: "auto" }}
+          >
+            <PropItem
+              section="root"
+              name="inheritProps"
+              schema="boolean"
+              key={`key-inheritProps`}
+              uinode={editNode}
+              data={_.get(editNode, `schema.inheritProps`)}
+            />
+            {Object.entries(restSchema).map((entry: any) => (
+              <PropItem
+                section="prop"
+                name={entry[0]}
+                schema={entry[1]}
+                key={`key-${entry[0]}`}
+                uinode={editNode}
+                data={_.get(editNode, `schema.props.${entry[0]}`)}
+              />
+            ))}
+          </Form>
+        </Panel>
         <Panel header="Layout and CSS" key="layout">
           <Form {...formItemLayout}>
             <PropItem
