@@ -150,6 +150,7 @@ interface ICommandOptions {
 }
 
 interface IWebsocketCommands {
+  socketName?: string
   name: string
   options?: ICommandOptions
   response?: any
