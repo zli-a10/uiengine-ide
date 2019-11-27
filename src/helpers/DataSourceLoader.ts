@@ -4,7 +4,7 @@ const getDataSource = (dataTree: any, keys: string[], fileName: string) => {
   const [firstKey, ...otherKeys] = keys
   const existItem = _.find(dataTree, (item: any) => {
     return item.title === firstKey
-  }) as { name: string; children: any; files: string[] }
+  }) as { name: string; children: any; files: string[]; file: string }
   if (!existItem) {
     const value = keys.slice(0, keys.indexOf(firstKey) + 1).join('.')
     dataTree.push({
@@ -25,8 +25,10 @@ const getDataSource = (dataTree: any, keys: string[], fileName: string) => {
         otherKeys,
         fileName
       )
-      existItem.files = [fileName, ...existItem.files]
+    } else {
+      existItem.file = fileName
     }
+    existItem.files = [fileName, ...existItem.files]
   }
   return dataTree
 }
