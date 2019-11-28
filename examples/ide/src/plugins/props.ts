@@ -122,7 +122,8 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         receiveParams,
         defaultParams,
         target,
-        listener
+        listener,
+        ...rest
       } = config
 
       return {
@@ -133,7 +134,8 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
           uiNode
         },
         target: _.isString(target) ? target : uiNode.id,
-        listener: _.isString(listener) ? listener : ''
+        listener: _.isString(listener) ? listener : '',
+        ...rest
       }
     })
   )
