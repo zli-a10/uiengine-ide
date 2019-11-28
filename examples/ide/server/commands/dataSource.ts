@@ -5,25 +5,47 @@ const buildFields = (fields: any, fileName: string) => {
   return fields.map((field: any) => {
     const domainName = fileName.replace('.json', ':')
     const value = domainName + field.key
-    let schema: any = {
-      type: 'field',
-      component: 'my:Form.FormItem',
-      title: field.key,
-      value,
-      props: {
-        label: field.label,
-        help: get(field, 'cm-meta.help', ''),
-        isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
-      },
-      datasource: { source: value }
-      // children: [
-      //   {
-      //     component: getFieldComponent(field),
-      //     datasource: { source: field['cm-lineage'] }
-      //   }
-      // ]
+    let schema: any = {}
+    if (field.fields) {
+      schema = {
+        type: 'file',
+        component: 'div',
+        title: field.key,
+        value: field.key,
+        children: buildFields(field.fields, fileName)
+        // props: {
+        //   label: field.label,
+        //   help: get(field, 'cm-meta.help', ''),
+        //   isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
+        // },
+        // datasource: { source: value }
+        // children: [
+        //   {
+        //     component: getFieldComponent(field),
+        //     datasource: { source: field['cm-lineage'] }
+        //   }
+        // ]
+      }
+    } else {
+      schema = {
+        type: 'field',
+        component: 'my:Form.FormItem',
+        title: field.key,
+        value,
+        props: {
+          label: field.label,
+          help: get(field, 'cm-meta.help', ''),
+          isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
+        },
+        datasource: { source: value }
+        // children: [
+        //   {
+        //     component: getFieldComponent(field),
+        //     datasource: { source: field['cm-lineage'] }
+        //   }
+        // ]
+      }
     }
-
     // exclusive
     let deps: any = []
     // const exclusion = get(field, 'cm-meta.m-exclusion', [])
@@ -62,9 +84,6 @@ const buildFields = (fields: any, fileName: string) => {
       }
     }
 
-    // console.log('-------------------------------------------\n')
-    // console.log(schema)
-    // console.log('-------------------------------------------\n')
     return schema
   })
 }
