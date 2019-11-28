@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useContext, useMemo } from 'react'
+import React, { useCallback, useEffect, useContext, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { UIEngine, UIEngineRegister } from 'uiengine'
 import { UIEngineDndWrapper } from '../../dnd'
 import { GlobalContext, SchemasContext, IDEEditorContext } from '../../Context'
-import { VersionControl, useDeleteNode, useCloneNode } from '../../../helpers'
+import { VersionControl, useDeleteNode, useCloneNode, FileLoader } from '../../../helpers'
 import * as plugins from '../../../helpers/plugins'
 
 UIEngineRegister.registerPlugins(plugins)
@@ -20,7 +20,7 @@ export const DrawingBoard: React.FC = (props: any) => {
   const { layouts, config = {} } = props
   const schemas = layouts
   schemas[0].id = 'drawingboard'
-
+  const [schema, setSchema] = useState(schemas);
   let productWrapper = useMemo(
     () => _.get(config, `widgetConfig.componentWrapper`),
     []
@@ -73,10 +73,6 @@ export const DrawingBoard: React.FC = (props: any) => {
     [editNode]
   )
 
-  let activeTab = JSON.parse(localStorage.cachedActiveTab || '{}')
-  if (!_.isEmpty(activeTab)) {
-    schemas[0].layout = activeTab.isTemplate ? 'schema/templates/ui/' + activeTab.tabName : 'schema/ui/' + activeTab.tabName
-  }
   useEffect(() => {
     // Update the document title using the browser API
     window.onkeydown = keyPressActions
@@ -88,10 +84,21 @@ export const DrawingBoard: React.FC = (props: any) => {
     //     togglePropsCollapsed(!componentCollapsed);
     //   };
     // }
-  }, [editNode, componentCollapsed])
+    const initActiveTab = async () => {
+      let activeTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      if (!_.isEmpty(activeTab)) {
+        const fileLoader = FileLoader.getInstance()
+        const data = await fileLoader.loadFile(activeTab.tabName, 'schema', activeTab.isTemplate)
+        const newSchema = _.clone(schema)
+        newSchema[0].layout = data
+        setSchema(newSchema)
+      }
+    }
+    initActiveTab()
+  }, [editNode, componentCollapsed, setSchema])
   return (
     <div className="editor" id="drawingboard">
-      <UIEngine layouts={schemas} config={newConfig} />
+      <UIEngine layouts={schema} config={newConfig} />
     </div>
   )
 }
