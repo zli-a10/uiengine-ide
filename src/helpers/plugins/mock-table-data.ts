@@ -15,20 +15,19 @@ const dataMocker = DataMocker.getInstance();
  */
 const execution: IPluginExecution = async (param: IPluginParam) => {
   const dataNode: IDataNode = _.get(param, "dataNode");
+
   if (_.has(dataNode, `uiNode.schema.$children`) && !_.isArray(dataNode.data)) {
     if (_.isArray(_.get(dataNode, `uiNode.schema.$children`))) {
       dataMocker.noCache = true;
-      const result = dataMocker.generateTableData(dataNode.uiNode);
-      dataNode.data = result;
-      return result;
+      return dataMocker.generateTableData(dataNode.uiNode);
     }
   }
 };
 
 export const mockTableData: IPlugin = {
+  name: "mockTableData",
   categories: ["data.data.parser"],
   paramKeys: ["dataNode"],
-  priority: 200,
   execution,
-  name: "mockTableData"
+  priority: 200,
 };
