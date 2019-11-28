@@ -89,13 +89,14 @@ export const DrawingBoard: React.FC = (props: any) => {
       if (!_.isEmpty(activeTab)) {
         const fileLoader = FileLoader.getInstance()
         const data = await fileLoader.loadFile(activeTab.tabName, 'schema', activeTab.isTemplate)
-        const newSchema = _.clone(schema)
+        const newSchema = _.cloneDeep(schema)
         newSchema[0].layout = data
         setSchema(newSchema)
       }
     }
     initActiveTab()
-  }, [editNode, componentCollapsed, setSchema])
+  }, [editNode, componentCollapsed])
+
   return (
     <div className="editor" id="drawingboard">
       <UIEngine layouts={schema} config={newConfig} />
