@@ -70,9 +70,10 @@ export const renderNode = (data: any) => {
     return (
       <Tree.TreeNode
         dataRef={item}
+        isLeaf={true}
         title={
           <>
-            <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
+            <span className="field-bar">{_.toUpper(item.title)[0]}</span>
             <WidgetItem title={item.title} data={item} />
           </>
         }
@@ -127,7 +128,13 @@ const DataSourceTree: React.FC<IDataSourceTreeProps> = (
       if (fileName) {
         const fieldsPromise = getDatasourceFields(fileName)
         fieldsPromise.then((data: any) => {
-          _.set(treeNode, `props.dataRef.children`, data)
+          let children = _.get(treeNode, `props.dataRef.children`)
+          if (children && _.isArray(data)) {
+            children = _.concat(children, data)
+          } else {
+            children = data
+          }
+          _.set(treeNode, `props.dataRef.children`, children)
           const newNodes = _.clone(nodes)
           setNodes(newNodes)
         })

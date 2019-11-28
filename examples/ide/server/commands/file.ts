@@ -41,7 +41,7 @@ const walkSync = (
       const tmpFiles = walkSync(dir + '/' + file, type, isTemplate, folderOnly)
       const p = dir ? `${dir}/${file}` : file
       const key = p.replace(readpath, '')
-      console.log(key)
+      // console.log(key)
       const node = {
         type,
         isTemplate,
@@ -58,7 +58,7 @@ const walkSync = (
     } else if (!folderOnly && file.indexOf('index.') !== 0) {
       const p = dir ? `${dir}/${file}` : file
       const key = p.replace(readpath, '')
-      console.log(key)
+      // console.log(key)
       const node = {
         type,
         isTemplate,

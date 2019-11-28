@@ -9,9 +9,10 @@ const renderNode = (data: any) => {
     return (
       <TreeSelect.TreeNode
         dataRef={item}
+        isLeaf={true}
         title={
           <div className="datasource-select">
-            <span className="field-bar">{item.children ? 'Fs' : 'F'}</span>
+            <span className="field-bar">{_.toUpper(item.title)[0]}</span>
             {item.title}
           </div>
         }
@@ -39,12 +40,12 @@ const renderNode = (data: any) => {
         {item.children ? (
           renderNode(item.children)
         ) : (
-          <TreeSelect.TreeNode
-            title="Loading ..."
-            value={_.uniqueId('loading')}
-            key={_.uniqueId('loading')}
-          />
-        )}
+            <TreeSelect.TreeNode
+              title="Loading ..."
+              value={_.uniqueId('loading')}
+              key={_.uniqueId('loading')}
+            />
+          )}
       </TreeSelect.TreeNode>
     )
   }
@@ -76,7 +77,13 @@ export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
       if (fileName) {
         const fieldsPromise = getDatasourceFields(fileName)
         fieldsPromise.then((data: any) => {
-          _.set(treeNode, `props.dataRef.children`, data)
+          let children = _.get(treeNode, `props.dataRef.children`)
+          if (children && _.isArray(data)) {
+            children = _.concat(children, data)
+          } else {
+            children = data
+          }
+          _.set(treeNode, `props.dataRef.children`, children)
           const newNodes = _.clone(nodes)
           setNodes(newNodes)
         })
@@ -123,20 +130,20 @@ export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
             }}
           />
         ) : (
-          <TreeSelect
-            dropdownClassName="cancel-drag"
-            disabled={disabled}
-            treeCheckable={multipleChecked}
-            allowClear
-            {...(value ? { value } : {})}
-            showSearch
-            onChange={(value: any) => onChangeValue(value)}
-            loadData={onLoadData}
-            size="small"
-          >
-            {renderNode(nodes)}
-          </TreeSelect>
-        )}
+            <TreeSelect
+              dropdownClassName="cancel-drag"
+              disabled={disabled}
+              treeCheckable={multipleChecked}
+              allowClear
+              {...(value ? { value } : {})}
+              showSearch
+              onChange={(value: any) => onChangeValue(value)}
+              loadData={onLoadData}
+              size="small"
+            >
+              {renderNode(nodes)}
+            </TreeSelect>
+          )}
       </Col>
       <Col span={4}>
         <Button
