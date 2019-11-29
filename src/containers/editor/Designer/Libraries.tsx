@@ -121,7 +121,10 @@ export const Libraries: React.FC<IComponents> = props => {
             </TreeSelect>
           </Col>
           <Col span={12}>
-            <Input.Search onSearch={handleSearch} />
+            <Input.Search
+              onSearch={handleSearch}
+              onBlur={(event: any) => handleSearch(event.target.value)}
+            />
           </Col>
           <Col span={4}>
             <Button
