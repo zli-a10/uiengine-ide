@@ -87,7 +87,7 @@ export const Main = (props: any) => {
       },
       saved: false,
       theme: "",
-      toggleTheme: (theme: string) => {},
+      toggleTheme: (theme: string) => { },
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
@@ -180,6 +180,7 @@ export const Main = (props: any) => {
   const handleOk = useCallback(() => {
     // save files using sockets
     const fileLoader = FileLoader.getInstance();
+    let templateFiles = [] as any[]
     files.forEach(async (statusNode: IUploadFile) => {
       const { path, type, status } = statusNode;
       if (
@@ -192,18 +193,34 @@ export const Main = (props: any) => {
       } else {
         let data = await fileLoader.loadFile(path, type);
         if (type === "schema") data = cleanSchema(data);
+        if (data.children) {
+          data.children.map((child: any) => {
+            if (child.$template) {
+              templateFiles.push(child.$template)
+            }
+          })
+        }
         statusNode.data = data;
         await saveFile(statusNode);
       }
       // update file status
-      let updatedStatus = _.cloneDeep(status);
-      updatedStatus.status = "dropped";
-      saveOpenFileStatus({ file: path, type, status: updatedStatus });
+      let updatedStatus = _.cloneDeep(status)
+      updatedStatus.status = "dropped"
+      saveOpenFileStatus({ file: path, type, status: updatedStatus })
       // remove node from resource tree
       removeNodeFromResourceTree(path, type);
       toggleRefresh();
     });
-
+    templateFiles.forEach(async (item: string) => {
+      let statusNode = {} as IUploadFile
+      statusNode.path = item
+      statusNode.type = 'schema'
+      statusNode.status = { status: 'new' }
+      // save templates
+      await saveFile(statusNode)
+      // update template status
+      saveFileStatus(item, "schema", "dropped");
+    })
     changeVisible(false);
   }, [files]);
 
