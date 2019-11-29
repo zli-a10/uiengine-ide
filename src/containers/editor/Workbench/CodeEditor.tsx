@@ -88,10 +88,7 @@ export class CodeEditor extends React.Component<any, any> {
     const tabContent = this.fetchContent();
     const debounceFunc = _.debounce((value: any) => {
       if (tabContent && !_.isEqual(tabContent.content, value)) {
-        const fileLoader = FileLoader.getInstance();
         const { file, type } = tabContent;
-        tabContent.content = value;
-        fileLoader.saveFile(file, value, type as EResourceType);
         if (type === "schema") {
           try {
             const schema = JSON.parse(value);
@@ -105,6 +102,9 @@ export class CodeEditor extends React.Component<any, any> {
             console.warn("Your UI JSON is not correct %s", value);
           }
         }
+        const fileLoader = FileLoader.getInstance();
+        tabContent.content = value;
+        fileLoader.saveFile(file, value, type as EResourceType);
       }
     }, 1000);
     debounceFunc(value);
@@ -118,7 +118,7 @@ export class CodeEditor extends React.Component<any, any> {
         value = JSON.parse(value);
         value = cleanSchema(value, true);
         value = JSON.stringify(value, null, "\t");
-      } catch { }
+      } catch {}
     }
     return value;
   }

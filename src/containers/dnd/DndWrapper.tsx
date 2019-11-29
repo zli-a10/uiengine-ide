@@ -50,7 +50,7 @@ export const UIEngineDndWrapper = (props: any) => {
     _.get(uinode, "schema.component")
   );
   const isContainer = _.get(componentInfo, "isContainer", false);
-
+  if (!_.isObject(uinode.schema)) return null;
   // will remove if export schema
   // add a wrapper ID
   if (!uinode.schema[IDE_ID]) {
@@ -84,10 +84,14 @@ export const UIEngineDndWrapper = (props: any) => {
       const draggingNode = item.uinode;
       const hoverNode = uinode;
 
-      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
       if (!_.isEmpty(cachedActiveTab)) {
-        if (draggingNode.schema && draggingNode.schema.$template && draggingNode.schema.$template === cachedActiveTab.tabName) {
-          return
+        if (
+          draggingNode.schema &&
+          draggingNode.schema.$template &&
+          draggingNode.schema.$template === cachedActiveTab.tabName
+        ) {
+          return;
         }
       }
 
@@ -162,10 +166,14 @@ export const UIEngineDndWrapper = (props: any) => {
       const draggingNode = item.uinode;
       const targetNode = uinode;
 
-      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}')
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
       if (!_.isEmpty(cachedActiveTab)) {
-        if (draggingNode.schema && draggingNode.schema.$template && draggingNode.schema.$template === cachedActiveTab.tabName) {
-          return
+        if (
+          draggingNode.schema &&
+          draggingNode.schema.$template &&
+          draggingNode.schema.$template === cachedActiveTab.tabName
+        ) {
+          return;
         }
       }
 
