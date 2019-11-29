@@ -4,24 +4,18 @@ import _ from "lodash";
 
 import { Widgets } from "..";
 import { useCreateFile } from "../../../helpers";
-import { IObject } from "uiengine/typings";
-import { T } from "antd/lib/upload/utils";
 // import { IDEEditorContext } from "../../Context";
 
 const Panel = Collapse.Panel;
 const { TreeNode } = TreeSelect;
 
 export const Libraries: React.FC<IComponents> = props => {
-  // const { activeTab } = useContext(IDEEditorContext);
-
   const { list } = props;
-
   function callback() {}
 
   const originComs = list;
   let components = _.cloneDeep(originComs);
   const [coms, setComs] = useState(components);
-  const [date, setDate] = useState(new Date().getTime());
   const [selectedLib, setSelectecLib] = useState(
     {} as {
       lib: string;
@@ -29,36 +23,42 @@ export const Libraries: React.FC<IComponents> = props => {
     }
   );
   const [searchValue, setSearchValue] = useState("");
-  const libs = _.uniq(list.map((lib: IObject) => lib.category) as string[]);
-  if (_.isEmpty(selectedLib)) {
-    setSelectecLib({
-      lib: libs[0],
-      isLeaf: false
-    });
-  }
+  const libs = _.uniq(list.map((lib: any) => lib.category) as string[]);
 
   useEffect(() => {
     components = _.cloneDeep(originComs);
     if (!_.isEmpty(selectedLib)) {
       if (selectedLib.isLeaf) {
         components = components.filter(
-          (com: IObject) =>
+          (com: any) =>
             com.id.replace("-", "").toLowerCase() ===
             selectedLib.lib.toLowerCase()
         );
       } else if (selectedLib.lib) {
         components = components.filter(
-          (com: IObject) => com.category === selectedLib.lib
+          (com: any) => com.category === selectedLib.lib
         );
       }
     }
     if (_.trim(searchValue) !== "") {
-      components = components.filter((item: IObject) => {
+      components = components.filter((item: any) => {
         if (item.children) {
-          item.children = item.children.filter(
-            (o: IObject) =>
+          item.children = item.children.filter((o: any) => {
+            // search sub nodes
+            if (_.isArray(o.children)) {
+              o.children = o.children.filter((s: any) => {
+                return (
+                  s.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
+                );
+              });
+            }
+
+            // if has subnodes, return parents
+            if (!_.isEmpty(o.children)) return true;
+            return (
               o.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1
-          );
+            );
+          });
           return item.children.length > 0;
         } else {
           return false;
@@ -67,7 +67,6 @@ export const Libraries: React.FC<IComponents> = props => {
     }
 
     setComs(components);
-    setDate(new Date().getTime());
   }, [searchValue, selectedLib]);
 
   const handleNodeChange = useCallback(
@@ -77,7 +76,7 @@ export const Libraries: React.FC<IComponents> = props => {
       } = extra;
       setSelectecLib({
         lib: value,
-        isLeaf: !!isLeaf ? isLeaf() : false
+        isLeaf: !!isLeaf && value !== "" ? isLeaf() : false
       });
     },
     []
@@ -105,21 +104,20 @@ export const Libraries: React.FC<IComponents> = props => {
               style={{ width: "90%" }}
               onChange={handleNodeChange}
             >
-              <TreeNode value="" title="All" key="" selectable={false}>
-                {libs.map((lib: string) => (
-                  <TreeNode value={lib} title={lib} key={lib}>
-                    {list
-                      .filter((item: IObject) => item.category === lib)
-                      .map((item: IObject) => (
-                        <TreeNode
-                          value={item.id}
-                          title={item.title}
-                          key={item.title}
-                        />
-                      ))}
-                  </TreeNode>
-                ))}
-              </TreeNode>
+              <TreeNode value="" title="All" key="" />
+              {libs.map((lib: string) => (
+                <TreeNode value={lib} title={lib} key={lib}>
+                  {list
+                    .filter((item: any) => item.category === lib)
+                    .map((item: any) => (
+                      <TreeNode
+                        value={item.id}
+                        title={item.title}
+                        key={item.title}
+                      />
+                    ))}
+                </TreeNode>
+              ))}
             </TreeSelect>
           </Col>
           <Col span={12}>
@@ -140,7 +138,7 @@ export const Libraries: React.FC<IComponents> = props => {
           {coms.map((item: any, key: any) => {
             return (
               <Panel header={item.title} key={key}>
-                <Widgets widgets={item.children} />
+                <Widgets widgets={item.children} openAll={!!searchValue} />
               </Panel>
             );
           })}

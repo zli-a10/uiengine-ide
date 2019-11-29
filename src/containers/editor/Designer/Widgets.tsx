@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import { Icon, Popover, List } from "antd";
 import { useDrag } from "react-dnd";
@@ -10,7 +10,7 @@ const WidgetItem = (props: any) => {
   const {
     id,
     title,
-    schema,
+    openAll,
     url,
     library,
     version,
@@ -55,12 +55,16 @@ const WidgetItem = (props: any) => {
     <List dataSource={data} renderItem={item => (item ? item : null)} />
   );
 
-  const [subWidgets, openSubWidgets] = useState(false);
+  const [showSubWidgets, toggleShowSubWidgets] = useState(openAll);
+
+  useEffect(() => {
+    toggleShowSubWidgets(openAll);
+  }, [openAll]);
 
   // states
   const cls = classnames({
     component: true,
-    open: subWidgets && children.length
+    open: showSubWidgets && children.length
   });
 
   return (
@@ -68,7 +72,7 @@ const WidgetItem = (props: any) => {
       <div
         className={cls}
         ref={drag}
-        onClick={() => children.length && openSubWidgets(!subWidgets)}
+        onClick={() => children.length && toggleShowSubWidgets(!showSubWidgets)}
       >
         <div className="body">
           {icon ? (
@@ -83,25 +87,27 @@ const WidgetItem = (props: any) => {
           {children.length ? (
             <span className="widget-with-children">
               <Icon
-                type={subWidgets ? "caret-up" : "caret-down"}
+                type={showSubWidgets ? "caret-up" : "caret-down"}
                 style={{ fontSize: "40px" }}
               />
             </span>
           ) : null}
         </div>
-        {children.length && subWidgets ? <Widgets widgets={children} /> : null}
+        {children.length && showSubWidgets ? (
+          <Widgets widgets={children} openAll={openAll} />
+        ) : null}
       </div>
     </Popover>
   );
 };
 
 export const Widgets: React.FC<IWidgets> = props => {
-  const { widgets } = props;
+  const { widgets, openAll } = props;
 
   return (
     <div className="list">
       {widgets.map((item: any, key: number) => (
-        <WidgetItem {...item} key={key} />
+        <WidgetItem {...item} key={key} openAll={openAll} />
       ))}
     </div>
   );
