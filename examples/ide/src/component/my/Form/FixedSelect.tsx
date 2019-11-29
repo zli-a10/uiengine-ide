@@ -9,7 +9,7 @@ const FixedSelectComponent = (props: any) => {
   if (
     uinode.dataNode &&
     uinode.dataNode.schema &&
-    uinode.dataNode.schema.type == 'select' &&
+    uinode.dataNode.schema.type === 'select' &&
     uinode.dataNode.schema['cm-meta'].allowed
   ) {
     allowedOptions = uinode.dataNode.schema['cm-meta'].allowed
@@ -18,6 +18,7 @@ const FixedSelectComponent = (props: any) => {
     customOptions.map((data: any) => {
       let optionSplit = data.split(':')
       allowedOptions.push({ label: optionSplit[0], value: optionSplit[1] })
+      return data
     })
   }
   return (

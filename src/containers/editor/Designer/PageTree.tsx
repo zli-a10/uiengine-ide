@@ -14,6 +14,7 @@ export const PageTree = () => {
       let tree = {};
       const schemaTree = [
         {
+          key: "templates",
           name: "templates",
           title: "Templates",
           nodeType: "root",

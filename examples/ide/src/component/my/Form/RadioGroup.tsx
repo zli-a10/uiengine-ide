@@ -10,12 +10,13 @@ const RadioGroupComponent = (props: any) => {
     radioOption.map((data: any) => {
       let optionSplit = data.split(':')
       radioOptionList.push({ label: optionSplit[0], value: optionSplit[1] })
+      return data
     })
   }
 
   const onRadioGroupChange = useCallback((e: any) => {
     onChange(e.target.value)
-  }, [])
+  }, [onChange])
 
   return (
     <Radio.Group onChange={onRadioGroupChange} value={value}>
