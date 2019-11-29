@@ -12,6 +12,7 @@ const buildFields = (fields: any, fileName: string) => {
         component: 'div',
         title: field.key,
         value: field.key,
+        id: field.key,
         children: buildFields(field.fields, fileName)
         // props: {
         //   label: field.label,
@@ -32,6 +33,7 @@ const buildFields = (fields: any, fileName: string) => {
         component: 'my:Form.FormItem',
         title: field.key,
         value,
+        id: value,
         props: {
           label: field.label,
           help: get(field, 'cm-meta.help', ''),

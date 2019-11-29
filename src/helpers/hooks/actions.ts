@@ -66,7 +66,7 @@ export const useSaveTemplate = (uinode: IUINode) => {
       key: newPath,
       name,
       title: name,
-      _editing_: 'rename',
+      // _editing_: 'rename',
       isTemplate: false,
       nodeType: "file",
       value: name,
@@ -78,7 +78,16 @@ export const useSaveTemplate = (uinode: IUINode) => {
     fileLoader.saveFile(newPath, schema, "schema", treeRoot);
     saveFileStatus(name, "schema", "new");
     // refresh the tree
-    setSelectedKey(newPath);
+    // setSelectedKey(newPath);
+
+    _.forIn(uinode.schema, function (value, key) {
+      delete uinode.schema[key]
+    })
+    uinode.schema.$template = name
+    const dndNodeManager = DndNodeManager.getInstance()
+    dndNodeManager.pushVersion()
+    await uinode.refreshLayout()
+    uinode.sendMessage(true)
   };
 };
 

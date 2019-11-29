@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
 import _ from 'lodash'
-import { schemaTidy, SchemaPropManager } from '../../../helpers'
+import { schemaTidy, SchemaPropManager, getActiveUINode } from '../../../helpers'
 import * as propComponents from './PropItems'
-import { GlobalContext, PropsContext } from '../../Context'
+import { GlobalContext, PropsContext, IDEEditorContext } from '../../Context'
 
 const schemaPropManager = SchemaPropManager.getInstance()
 
@@ -10,6 +10,7 @@ export const PropItem = (props: IComponentSchema) => {
   const { schema, data, name, uinode, section = 'prop' } = props
   const { preview } = useContext(GlobalContext)
   const { refresh } = useContext(PropsContext)
+  const { setContent } = useContext(IDEEditorContext);
 
   const standardSchema = schemaTidy(schema)
   let { type = 'string', ...schemaProps } = standardSchema
@@ -31,6 +32,15 @@ export const PropItem = (props: IComponentSchema) => {
       uinode,
       props
     )
+    const jsonFileSchema = getActiveUINode(true);
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}")
+    if (!_.isEmpty(cachedActiveTab)) {
+      setContent({
+        content: jsonFileSchema,
+        file: cachedActiveTab.tabName,
+        type: "schema"
+      });
+    }
     refresh()
   }
 
