@@ -13,7 +13,8 @@ import {
   LARGER_DATA,
   DataMocker,
   getActiveUINode,
-  changeApiHost
+  changeApiHost,
+  getApiHost
 } from "../../../../helpers";
 
 const dataMocker = DataMocker.getInstance();
@@ -39,20 +40,20 @@ export const TestToolkits = (props: any) => {
   const [selectedValue, setValue] = useState("empty");
   const [host, setHost] = useState();
 
-  const onSetHost = useCallback(() => {
-    _.set(rootNode, `request.config.baseURL`, host);
-  }, [host]);
+  // const onSetHost = useCallback(() => {
+  //   _.set(rootNode, `request.config.baseURL`, host);
+  // }, [host]);
 
-  const onChangeHost = useCallback(
-    (e: any) => {
-      let host = _.get(e, "target.value");
-      if (_.trimEnd(host).indexOf("http") !== 0) {
-        host = `http://${host}/`;
-      }
-      setHost(host);
-    },
-    [host]
-  );
+  // const onChangeHost = useCallback(
+  //   (e: any) => {
+  //     let host = _.get(e, "target.value");
+  //     if (_.trimEnd(host).indexOf("http") !== 0) {
+  //       host = `http://${host}/`;
+  //     }
+  //     setHost(host);
+  //   },
+  //   [host]
+  // );
 
   const [apiHost, setApiHost] = useState();
   const onChangeApiHost = useCallback(
@@ -68,22 +69,26 @@ export const TestToolkits = (props: any) => {
   }, [apiHost]);
 
   useEffect(() => {
-    const host = _.get(rootNode, `request.config.baseURL`);
-    setHost(host);
-    const apiHost = _.get(rootNode, `request.config.apiServer`);
-    setApiHost(apiHost);
+    const promise = getApiHost();
+    promise.then((data: any) => {
+      // const host = _.get(rootNode, `request.config.baseURL`);
+      // setHost(host);
+      // const apiHost = _.get(rootNode, `request.config.apiServer`);
+      console.log(data, "..... use effect to get api host");
+      setApiHost(data);
+    });
   }, [rootNode, setHost, setApiHost]);
 
   return (
     <Form {...formItemLayout}>
-      <Form.Item label="Local Host">
+      {/* <Form.Item label="Local Host">
         <Input
           value={host}
           placeholder={"http://localhost:3000/"}
           onChange={onChangeHost}
           addonAfter={<a onClick={onSetHost}>Set</a>}
         />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item label="API Host">
         <Input
           value={apiHost}

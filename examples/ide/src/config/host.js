@@ -1,1 +1,1 @@
-module.exports = {"dev":"localhost","apiServer":"192.168.105.54"}
+module.exports = {"dev":"localhost","apiServer":"192.168.105.95"}
