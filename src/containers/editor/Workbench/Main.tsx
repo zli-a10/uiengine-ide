@@ -195,7 +195,6 @@ export const Main = (props: any) => {
         if (data.children) {
           data.children.forEach(async (child: any) => {
             if (child.$template) {
-              debugger
               let templateData = await fileLoader.loadFile(child.$template, 'schema')
               templateData = cleanSchema(templateData)
               let templateStatusNode = {} as IUploadFile
