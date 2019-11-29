@@ -1,55 +1,48 @@
-import { readFile, ICommandOptions } from './file'
-import { get, isArray, isEmpty } from 'lodash'
+import { readFile, ICommandOptions } from "./file";
+import { get, isArray, isEmpty, upperFirst } from "lodash";
 
-const buildFields = (fields: any, fileName: string) => {
+const getWidgetType = (type: string) => {
+  let widget = "antd:Input";
+  if (type) {
+    widget = "antd:" + upperFirst(type);
+  }
+  return widget;
+};
+
+const buildFields = (fields: any, options: ICommandOptions) => {
   return fields.map((field: any) => {
-    const domainName = fileName.replace('.json', ':')
-    const value = domainName + field.key
-    let schema: any = {}
+    const { path: fileName, component = "my:Form.FormItem" } = options;
+    const domainName = fileName.replace(".json", "");
+    const lineage = get(field, "cm-lineage", "");
+    // const value = domainName + field.key
+    const value = lineage.replace(`${domainName}.`, `${domainName}:`);
+    // console.log('replace:::::::::::::::', lineage, value, domainName)
+    let schema: any = {};
     if (field.fields) {
       schema = {
-        type: 'file',
-        component: 'div',
-        title: field.key,
-        value: field.key,
-        id: field.key,
-        children: buildFields(field.fields, fileName)
-        // props: {
-        //   label: field.label,
-        //   help: get(field, 'cm-meta.help', ''),
-        //   isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
-        // },
-        // datasource: { source: value }
-        // children: [
-        //   {
-        //     component: getFieldComponent(field),
-        //     datasource: { source: field['cm-lineage'] }
-        //   }
-        // ]
-      }
-    } else {
-      schema = {
-        type: 'field',
-        component: 'my:Form.FormItem',
+        type: "file",
+        component: "div",
         title: field.key,
         value,
-        id: value,
+        children: buildFields(field.fields, options)
+      };
+    } else {
+      schema = {
+        type: "field",
+        component,
+        title: field.key,
+        value,
         props: {
           label: field.label,
-          help: get(field, 'cm-meta.help', ''),
-          isAdvance: get(field, 'cm-meta.gui-section') === 'Advanced'
+          type: getWidgetType(get(field, ["type"], "")),
+          help: get(field, "cm-meta.help", ""),
+          isAdvance: get(field, "cm-meta.gui-section") === "Advanced"
         },
         datasource: { source: value }
-        // children: [
-        //   {
-        //     component: getFieldComponent(field),
-        //     datasource: { source: field['cm-lineage'] }
-        //   }
-        // ]
-      }
+      };
     }
     // exclusive
-    let deps: any = []
+    let deps: any = [];
     // const exclusion = get(field, 'cm-meta.m-exclusion', [])
     // if (isArray(exclusion)) {
     //   deps = deps.concat(
@@ -67,39 +60,45 @@ const buildFields = (fields: any, fileName: string) => {
     // }
 
     // condition
-    const condition = get(field, 'cm-meta.condition')
+    const condition = get(field, "cm-meta.condition");
+    const prefixOfCondition = lineage
+      .split(".")
+      .pop()
+      .replace(`${domainName}.`, `${domainName}:`);
     if (condition) {
       deps.push({
         selector: {
-          'datasource.source': domainName + condition
+          "datasource.source": prefixOfCondition + condition
         },
         // "state": { visible: true }
-        data: '',
-        dataCompareRule: 'not'
-      })
+        data: "",
+        dataCompareRule: "not"
+      });
     }
 
     // add deps to visible node
     if (!isEmpty(deps)) {
       schema.state = {
         visible: { deps }
-      }
+      };
     }
 
-    return schema
-  })
-}
+    return schema;
+  });
+};
 
 /**
  *
  * @param options {"name": "getDataFields", "options":{ type: "datasource", "path": name }}
  */
 export function getDataFields(options: ICommandOptions) {
-  const content = readFile(options)
+  const content = readFile(options);
   try {
-    const jsonObj = JSON.parse(content)
-    return buildFields(jsonObj.fields, options.path)
+    const jsonObj = JSON.parse(content);
+    const dataFields = buildFields(jsonObj.fields, options);
+    // console.log(dataFields, '................')
+    return dataFields;
   } catch (e) {
-    return []
+    return [];
   }
 }
