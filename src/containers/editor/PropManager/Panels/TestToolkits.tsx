@@ -1,7 +1,7 @@
-import React, { useContext, useState, useCallback, useEffect } from "react";
-import _ from "lodash";
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import _ from 'lodash';
 // import ReactJson from "react-json-view";
-import { Input, Form, Button, Select, Icon, Col } from "antd";
+import { Input, Form, Button, Select, Icon, Col } from 'antd';
 // import ButtonGroup from "antd/lib/button/button-group";
 // import { IDEEditorContext, GlobalContext } from "../../Context";
 import {
@@ -15,7 +15,7 @@ import {
   getActiveUINode,
   changeApiHost,
   getApiHost
-} from "../../../../helpers";
+} from '../../../../helpers';
 
 const dataMocker = DataMocker.getInstance();
 
@@ -37,7 +37,7 @@ export const TestToolkits = (props: any) => {
     [dataMocker]
   );
 
-  const [selectedValue, setValue] = useState("empty");
+  const [selectedValue, setValue] = useState('empty');
   const [host, setHost] = useState();
 
   // const onSetHost = useCallback(() => {
@@ -58,23 +58,25 @@ export const TestToolkits = (props: any) => {
   const [apiHost, setApiHost] = useState();
   const onChangeApiHost = useCallback(
     (e: any) => {
-      let host = _.get(e, "target.value");
+      let host = _.get(e, 'target.value');
+
       setApiHost(host);
     },
     [apiHost]
   );
   const onSetApiHost = useCallback(async () => {
-    console.log(apiHost, "apiHost");
+    console.log(apiHost, 'apiHost');
     await changeApiHost(apiHost);
   }, [apiHost]);
 
   useEffect(() => {
     const promise = getApiHost();
+
     promise.then((data: any) => {
       // const host = _.get(rootNode, `request.config.baseURL`);
       // setHost(host);
       // const apiHost = _.get(rootNode, `request.config.apiServer`);
-      console.log(data, "..... use effect to get api host");
+      console.log(data, '..... use effect to get api host');
       setApiHost(data);
     });
   }, [rootNode, setHost, setApiHost]);
@@ -92,7 +94,7 @@ export const TestToolkits = (props: any) => {
       <Form.Item label="API Host">
         <Input
           value={apiHost}
-          placeholder={"192.168.x.x"}
+          placeholder={'192.168.x.x'}
           onChange={onChangeApiHost}
           addonAfter={<a onClick={onSetApiHost}>Set</a>}
         />

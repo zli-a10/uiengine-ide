@@ -1,5 +1,5 @@
-import React from 'react'
-import { Layout, Menu, Breadcrumb, Row, Col, Icon, AutoComplete } from 'antd'
+import React from "react";
+import { Layout } from "antd";
 // import {
 //   CLIInfoComponent,
 //   SwitcherComponent,
@@ -7,8 +7,8 @@ import { Layout, Menu, Breadcrumb, Row, Col, Icon, AutoComplete } from 'antd'
 //   TabsComponent,
 //   SubmitComponent
 // } from "./Form";
-import _ from 'lodash'
-const { Content } = Layout
+// import _ from 'lodash'
+const { Content } = Layout;
 // export class ContentComponent extends React.Component<any, any> {
 //   render() {
 //     return (
@@ -38,12 +38,12 @@ const { Content } = Layout
 // }
 
 const ContentComponent = (props: any) => {
-  const { children } = props
+  const { children } = props;
   return (
     <Content className="a10-content">
       <div className="flex-bar">{children}</div>
     </Content>
-  )
-}
+  );
+};
 
-export default ContentComponent
+export default ContentComponent;

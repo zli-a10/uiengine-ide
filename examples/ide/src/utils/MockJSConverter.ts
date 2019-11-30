@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { mocks } from "./mocks";
+import _ from 'lodash';
+import { mocks } from './mocks';
 /**
  * Convert data schema to mockjs data
  */
@@ -15,7 +15,7 @@ class MockDataconverter {
   schemaMap: any = mocks;
 
   convert(dataSchema: any, mode: string) {
-    const format = _.get(dataSchema, "cm-meta.format", "string");
+    const format = _.get(dataSchema, 'cm-meta.format', 'string');
     if (_.isFunction(this.schemaMap[format])) {
       const result = this.schemaMap[format](dataSchema, mode);
       return result;

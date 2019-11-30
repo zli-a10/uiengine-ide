@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import _ from "lodash";
-import ReactJson from "react-json-view";
-import { Collapse, Input, Form, Button, Select, TreeSelect } from "antd";
+import React, { useContext } from 'react';
+import _ from 'lodash';
+import ReactJson from 'react-json-view';
+import { Collapse, Input, Form, Button, Select, TreeSelect } from 'antd';
 // import { IDEEditorContext, GlobalContext } from "../../Context";
 // import { getActiveUINode } from "../../../helpers";
 const TreeNode = TreeSelect.TreeNode;
@@ -18,7 +18,7 @@ export const InitialParams = (props: any) => {
           value={value}
           size="small"
           style={{ height: 22 }}
-          dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
           placeholder="Please select"
           allowClear
           multiple
@@ -33,7 +33,7 @@ export const InitialParams = (props: any) => {
             <TreeNode value="parent 1-1" title="parent 1-1" key="random2">
               <TreeNode
                 value="sss"
-                title={<b style={{ color: "#08c" }}>sss</b>}
+                title={<b style={{ color: '#08c' }}>sss</b>}
                 key="random3"
               />
             </TreeNode>

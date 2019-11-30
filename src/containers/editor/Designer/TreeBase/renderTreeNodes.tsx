@@ -1,8 +1,8 @@
-import React from "react";
-import _ from "lodash";
-import { Title } from "./Title";
+import React from 'react';
+import _ from 'lodash';
+import { Title } from './Title';
 
-import { Tree } from "antd";
+import { Tree } from 'antd';
 
 const { TreeNode } = Tree;
 
@@ -17,16 +17,17 @@ export const renderTreeNodes = (
   props: any,
   parent: any = null
 ) => {
-  return treeNodes
-    ? treeNodes.map((item: any) => {
+  return treeNodes ?
+    treeNodes.map((item: any) => {
       const title = item.title || item.name;
       // to improve performance, this is not about Nodes itself
+
       intialItems(item, parent);
 
       if (item.children) {
         return (
           <TreeNode
-            isLeaf={item.nodeType === "file"}
+            isLeaf={item.nodeType === 'file'}
             title={
               <Title dataRef={item} {...props}>
                 {title}
@@ -42,7 +43,7 @@ export const renderTreeNodes = (
       }
       return (
         <TreeNode
-          isLeaf={item.nodeType === "file"}
+          isLeaf={item.nodeType === 'file'}
           title={
             <Title dataRef={item} {...props}>
               {title}
@@ -52,6 +53,6 @@ export const renderTreeNodes = (
           dataRef={item}
         />
       );
-    })
-    : null;
+    }) :
+    null;
 };

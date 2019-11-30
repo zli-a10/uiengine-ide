@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import _ from 'lodash'
-import { Form } from 'antd'
-import { formatTitle } from '../../../../helpers'
-import { DataSourceSelector } from './DataSource/DataSourceSelector'
+import React, { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
+import { Form } from 'antd';
+import { formatTitle } from '../../../../helpers';
+import { DataSourceSelector } from './DataSource/DataSourceSelector';
 
 export const FieldselectorComponent = (props: any) => {
-  let { onChange, value, uinode, disabled } = props
+  let { onChange, value, uinode, disabled } = props;
 
   const onChangeValue = useCallback(
     (value: string) => {
-      if (onChange) onChange(value)
+      if (onChange) onChange(value);
     },
     [onChange]
-  )
+  );
 
   return (
     <Form.Item label={formatTitle(props.name)}>
@@ -23,5 +23,5 @@ export const FieldselectorComponent = (props: any) => {
         size="small"
       />
     </Form.Item>
-  )
-}
+  );
+};

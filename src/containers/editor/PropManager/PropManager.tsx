@@ -1,21 +1,23 @@
-import React, { useContext, useState, useMemo, useEffect } from "react";
-import _ from "lodash";
-import { Tabs, Icon } from "antd";
-import Draggable from "react-draggable";
-import { Debugger } from "./Debugger";
-import { Release, Props } from "../PropManager";
-import { GlobalContext, IDEEditorContext } from "../../Context";
-import * as Providers from "../Providers";
+import React, { useContext, useState, useMemo, useEffect } from 'react';
+import _ from 'lodash';
+import { Tabs, Icon } from 'antd';
+import Draggable from 'react-draggable';
+import { Debugger } from './Debugger';
+import { Release, Props } from '../PropManager';
+import { GlobalContext, IDEEditorContext } from '../../Context';
+import * as Providers from '../Providers';
 
 const TabPane = Tabs.TabPane;
+
 export const PropManager: React.FC<IPropManager> = props => {
   // const { onClose } = props;
   const { preview, propsCollapsed, togglePropsCollapsed } = useContext(
     GlobalContext
   );
   const { editNode } = useContext(IDEEditorContext);
-  let defaultActiveKey = preview ? "2" : "1";
+  let defaultActiveKey = preview ? '2' : '1';
   const [activeKey, setActiveKey] = useState(defaultActiveKey);
+
   useEffect(() => {
     setActiveKey(defaultActiveKey);
   }, [preview]);
@@ -24,11 +26,12 @@ export const PropManager: React.FC<IPropManager> = props => {
     e.stopPropagation();
   };
 
-  const [animatedClassName, setAnimatedClassName] = useState("showout");
+  const [animatedClassName, setAnimatedClassName] = useState('showout');
+
   useEffect(() => {
-    setAnimatedClassName("showout");
+    setAnimatedClassName('showout');
     _.debounce(() => {
-      setAnimatedClassName("");
+      setAnimatedClassName('');
     }, 1200)();
   }, [editNode]);
 
@@ -50,14 +53,14 @@ export const PropManager: React.FC<IPropManager> = props => {
           <h3 className="prop-title">
             {_.get(
               editNode,
-              "schema.datasource.source",
-              _.get(editNode, "schema.datasource")
+              'schema.datasource.source',
+              _.get(editNode, 'schema.datasource')
             )}
             <a
               className="close-button"
               onClick={() => {
                 togglePropsCollapsed(true);
-                setAnimatedClassName("");
+                setAnimatedClassName('');
               }}
             >
               <Icon type="close" />

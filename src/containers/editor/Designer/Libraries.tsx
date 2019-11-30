@@ -75,7 +75,7 @@ export const Libraries: React.FC<IComponents> = props => {
         triggerNode: { isLeaf }
       } = extra;
       setSelectecLib({
-        lib: value,
+        lib: value.replace("parent-", ""),
         isLeaf: !!isLeaf && value !== "" ? isLeaf() : false
       });
     },
@@ -105,17 +105,19 @@ export const Libraries: React.FC<IComponents> = props => {
               onChange={handleNodeChange}
             >
               <TreeNode value="" title="All" key="" />
-              {libs.map((lib: string) => (
-                <TreeNode value={lib} title={lib} key={lib}>
+              {libs.map((lib: string, index: number) => (
+                <TreeNode value={`parent-${lib}`} title={lib} key={index}>
                   {list
                     .filter((item: any) => item.category === lib)
-                    .map((item: any) => (
-                      <TreeNode
-                        value={item.id}
-                        title={item.title}
-                        key={item.title}
-                      />
-                    ))}
+                    .map((item: any, key: number) => {
+                      return (
+                        <TreeNode
+                          value={item.id}
+                          title={item.title}
+                          key={`sub-${index}-${key}`}
+                        />
+                      );
+                    })}
                 </TreeNode>
               ))}
             </TreeSelect>

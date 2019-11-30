@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-export const ComponentsContext = React.createContext<IComponentsContext>({
-  keywords: "",
+export const ComponentsContext = React.createContext < IComponentsContext > ({
+  keywords: '',
   setKeywords: (path: string) => {},
-  help: "",
+  help: '',
   setHelp: (help: string) => {},
-  refresh: "",
+  refresh: '',
   toggleRefresh: (refresh: string) => {},
-  showTab: "",
+  showTab: '',
   activeTab: (tab: string) => {}
 });

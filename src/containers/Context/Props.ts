@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-export const PropsContext = React.createContext<IPropsContext>({
-  showTab: "",
+export const PropsContext = React.createContext < IPropsContext > ({
+  showTab: '',
   activeTab: (tab: string) => {},
-  help: "",
+  help: '',
   setHelp: (help: string) => {},
   time: Date.now(),
   refresh: () => {}

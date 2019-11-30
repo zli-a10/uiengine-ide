@@ -1,9 +1,9 @@
-import React, { useMemo, useCallback, useContext } from "react";
-import _ from "lodash";
+import React, { useMemo, useCallback, useContext } from 'react';
+import _ from 'lodash';
 
-import { Menu } from "antd";
-import { resourceActions, getActiveUINode } from "../../../../helpers";
-import { IDEEditorContext } from "../../../Context";
+import { Menu } from 'antd';
+import { resourceActions, getActiveUINode } from '../../../../helpers';
+import { IDEEditorContext } from '../../../Context';
 
 export const ActionMenu = (props: any) => {
   const {
@@ -30,7 +30,7 @@ export const ActionMenu = (props: any) => {
         onAutoExpandParent(true);
       },
       addFolder: () => {
-        console.log("add folder");
+        console.log('add folder');
         resourceActions.addFolder(dataRef);
         if (expandKeys.indexOf(dataRef.key) === -1) {
           expandKeys.push(dataRef.key);
@@ -51,26 +51,29 @@ export const ActionMenu = (props: any) => {
       },
       clone: () => {
         const data = resourceActions.clone(dataRef);
+
         data.then((newNode: IResourceTreeNode) => {
           onSelect([newNode.name], newNode);
           onRefresh();
         });
       },
       rename: () => {
-        dataRef._editing_ = "rename";
+        dataRef._editing_ = 'rename';
         onRefresh();
       },
       revert: () => {
         const data = resourceActions.revert(dataRef);
+
         data.then(content => {
           if (_.find(tabs, { tab: dataRef.key })) {
             setContent({
-              content: JSON.stringify(content, null, "\t"),
-              type: "schema",
+              content: JSON.stringify(content, null, '\t'),
+              type: 'schema',
               file: dataRef.key
             });
             try {
               const uiNode = getActiveUINode();
+
               uiNode.schema = content;
               uiNode.refreshLayout();
               uiNode.sendMessage(true);
@@ -89,25 +92,27 @@ export const ActionMenu = (props: any) => {
     (e: any) => {
       e.domEvent.stopPropagation();
       const actionName = e.key;
+
       return actionmMap[actionName].call();
     },
     [dataRef, removeTab, setContent, tabs]
   );
 
-  const isFolder = dataRef.nodeType === "folder" || dataRef.nodeType === "root";
+  const isFolder = dataRef.nodeType === 'folder' || dataRef.nodeType === 'root';
+
   return (
     <Menu onClick={onClick}>
-      {status !== "removed" && isFolder ? (
+      {status !== 'removed' && isFolder ? (
         <Menu.Item key="add">
           <a>Add File</a>
         </Menu.Item>
       ) : null}
-      {status !== "removed" && isFolder ? (
+      {status !== 'removed' && isFolder ? (
         <Menu.Item key="addFolder">
           <a>Add Folder</a>
         </Menu.Item>
       ) : null}
-      {dataRef.nodeType === "root" ? null : status !== "removed" ? (
+      {dataRef.nodeType === 'root' ? null : status !== 'removed' ? (
         <Menu.Item key="delete">
           <a>Delete</a>
         </Menu.Item>
@@ -121,12 +126,12 @@ export const ActionMenu = (props: any) => {
           <a>Clone</a>
         </Menu.Item>
       )}
-      {dataRef.nodeType !== "root" && status !== "removed" ? (
+      {dataRef.nodeType !== 'root' && status !== 'removed' ? (
         <Menu.Item key="rename">
           <a>Rename</a>
         </Menu.Item>
       ) : null}
-      {status == "changed" && !isFolder ? (
+      {status == 'changed' && !isFolder ? (
         <Menu.Item key="revert">
           <a>Revert</a>
         </Menu.Item>

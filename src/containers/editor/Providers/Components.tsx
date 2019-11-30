@@ -1,22 +1,23 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from 'react';
 // import { ILayoutSchema } from "uiengine/typings";
-import { ComponentsContext } from "../../Context";
+import { ComponentsContext } from '../../Context';
 
 export const Components = (props: any) => {
   // const [schema, setSchema] = useState();
-  const componentsContextValue = useMemo<IComponentsContext>(
+  const componentsContextValue = useMemo < IComponentsContext > (
     () => ({
-      keywords: "",
+      keywords: '',
       setKeywords: (path: string) => {},
-      help: "",
+      help: '',
       setHelp: (help: string) => {},
-      refresh: "",
+      refresh: '',
       toggleRefresh: (refresh: string) => {},
-      showTab: "",
+      showTab: '',
       activeTab: (tab: string) => {}
     }),
     []
   );
+
   return (
     <ComponentsContext.Provider value={componentsContextValue}>
       {props.children}

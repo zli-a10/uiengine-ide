@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo } from 'react';
 // import { ILayoutSchema } from "uiengine/typings";
-import { PropsContext } from "../../Context";
+import { PropsContext } from '../../Context';
 
 export const Props = (props: any) => {
   const [time, updateTime] = useState(Date.now());
-  const propManagerContextValue = useMemo<IPropsContext>(
+  const propManagerContextValue = useMemo < IPropsContext > (
     () => ({
-      showTab: "",
+      showTab: '',
       activeTab: (tab: string) => {},
-      help: "",
+      help: '',
       setHelp: (help: string) => {},
       time,
       refresh: () => {
@@ -17,6 +17,7 @@ export const Props = (props: any) => {
     }),
     [time]
   );
+
   return (
     <PropsContext.Provider value={propManagerContextValue}>
       {props.children}

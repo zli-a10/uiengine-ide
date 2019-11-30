@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
-import _ from "lodash";
-import { Form, Switch } from "antd";
-import { PropItem } from "../PropItem";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useCallback, useEffect } from 'react';
+import _ from 'lodash';
+import { Form, Switch } from 'antd';
+import { PropItem } from '../PropItem';
+import { formatTitle } from '../../../../helpers';
 
 export const SubComponent = (props: any) => {
   const {
@@ -12,16 +12,16 @@ export const SubComponent = (props: any) => {
     dataRef,
     uinode,
     onChange,
-    section = "prop"
+    section = 'prop'
   } = props;
-  const [showSub, setShowSub] = useState(!_.isEmpty(data) ? true : false);
+  const [showSub, setShowSub] = useState(!_.isEmpty(data));
   const onChangeSub = (value: any) => {
     setShowSub(value);
     if (!value) onChange({});
   };
 
   useEffect(() => {
-    setShowSub(!_.isEmpty(data) ? true : false);
+    setShowSub(!_.isEmpty(data));
   }, [uinode, data]);
 
   return (
@@ -31,7 +31,7 @@ export const SubComponent = (props: any) => {
       </Form.Item>
       {showSub ? (
         <div className="sub-options">
-          {typeSchema["sub"].map((restSchema: any) =>
+          {typeSchema['sub'].map((restSchema: any) =>
             Object.entries(restSchema).map((entry: any) => {
               return (
                 <PropItem

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import _ from "lodash";
-import { Icon, Popover, List } from "antd";
-import { useDrag } from "react-dnd";
-import { UINode } from "uiengine";
-import classnames from "classnames";
+import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
+import { Icon, Popover, List } from 'antd';
+import { useDrag } from 'react-dnd';
+import { UINode } from 'uiengine';
+import classnames from 'classnames';
 
-import { DND_IDE_NODE_TYPE, IDE_ID } from "../../../helpers";
+import { DND_IDE_NODE_TYPE, IDE_ID } from '../../../helpers';
 const WidgetItem = (props: any) => {
   const {
     id,
@@ -33,6 +33,7 @@ const WidgetItem = (props: any) => {
       tempSchema[IDE_ID] = _.uniqueId(`${IDE_ID}_new_`);
       // const uinode = new UINode(tempSchema);
       const uinode = { schema: tempSchema };
+
       return {
         type: DND_IDE_NODE_TYPE,
         uinode
@@ -43,7 +44,7 @@ const WidgetItem = (props: any) => {
   const data = [
     component ? <h5>component: {component}</h5> : <></>,
     preview ? (
-      <img src={preview} style={{ maxWidth: "200px", minWidth: "150px" }} />
+      <img src={preview} style={{ maxWidth: '200px', minWidth: '150px' }} />
     ) : (
       <></>
     ),
@@ -76,7 +77,7 @@ const WidgetItem = (props: any) => {
       >
         <div className="body">
           {icon ? (
-            <Icon type={icon} style={{ fontSize: "40px" }} />
+            <Icon type={icon} style={{ fontSize: '40px' }} />
           ) : preview ? (
             <img src={preview} width="60" height="60" />
           ) : (
@@ -87,8 +88,8 @@ const WidgetItem = (props: any) => {
           {children.length ? (
             <span className="widget-with-children">
               <Icon
-                type={showSubWidgets ? "caret-up" : "caret-down"}
-                style={{ fontSize: "40px" }}
+                type={showSubWidgets ? 'caret-up' : 'caret-down'}
+                style={{ fontSize: '40px' }}
               />
             </span>
           ) : null}

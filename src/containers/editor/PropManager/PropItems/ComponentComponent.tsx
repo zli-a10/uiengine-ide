@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from "react";
-import _ from "lodash";
-import { Input } from "antd";
-import { Form } from "antd";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useCallback } from 'react';
+import _ from 'lodash';
+import { Input } from 'antd';
+import { Form } from 'antd';
+import { formatTitle } from '../../../../helpers';
 
 export const ComponentComponent = (props: any) => {
   const { name, disabled, onChange: onChangeProps } = props;
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const onChange = (e: any) => {
     setInputValue(e.target.value);
   };
@@ -17,6 +17,7 @@ export const ComponentComponent = (props: any) => {
   const onMouseDown = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
+
   return (
     <Form.Item label={formatTitle(name)}>
       <Input

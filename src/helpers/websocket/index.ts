@@ -1,2 +1,2 @@
-export * from './commands'
-export * from './WebsocketClient'
+export * from './commands';
+export * from './WebsocketClient';

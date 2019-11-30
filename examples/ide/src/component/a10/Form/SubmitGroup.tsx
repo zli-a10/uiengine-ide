@@ -1,16 +1,14 @@
-import React from 'react'
-import { Row, Button, Col } from 'antd'
-import _ from 'lodash'
+import React from "react";
+import { Row, Button } from "antd";
+// import _ from 'lodash'
 const SubmitGroupComponent = (props: any) => {
   const {
-    children,
     onSaveClick,
     onCancelClick,
-    saveText = 'Save',
-    cancelText = 'Cancel',
-    buttonAlign = 'right',
-    ...rest
-  } = props
+    saveText = "Save",
+    cancelText = "Cancel",
+    buttonAlign = "right"
+  } = props;
   return (
     <Row className="a10-form-submit" style={{ textAlign: buttonAlign }}>
       <Button type="primary" size="large" icon="save" onClick={onSaveClick}>
@@ -25,7 +23,7 @@ const SubmitGroupComponent = (props: any) => {
         {cancelText}
       </Button>
     </Row>
-  )
-}
+  );
+};
 
-export default SubmitGroupComponent
+export default SubmitGroupComponent;

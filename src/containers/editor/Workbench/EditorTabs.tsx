@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect, useContext } from "react";
-import * as _ from "lodash";
+import React, { useState, useCallback, useEffect, useContext } from 'react';
+import * as _ from 'lodash';
 import {
   Tabs,
   Icon,
@@ -12,9 +12,9 @@ import {
   Input,
   TreeSelect,
   message
-} from "antd";
-import { DrawingBoard, CodeEditor } from "./../";
-import { IDEEditorContext, GlobalContext } from "../../Context";
+} from 'antd';
+import { DrawingBoard, CodeEditor } from './../';
+import { IDEEditorContext, GlobalContext } from '../../Context';
 import {
   loadFileStatus,
   getFileSuffix,
@@ -22,7 +22,7 @@ import {
   VersionControl,
   saveFileStatus,
   getActiveUINode
-} from "../../../helpers";
+} from '../../../helpers';
 const { TabPane } = Tabs;
 
 const WindowSizeDown = (props: any) => {
@@ -31,17 +31,18 @@ const WindowSizeDown = (props: any) => {
     onMenuClick,
     onSave,
     activeKey,
-    type = "schema"
+    type = 'schema'
   } = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [fileName, setFileName] = useState(activeKey);
   const [folder, setFolder] = useState();
   const handleOk = useCallback(() => {
     if (fileName === activeKey) {
-      message.warning("Please input a new file name to save as");
+      message.warning('Please input a new file name to save as');
     } else {
       const fileSuffix = getFileSuffix(type);
       let file = fileName;
+
       if (fileName.indexOf(fileSuffix) === -1) {
         file = `${fileName}${fileSuffix}`;
       }
@@ -69,6 +70,7 @@ const WindowSizeDown = (props: any) => {
   );
 
   const [treeData, setTreeData] = useState();
+
   useEffect(() => {
     setFileName(activeKey);
     const loadTreeData = async () => {
@@ -83,11 +85,13 @@ const WindowSizeDown = (props: any) => {
           children: data
         }
       ];
+
       return tree;
     };
 
     if (type) {
       const treePromise = loadTreeData();
+
       treePromise.then((tree: any) => {
         setTreeData(tree);
         setFolder(`root_${type}`);
@@ -110,14 +114,14 @@ const WindowSizeDown = (props: any) => {
     <div className="tab-action">
       <Icon
         type="save"
-        style={{ marginRight: "20px" }}
+        style={{ marginRight: '20px' }}
         onClick={showModal}
         className="splitter"
       />
       <Dropdown overlay={menu}>
         <Icon
           type="layout"
-          style={{ marginRight: "20px" }}
+          style={{ marginRight: '20px' }}
           onClick={onSplitWindow}
           className="splitter"
         />
@@ -142,7 +146,7 @@ const WindowSizeDown = (props: any) => {
             <TreeSelect
               style={{ width: 300 }}
               value={folder}
-              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               treeData={treeData}
               placeholder="Please select"
               treeDefaultExpandAll
@@ -157,7 +161,7 @@ const WindowSizeDown = (props: any) => {
 
 export const EditorTabs = (props: any) => {
   const { tabs } = props;
-  const propActiveKey = props["activeKey"];
+  const propActiveKey = props['activeKey'];
   const {
     activeTab,
     removeTab,
@@ -167,8 +171,10 @@ export const EditorTabs = (props: any) => {
   } = useContext(IDEEditorContext);
   const { resourceTree, setResourceTree } = useContext(GlobalContext);
   let activeKey = propActiveKey;
-  if (propActiveKey.indexOf("drawingboard") !== -1) {
-    const segs = propActiveKey.split(":");
+
+  if (propActiveKey.indexOf('drawingboard') !== -1) {
+    const segs = propActiveKey.split(':');
+
     if (segs[1]) activeKey = segs[1];
   }
   const [leftSpan, setLeftSpan] = useState(12);
@@ -179,25 +185,27 @@ export const EditorTabs = (props: any) => {
   const onSplitWindow = useCallback(() => {
     setSpitted(!splitted);
     if (!splitted) {
-      localStorage["drawingBoardLayout"] = "12:12";
-      activeTab(`drawingboard:${activeTabName}`, "schema");
+      localStorage['drawingBoardLayout'] = '12:12';
+      activeTab(`drawingboard:${activeTabName}`, 'schema');
     } else {
-      localStorage["drawingBoardLayout"] = "";
-      activeTab(`drawingboard:${activeKey}`, "schema");
+      localStorage['drawingBoardLayout'] = '';
+      activeTab(`drawingboard:${activeKey}`, 'schema');
     }
   }, [splitted, activeTab, activeKey, activeTabName]);
 
   const onMenuClick = useCallback((e: any) => {
     const { key } = e;
-    const [left, right] = key.split(":");
+    const [left, right] = key.split(':');
+
     setLeftSpan(left);
     setRightSpan(right);
     setSpitted(true);
-    localStorage["drawingBoardLayout"] = key;
+    localStorage['drawingBoardLayout'] = key;
   }, []);
 
   const searchNode = useCallback((folder: string, nodes: Array<any>): any => {
     let node;
+
     if (nodes && _.isArray(nodes)) {
       for (let key in nodes) {
         node = nodes[key];
@@ -220,15 +228,17 @@ export const EditorTabs = (props: any) => {
   const onSave = useCallback(
     (folder: string, fileName: string, type: EResourceType) => {
       // save nwe
-      const isRoot = folder.indexOf("root_") !== -1;
+      const isRoot = folder.indexOf('root_') !== -1;
       let data: any;
-      if (type === "schema") {
+
+      if (type === 'schema') {
         data = _.get(resourceTree, `${type}[1]`);
       } else {
         data = _.get(resourceTree, type);
       }
 
       let targetNode;
+
       if (isRoot) {
         targetNode = data;
       } else {
@@ -240,27 +250,29 @@ export const EditorTabs = (props: any) => {
       }
 
       if (_.isArray(targetNode)) {
-        const file = `${isRoot ? "" : folder + "/"}${fileName}`;
+        const file = `${isRoot ? '' : folder + '/'}${fileName}`;
         const newNode = {
           isTemplate: false,
           key: file,
           name: file,
-          nodeType: "file",
+          nodeType: 'file',
           path: file,
           server: true,
           title: fileName,
           type,
           value: file
         };
+
         targetNode.push(newNode);
         // console.log("file: %s path: %s type: %s", file, folder, type);
         const fileLoader = FileLoader.getInstance();
         const text = _.find(content, { file: activeKey });
         const changedTypeObject = _.get(resourceTree, type);
+
         if (text) {
           fileLoader.saveFile(file, text.content, type, changedTypeObject);
           text.file = fileName;
-          saveFileStatus(file, type, "new");
+          saveFileStatus(file, type, 'new');
           activeTab(file, type, activeKey);
           setResourceTree({ [type]: changedTypeObject });
         }
@@ -271,19 +283,22 @@ export const EditorTabs = (props: any) => {
 
   const onTabClick = useCallback(
     (activeKey: any) => {
-      if (activeKey !== "drawingboard") {
+      if (activeKey !== 'drawingboard') {
         const fileLoader = FileLoader.getInstance();
         const versionControl = VersionControl.getInstance();
+
         versionControl.clearHistories();
         fileLoader.editingFile = activeKey;
       }
-      activeTab(`drawingboard:${activeKey}`, "schema");
+      activeTab(`drawingboard:${activeKey}`, 'schema');
       const text = _.find(content, { file: activeKey });
+
       if (text) {
         if (_.isString(text.content)) {
           try {
             const schema = JSON.parse(text.content);
             const uiNode = getActiveUINode();
+
             uiNode.schema = schema;
             uiNode.refreshLayout();
             uiNode.sendMessage(true);
@@ -298,9 +313,9 @@ export const EditorTabs = (props: any) => {
 
   const onEdit = useCallback(
     (targetKey: any, action: string) => {
-      if (action === "remove") {
-        if (targetKey === "drawingboard") {
-          message.warning("drawingboard can not be closed!");
+      if (action === 'remove') {
+        if (targetKey === 'drawingboard') {
+          message.warning('drawingboard can not be closed!');
         } else {
           removeTab(targetKey);
         }
@@ -319,11 +334,11 @@ export const EditorTabs = (props: any) => {
   );
 
   useEffect(() => {
-    if (localStorage["drawingBoardLayout"]) {
-      onMenuClick({ key: localStorage["drawingBoardLayout"] });
+    if (localStorage['drawingBoardLayout']) {
+      onMenuClick({ key: localStorage['drawingBoardLayout'] });
     }
     if (tabs.length) {
-      setSpitted(!!localStorage["drawingBoardLayout"]);
+      setSpitted(!!localStorage['drawingBoardLayout']);
     } else {
       setSpitted(false);
     }
@@ -331,26 +346,30 @@ export const EditorTabs = (props: any) => {
 
   useEffect(() => {
     const initTab = async () => {
-      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
+      let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+
       if (!_.isEmpty(cachedActiveTab)) {
         const tabIndex: any = _.findIndex(tabs, {
           tab: cachedActiveTab.tabName
         });
+
         if (tabIndex === -1) {
           const fileLoader = FileLoader.getInstance();
           const data = await fileLoader.loadFile(
             cachedActiveTab.tabName,
-            "schema"
+            'schema'
           );
+
           setContent({
-            content: JSON.stringify(data, null, "\t"),
+            content: JSON.stringify(data, null, '\t'),
             file: cachedActiveTab.tabName,
-            type: "schema"
+            type: 'schema'
           });
-          activeTab(`drawingboard:${cachedActiveTab.tabName}`, "schema");
+          activeTab(`drawingboard:${cachedActiveTab.tabName}`, 'schema');
         }
       }
     };
+
     initTab();
   }, [activeTab, setContent]);
 
@@ -362,8 +381,10 @@ export const EditorTabs = (props: any) => {
       let tabTitle: any;
       // this is not the final solution
       const isNew = tab.indexOf(suffix) === -1;
-      if (_.has(status, "status") || isNew) {
-        const s = _.get(status, "status", isNew ? "new" : "normal");
+
+      if (_.has(status, 'status') || isNew) {
+        const s = _.get(status, 'status', isNew ? 'new' : 'normal');
+
         tabTitle = <span className={`node-modified-${s}`}>*{tab}</span>;
       } else {
         tabTitle = <span>{tab}</span>;
@@ -375,8 +396,9 @@ export const EditorTabs = (props: any) => {
 
   // load active key type
   const tab = _.find(tabs, { tab: activeKey });
-  let type = "";
-  if (tab) type = _.get(tab, "language");
+  let type = '';
+
+  if (tab) type = _.get(tab, 'language');
 
   return !splitted ? (
     <Tabs

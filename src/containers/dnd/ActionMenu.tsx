@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import _ from "lodash";
-import { Menu, Dropdown, Icon } from "antd";
+import React, { useContext } from 'react';
+import _ from 'lodash';
+import { Menu, Dropdown, Icon } from 'antd';
 
-import { GlobalContext, IDEEditorContext, SchemasContext } from "../Context";
+import { GlobalContext, IDEEditorContext, SchemasContext } from '../Context';
 import {
   IDE_ID,
   useDeleteNode,
@@ -11,7 +11,7 @@ import {
   useSaveTemplate,
   useCollapseItems,
   useCloneNode
-} from "../../helpers";
+} from '../../helpers';
 
 const ActionMenu = (props: any) => {
   const { editingResource } = useContext(SchemasContext);
@@ -21,16 +21,16 @@ const ActionMenu = (props: any) => {
   const menu = (
     <Menu>
       <Menu.Item key="unit-collapse" onClick={useCollapseItems(uinode)}>
-        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) >
+        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, '**any-id')) >
         -1 ? (
-          <a target="_blank">
-            <Icon type="fullscreen" /> Expand Items
-          </a>
-        ) : (
-          <a target="_blank">
-            <Icon type="fullscreen-exit" /> Collapse Items
-          </a>
-        )}
+            <a target="_blank">
+              <Icon type="fullscreen" /> Expand Items
+            </a>
+          ) : (
+            <a target="_blank">
+              <Icon type="fullscreen-exit" /> Collapse Items
+            </a>
+          )}
       </Menu.Item>
       {!editingResource ? null : (
         <Menu.Item
@@ -68,25 +68,25 @@ const ActionMenu = (props: any) => {
           </span>
         }
       >
-        <Menu.Item key="unit-clone-left" onClick={useCloneNode(uinode)("left")}>
+        <Menu.Item key="unit-clone-left" onClick={useCloneNode(uinode)('left')}>
           <a target="_blank">
             <Icon type="left" /> Clone to Left [^L]
           </a>
         </Menu.Item>
         <Menu.Item
           key="unit-clone-right"
-          onClick={useCloneNode(uinode)("right")}
+          onClick={useCloneNode(uinode)('right')}
         >
           <a target="_blank">
             <Icon type="right" /> Clone to Right [^R]
           </a>
         </Menu.Item>
-        <Menu.Item key="unit-clone-up" onClick={useCloneNode(uinode)("up")}>
+        <Menu.Item key="unit-clone-up" onClick={useCloneNode(uinode)('up')}>
           <a target="_blank">
             <Icon type="up" /> Clone to Up [^U]
           </a>
         </Menu.Item>
-        <Menu.Item key="unit-clone-down" onClick={useCloneNode(uinode)("down")}>
+        <Menu.Item key="unit-clone-down" onClick={useCloneNode(uinode)('down')}>
           <a target="_blank">
             <Icon type="down" /> Clone to Down [^D]
           </a>

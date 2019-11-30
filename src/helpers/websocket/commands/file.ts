@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { Client } from "../Client";
+import _ from 'lodash';
+import { Client } from '../Client';
 
 export async function getFileList(
   type: EResourceType,
@@ -7,9 +7,10 @@ export async function getFileList(
   folderOnly: boolean = false
 ) {
   const command: IWebsocketCommands = {
-    name: "getFileList",
+    name: 'getFileList',
     options: { type, isTemplate, folderOnly }
   };
+
   return await Client.connect(command);
 }
 
@@ -19,7 +20,7 @@ export async function readFile(
   isTemplate: boolean = false
 ) {
   const command: IWebsocketCommands = {
-    name: "readFile",
+    name: 'readFile',
     options: { type, path: name, isTemplate }
   };
 
@@ -28,9 +29,10 @@ export async function readFile(
 
 export function saveFile(fileOptions: IUploadFile) {
   const command: IWebsocketCommands = {
-    name: "writeFile",
+    name: 'writeFile',
     options: fileOptions
   };
+
   return Client.connect(command);
 }
 
@@ -39,12 +41,13 @@ export async function getDatasourceFields(
   component?: string
 ) {
   const command: IWebsocketCommands = {
-    name: "getDataFields",
+    name: 'getDataFields',
     options: {
-      type: "datasource",
+      type: 'datasource',
       path: fileName,
       component
     }
   };
+
   return await Client.connect(command);
 }

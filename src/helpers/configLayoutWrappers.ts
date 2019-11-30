@@ -15,19 +15,19 @@
 
 export const configLayoutWrappers: IConfigWrappers = {
   row: {
-    component: "antd:Row",
+    component: 'antd:Row',
     props: {
       gutter: 16,
-      type: "flex",
-      align: "top",
+      type: 'flex',
+      align: 'top',
       style: {
-        display: "flex",
+        display: 'flex',
         flex: 1
       }
     }
   },
   col: {
-    component: "antd:Col",
+    component: 'antd:Col',
     props: {
       style: { flex: 1 }
     }
@@ -35,10 +35,10 @@ export const configLayoutWrappers: IConfigWrappers = {
 };
 
 export const defaultEmptyLayoutSchema = {
-  component: "div",
+  component: 'div',
   props: {
-    className: "uiengine-container",
-    id: "uiengine-container"
+    className: 'uiengine-container',
+    id: 'uiengine-container'
   },
   children: []
 

@@ -1,1 +1,1 @@
-export * from './DataSourceSelector'
+export * from './DataSourceSelector';

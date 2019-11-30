@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
-import { Collapse, Icon, Switch } from 'antd'
-import { MyContext } from '../Context/Provider'
+import React, { useState, useCallback, useEffect, useContext } from "react";
+import { Collapse, Icon, Switch } from "antd";
+import { MyContext } from "../Context/Provider";
 
-const { Panel } = Collapse
+const { Panel } = Collapse;
 
 const SectionComponent = (props: any) => {
   const {
@@ -14,29 +14,29 @@ const SectionComponent = (props: any) => {
     onChangeWithValue,
     advanceToggle = false,
     tabSwitch = false
-  } = props
-  const [activeKey, setActiveKey] = useState(active ? title : '')
-  const { data, dispatch } = useContext(MyContext)
+  } = props;
+  const [activeKey, setActiveKey] = useState(active ? title : "");
+  const { dispatch } = useContext(MyContext);
 
-  const onCollapse = useCallback(
-    (key: any) => {
-      setActiveKey(key)
+  const onCollapse = useCallback((key: any) => {
+    setActiveKey(key);
+  }, []);
+
+  const onShowAdvance = useCallback(
+    (value: any, event: any) => {
+      event.stopPropagation();
+      dispatch({ name: "set", params: { advanceOption: { [title]: value } } });
     },
-    [activeKey]
-  )
-
-  const onShowAdvance = useCallback((value: any, event: any) => {
-    event.stopPropagation()
-    dispatch({ name: 'set', params: { advanceOption: { [title]: value } } })
-  }, [])
+    [dispatch, title]
+  );
 
   const onSwitchTabs = useCallback(
     (value: any, event: any) => {
-      event.stopPropagation()
-      onChangeWithValue(value, event)
+      event.stopPropagation();
+      onChangeWithValue(value, event);
     },
-    [onChangeWithValue, value]
-  )
+    [onChangeWithValue]
+  );
 
   const genExtra = useCallback(
     () => (
@@ -59,18 +59,18 @@ const SectionComponent = (props: any) => {
         ) : null}
       </>
     ),
-    [advanceToggle]
-  )
+    [advanceToggle, onShowAdvance, onSwitchTabs, tabSwitch, value]
+  );
 
   useEffect(() => {
-    setActiveKey(active ? title : '')
-  }, [active])
+    setActiveKey(active ? title : "");
+  }, [active, title]);
 
   return (
     <div className="a10-collapse-frame">
       <Collapse
         bordered={false}
-        defaultActiveKey={'----'}
+        defaultActiveKey={"----"}
         activeKey={activeKey}
         onChange={onCollapse}
         expandIcon={({ isActive }) => (
@@ -86,12 +86,12 @@ const SectionComponent = (props: any) => {
         >
           {children &&
             children.map((child: any) => {
-              return React.cloneElement(child, { group: title })
+              return React.cloneElement(child, { group: title });
             })}
         </Panel>
       </Collapse>
     </div>
-  )
-}
+  );
+};
 
-export default SectionComponent
+export default SectionComponent;

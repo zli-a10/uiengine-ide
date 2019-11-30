@@ -40,13 +40,13 @@ const getUiSchema = (field: any) => {
       children: [
         {
           component: getFieldComponent(field),
-          ...(Array.isArray(field.fields)
-            ? {
-                children: field.fields.map((subField: any) => {
-                  return getUiSchema(subField)
-                })
-              }
-            : {})
+          ...(Array.isArray(field.fields) ?
+            {
+              children: field.fields.map((subField: any) => {
+                return getUiSchema(subField)
+              })
+            } :
+            {})
         }
       ]
     }

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
-import _ from "lodash";
-import { TreeBase } from "./TreeBase";
-import { FileLoader, getPluginTree } from "../../../helpers";
-import { PluginManager } from "uiengine";
-import { SchemasContext, GlobalContext } from "../../Context";
+import React, { useState, useEffect, useMemo, useContext } from 'react';
+import _ from 'lodash';
+import { TreeBase } from './TreeBase';
+import { FileLoader, getPluginTree } from '../../../helpers';
+import { PluginManager } from 'uiengine';
+import { SchemasContext, GlobalContext } from '../../Context';
 
 export const ResourceTree = () => {
   // const { refresh } = useContext(SchemasContext);
@@ -31,47 +31,47 @@ export const ResourceTree = () => {
   const tree = useMemo(() => {
     return [
       {
-        name: "Plugins",
-        title: "Plugins",
-        nodeType: "category",
+        name: 'Plugins',
+        title: 'Plugins',
+        nodeType: 'category',
         children: [
           {
-            name: "running-plugins",
-            title: "Running Plugins",
-            nodeType: "category",
+            name: 'running-plugins',
+            title: 'Running Plugins',
+            nodeType: 'category',
             children: getPluginTree(
-              PluginManager.getInstance().getPlugins("global")
+              PluginManager.getInstance().getPlugins('global')
             )
           },
           {
-            name: "my-plugins",
-            title: "My Plugins",
-            nodeType: "root",
-            type: "plugin",
-            children: _.get(resourceTree, "plugin", [])
+            name: 'my-plugins',
+            title: 'My Plugins',
+            nodeType: 'root',
+            type: 'plugin',
+            children: _.get(resourceTree, 'plugin', [])
           }
         ]
       },
       {
-        name: "Listeners",
-        title: "Listeners",
-        nodeType: "root",
-        type: "listener",
-        children: _.get(resourceTree, "listener", [])
+        name: 'Listeners',
+        title: 'Listeners',
+        nodeType: 'root',
+        type: 'listener',
+        children: _.get(resourceTree, 'listener', [])
       },
       {
-        name: "Components",
-        title: "Components",
-        nodeType: "root",
-        type: "component",
-        children: _.get(resourceTree, "component", [])
+        name: 'Components',
+        title: 'Components',
+        nodeType: 'root',
+        type: 'component',
+        children: _.get(resourceTree, 'component', [])
       },
       {
-        name: "DataSources",
-        title: "Data Sources",
-        nodeType: "root",
-        type: "datasource",
-        children: _.get(resourceTree, "datasource", [])
+        name: 'DataSources',
+        title: 'Data Sources',
+        nodeType: 'root',
+        type: 'datasource',
+        children: _.get(resourceTree, 'datasource', [])
       }
     ];
   }, [resourceTree]);

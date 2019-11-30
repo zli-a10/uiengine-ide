@@ -32,7 +32,7 @@ const TabListComponent = (props: any) => {
         setActiveKey(key.toString());
       }
     },
-    [uinode, children, activeKey]
+    [maxTabs, children.length, uinode.dataNode]
   );
 
   const onChange = useCallback((activeKey: string) => {

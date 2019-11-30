@@ -4,7 +4,7 @@ import { Checkbox } from "antd";
 import { getComponent } from "uiengine";
 
 const THeader = (props: any) => {
-  let { children, columns, onSelectAll, allSelected = false, ...rest } = props;
+  let { children, columns, onSelectAll, ...rest } = props;
   const tds = _.get(columns, "0.children", []);
 
   return (

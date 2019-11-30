@@ -1,15 +1,15 @@
-import React from 'react'
-import { Layout, Icon, Row, Col, Menu, Input } from 'antd'
+import React from "react";
+import { Layout, Icon, Row, Col, Menu, Input } from "antd";
 
-const { Header } = Layout
-const { SubMenu } = Menu
+const { Header } = Layout;
+const { SubMenu } = Menu;
 const HeaderComponent = (props: any) => {
   return (
     <div className="a10-header ">
       <Header className="flex-bar">
         <Row type="flex" align="middle" justify="space-between">
           <Col span={12} className="logo">
-            <img src="logo-a10.png" />
+            <img src="logo-a10.png" alt="A10" />
           </Col>
           <Col span={12}>
             <Row type="flex" align="middle" justify="end">
@@ -62,10 +62,10 @@ const HeaderComponent = (props: any) => {
                     <Menu.Item key="Japanese">Japanese</Menu.Item>
                   </SubMenu>
                   <Menu.Item key="cli" className="sys-menu-item">
-                    <Icon type="code" /> CLI{' '}
+                    <Icon type="code" /> CLI{" "}
                   </Menu.Item>
                   <Menu.Item key="user" className="sys-menu-item">
-                    <Icon type="user" /> Admin{' '}
+                    <Icon type="user" /> Admin{" "}
                   </Menu.Item>
                 </Menu>
               </Col>
@@ -74,7 +74,7 @@ const HeaderComponent = (props: any) => {
         </Row>
       </Header>
     </div>
-  )
-}
+  );
+};
 
-export default HeaderComponent
+export default HeaderComponent;

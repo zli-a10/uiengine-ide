@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
-import _ from "lodash";
-import { InputNumber, Form } from "antd";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useCallback, useEffect } from 'react';
+import _ from 'lodash';
+import { InputNumber, Form } from 'antd';
+import { formatTitle } from '../../../../helpers';
 
 export const NumberComponent = (props: any) => {
   const {
