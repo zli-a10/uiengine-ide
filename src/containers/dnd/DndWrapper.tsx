@@ -195,7 +195,7 @@ export const UIEngineDndWrapper = (props: any) => {
         }
       }
 
-      console.log(item, "to be drop");
+      // console.log(item, "to be drop");
       switch (item.type) {
         case DND_IDE_NODE_TYPE:
           // Determine rectangle on screen
