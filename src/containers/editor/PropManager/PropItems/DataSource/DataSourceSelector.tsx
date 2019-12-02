@@ -43,12 +43,12 @@ const renderNode = (data: any) => {
         {item.children ? (
           renderNode(item.children)
         ) : (
-          <TreeSelect.TreeNode
-            title="Loading ..."
-            value={_.uniqueId("loading")}
-            key={_.uniqueId("loading")}
-          />
-        )}
+            <TreeSelect.TreeNode
+              title="Loading ..."
+              value={_.uniqueId("loading")}
+              key={_.uniqueId("loading")}
+            />
+          )}
       </TreeSelect.TreeNode>
     );
   };
@@ -106,7 +106,7 @@ export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
 
   const onChangeValue = useCallback(
     (e: any) => {
-      let value = typeof e === "string" ? e : e.target.value;
+      let value = typeof e === "string" ? e : _.get(e, ['target', 'value'], '');
       if (onChange) onChange(value);
     },
     [onChange]
@@ -145,20 +145,20 @@ export const DataSourceSelector: React.FC<IDataSourceTreeProps> = (
             onPressEnter={onChangeValue}
           />
         ) : (
-          <TreeSelect
-            dropdownClassName="cancel-drag"
-            disabled={disabled}
-            treeCheckable={multipleChecked}
-            allowClear
-            {...(value ? { value } : {})}
-            showSearch
-            onChange={(value: any) => onChangeValue(value)}
-            loadData={onLoadData}
-            size="small"
-          >
-            {renderNode(nodes)}
-          </TreeSelect>
-        )}
+            <TreeSelect
+              dropdownClassName="cancel-drag"
+              disabled={disabled}
+              treeCheckable={multipleChecked}
+              allowClear
+              {...(value ? { value } : {})}
+              showSearch
+              onChange={(value: any) => onChangeValue(value)}
+              loadData={onLoadData}
+              size="small"
+            >
+              {renderNode(nodes)}
+            </TreeSelect>
+          )}
       </Col>
       <Col span={4}>
         <Button
