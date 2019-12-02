@@ -11,7 +11,7 @@ const { TreeNode } = TreeSelect;
 
 export const Libraries: React.FC<IComponents> = props => {
   const { list } = props;
-  function callback() {}
+  function callback() { }
 
   const originComs = list;
   let components = _.cloneDeep(originComs);
@@ -31,7 +31,7 @@ export const Libraries: React.FC<IComponents> = props => {
       if (selectedLib.isLeaf) {
         components = components.filter(
           (com: any) =>
-            com.id.replace("-", "").toLowerCase() ===
+            com.id.toLowerCase() ===
             selectedLib.lib.toLowerCase()
         );
       } else if (selectedLib.lib) {
