@@ -16,11 +16,10 @@ const dataMocker = DataMocker.getInstance();
 const execution: IPluginExecution = async (param: IPluginParam) => {
   const dataNode: IDataNode = _.get(param, 'dataNode');
 
-  if (_.has(dataNode, 'uiNode.schema.$children') && !_.isArray(dataNode.data)) {
-    if (_.isArray(_.get(dataNode, 'uiNode.schema.$children'))) {
-      dataMocker.noCache = true;
-      return dataMocker.generateTableData(dataNode.uiNode);
-    }
+  const $children = _.get(dataNode, 'uiNode.schema.$children')
+  if (_.isArray($children) && !_.isArray(dataNode.data)) {
+    dataMocker.noCache = true;
+    return dataMocker.generateTableData(dataNode.uiNode);
   }
 };
 
