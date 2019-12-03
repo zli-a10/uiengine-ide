@@ -56,14 +56,17 @@ export const Main = (props: any) => {
 
   // preview collaspse state
   const [preview, setPreview] = useState(false);
-  const switchPreview = async (status: boolean) => {
-    MemoStore.bucket.preview = status;
-    const rootNode = getActiveUINode() as UINode;
-    await rootNode.refreshLayout();
-    rootNode.sendMessage(true);
-    setPreview(status);
-    activeTab("drawingboard");
-  };
+  const switchPreview = useCallback(
+    async (status: boolean) => {
+      MemoStore.bucket.preview = status;
+      const rootNode = getActiveUINode() as UINode;
+      await rootNode.refreshLayout();
+      rootNode.sendMessage(true);
+      setPreview(status);
+      activeTab("drawingboard");
+    },
+    [preview, activeTab]
+  );
 
   const [resourceTree, setResourceTree] = useState({
     listener: [],
@@ -87,7 +90,7 @@ export const Main = (props: any) => {
       },
       saved: false,
       theme: "",
-      toggleTheme: (theme: string) => { },
+      toggleTheme: (theme: string) => {},
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
@@ -195,27 +198,30 @@ export const Main = (props: any) => {
         if (data.children) {
           data.children.forEach(async (child: any) => {
             if (child.$template) {
-              let templateData = await fileLoader.loadFile(child.$template, 'schema')
-              templateData = cleanSchema(templateData)
-              let templateStatusNode = {} as IUploadFile
-              templateStatusNode.data = templateData
-              templateStatusNode.path = child.$template
-              templateStatusNode.type = 'schema'
-              templateStatusNode.status = { status: 'new', nodeType: 'file' }
+              let templateData = await fileLoader.loadFile(
+                child.$template,
+                "schema"
+              );
+              templateData = cleanSchema(templateData);
+              let templateStatusNode = {} as IUploadFile;
+              templateStatusNode.data = templateData;
+              templateStatusNode.path = child.$template;
+              templateStatusNode.type = "schema";
+              templateStatusNode.status = { status: "new", nodeType: "file" };
               // save templates
-              await saveFile(templateStatusNode)
+              await saveFile(templateStatusNode);
               // update template status
               saveFileStatus(child.$template, "schema", "dropped");
             }
-          })
+          });
         }
         statusNode.data = data;
         await saveFile(statusNode);
       }
       // update file status
-      let updatedStatus = _.cloneDeep(status)
-      updatedStatus.status = "dropped"
-      saveOpenFileStatus({ file: path, type, status: updatedStatus })
+      let updatedStatus = _.cloneDeep(status);
+      updatedStatus.status = "dropped";
+      saveOpenFileStatus({ file: path, type, status: updatedStatus });
       // remove node from resource tree
       removeNodeFromResourceTree(path, type);
       toggleRefresh();
@@ -236,8 +242,24 @@ export const Main = (props: any) => {
     setFiles(files);
   }, []);
 
+  // shortcut handler
+  const keyPressActions = useCallback(
+    async (e: any) => {
+      if (e.code === "KeyV") {
+        switchPreview(!preview);
+      }
+      if (e.code === "KeyA") {
+        togglePropsCollapse(!propsCollapsed);
+      }
+    },
+    [preview, propsCollapsed]
+  );
+
   const [isOverHeader, setIsOverHeader] = useState(false);
   useEffect(() => {
+    // shortcut v == preview, a=attribute
+    window.onkeydown = keyPressActions;
+
     const ideEditor: any = document.getElementById("ide-editor");
     if (headerCollapsed) {
       ideEditor.style.height = "100%";
@@ -254,7 +276,7 @@ export const Main = (props: any) => {
     designManager.onmouseout = () => {
       setIsOverHeader(false);
     };
-  }, [isOverHeader, headerCollapsed]);
+  }, [isOverHeader, headerCollapsed, preview, propsCollapsed]);
 
   const cls = classnames({
     "ide-header": true,
