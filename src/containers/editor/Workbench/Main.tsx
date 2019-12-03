@@ -281,7 +281,7 @@ export const Main = (props: any) => {
       }
       return false;
     },
-    [preview, propsCollapsed, toggleShowAll]
+    [preview, propsCollapsed, allShow]
   );
 
   const [isOverHeader, setIsOverHeader] = useState(false);
@@ -305,7 +305,7 @@ export const Main = (props: any) => {
     designManager.onmouseout = () => {
       setIsOverHeader(false);
     };
-  }, [isOverHeader, headerCollapsed, preview, propsCollapsed]);
+  }, [isOverHeader, headerCollapsed, preview, propsCollapsed, allShow]);
 
   const cls = classnames({
     "ide-header": true,
