@@ -128,17 +128,31 @@ export const Main = (props: any) => {
     ]
   );
 
+  const [allShow, setAllShow] = useState(
+    localStorage.ideHeaderCollapse === "false"
+  );
   const hideAll = useCallback(() => {
     toggleComponentCollapse(true);
     togglePropsCollapse(true);
     toggleHeaderCollapse(true);
-  }, []);
+    setAllShow(false);
+  }, [allShow]);
 
   const showAll = useCallback(() => {
     toggleComponentCollapse(false);
     togglePropsCollapse(false);
     toggleHeaderCollapse(false);
-  }, []);
+    setAllShow(true);
+  }, [allShow]);
+
+  // add shortcut:h
+  const toggleShowAll = useCallback(() => {
+    if (allShow) {
+      hideAll();
+    } else {
+      showAll();
+    }
+  }, [allShow]);
 
   // file save window
   const [visible, changeVisible] = useState(false);
@@ -233,7 +247,7 @@ export const Main = (props: any) => {
     changeVisible(false);
   }, []);
 
-  const showSaveWindow = useCallback((e: any) => {
+  const showSaveWindow = useCallback(() => {
     changeVisible(true);
   }, []);
 
@@ -245,14 +259,29 @@ export const Main = (props: any) => {
   // shortcut handler
   const keyPressActions = useCallback(
     async (e: any) => {
+      e.preventDefault();
+      // shortcut:v for preview
       if (e.code === "KeyV") {
         switchPreview(!preview);
       }
+
+      // shortcut: a for prop window
       if (e.code === "KeyA") {
         togglePropsCollapse(!propsCollapsed);
       }
+
+      // shortcut: h for toggle show prop,designer, header
+      if (e.code === "KeyH") {
+        toggleShowAll();
+      }
+
+      // shortcut: ctrl+s for show save window
+      if (e.ctrlKey && e.code === "KeyS") {
+        showSaveWindow();
+      }
+      return false;
     },
-    [preview, propsCollapsed]
+    [preview, propsCollapsed, toggleShowAll]
   );
 
   const [isOverHeader, setIsOverHeader] = useState(false);
@@ -287,13 +316,13 @@ export const Main = (props: any) => {
   return (
     <GlobalContext.Provider value={contextValue}>
       {headerCollapsed ? (
-        <a className="ide-show" onClick={showAll}>
+        <a className="ide-show" title="shortcut: h" onClick={showAll}>
           <Icon type="caret-right" />
         </a>
       ) : null}
       <div className={cls} id="ide-design-header">
         <div className="left">
-          <div className="button-close">
+          <div className="button-close" title="shortcut: h">
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
@@ -326,18 +355,24 @@ export const Main = (props: any) => {
         <div className="right">
           <div className="props">
             <Switch
+              title="shortcut: v"
               checked={preview}
               checkedChildren="Preview"
               unCheckedChildren="Edit"
               onChange={() => switchPreview(!preview)}
             />
             <a
+              title="shortcut: a"
               className="settings"
               onClick={() => togglePropsCollapse(!propsCollapsed)}
             >
               <Icon type="setting" />
             </a>
-            <a className="save" onClick={showSaveWindow}>
+            <a
+              className="save"
+              title="shortcut: ctrl+s"
+              onClick={showSaveWindow}
+            >
               <Icon type="save" />
             </a>
           </div>
