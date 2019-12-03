@@ -1,27 +1,33 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import _ from 'lodash';
-import { DataSourceSelector } from './DataSource';
-import { Switch, Form, Input, Row, Col, Icon, Select, InputNumber } from 'antd';
-import { IDERegister, DndNodeManager } from '../../../../helpers';
-import { PropItem } from '../PropItem';
+import React, { useState, useCallback, useEffect } from "react";
+import _ from "lodash";
+import { DataSourceSelector } from "./DataSource";
+import { Switch, Form, Input, Row, Col, Icon, Select, InputNumber } from "antd";
+import { IDERegister, DndNodeManager } from "../../../../helpers";
+import { PropItem } from "../PropItem";
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, value, name, uinode, disabled, ...rest } = props;
   // let dataSource = _.get(uinode, "schema.datasource") as any;
-  let dataSource = value;
+  let dataSource: any = {
+    source: "",
+    schema: ""
+  };
 
-  if (_.isString(dataSource)) {
+  if (_.isString(value)) {
     dataSource = {
-      source: dataSource
+      source: value,
+      schema: value
     };
+  } else if (_.isObject(value)) {
+    dataSource = value;
   }
 
   // change source and update layout
-  const [source, changeSource] = useState(_.get(dataSource, 'source'));
-  const [schema, changeSchema] = useState(_.get(dataSource, 'schema'));
-  const [autoload, changeAutoload] = useState(_.get(dataSource, 'autoload'));
+  const [source, changeSource] = useState(_.get(dataSource, "source"));
+  const [schema, changeSchema] = useState(_.get(dataSource, "schema"));
+  const [autoload, changeAutoload] = useState(_.get(dataSource, "autoload"));
   const [defaultValue, changeDefaultValue] = useState(
-    _.get(dataSource, 'defaultValue')
+    _.get(dataSource, "defaultValue")
   );
 
   const [isLock, setLock] = useState(true);
@@ -64,7 +70,7 @@ export const DatasourceComponent = (props: any) => {
     [dataSource]
   );
 
-  const [defaultValueType, changeDefaultValueType] = useState('string');
+  const [defaultValueType, changeDefaultValueType] = useState("string");
   const onChangeDefaultValueType = (value: string) => {
     changeDefaultValueType(value);
     changeDefaultValue(undefined);
@@ -74,9 +80,9 @@ export const DatasourceComponent = (props: any) => {
   const onChangeDefaultValue = (e: any) => {
     let value: any;
 
-    if (defaultValueType === 'string') {
+    if (defaultValueType === "string") {
       value = e.target.value;
-    } else if (defaultValueType === 'undefined') {
+    } else if (defaultValueType === "undefined") {
       value = undefined;
     } else {
       value = e;
@@ -89,12 +95,12 @@ export const DatasourceComponent = (props: any) => {
   const [formatter, setFormatter] = useState();
   const changeFormatter = useCallback((formatterName: string) => {
     setFormatter(formatterName);
-    const finalResult = _.get(uinode, 'schema', {});
+    const finalResult = _.get(uinode, "schema", {});
 
     if (!formatterName) {
-      _.unset(finalResult, 'props.formatter');
+      _.unset(finalResult, "props.formatter");
     } else {
-      _.set(finalResult, 'props.formatter.name', formatterName);
+      _.set(finalResult, "props.formatter.name", formatterName);
     }
     uinode.refreshLayout();
     uinode.sendMessage(true);
@@ -105,11 +111,11 @@ export const DatasourceComponent = (props: any) => {
 
   // const [ds, changeDs] = useState(dataSource);
   useEffect(() => {
-    changeSource(_.get(dataSource, 'source'));
-    changeSchema(_.get(dataSource, 'schema'));
-    changeAutoload(_.get(dataSource, 'autoload'));
-    changeDefaultValue(_.get(dataSource, 'defaultValue'));
-    const formatterName = _.get(uinode, 'schema.props.formatter.name');
+    changeSource(_.get(dataSource, "source"));
+    changeSchema(_.get(dataSource, "schema"));
+    changeAutoload(_.get(dataSource, "autoload"));
+    changeDefaultValue(_.get(dataSource, "defaultValue"));
+    const formatterName = _.get(uinode, "schema.props.formatter.name");
 
     setFormatter(formatterName);
   }, [dataSource, formatter, uinode]);
@@ -132,15 +138,15 @@ export const DatasourceComponent = (props: any) => {
           value={schema}
         />
       </Form.Item>
-      <div style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', right: '22px', top: '-52px' }}>
+      <div style={{ position: "relative" }}>
+        <div style={{ position: "absolute", right: "22px", top: "-52px" }}>
           {isLock ? (
-            <Icon onClick={onClickLock} type="lock" style={{ color: 'red' }} />
+            <Icon onClick={onClickLock} type="lock" style={{ color: "red" }} />
           ) : (
             <Icon
               onClick={onClickLock}
               type="unlock"
-              style={{ color: 'green' }}
+              style={{ color: "green" }}
             />
           )}
         </div>
@@ -168,14 +174,14 @@ export const DatasourceComponent = (props: any) => {
                 </Select>
               </Col>
               <Col span={16}>
-                {defaultValueType === 'number' ? (
+                {defaultValueType === "number" ? (
                   <InputNumber
                     value={defaultValue}
                     onChange={onChangeDefaultValue}
                     disabled={disabled}
                     size="small"
                   />
-                ) : defaultValueType === 'boolean' ? (
+                ) : defaultValueType === "boolean" ? (
                   <Switch
                     onChange={onChangeDefaultValue}
                     checked={defaultValue}
@@ -210,25 +216,25 @@ export const DatasourceComponent = (props: any) => {
                   )}
                 </Select>
               </Form.Item>
-              {_.has(IDERegister.formatters, `${formatter}.params`) ?
-                Object.entries(IDERegister.formatters[formatter].params).map(
-                  (entry: any) => {
-                    return (
-                      <PropItem
-                        section="prop"
-                        name={`formatter.${entry[0]}`}
-                        schema={entry[1]}
-                        key={`key-${entry[0]}`}
-                        uinode={uinode}
-                        data={_.get(
-                          uinode,
-                          `schema.props.formatter.${entry[0]}`
-                        )}
-                      />
-                    );
-                  }
-                ) :
-                null}
+              {_.has(IDERegister.formatters, `${formatter}.params`)
+                ? Object.entries(IDERegister.formatters[formatter].params).map(
+                    (entry: any) => {
+                      return (
+                        <PropItem
+                          section="prop"
+                          name={`formatter.${entry[0]}`}
+                          schema={entry[1]}
+                          key={`key-${entry[0]}`}
+                          uinode={uinode}
+                          data={_.get(
+                            uinode,
+                            `schema.props.formatter.${entry[0]}`
+                          )}
+                        />
+                      );
+                    }
+                  )
+                : null}
             </>
           ) : null}
         </>
