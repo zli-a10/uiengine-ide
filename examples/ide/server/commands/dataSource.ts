@@ -24,6 +24,7 @@ const buildFields = (fields: any, options: ICommandOptions) => {
         component: "div",
         title: field.key,
         value,
+        id: field.key,
         children: buildFields(field.fields, options)
       };
     } else {
@@ -32,6 +33,7 @@ const buildFields = (fields: any, options: ICommandOptions) => {
         component,
         title: field.key,
         value,
+        id: value,
         props: {
           label: field.label,
           type: getWidgetType(get(field, ["type"], "")),

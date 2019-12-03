@@ -9,6 +9,7 @@ import {
   useUnWrapNode,
   useRemoveChildren,
   useSaveTemplate,
+  useBreakupFromTemplate,
   useCollapseItems,
   useCloneNode
 } from '../../helpers';
@@ -17,12 +18,13 @@ const ActionMenu = (props: any) => {
   const { editingResource } = useContext(SchemasContext);
   const { collapsedNodes } = useContext(IDEEditorContext);
   const { children, uinode } = props;
+  const isTemplate = _.has(uinode, 'props.ide_droppable');
 
   const menu = (
     <Menu>
       <Menu.Item key="unit-collapse" onClick={useCollapseItems(uinode)}>
         {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, '**any-id')) >
-        -1 ? (
+          -1 ? (
             <a target="_blank">
               <Icon type="fullscreen" /> Expand Items
             </a>
@@ -32,7 +34,7 @@ const ActionMenu = (props: any) => {
             </a>
           )}
       </Menu.Item>
-      {!editingResource ? null : (
+      {!editingResource || isTemplate ? null : (
         <Menu.Item
           key="unit-save-as-template"
           onClick={useSaveTemplate(uinode)}
@@ -42,7 +44,16 @@ const ActionMenu = (props: any) => {
           </a>
         </Menu.Item>
       )}
-
+      {isTemplate ? (
+        <Menu.Item
+          key="unit-break-from-template"
+          onClick={useBreakupFromTemplate(uinode)}
+        >
+          <a target="_blank">
+            <Icon type="save" /> Breakup from Template
+          </a>
+        </Menu.Item>
+      ) : null}
       <Menu.Divider />
       <Menu.Item key="unit-remove-all" onClick={useRemoveChildren(uinode)}>
         <a target="_blank">
