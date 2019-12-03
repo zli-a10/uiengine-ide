@@ -287,7 +287,8 @@ export const Main = (props: any) => {
   const [isOverHeader, setIsOverHeader] = useState(false);
   useEffect(() => {
     // shortcut v == preview, a=attribute
-    window.onkeydown = keyPressActions;
+    // window.onkeydown = keyPressActions;
+    window.addEventListener("keydown", keyPressActions);
 
     const ideEditor: any = document.getElementById("ide-editor");
     if (headerCollapsed) {
