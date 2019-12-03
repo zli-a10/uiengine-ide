@@ -259,27 +259,30 @@ export const Main = (props: any) => {
   // shortcut handler
   const keyPressActions = useCallback(
     async (e: any) => {
-      e.preventDefault();
-      // shortcut:v for preview
-      if (e.code === "KeyV") {
+      // shortcut:alt+v for preview
+      if (e.altKey && e.code === "KeyV") {
+        e.preventDefault();
         switchPreview(!preview);
       }
 
-      // shortcut: a for prop window
-      if (e.code === "KeyA") {
+      // shortcut: alt+a for prop window
+      if (e.altKey && e.code === "KeyA") {
+        e.preventDefault();
         togglePropsCollapse(!propsCollapsed);
       }
 
-      // shortcut: h for toggle show prop,designer, header
-      if (e.code === "KeyH") {
+      // shortcut: alt+h for toggle show prop,designer, header
+      if (e.altKey && e.code === "KeyH") {
+        e.preventDefault();
         toggleShowAll();
       }
 
       // shortcut: ctrl+s for show save window
       if (e.ctrlKey && e.code === "KeyS") {
+        e.preventDefault();
         showSaveWindow();
       }
-      return false;
+      // return false;
     },
     [preview, propsCollapsed, allShow]
   );
@@ -317,13 +320,13 @@ export const Main = (props: any) => {
   return (
     <GlobalContext.Provider value={contextValue}>
       {headerCollapsed ? (
-        <a className="ide-show" title="shortcut: h" onClick={showAll}>
+        <a className="ide-show" title="shortcut: alt+h" onClick={showAll}>
           <Icon type="caret-right" />
         </a>
       ) : null}
       <div className={cls} id="ide-design-header">
         <div className="left">
-          <div className="button-close" title="shortcut: h">
+          <div className="button-close" title="shortcut: alt+h">
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
@@ -356,14 +359,14 @@ export const Main = (props: any) => {
         <div className="right">
           <div className="props">
             <Switch
-              title="shortcut: v"
+              title="shortcut: alt+v"
               checked={preview}
               checkedChildren="Preview"
               unCheckedChildren="Edit"
               onChange={() => switchPreview(!preview)}
             />
             <a
-              title="shortcut: a"
+              title="shortcut: alt+a"
               className="settings"
               onClick={() => togglePropsCollapse(!propsCollapsed)}
             >
