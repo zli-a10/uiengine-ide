@@ -1,16 +1,16 @@
-import React from 'react'
-import { Layout } from 'antd'
-import _ from 'lodash'
-import LayoutComponent from './Layout'
-import HeaderComponent from './Header'
-import ContentComponent from './Content'
-import BreadcrumbComponent from './Breadcrumb'
-import MenuComponent from './Menu'
-import FooterComponent from './Footer'
-import Provider from '../../my/Context/Provider'
+import React from "react";
+// import { Layout } from 'antd'
+// import _ from 'lodash'
+import LayoutComponent from "./Layout";
+import HeaderComponent from "./Header";
+import ContentComponent from "./Content";
+import BreadcrumbComponent from "./Breadcrumb";
+import MenuComponent from "./Menu";
+import FooterComponent from "./Footer";
+import Provider from "../../my/Context/Provider";
 
 const PageComponent = (props: any) => {
-  const { children, helpSwitcher } = props
+  const { children, helpSwitcher } = props;
   return (
     <Provider>
       <LayoutComponent>
@@ -21,7 +21,7 @@ const PageComponent = (props: any) => {
         <FooterComponent />
       </LayoutComponent>
     </Provider>
-  )
-}
+  );
+};
 
-export default PageComponent
+export default PageComponent;

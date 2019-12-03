@@ -1,10 +1,5 @@
 import _ from "lodash";
-import {
-  IPlugin,
-  IPluginParam,
-  IUINode,
-  IPluginExecution
-} from "uiengine/typings";
+import { IPlugin, IPluginParam, IPluginExecution } from "uiengine/typings";
 
 import { MemoStore } from "uiengine-ide";
 

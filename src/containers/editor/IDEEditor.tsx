@@ -1,42 +1,61 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import * as _ from "lodash";
-import { IUINode } from "uiengine/typings";
-import { Main, DesignManager, PropManager } from "./";
-import { IDEEditorContext } from "../Context";
-import { UIEngineDndProvider } from "../dnd";
-import * as Providers from "./Providers";
-import { IDE_ID, getActiveUINode, FileLoader, VersionControl } from "../../helpers";
-import "./styles/index.less";
-import ErrorBoundary from "./ErrorBoundary";
-import { Start } from "./Helper";
-import { EditorTabs } from "./Workbench/EditorTabs";
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import * as _ from 'lodash';
+import { IUINode } from 'uiengine/typings';
+import { Main, DesignManager, PropManager } from './';
+import { IDEEditorContext } from '../Context';
+import { UIEngineDndProvider } from '../dnd';
+import * as Providers from './Providers';
+import {
+  IDE_ID,
+  getActiveUINode,
+  FileLoader,
+  VersionControl
+} from '../../helpers';
+import './styles/index.less';
+import ErrorBoundary from './ErrorBoundary';
+import { Start } from './Helper';
+import { EditorTabs } from './Workbench/EditorTabs';
 
 export const IDEEditor: React.FC<IIDEEditor> = props => {
-  const [currentTab, setCurrentTab] = useState("drawingboard");
-  const [activeTabName, setActiveTabName] = useState("drawingboard");
+  const [currentTab, setCurrentTab] = useState('drawingboard');
+  const [activeTabName, setActiveTabName] = useState('drawingboard');
   const [tabs, setTabs] = useState([]);
   const [editNode, setEditNode] = useState();
-  const [content, setContent] = useState<Array<IContentList>>([]);
-  const [collapsedNodes, setCollapsedNodes] = useState<Array<string>>([]);
+  const [content, setContent] = useState < Array < IContentList >> ([]);
+  const [collapsedNodes, setCollapsedNodes] = useState < Array < string >> ([]);
 
-  const ideEditorContextValue = useMemo<IIDEEditorContext>(
+  const ideEditorContextValue = useMemo < IIDEEditorContext > (
     () => ({
       tabs,
       showTab: currentTab,
       activeTabName: activeTabName,
-      activeTab: (tab: string, language?: string, oldTabName?: string) => {
+      activeTab: (
+        tab: string,
+        language?: string,
+        oldTabName?: string,
+        isTemplate?: boolean
+      ) => {
         const newTabs: any = _.clone(tabs);
         let current: string = tab;
-        const drawingBoard = "drawingboard";
-        if (!language) language = "schema";
+        const drawingBoard = 'drawingboard';
+
+        if (!language) language = 'schema';
         if (tab.indexOf(drawingBoard) !== -1) {
-          const segs = tab.split(":");
+          const segs = tab.split(':');
+
           if (segs[1]) current = segs[1];
+        }
+        if (current !== drawingBoard && language === 'schema') {
+          localStorage.cachedActiveTab = JSON.stringify({
+            tabName: current,
+            isTemplate
+          });
         }
         if (oldTabName) {
           const tabOld = _.find(newTabs, { tab: oldTabName });
+
           if (!tabOld) return;
-          if (_.isObject(tabOld)) _.set(tabOld, "tab", current);
+          if (_.isObject(tabOld)) _.set(tabOld, 'tab', current);
         } else if (
           !_.find(tabs, { tab: current }) &&
           drawingBoard !== current
@@ -45,8 +64,8 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           setTabs(newTabs);
         }
         setActiveTabName(current);
-        if (language === "schema") {
-          if (!!localStorage["drawingBoardLayout"]) {
+        if (language === 'schema') {
+          if (localStorage['drawingBoardLayout']) {
             setCurrentTab(current);
           } else {
             if (tab.indexOf(drawingBoard) !== -1) {
@@ -62,18 +81,22 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       removeTab: (tab: string) => {
         const newTabs: any = _.clone(tabs);
         const index: any = _.findIndex(newTabs, { tab });
+
         if (index > -1) {
-          let newCurrentTab = newTabs[index + 1]
-            ? newTabs[index + 1]
-            : newTabs[index - 1];
+          let newCurrentTab = newTabs[index + 1] ?
+            newTabs[index + 1] :
+            newTabs[index - 1];
+
           newTabs.splice(index, 1);
           setTabs(newTabs);
-          const fileLoader = FileLoader.getInstance()
-          const versionControl = VersionControl.getInstance()
-          versionControl.clearHistories()
+          const fileLoader = FileLoader.getInstance();
+          const versionControl = VersionControl.getInstance();
+
+          versionControl.clearHistories();
           if (!newCurrentTab) {
-            fileLoader.editingFile = ''
-            setCurrentTab("drawingboard");
+            localStorage.cachedActiveTab = JSON.stringify({});
+            fileLoader.editingFile = '';
+            setCurrentTab('drawingboard');
             const sandbox: any = {
               component: 'div',
               props: {
@@ -90,37 +113,45 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
                     'Please Drag and Drop an element from left Components tab, and then try to edit it on prop window.'
                 }
               ]
-            }
+            };
+
             try {
               const uiNode = getActiveUINode();
+
               uiNode.schema = sandbox;
-              uiNode.updateLayout();
+              uiNode.refreshLayout();
               uiNode.sendMessage(true);
             } catch (e) {
               console.error(e);
             }
           } else {
-            fileLoader.editingFile = newCurrentTab.tab
+            fileLoader.editingFile = newCurrentTab.tab;
             setActiveTabName(newCurrentTab.tab);
-            if (newCurrentTab.language === "schema") {
+            localStorage.cachedActiveTab = JSON.stringify({
+              tabName: newCurrentTab.tab,
+              isTemplate: false
+            });
+            if (newCurrentTab.language === 'schema') {
               const text = _.find(content, { file: newCurrentTab.tab });
+
               if (text) {
                 if (_.isString(text.content)) {
                   try {
                     const schema = JSON.parse(text.content);
                     const uiNode = getActiveUINode();
+
                     uiNode.schema = schema;
-                    uiNode.updateLayout();
+                    uiNode.refreshLayout();
                     uiNode.sendMessage(true);
                   } catch (e) {
                     console.error(e);
                   }
                 }
               }
-              if (!!localStorage["drawingBoardLayout"]) {
+              if (localStorage['drawingBoardLayout']) {
                 setCurrentTab(newCurrentTab.tab);
               } else {
-                setCurrentTab("drawingboard");
+                setCurrentTab('drawingboard');
               }
             } else {
               setCurrentTab(newCurrentTab.tab);
@@ -131,19 +162,20 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
         // remove content
         const newContentList: any = _.clone(content);
         const conentIndex = _.findIndex(newContentList, { file: tab });
+
         if (conentIndex > -1) {
           newContentList.splice(conentIndex, 1);
           setContent(newContentList);
         }
       },
-      layout: "",
-      setLayout: (path: string) => { },
+      layout: '',
+      setLayout: (path: string) => {},
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
-      help: "",
-      setHelp: (help: string) => { },
-      refresh: "",
-      toggleRefresh: (refresh: string) => { },
+      help: '',
+      setHelp: (help: string) => {},
+      refresh: '',
+      toggleRefresh: (refresh: string) => {},
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode);
@@ -167,10 +199,12 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       setContent: (data: IContentList) => {
         const newContentList: any = _.clone(content);
         const { file, type, content: newContent } = data;
+
         if (_.isObject(newContent)) {
-          data.content = JSON.stringify(newContent, null, "\t");
+          data.content = JSON.stringify(newContent, null, '\t');
         }
         const index = _.findIndex(newContentList, { type, file });
+
         if (index > -1) {
           newContentList[index] = data;
         } else {
@@ -184,20 +218,20 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
 
   // show start ?
   const [showGuide, setShowGuide] = useState(false);
+
   useEffect(() => {
     // show guide
     const showGuideStatus =
-      localStorage["showGuide"] === undefined
-        ? true
-        : localStorage["showGuide"] === "false"
-          ? false
-          : true;
+      localStorage['showGuide'] === undefined ?
+        true :
+        localStorage['showGuide'] !== 'false';
+
     setShowGuide(showGuideStatus);
-  }, [localStorage["drawingBoardLayout"], localStorage["showGuide"]]);
+  }, [localStorage['drawingBoardLayout'], localStorage['showGuide']]);
 
   const onCloseGuide = useCallback(() => {
     setShowGuide(false);
-    localStorage["showGuide"] = false;
+    localStorage['showGuide'] = false;
   }, []);
 
   return (

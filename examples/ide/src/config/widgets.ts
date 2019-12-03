@@ -1,5 +1,5 @@
-import { message } from "antd";
-import { ProductWrapper } from "../component";
+import { message } from 'antd';
+import { ProductWrapper } from '../component';
 
 const widgetsConfig = {
   messager: (props: any) => {

@@ -1,4 +1,4 @@
-import { dev } from "./host";
+import { dev } from './host';
 
 export default {
   port: 3001,

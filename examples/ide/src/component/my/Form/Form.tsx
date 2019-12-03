@@ -1,8 +1,8 @@
-import React from 'react'
-import { Form } from 'antd'
-import _ from 'lodash'
+import React from "react";
+import { Form } from "antd";
+// import _ from 'lodash'
 const FormComponent = (props: any) => {
-  const { children } = props
+  const { children } = props;
 
   const formItemLayout = {
     labelCol: {
@@ -13,13 +13,13 @@ const FormComponent = (props: any) => {
       xs: { span: 24 },
       sm: { span: 12 }
     }
-  }
+  };
 
   return (
     <>
       <Form {...formItemLayout}>{children}</Form>
     </>
-  )
-}
+  );
+};
 
-export default FormComponent
+export default FormComponent;

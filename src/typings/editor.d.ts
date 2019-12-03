@@ -1,20 +1,20 @@
 interface IErrorBoundaryProps {}
 
 interface IErrorBoundaryState {
-  hasError: boolean
-  error: Error | null
+  hasError: boolean;
+  error: Error | null;
 }
 
 interface IPropInfo {
-  schema?: ILayoutSchema
-  debug?: any
-  [name: string]: any
+  schema?: ILayoutSchema;
+  debug?: any;
+  [name: string]: any;
 }
 
 interface IIDEEditor {
-  children?: ReactNode
-  layouts: [string]
-  config: object
+  children?: ReactNode;
+  layouts: [string];
+  config: object;
 }
 
 interface IPropManager {}
@@ -22,32 +22,33 @@ interface IPropManager {}
 interface IDesignManager {}
 
 interface IWidgets {
-  widgets: IWidget[]
+  openAll: any;
+  widgets: IWidget[];
 }
 
 interface ILayoutManager {
-  layout: string
+  layout: string;
 }
 
 interface ITree {
-  tree: any
+  tree: any;
 }
 
 interface ITreeState {
-  expandKeys: string[]
-  date: number
-  autoExpandParent: boolean
-  [name: string]: any
+  expandKeys: string[];
+  date: number;
+  autoExpandParent: boolean;
+  [name: string]: any;
 }
 
 interface IComponents {
-  list: any
+  list: any;
 }
 
 interface IWidget {
-  widget: any
+  widget: any;
 }
 
 interface IMenuTitle {
-  dataRef: any
+  dataRef: any;
 }

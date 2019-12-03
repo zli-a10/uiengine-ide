@@ -17,7 +17,8 @@ import {
   DndNodeManager,
   RegionDetector,
   DND_IDE_NODE_TYPE,
-  DND_IDE_SCHEMA_TYPE
+  DND_IDE_SCHEMA_TYPE,
+  DND_IDE_DATASOURCE_TYPE
 } from "../../helpers";
 import ActionMenu from "./ActionMenu";
 import "./styles/index.less";
@@ -50,7 +51,7 @@ export const UIEngineDndWrapper = (props: any) => {
     _.get(uinode, "schema.component")
   );
   const isContainer = _.get(componentInfo, "isContainer", false);
-
+  if (!_.isObject(uinode.schema)) return null;
   // will remove if export schema
   // add a wrapper ID
   if (!uinode.schema[IDE_ID]) {
@@ -76,7 +77,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
-    accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE],
+    accept: [DND_IDE_NODE_TYPE, DND_IDE_SCHEMA_TYPE, DND_IDE_DATASOURCE_TYPE],
     hover: async (item: DragItem, monitor: DropTargetMonitor) => {
       if (!ref.current) {
         return;
@@ -84,9 +85,22 @@ export const UIEngineDndWrapper = (props: any) => {
       const draggingNode = item.uinode;
       const hoverNode = uinode;
 
-      // Don't replace items with themselves
-      if (draggingNode === hoverNode || !isOverCurrent) {
-        return;
+      if (draggingNode) {
+        let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
+        if (!_.isEmpty(cachedActiveTab)) {
+          if (
+            draggingNode.schema &&
+            draggingNode.schema.$template &&
+            draggingNode.schema.$template === cachedActiveTab.tabName
+          ) {
+            return;
+          }
+        }
+
+        // Don't replace items with themselves
+        if (draggingNode === hoverNode || !isOverCurrent) {
+          return;
+        }
       }
 
       let regionStyles;
@@ -146,6 +160,14 @@ export const UIEngineDndWrapper = (props: any) => {
           setOverClass("schema");
           setBorder(regionStyles);
           break;
+        case DND_IDE_DATASOURCE_TYPE:
+          regionStyles = {
+            border: "3px solid #80c35f",
+            backgroundColor: "#40a9ff"
+          };
+          setOverClass("datasource");
+          setBorder(regionStyles);
+          break;
       }
     },
     drop: async (item: DragItem, monitor: DropTargetMonitor) => {
@@ -154,11 +176,26 @@ export const UIEngineDndWrapper = (props: any) => {
       }
       const draggingNode = item.uinode;
       const targetNode = uinode;
-      // Don't replace items with themselves
-      if (draggingNode === targetNode || !isOverCurrent) {
-        return;
+
+      if (draggingNode) {
+        let cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
+        if (!_.isEmpty(cachedActiveTab)) {
+          if (
+            draggingNode.schema &&
+            draggingNode.schema.$template &&
+            draggingNode.schema.$template === cachedActiveTab.tabName
+          ) {
+            return;
+          }
+        }
+
+        // Don't replace items with themselves
+        if (draggingNode === targetNode || !isOverCurrent) {
+          return;
+        }
       }
 
+      // console.log(item, "to be drop");
       switch (item.type) {
         case DND_IDE_NODE_TYPE:
           // Determine rectangle on screen
@@ -182,6 +219,7 @@ export const UIEngineDndWrapper = (props: any) => {
           }
           break;
         case DND_IDE_SCHEMA_TYPE:
+        case DND_IDE_DATASOURCE_TYPE:
           if (_.isObject(item.schema)) {
             dndNodeManager.useSchema(targetNode, item.schema);
           }
@@ -230,7 +268,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // update schema deps
   updateDepsColor(uinode);
-  let myId = getUINodeLable(uinode);
+  // let myId = getUINodeLable(uinode);
 
   // double click
   useEffect(() => {

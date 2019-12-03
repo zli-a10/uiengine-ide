@@ -1,13 +1,13 @@
-import React, { useContext, useState, useCallback } from "react";
-import _ from "lodash";
-import ReactJson from "react-json-view";
-import { Collapse, Row, Col, Input, Select, Form, Icon } from "antd";
-import { useDrop } from "react-dnd";
-import { IDEEditorContext, GlobalContext, PropsContext } from "../../Context";
-import * as Panels from "./Panels";
-import { getActiveUINode } from "../../../helpers";
-import { PluginManager } from "uiengine";
-import { DND_IDE_NODE_TYPE, useDeepCompareEffect } from "../../../helpers";
+import React, { useContext, useState, useCallback, useEffect } from 'react';
+import _ from 'lodash';
+import ReactJson from 'react-json-view';
+import { Collapse, Row, Col, Input, Select, Form, Icon } from 'antd';
+import { useDrop } from 'react-dnd';
+import { IDEEditorContext, PropsContext } from '../../Context';
+import * as Panels from './Panels';
+import { getActiveUINode } from '../../../helpers';
+import { PluginManager } from 'uiengine';
+import { DND_IDE_NODE_TYPE } from '../../../helpers';
 
 const Panel = Collapse.Panel;
 // layout
@@ -37,7 +37,6 @@ const tailFormItemLayout = {
 
 export const Debugger: React.FC = (props: any) => {
   const { editNode } = useContext(IDEEditorContext);
-
   const { time } = useContext(PropsContext);
 
   // preview json
@@ -47,27 +46,29 @@ export const Debugger: React.FC = (props: any) => {
   const getJson = () => {
     let uiJson: any = {},
       dataJson;
+
     if (editNode) {
       uiJson = editNode.schema;
       dataJson = editNode.dataNode.schema;
     } else {
       const uiNode = getActiveUINode(true);
-      uiJson = _.get(uiNode, "schema", {});
+
+      uiJson = _.get(uiNode, 'schema', {});
     }
-    setStateUIJson(uiJson);
-    setStateDataJson(dataJson);
+    setStateUIJson(_.clone(uiJson));
+    setStateDataJson(_.clone(dataJson));
   };
 
-  const [struct, setStruct] = useState<any>("category-id-tree");
-  const [exclude, setExclude] = useState<any>("empty-record");
-  const [componentID, setComponentID] = useState<any>(_.get(editNode, "id"));
+  const [struct, setStruct] = useState < any > ('category-id-tree');
+  const [exclude, setExclude] = useState < any > ('empty-record');
+  const [componentID, setComponentID] = useState < any > (_.get(editNode, 'id'));
 
   const pluginManager = PluginManager.getInstance();
   let pluginData = pluginManager.exportHistoryRecords({
     struct,
     exclude,
     include: {
-      id: componentID === "" ? undefined : componentID
+      id: componentID === '' ? undefined : componentID
     }
   });
 
@@ -82,7 +83,8 @@ export const Debugger: React.FC = (props: any) => {
   // drop id
   const changeComponentId = (e: any) => {
     let id;
-    if (_.has(e, "target")) {
+
+    if (_.has(e, 'target')) {
       id = e.target.value;
     } else {
       id = e;
@@ -100,16 +102,11 @@ export const Debugger: React.FC = (props: any) => {
     drop: async (item: DragItem) => {
       const draggingNode = item.uinode;
       const schema = draggingNode.schema;
-      let id = _.get(schema, "id", _.get(schema, "_id"));
+      let id = _.get(schema, 'id', _.get(schema, '_id'));
+
       changeComponentId(id);
     }
   });
-
-  const [currentTime, setCurrentTime] = useState(Date.now());
-  const onRefresh = (e: any) => {
-    e.stopPropagation();
-    setCurrentTime(Date.now());
-  };
 
   // set data for nodes
   const [uiNode, setUINode] = useState({});
@@ -132,6 +129,7 @@ export const Debugger: React.FC = (props: any) => {
       errorInfo,
       rootName
     };
+
     setUINode(data);
   }, [editNode]);
 
@@ -147,6 +145,7 @@ export const Debugger: React.FC = (props: any) => {
       rootSchema,
       dataPool
     };
+
     setDataNode(info);
   }, [editNode]);
 
@@ -158,11 +157,12 @@ export const Debugger: React.FC = (props: any) => {
       state,
       errorInfo
     };
+
     setStateNode(info);
   }, [editNode]);
 
-  useDeepCompareEffect(() => {
-    if (_.get(editNode, `id`)) {
+  useEffect(() => {
+    if (_.get(editNode, 'id')) {
       changeComponentId(editNode.id);
       fetchUINode();
       fetchDataNode();
@@ -175,9 +175,10 @@ export const Debugger: React.FC = (props: any) => {
   const onChangeTreeSchema = useCallback(
     async (d: any) => {
       const namespace = _.cloneDeep(d.namespace);
+
       namespace.push(d.name);
       _.set(editNode.schema, namespace, d.new_value);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]
@@ -186,7 +187,7 @@ export const Debugger: React.FC = (props: any) => {
   const onAddTreeSchema = useCallback(
     async (d: any) => {
       _.merge(editNode.schema, d.new_value);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]
@@ -195,9 +196,10 @@ export const Debugger: React.FC = (props: any) => {
   const onDeleteTreeSchema = useCallback(
     async (d: any) => {
       const namespace = _.cloneDeep(d.namespace);
+
       namespace.push(d.name);
       _.unset(editNode.schema, namespace);
-      await editNode.updateLayout();
+      await editNode.refreshLayout();
       editNode.sendMessage(true);
     },
     [editNode]
@@ -294,9 +296,9 @@ export const Debugger: React.FC = (props: any) => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              {/* <Col span={4}>
                 <Icon type="redo" title="Reload" onClick={onRefresh} />
-              </Col>
+              </Col> */}
             </Row>
             <Row gutter={16}>
               <Col span={24}>
@@ -339,9 +341,9 @@ export const Debugger: React.FC = (props: any) => {
         <Panel
           header="Nodes"
           key="nodes"
-          extra={<Icon type="reload" onClick={onRefresh} />}
+          // extra={<Icon type="reload" onClick={onRefresh} />}
         >
-          <Collapse accordion bordered={false} defaultActiveKey={"ui-node"}>
+          <Collapse accordion bordered={false} defaultActiveKey={'ui-node'}>
             <Panel header="UI Node" key="ui-node">
               <div className="debugger-tree ui-node">
                 <ReactJson

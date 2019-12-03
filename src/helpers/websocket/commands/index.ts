@@ -1,2 +1,2 @@
-export * from './file'
-export * from './setting'
+export * from './file';
+export * from './setting';

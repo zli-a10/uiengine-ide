@@ -1,12 +1,11 @@
-import React, { useContext } from 'react'
-import { Icon, Checkbox } from 'antd'
-import _ from 'lodash'
-import Td from './Td'
-import { GlobalContext } from 'uiengine-ide'
-import useTableElement from './createElement'
+import React, { useContext } from "react";
+import { Icon } from "antd";
+import Td from "./Td";
+import { GlobalContext } from "uiengine-ide";
+import useTableElement from "./createElement";
 
 const Tr = (props: any) => {
-  const { ideMode, preview } = useContext(GlobalContext)
+  const { ideMode, preview } = useContext(GlobalContext);
   let {
     children,
     expanded,
@@ -19,16 +18,16 @@ const Tr = (props: any) => {
     selectedItems,
     selectItem,
     ...rest
-  } = props
+  } = props;
 
-  const TR = useTableElement('tr')
+  const TR = useTableElement("tr");
 
   return !parentIsTrGroup || mainRow || expanded || (ideMode && !preview) ? (
     <TR className="my-table-row" {...rest}>
       {mainRow && parentIsTrGroup ? (
         <Td width="40">
           <Icon
-            type={expanded ? 'caret-down' : 'caret-right'}
+            type={expanded ? "caret-down" : "caret-right"}
             onClick={() => onExpandSubRow(!expanded)}
           />
         </Td>
@@ -46,10 +45,10 @@ const Tr = (props: any) => {
           return React.cloneElement(child, {
             colCount,
             rowData: value || rowGroupData
-          })
+          });
         })}
     </TR>
-  ) : null
-}
+  ) : null;
+};
 
-export default Tr
+export default Tr;

@@ -1,23 +1,23 @@
-import _ from 'lodash'
-import { DndNodeManager } from './DndNodeManager'
-import { IUINode, ILayoutSchema } from 'uiengine/typings'
-import * as schemaGenerators from './schemaGenerators'
+import _ from "lodash";
+import { DndNodeManager } from "./DndNodeManager";
+import { IUINode, IUISchema } from "uiengine/typings";
+import * as schemaGenerators from "./schemaGenerators";
 
 export class SchemaPropManager implements ISchemaPropManager {
-  static instance: ISchemaPropManager
+  static instance: ISchemaPropManager;
   static getInstance() {
     if (!SchemaPropManager.instance) {
-      SchemaPropManager.instance = new SchemaPropManager()
+      SchemaPropManager.instance = new SchemaPropManager();
     }
-    return SchemaPropManager.instance
+    return SchemaPropManager.instance;
   }
 
-  errors?: IError
+  errors?: IError;
 
-  private dndNodeManager: IDndNodeManager = DndNodeManager.getInstance()
+  private dndNodeManager: IDndNodeManager = DndNodeManager.getInstance();
 
   private validateSchemaValue(componentPropSchema: any, value: any) {
-    return true
+    return true;
   }
 
   /**
@@ -33,28 +33,24 @@ export class SchemaPropManager implements ISchemaPropManager {
     value: any,
     extraInfo?: any
   ) {
-    if (!type) type = 'prop'
-    const errors = this.validateSchemaValue(componentPropSchema, value)
-    if (errors !== true) return false
-    const schemaEntries = Object.entries(componentPropSchema)
-    let result = {}
+    if (!type) type = "root";
+    const errors = this.validateSchemaValue(componentPropSchema, value);
+    if (errors !== true) return false;
+    const schemaEntries = Object.entries(componentPropSchema);
+    let result = {};
     if (schemaEntries.length) {
       schemaEntries.forEach((schema: any) => {
-        const [name, info] = schema
-        if (schemaGenerators[type]) {
-          const finalSchema = schemaGenerators[type](
-            name,
-            info,
-            value,
-            extraInfo
-          )
-          console.log('result1, ', result)
-          result = _.merge(result, finalSchema)
-          console.log('result2, ', result)
+        const [name, info] = schema;
+        let generator = schemaGenerators[type] || schemaGenerators["root"];
+        if (generator) {
+          const finalSchema = generator(name, info, value, extraInfo);
+          console.log("result1, ", result);
+          result = _.merge(result, finalSchema);
+          console.log("result2, ", result);
         }
-      })
+      });
     }
-    return result
+    return result;
   }
 
   async applySchema(
@@ -64,12 +60,12 @@ export class SchemaPropManager implements ISchemaPropManager {
     uiNode: IUINode,
     extraInfo?: any
   ) {
-    const schema: ILayoutSchema = this.generateSchema(
+    const schema: IUISchema = this.generateSchema(
       type,
       componentPropSchema,
       value,
       extraInfo
-    )
-    await this.dndNodeManager.useSchema(uiNode, schema)
+    );
+    await this.dndNodeManager.useSchema(uiNode, schema);
   }
 }

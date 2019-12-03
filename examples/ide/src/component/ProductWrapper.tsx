@@ -2,7 +2,7 @@
 // import { IDEEditorContext } from "uiengine-ide";
 // import { Icon } from "antd";
 
-import _ from "lodash";
+// import _ from 'lodash';
 // export const ProductWrapper = (props: any) => {
 //   const { uinode, style } = props;
 //   const { chooseEditNode } = useContext(IDEEditorContext);

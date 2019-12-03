@@ -1,7 +1,7 @@
 import _ from "lodash";
 // import { difference } from "../../utils";
-import { ILayoutSchema, INodeController, IUINode } from "uiengine/typings";
-import { NodeController } from "uiengine";
+import { IUISchema, INodeController, IUINode } from "uiengine/typings";
+import { NodeController, UINode } from "uiengine";
 import { FileLoader } from ".";
 
 export class VersionControl implements IVersionControl {
@@ -19,15 +19,17 @@ export class VersionControl implements IVersionControl {
   private fileLoader: IFileLoader = FileLoader.getInstance();
   private debounced: any;
 
-  private async reloadSchema(schema: ILayoutSchema) {
+  private async reloadSchema(schema: IUISchema) {
     const activeLayout = this.nodeController.activeLayout;
-    const uiNode: IUINode = this.nodeController.getUINode(activeLayout, true);
-    await uiNode.replaceLayout(_.cloneDeep(schema));
-    await uiNode.sendMessage(true);
+    const uiNode = this.nodeController.getLayout(activeLayout, true);
+    if (uiNode instanceof UINode) {
+      await uiNode.replaceLayout(_.cloneDeep(schema));
+      await uiNode.sendMessage(true);
+    }
   }
 
   // store every 3 seconds
-  private cacheSchema(schema: ILayoutSchema) {
+  private cacheSchema(schema: IUISchema) {
     if (this.debounced) this.debounced.cancel();
     this.debounced = _.debounce(() => {
       if (this.fileLoader.editingFile) {
@@ -37,7 +39,7 @@ export class VersionControl implements IVersionControl {
     }, 1000)();
   }
 
-  push(schema: ILayoutSchema) {
+  push(schema: IUISchema) {
     // remove backwards histories
     if (this.position < this.histories.length - 1) {
       const result = this.histories.splice(

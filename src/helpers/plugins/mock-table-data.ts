@@ -6,7 +6,7 @@ import {
   IPluginExecution
 } from "uiengine/typings";
 import { DataMocker } from "../DataMocker";
-const dataMocker = DataMocker.getInstance();
+import { NO_MOCK } from "../consts";
 
 /**
  * mock Table Data
@@ -15,20 +15,23 @@ const dataMocker = DataMocker.getInstance();
  */
 const execution: IPluginExecution = async (param: IPluginParam) => {
   const dataNode: IDataNode = _.get(param, "dataNode");
-  if (_.has(dataNode, `uiNode.schema.$children`)) {
-    if (_.isArray(_.get(dataNode, `uiNode.schema.$children`))) {
-      dataMocker.noCache = true;
-      const result = dataMocker.generateTableData(dataNode.uiNode);
-      dataNode.data = result;
-      return result;
-    }
+  const dataMocker = DataMocker.getInstance();
+
+  const $children = _.get(dataNode, "uiNode.schema.$children");
+  if (
+    dataMocker.mode !== NO_MOCK &&
+    _.isArray($children) &&
+    !_.isArray(dataNode.data)
+  ) {
+    dataMocker.noCache = true;
+    return dataMocker.generateTableData(dataNode.uiNode);
   }
 };
 
 export const mockTableData: IPlugin = {
+  name: "mockTableData",
   categories: ["data.data.parser"],
   paramKeys: ["dataNode"],
-  priority: 200,
   execution,
-  name: "mockTableData"
+  priority: 200
 };

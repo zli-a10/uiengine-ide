@@ -1,47 +1,47 @@
-import React, { useState } from 'react'
-import { Icon, Dropdown, Menu, Row, Col } from 'antd'
-import _ from 'lodash'
+import React from "react";
+import { Icon, Dropdown, Menu, Row, Col } from "antd";
+import _ from "lodash";
 export interface IDropdownState {
-  subMenu?: string
-  isClick?: Boolean
-  menuLevel?: string
-  thirdMenu?: string
+  subMenu?: string;
+  isClick?: Boolean;
+  menuLevel?: string;
+  thirdMenu?: string;
 }
 
-const { SubMenu } = Menu
+const { SubMenu } = Menu;
 class DropdownComponent extends React.Component<any, any> {
   constructor(props: any) {
-    super(props)
-    this.state = { subMenu: '', isClick: false, menuLevel: '', thirdMenu: '' }
+    super(props);
+    this.state = { subMenu: "", isClick: false, menuLevel: "", thirdMenu: "" };
   }
 
   handleSecMenuClick = (e: any) => {
     if (
-      _.has(e, 'item') &&
-      _.has(e.item, 'props') &&
-      _.has(e.item.props, 'children')
+      _.has(e, "item") &&
+      _.has(e.item, "props") &&
+      _.has(e.item.props, "children")
     ) {
       this.setState({
         subMenu: e.item.props.children,
         isClick: true
-      })
+      });
     }
-  }
+  };
   handleThirdMenuClick = (e: any) => {
     if (
-      _.has(e, 'item') &&
-      _.has(e.item, 'props') &&
-      _.has(e.item.props, 'children')
+      _.has(e, "item") &&
+      _.has(e.item, "props") &&
+      _.has(e.item.props, "children")
     ) {
       this.setState({
         thirdMenu: e.item.props.children
-      })
+      });
     }
-  }
+  };
 
   render() {
     // const menu = this.props;
-    const { subMenu, isClick, thirdMenu } = this.state
+    const { subMenu, thirdMenu } = this.state;
 
     const appMenu = (
       <Menu onClick={this.handleSecMenuClick} mode="horizontal">
@@ -69,25 +69,25 @@ class DropdownComponent extends React.Component<any, any> {
           GSLB
         </Menu.Item>
       </Menu>
-    )
+    );
     const solutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
         <Menu.Item key="1">solution A</Menu.Item>
         <Menu.Item key="2">solution B</Menu.Item>
       </Menu>
-    )
+    );
     const mySolutionMenu = (
       <Menu onClick={this.handleThirdMenuClick}>
         <Menu.Item key="1">Deployment A</Menu.Item>
         <Menu.Item key="2">Deployment B</Menu.Item>
       </Menu>
-    )
+    );
     return (
       <Row className="a10-dropdown">
         <Col span={8}>
-          <Dropdown overlay={appMenu} trigger={['click']}>
-            <a className="ant-dropdown-link" href="#">
-              <Icon type="solution" style={{ marginRight: '10px' }} />
+          <Dropdown overlay={appMenu} trigger={["click"]}>
+            <a className="ant-dropdown-link" href="/">
+              <Icon type="solution" style={{ marginRight: "10px" }} />
               Applications
               <Icon type="right" className="dropdown-icon" />
             </a>
@@ -95,8 +95,8 @@ class DropdownComponent extends React.Component<any, any> {
         </Col>
         {subMenu ? (
           <Col span={8}>
-            <Dropdown overlay={solutionMenu} trigger={['click']}>
-              <a className="ant-dropdown-link" href="#">
+            <Dropdown overlay={solutionMenu} trigger={["click"]}>
+              <a className="ant-dropdown-link" href="/">
                 {subMenu}
                 <Icon type="right" className="dropdown-icon" />
               </a>
@@ -106,8 +106,8 @@ class DropdownComponent extends React.Component<any, any> {
 
         {thirdMenu ? (
           <Col span={8}>
-            <Dropdown overlay={mySolutionMenu} trigger={['click']}>
-              <a className="ant-dropdown-link" href="#">
+            <Dropdown overlay={mySolutionMenu} trigger={["click"]}>
+              <a className="ant-dropdown-link" href="/">
                 {thirdMenu}
                 <Icon type="right" className="dropdown-icon" />
               </a>
@@ -115,8 +115,8 @@ class DropdownComponent extends React.Component<any, any> {
           </Col>
         ) : null}
       </Row>
-    )
+    );
   }
 }
 
-export default DropdownComponent
+export default DropdownComponent;

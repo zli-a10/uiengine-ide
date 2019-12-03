@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import _ from "lodash";
-import { InputNumber } from "antd";
-import { Form } from "antd";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
+import { InputNumber } from 'antd';
+import { Form } from 'antd';
+import { formatTitle } from '../../../../helpers';
 
 export const RangeComponent = (props: any) => {
   let { range: dataRange, onChange, value, uinode, disabled } = props;
+
   if (!_.isArray(dataRange)) return null;
 
   const [inputValue, setInputValue] = useState(dataRange[0]);

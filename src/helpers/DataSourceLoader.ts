@@ -1,43 +1,54 @@
-import * as _ from 'lodash'
+import * as _ from "lodash";
 
-const getDataSource = (dataTree: any, keys: string[], fileName: string) => {
-  const [firstKey, ...otherKeys] = keys
+const getDataSource = (
+  dataTree: any,
+  keys: string[],
+  fileName: string,
+  parentKey?: string
+) => {
+  const [firstKey, ...otherKeys] = keys;
   const existItem = _.find(dataTree, (item: any) => {
-    return item.title === firstKey
-  }) as { name: string; children: any; files: string[] }
+    return item.title === firstKey;
+  }) as { name: string; children: any; files: string[]; file: string };
+  const value = parentKey ? `${parentKey}.${firstKey}` : firstKey;
+
   if (!existItem) {
-    const value = keys.slice(0, keys.indexOf(firstKey) + 1).join('.')
+    // const value = keys.slice(0, keys.indexOf(firstKey) + 1).join(".");
     dataTree.push({
-      component: 'div',
+      component: "div",
       files: [fileName],
-      type: 'file',
+      type: "file",
       id: value,
-      value,
+      value: `${value}:`,
       title: firstKey,
       ...(otherKeys.length > 0
-        ? { children: getDataSource([], otherKeys, fileName) }
+        ? { children: getDataSource([], otherKeys, fileName, value) }
         : { file: fileName })
-    })
+    });
   } else {
     if (otherKeys.length > 0) {
       existItem.children = getDataSource(
         existItem.children || [],
         otherKeys,
-        fileName
-      )
-      existItem.files = [fileName, ...existItem.files]
+        fileName,
+        value
+      );
+    } else {
+      existItem.file = fileName;
     }
+    existItem.files = [fileName, ...existItem.files];
   }
-  return dataTree
-}
+  return dataTree;
+};
 
 export const analysisDataSource = (dataSource: any) => {
-  let dataTree: any = []
+  let dataTree: any = [];
   dataSource.forEach((item: any) => {
-    const { name } = item
-    const nameKeys = _.split(_.replace(name, '.json', ''), '.')
-    dataTree = getDataSource(dataTree, nameKeys, name)
-  })
+    const { name } = item;
+    const nameKeys = _.split(_.replace(name, ".json", ""), ".");
+    dataTree = getDataSource(dataTree, nameKeys, name);
+  });
 
-  return dataTree
-}
+  // console.log(dataTree, "data tree");
+  return dataTree;
+};

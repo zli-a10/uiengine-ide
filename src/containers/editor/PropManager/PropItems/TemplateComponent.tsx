@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
-import _ from "lodash";
-import { Form, Modal, Button } from "antd";
-import ReactJson from "react-json-view";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useCallback, useEffect } from 'react';
+import _ from 'lodash';
+import { Form, Modal, Button } from 'antd';
+import ReactJson from 'react-json-view';
+import { formatTitle } from '../../../../helpers';
 
 export const TemplateComponent = (props: any) => {
   const { schema, data, name, uinode, onChange } = props;
@@ -24,7 +24,7 @@ export const TemplateComponent = (props: any) => {
   }, []);
 
   const [visible, changeVisible] = useState(false);
-  const [schemas, changeSchemas] = useState(_.get(schema, "template"));
+  const [schemas, changeSchemas] = useState(_.get(schema, 'template'));
   const onViewCode = useCallback(() => {
     changeVisible(true);
   }, [schemas]);

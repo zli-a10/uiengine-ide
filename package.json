@@ -94,7 +94,6 @@
     "classnames": "^2.2.6",
     "css-loader": "^3.2.0",
     "csstype": "^2.6.5",
-    "isomorphic-ws": "^4.0.1",
     "less-loader": "^5.0.0",
     "lodash": "^4.17.11",
     "mockjs": "^1.0.1-beta3",

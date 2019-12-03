@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import { Result, Button } from "antd";
+import React, { PureComponent } from 'react';
+import { Result, Button } from 'antd';
 
 class ErrorBoundary extends PureComponent<
   IErrorBoundaryProps,
@@ -20,6 +20,7 @@ class ErrorBoundary extends PureComponent<
 
   render() {
     const { hasError, error } = this.state;
+
     if (hasError && error) {
       return (
         <Result

@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
-import _ from "lodash";
-import { Slider } from "antd";
-import { Form } from "antd";
-import { formatTitle } from "../../../../helpers";
+import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
+import { Slider } from 'antd';
+import { Form } from 'antd';
+import { formatTitle } from '../../../../helpers';
 
 export const SliderComponent = (props: any) => {
   let { range: dataRange, onChange, value, uinode, disabled, ...rest } = props;
+
   if (!_.isArray(dataRange)) return null;
   const maxValue = 9999999999;
+
   if (!_.isArray(value)) value = [0, maxValue];
 
   const [inputValue, setInputValue] = useState(value);

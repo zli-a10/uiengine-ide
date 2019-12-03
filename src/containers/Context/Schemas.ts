@@ -1,5 +1,5 @@
 import React from "react";
-import { ILayoutSchema } from "uiengine/typings";
+import { IUISchema } from "uiengine/typings";
 
 export const SchemasContext = React.createContext<ISchemasContext>({
   selectedKeys: [],
@@ -14,7 +14,7 @@ export const SchemasContext = React.createContext<ISchemasContext>({
   setSavedTime: (savedTime: string) => {},
   // for schema replace
   schema: {},
-  updateSchema: (schema: ILayoutSchema) => {},
+  updateSchema: (schema: IUISchema) => {},
   editingResource: {} as IResourceTreeNode,
   setEditingResource: (editingResource: IResourceTreeNode) => {}
 });

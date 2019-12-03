@@ -7,8 +7,8 @@ export class FileStorage implements IStorage {
     return FileStorage.instance;
   }
 
-  path: string = "";
-  content: string = "";
+  path: string = '';
+  content: string = '';
 
   save(path: string, content: any) {}
 

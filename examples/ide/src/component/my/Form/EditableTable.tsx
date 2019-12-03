@@ -161,11 +161,13 @@ class EditableTable extends React.Component<any, any> {
     const {
       modal: { connect }
     } = this.props
-    const workingMode = {
-      mode: 'edit-pool',
+    const workingMode: IWorkingMode = {
+      mode: 'edit',
       options: {
-        key,
-        source: connect
+        dataConnect: connect,
+        connectParam: {
+          index: key
+        },
       }
     }
     this.openModal(workingMode)
@@ -183,10 +185,10 @@ class EditableTable extends React.Component<any, any> {
     const {
       modal: { connect }
     } = this.props
-    const workingMode = {
+    const workingMode: IWorkingMode = {
       mode: 'new',
       options: {
-        source: connect
+        dataConnect: connect,
       }
     }
     this.openModal(workingMode)
@@ -202,7 +204,7 @@ class EditableTable extends React.Component<any, any> {
     //   const dataPool = DataPool.getInstance();
     //   dataPool.clear(_.get(connect, "source"));
     // }
-    nodeController.hideUINode(layout, true)
+    nodeController.hideLayout(layout, true)
   }
 
   openModal = (workingMode?: IWorkingMode) => {

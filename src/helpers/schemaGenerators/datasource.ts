@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 export const datasource = (
   name: string,
@@ -7,5 +7,8 @@ export const datasource = (
   options: any = {}
 ) => {
   // TODO: validate by componentSchema
+  if (!_.get(value, 'source')) {
+    return { datasource: null };
+  }
   return { datasource: value };
 };
