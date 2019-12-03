@@ -1,11 +1,11 @@
-import Mock from 'mockjs';
-import _ from 'lodash';
-import { EMPTY_DATA } from '../helpers';
-import { IUINode } from 'uiengine/typings';
+import Mock from "mockjs";
+import _ from "lodash";
+import { EMPTY_DATA, NO_MOCK } from "../helpers";
+import { IUINode } from "uiengine/typings";
 // import { DataNode, UINode, Request } from 'uiengine'
 
 export class DataMocker implements IDataMocker {
-  static instance: IDataMocker
+  static instance: IDataMocker;
   static getInstance() {
     if (!DataMocker.instance) {
       DataMocker.instance = new DataMocker();
@@ -17,17 +17,17 @@ export class DataMocker implements IDataMocker {
    * Should convert data schema rules to mockjs definiation
    * @param schema data schema
    */
-  schemaCoverter(schema: any, mode: string = '') {
+  schemaCoverter(schema: any, mode: string = "") {
     return schema;
   }
 
-  maxRow: number = 5
-  enable: boolean = true
-  mode: string = 'normal'
-  noCache: boolean = false // default cache
-  dataCached: any = {} // see mockjs definiation
+  maxRow: number = 5;
+  enable: boolean = true;
+  mode: string = NO_MOCK;
+  noCache: boolean = false; // default cache
+  dataCached: any = {}; // see mockjs definiation
   generate(schema: any) {
-    if (this.mode === EMPTY_DATA) return;
+    if (this.mode === EMPTY_DATA || this.mode === NO_MOCK) return;
     if (!this.enable) return;
     const templates = this.schemaCoverter(schema, this.mode);
     const key = Object.keys(templates)[0];
@@ -117,7 +117,7 @@ export class DataMocker implements IDataMocker {
 
     if (this.mode === EMPTY_DATA) return result;
     if (!this.enable) return result;
-    const children = _.get(uiNode, 'schema.$children', []);
+    const children = _.get(uiNode, "schema.$children", []);
 
     for (let i = 0; i < this.maxRow; i++) {
       const r = children.map(() => ({}));
