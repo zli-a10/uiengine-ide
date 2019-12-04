@@ -36,6 +36,7 @@ const getChildrenUiSchema = (data: any) => {
 const WidgetItem = (props: any) => {
   const { title, data, component } = props;
   // const dataSchema = data.uiSchema || data
+  data.component = component
   let dragObj, dragType;
   if (!component) {
     dragType = DND_IDE_DATASOURCE_TYPE;
