@@ -251,7 +251,6 @@ export const enumGen = (schema: any, mode: string) => {
       // const range = _.get(schema, "cm-meta.allowed");
       // result = "syslog  Syslog Format (default) cef Common Event Format";
       result = _.get(schema, "cm-meta.allowed");
-      console.log('======result=====', result)
   }
   const lineage = _.get(schema, "cm-lineage");
 
