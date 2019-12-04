@@ -1,0 +1,329 @@
+{
+  "version": "3.0.0#Autoform v1.5",
+  "endpoints": {
+    "default": {
+      "path": "/axapi/v3/slb/server/{name}"
+    }
+  },
+  "cm-branch": "",
+  "cm-lineage": "slb.server",
+  "cm-object-meta": {
+    "obj-occurences": "multi"
+  },
+  "fields": [
+    {
+      "key": "number",
+      "label": "Number",
+      "type": "input",
+      "cm-lineage": "test.gen.data.number",
+      "cm-meta": {
+        "format": "number",
+        "range": "1-1000",
+        "help": "Test number"
+      }
+    },
+    {
+      "key": "ipv6-address-plen",
+      "label": "Ipv6-address-plen",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv6-address-plen",
+      "cm-meta": {
+        "format": "ipv6-address-plen",
+        "help": "Test ipv6-address-plen"
+      }
+    },
+    {
+      "key": "ipv6-address",
+      "label": "Ipv6-address",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv6-address",
+      "cm-meta": {
+        "format": "ipv6-address",
+        "condition": "name",
+        "help": "Test IPV6 address"
+      }
+    },
+    {
+      "key": "mac-address",
+      "label": "Mac-address",
+      "type": "input",
+      "cm-lineage": "test.gen.data.mac-address",
+      "cm-meta": {
+        "format": "mac-address",
+        "condition": "name",
+        "help": "Test Mac-address"
+      }
+    },
+    {
+      "key": "flag",
+      "label": "Flag",
+      "type": "switch",
+      "cm-lineage": "test.gen.data.flag",
+      "cm-meta": {
+        "format": "flag",
+        "flags": "mk",
+        "condition": "p-health-check",
+        "m-exclusion": ["health-check", "health-check-disable"],
+        "help": "This type is used to specify the flag fields"
+      }
+    },
+    {
+      "key": "interface",
+      "label": "Interface",
+      "type": "input",
+      "cm-lineage": "test.gen.data.interface",
+      "cm-meta": {
+        "format": "interface",
+        "range": "1-10",
+        "condition": "name",
+        "help": "Test interface"
+      }
+    },
+    {
+      "key": "dummy",
+      "label": "Dummy",
+      "type": "dummy",
+      "cm-lineage": "test.gen.data.dummy",
+      "cm-meta": {
+        "format": "dummy",
+        "flags": "ok",
+        "help": "Test dummy"
+      }
+    },
+    {
+      "key": "string",
+      "label": "String",
+      "type": "input",
+      "cm-lineage": "test.gen.data.string",
+      "cm-meta": {
+        "format": "string-rlx",
+        "range": "1-127",
+        "help": "Test String"
+      }
+    },
+    {
+      "key": "string-rlx",
+      "label": "String-rlx",
+      "type": "input",
+      "cm-lineage": "test.gen.data.string-rlx",
+      "cm-meta": {
+        "format": "string-rlx",
+        "flags": "mb",
+        "range": "1-127",
+        "help": "This is a variation of string type, stands for string relax (or relaxed string)"
+      }
+    },
+    {
+      "key": "name",
+      "label": "Name",
+      "type": "input",
+      "cm-lineage": "test.gen.data.name",
+      "cm-meta": {
+        "format": "name",
+        "flags": "mb",
+        "range": "1-127",
+        "help": "This is similar to the basic type string"
+      }
+    },
+    {
+      "key": "domain",
+      "label": "Domain",
+      "type": "input",
+      "cm-lineage": "test.gen.data.domain",
+      "cm-meta": {
+        "format": "domain",
+        "flags": "mb",
+        "range": "1-127",
+        "help": "This is similar to the basic type string. (Actually it is subtype of the basic type string-rlx.)"
+      }
+    },
+    {
+      "key": "hostname",
+      "label": "Hostname",
+      "type": "input",
+      "cm-lineage": "test.gen.data.hostname",
+      "cm-meta": {
+        "format": "hostname",
+        "help": "This is similar to the basic type string. The difference is it does not accept IPv4 address and IPv6 address."
+      }
+    },
+    {
+      "key": "line",
+      "label": "Line",
+      "type": "input",
+      "cm-lineage": "test.gen.data.line",
+      "cm-meta": {
+        "format": "line",
+        "help": "This is another variation of string type."
+      }
+    },
+    {
+      "key": "file",
+      "label": "File",
+      "type": "input",
+      "cm-lineage": "test.gen.data.file",
+      "cm-meta": {
+        "format": "file",
+        "help": "Test file"
+      }
+    },
+    {
+      "key": "enum",
+      "label": "Enum",
+      "type": "input",
+      "cm-lineage": "test.gen.data.enum",
+      "cm-meta": {
+        "format": "enum",
+        "allowed": [{
+            "label": "Syslog",
+            "value": "syslog",
+            "help": "Enable statistical data collection for real server"
+          },
+          {
+            "label": "Cef",
+            "value": "cef",
+            "help": "Common Event Format"
+          }
+        ],
+        "help": "Enum is a special variation of string where the accepted value can only be one of the values enumerated for that field using the allowed metadata"
+      }
+    },
+    {
+      "key": "enum-list",
+      "label": "Enum-list",
+      "type": "input",
+      "cm-lineage": "test.gen.data.enum-list",
+      "cm-meta": {
+        "format": "enum-list",
+        "help": "Like an enum, an enum-list only accepts the values enumerated for that field."
+      }
+    },
+    {
+      "key": "host",
+      "label": "Host",
+      "type": "input",
+      "cm-lineage": "test.gen.data.host",
+      "cm-meta": {
+        "format": "ipv4-address",
+        "condition": "name",
+        "help": "IP Address"
+      }
+    },
+    {
+      "key": "nasp-string",
+      "label": "Nasp-string",
+      "type": "input",
+      "cm-lineage": "test.gen.data.nasp-string",
+      "cm-meta": {
+        "format": "nasp-string",
+        "condition": "name",
+        "help": "An NSAP address.The format is 'XX.XXXX. ... .XXXX.XX'"
+      }
+    },
+    {
+      "key": "password",
+      "label": "Password",
+      "type": "input",
+      "cm-lineage": "test.gen.data.password",
+      "cm-meta": {
+        "format": "password",
+        "help": "A password field accepts variety of characters that can be used in a password."
+      }
+    },
+    {
+      "key": "encrypted",
+      "label": "Encrypted",
+      "type": "input",
+      "cm-lineage": "test.gen.data.encrypted",
+      "cm-meta": {
+        "format": "encrypted",
+        "help": "This type goes hand in hand with the password type."
+      }
+    },
+    {
+      "key": "email-address",
+      "label": "Email-address",
+      "type": "input",
+      "cm-lineage": "test.gen.data.email-address",
+      "cm-meta": {
+        "format": "email-address",
+        "help": "Test email-address"
+      }
+    },
+    {
+      "key": "url",
+      "label": "Url",
+      "type": "input",
+      "cm-lineage": "test.gen.data.url",
+      "cm-meta": {
+        "format": "url",
+        "help": "Test url"
+      }
+    },
+    {
+      "key": "comp-string",
+      "label": "Comp-string",
+      "type": "input",
+      "cm-lineage": "test.gen.data.comp-string",
+      "cm-meta": {
+        "format": "comp-string",
+        "help": "Test comp-string"
+      }
+    },
+    {
+      "key": "ipv4-address",
+      "label": "Ipv4-address",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv4-address",
+      "cm-meta": {
+        "format": "ipv4-address",
+        "condition": "name",
+        "help": "Test IPV4 address"
+      }
+    },
+    {
+      "key": "ipv4-netmask",
+      "label": "Ipv4-netmask",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv4-netmask",
+      "cm-meta": {
+        "format": "ipv4-netmask",
+        "condition": "name",
+        "help": "ipv4-netmask is used to specify the network mask for the ipv4 network."
+      }
+    },
+    {
+      "key": "ipv4-netmask-brief",
+      "label": "Ipv4-netmask-brief",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv4-netmask-brief",
+      "cm-meta": {
+        "format": "ipv4-netmask-brief",
+        "condition": "name",
+        "help": "same as ipv4-netmask"
+      }
+    },
+    {
+      "key": "ipv4-rev-netmask",
+      "label": "Ipv4-rev-netmask",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv4-rev-netmask",
+      "cm-meta": {
+        "format": "ipv4-rev-netmask",
+        "condition": "name",
+        "help": "same as ipv4-netmask except that it accepts the reverse mask."
+      }
+    },
+    {
+      "key": "ipv4-cidr",
+      "label": "Ipv4-cidr",
+      "type": "input",
+      "cm-lineage": "test.gen.data.ipv4-cidr",
+      "cm-meta": {
+        "format": "ipv4-cidr",
+        "condition": "name",
+        "help": "Field with ipv4-cidr type, accepts both the ip address and the prefix length in the same field itself."
+      }
+    }
+  ]
+}
