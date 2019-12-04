@@ -11,7 +11,7 @@ import {
   DND_IDE_DATASOURCE_TYPE
 } from "../../../../helpers";
 
-const getChildrenUiSchema = (data: any) => {
+const getChildrenUiSchema = (data: any, component: any) => {
   const { type, children = [] } = data;
   if (type !== "file") {
     return [];
@@ -19,15 +19,16 @@ const getChildrenUiSchema = (data: any) => {
   return children.map((child: any) => {
     const { type, ...uiSchema } = child;
     if (type === "field") {
+      uiSchema.component = component
       return uiSchema;
     }
     if (type === "file") {
-      const { component, props, datasource } = child;
+      const { props, datasource } = child;
       return {
-        component,
+        component: 'div',
         props,
         datasource,
-        children: getChildrenUiSchema(child)
+        children: getChildrenUiSchema(child, component)
       };
     }
   });
@@ -50,9 +51,9 @@ const WidgetItem = (props: any) => {
       dragObj = {
         uinode: {
           schema: {
-            component,
+            component: 'div',
             props,
-            children: getChildrenUiSchema(data)
+            children: getChildrenUiSchema(data, component)
           }
         }
       };
