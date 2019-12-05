@@ -21,10 +21,10 @@ UIEngineRegister.registerPlugins(plugins);
 
 export const DrawingBoard: React.FC = (props: any) => {
   const {
-    preview,
-    togglePropsCollapsed,
-    componentCollapsed,
-    toggleComponentCollapsed
+    preview
+    // togglePropsCollapsed,
+    // componentCollapsed,
+    // toggleComponentCollapsed
   } = useContext(GlobalContext);
   const { updateSchema } = useContext(SchemasContext);
   const { editNode } = useContext(IDEEditorContext);
@@ -98,6 +98,11 @@ export const DrawingBoard: React.FC = (props: any) => {
   useEffect(() => {
     // Update the document title using the browser API
     window.addEventListener("keydown", keyPressActions);
+  }, [editNode]);
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    // window.addEventListener("keydown", keyPressActions);
     // const drawingboard = document.getElementById("drawingboard");
     // if (drawingboard) {
     //   drawingboard.ondblclick = (e: any) => {
@@ -119,12 +124,12 @@ export const DrawingBoard: React.FC = (props: any) => {
         const newSchema = _.cloneDeep(schema);
 
         newSchema[0].layout = data;
-        // setSchema(newSchema)
+        setSchema(newSchema);
       }
     };
 
     initActiveTab();
-  }, [editNode, componentCollapsed]);
+  }, [localStorage.cachedActiveTab]);
 
   return (
     <div className="editor" id="drawingboard">
