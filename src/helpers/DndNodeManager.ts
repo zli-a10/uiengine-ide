@@ -375,6 +375,7 @@ export class DndNodeManager implements IDndNodeManager {
 
   async removeWrappers(sourceNode: IUINode) {
     if (!sourceNode.parent) return;
+    debugger
     this.selectNode(sourceNode, {} as IUINode);
     const removeAllWrappers = (node: IUINode) => {
       // this.selectNode(sourceNode, {} as IUINode);
@@ -398,18 +399,25 @@ export class DndNodeManager implements IDndNodeManager {
 
     // append to parent
     if (this.sourceParentSchema.children) {
-      const schema = removeAllWrappers(sourceNode);
+      // const schema = removeAllWrappers(sourceNode);
       this.sourceParentChildrenSchema.splice(this.sourceIndex, 1);
       const tailChildren = this.sourceParentChildrenSchema.splice(
         this.sourceIndex,
         this.sourceParentChildrenSchema.length
       );
-
-      this.sourceParentSchema.children = [
-        ...this.sourceParentChildrenSchema,
-        ...schema,
-        ...tailChildren
-      ];
+      if (sourceNode.schema.children && sourceNode.schema.children.length) {
+        this.sourceParentSchema.children = [
+          ...this.sourceParentChildrenSchema,
+          ...sourceNode.schema.children,
+          ...tailChildren
+        ];
+      } else {
+        this.sourceParentSchema.children = [
+          ...this.sourceParentChildrenSchema,
+          // ...schema,
+          ...tailChildren
+        ];
+      }
       await this.refresh();
     }
   }

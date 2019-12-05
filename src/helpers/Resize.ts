@@ -64,12 +64,14 @@ export class Resize {
         this.size.width = length
         break
       case 's':
-        var add_length = this.clickY - location.y
-        this.clickY = location.y
-        length = parseInt(this.target.offsetHeight) - add_length
-        // console.log(length, 's')
-        this.target.style.height = length + 'px'
-        this.size.height = length
+        if (location.y + 100 < document.body.offsetHeight) {
+          var add_length = this.clickY - location.y
+          this.clickY = location.y
+          length = parseInt(this.target.offsetHeight) - add_length
+          // console.log(length, 's')
+          this.target.style.height = length + 'px'
+          this.size.height = length
+        }
         break
       case 'w':
         var add_length = this.clickX - location.x
