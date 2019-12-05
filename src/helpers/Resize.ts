@@ -4,14 +4,16 @@ export class Resize {
   private callback: any
   private clickX = 0
   private clickY = 0
+  private maxY = 0
   size: { width: any; height: any } = { width: 0, height: 0 }
 
   // type could be  n,s,w,e, nw, ne, sw, se
-  constructor(type: string, target: any, handler: any, callback: any) {
+  constructor(type: string, target: any, handler: any, callback: any, maxY: number = 0) {
     this.target = target
     this.handler = handler
     this.callback = callback
     this.handler.onmousedown = this.onDragDown.bind(this, type)
+    this.maxY = maxY
     document.addEventListener('mousemove', (e: any) => {
       if (this.handler) {
         this.onDragMove.call(this, e)
@@ -52,7 +54,7 @@ export class Resize {
     this.handler = null
   }
 
-  move(operateType: any, location: any) {
+  move(operateType: any, location: any, maxY: number = 0) {
     document.body.style.cursor = location + '_resize'
     let length
     switch (operateType) {
@@ -64,7 +66,7 @@ export class Resize {
         this.size.width = length
         break
       case 's':
-        if (location.y + 100 < document.body.offsetHeight) {
+        if (location.y < maxY) {
           var add_length = this.clickY - location.y
           this.clickY = location.y
           length = parseInt(this.target.offsetHeight) - add_length
@@ -103,7 +105,7 @@ export class Resize {
           this.move('n', location)
           break
         case 's':
-          this.move('s', location)
+          this.move('s', location, this.maxY)
           break
         case 'w':
           this.move('w', location)

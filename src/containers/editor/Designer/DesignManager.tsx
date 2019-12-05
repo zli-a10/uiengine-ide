@@ -53,7 +53,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
         }
         // rememeber the resize
         localStorage.designerSize = JSON.stringify(designerSize);
-      });
+      }, document.body.offsetHeight - 100);
 
       if (!_.isEmpty(designerSize)) {
         const { offset, filelistHeight, widgetLibHeight, widgetDatasourceHeight } = designerSize;
