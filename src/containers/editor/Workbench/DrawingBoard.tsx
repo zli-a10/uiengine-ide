@@ -13,7 +13,8 @@ import {
   VersionControl,
   useDeleteNode,
   useCloneNode,
-  FileLoader
+  FileLoader,
+  ShortcutManager
 } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 
@@ -58,19 +59,20 @@ export const DrawingBoard: React.FC = (props: any) => {
       // console.log(allowBubbleKeys.indexOf(e.code), e.code);
       // if (allowBubbleKeys.indexOf(e.code) === -1) return false;
 
-      // shortcut ctrl+z
-      const versionControl = VersionControl.getInstance();
-      if (e.ctrlKey && e.code === "KeyZ") {
-        const schema = await versionControl.undo();
+      // console.log(e);
+      // // shortcut ctrl+z
+      // const versionControl = VersionControl.getInstance();
+      // if (e.ctrlKey && e.code === "KeyZ") {
+      //   const schema = await versionControl.undo();
 
-        updateSchema({ schema });
-      }
+      //   updateSchema({ schema });
+      // }
 
-      if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
-        const schema = await versionControl.redo();
+      // if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
+      //   const schema = await versionControl.redo();
 
-        updateSchema({ schema });
-      }
+      //   updateSchema({ schema });
+      // }
 
       // duplicate | delete
       const keyMap = {
@@ -94,11 +96,66 @@ export const DrawingBoard: React.FC = (props: any) => {
     },
     [editNode]
   );
+  const ctrlZ = useCallback(async () => {
+    const versionControl = VersionControl.getInstance();
+    const schema = await versionControl.undo();
+    updateSchema({ schema });
+  }, []);
+
+  const ctrlShiftZ = useCallback(async () => {
+    const versionControl = VersionControl.getInstance();
+    const schema = await versionControl.redo();
+
+    updateSchema({ schema });
+  }, []);
+
+  const duplicate = useCallback(
+    e => {
+      const keyMap = {
+        KeyD: "down",
+        KeyU: "up",
+        KeyL: "left",
+        KeyR: "right"
+      };
+
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        // dup: Bug: ^D  will recover downwards elements
+        if (keyMap[e.code] && editNode) {
+          cloneEditNode(keyMap[e.code])();
+        }
+      }
+    },
+    [editNode]
+  );
+
+  const deleteNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        // dup: Bug: ^D  will recover downwards elements
+        // delete
+        deleteEditNode();
+      }
+    },
+    [preview, editNode]
+  );
 
   useEffect(() => {
     // Update the document title using the browser API
-    window.addEventListener("keydown", keyPressActions);
-  }, [editNode]);
+    const shortcutManger = ShortcutManager.getInstance();
+    const shortcuts = {
+      ctrlZ,
+      ctrlShiftZ,
+      ctrlD: duplicate,
+      ctrlU: duplicate,
+      ctrlL: duplicate,
+      ctrlR: duplicate,
+      Delete: deleteNode,
+      d: deleteNode
+    };
+    shortcutManger.register(shortcuts);
+  }, [editNode, preview]);
 
   useEffect(() => {
     // Update the document title using the browser API

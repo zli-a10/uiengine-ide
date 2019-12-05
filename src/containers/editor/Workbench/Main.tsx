@@ -18,7 +18,8 @@ import {
   saveFile,
   saveFileStatus,
   cleanSchema,
-  MemoStore
+  MemoStore,
+  ShortcutManager
 } from "../../../helpers";
 import { StagingFileTree } from "./StagingFileTree";
 
@@ -145,15 +146,6 @@ export const Main = (props: any) => {
     setAllShow(true);
   }, [allShow]);
 
-  // add shortcut:h
-  const toggleShowAll = useCallback(() => {
-    if (allShow) {
-      hideAll();
-    } else {
-      showAll();
-    }
-  }, [allShow]);
-
   // file save window
   const [visible, changeVisible] = useState(false);
   const [files, setFiles] = useState([]);
@@ -247,52 +239,60 @@ export const Main = (props: any) => {
     changeVisible(false);
   }, []);
 
-  const showSaveWindow = useCallback(() => {
-    changeVisible(true);
-  }, []);
-
   const onCheckFiles = useCallback((files: any) => {
     console.log(files, "files...");
     setFiles(files);
   }, []);
 
-  // shortcut handler
-  const keyPressActions = useCallback(
-    async (e: any) => {
-      // shortcut:alt+v for preview
-      if (e.altKey && e.code === "KeyV") {
-        e.preventDefault();
-        switchPreview(!preview);
-      }
-
-      // shortcut: alt+a for prop window
-      if (e.altKey && e.code === "KeyA") {
-        e.preventDefault();
-        togglePropsCollapse(!propsCollapsed);
-      }
-
-      // shortcut: alt+h for toggle show prop,designer, header
-      if (e.altKey && e.code === "KeyH") {
-        e.preventDefault();
-        toggleShowAll();
-      }
-
-      // shortcut: ctrl+s for show save window
-      if (e.ctrlKey && e.code === "KeyS") {
-        e.preventDefault();
-        showSaveWindow();
-      }
-      // return false;
+  const switchPreviewMode = useCallback(
+    e => {
+      e.preventDefault();
+      switchPreview(!preview);
     },
-    [preview, propsCollapsed, allShow]
+    [preview]
   );
+
+  const showPropWindow = useCallback(
+    e => {
+      e.preventDefault();
+      togglePropsCollapse(!propsCollapsed);
+    },
+    [propsCollapsed]
+  );
+
+  // add shortcut:h
+  const toggleShowAll = useCallback(
+    e => {
+      e.preventDefault();
+      if (allShow) {
+        hideAll();
+      } else {
+        showAll();
+      }
+    },
+    [allShow]
+  );
+
+  const showSaveWindow = useCallback((e: any) => {
+    if (e) e.preventDefault();
+    changeVisible(true);
+  }, []);
+
+  // shortcuts
+  // shortcut v == preview, a=attribute
+  useEffect(() => {
+    const shortcutManger = ShortcutManager.getInstance();
+    const shortcuts = {
+      ctrlP: switchPreviewMode,
+      ctrlQ: showPropWindow,
+      ctrlH: toggleShowAll,
+      ctrlS: showSaveWindow
+    };
+    shortcutManger.register(shortcuts);
+  }, [allShow, preview, propsCollapsed]);
 
   const [isOverHeader, setIsOverHeader] = useState(false);
   useEffect(() => {
-    // shortcut v == preview, a=attribute
-    // window.onkeydown = keyPressActions;
-    window.addEventListener("keydown", keyPressActions);
-
     const ideEditor: any = document.getElementById("ide-editor");
     if (headerCollapsed) {
       ideEditor.style.height = "100%";
@@ -320,13 +320,13 @@ export const Main = (props: any) => {
   return (
     <GlobalContext.Provider value={contextValue}>
       {headerCollapsed ? (
-        <a className="ide-show" title="shortcut: alt+h" onClick={showAll}>
+        <a className="ide-show" title="shortcut: ctrl+h" onClick={showAll}>
           <Icon type="caret-right" />
         </a>
       ) : null}
       <div className={cls} id="ide-design-header">
         <div className="left">
-          <div className="button-close" title="shortcut: alt+h">
+          <div className="button-close" title="shortcut: ctrl+h">
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
@@ -359,14 +359,14 @@ export const Main = (props: any) => {
         <div className="right">
           <div className="props">
             <Switch
-              title="shortcut: alt+v"
+              title="shortcut: ctrl+p"
               checked={preview}
               checkedChildren="Preview"
               unCheckedChildren="Edit"
               onChange={() => switchPreview(!preview)}
             />
             <a
-              title="shortcut: alt+a"
+              title="shortcut: ctrl+q"
               className="settings"
               onClick={() => togglePropsCollapse(!propsCollapsed)}
             >
