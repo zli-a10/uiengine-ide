@@ -186,7 +186,6 @@ export const Debugger: React.FC = (props: any) => {
   // change ui tree schema
   const onChangeTreeSchema = useCallback(
     async (d: any) => {
-      debugger
       const namespace = _.cloneDeep(d.namespace);
 
       namespace.push(d.name);

@@ -375,7 +375,6 @@ export class DndNodeManager implements IDndNodeManager {
 
   async removeWrappers(sourceNode: IUINode) {
     if (!sourceNode.parent) return;
-    debugger
     this.selectNode(sourceNode, {} as IUINode);
     const removeAllWrappers = (node: IUINode) => {
       // this.selectNode(sourceNode, {} as IUINode);
