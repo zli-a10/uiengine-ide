@@ -155,7 +155,7 @@ const steps = [
     }
   },
   {
-    selector: '#drawingboard > div.wrapper.with-datasource.wrapper-container > section > div > main > div > div.ant-row-input > div:nth-child(2) > div.ant-col.ant-col-24 > div.wrapper.wrapper-container > form > div:nth-child(1) > div.ant-row-flex.ant-row-flex-top > div:nth-child(1) > div.component-action.ant-dropdown-trigger > div.component-name',
+    selector: '#drawingboard > div > div.sandbox > div:nth-child(2) > div > div.component-name > i',
     content: (params: any) => {
       return (
         <div className="tour-tips">

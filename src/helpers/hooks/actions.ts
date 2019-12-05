@@ -7,7 +7,8 @@ import {
   getTreeRoot,
   removeDepsSchema,
   getFileSuffix,
-  saveFileStatus
+  saveFileStatus,
+  getActiveUINode
 } from "../../helpers";
 import { SchemasContext, IDEEditorContext } from "../../containers/Context";
 import { IUINode } from "uiengine/typings";
@@ -46,6 +47,7 @@ export const useRemoveChildren = (uinode: IUINode) => {
 
 export const useSaveTemplate = (uinode: IUINode) => {
   const { editingResource, setSelectedKey } = useContext(SchemasContext);
+  const { setContent } = useContext(IDEEditorContext);
   return async () => {
     if (!editingResource) return;
     const fileLoader = FileLoader.getInstance();
@@ -88,7 +90,41 @@ export const useSaveTemplate = (uinode: IUINode) => {
     dndNodeManager.pushVersion()
     await uinode.refreshLayout()
     uinode.sendMessage(true)
+
+    //update code editor
+    const jsonFileSchema = getActiveUINode(true);
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    if (!_.isEmpty(cachedActiveTab)) {
+      setContent({
+        content: jsonFileSchema,
+        file: cachedActiveTab.tabName,
+        type: 'schema'
+      });
+    }
   };
+};
+
+export const useBreakupFromTemplate = (uinode: IUINode) => {
+  const { setContent } = useContext(IDEEditorContext);
+  return async () => {
+    //update schema
+    delete uinode.schema.$$template
+    const dndNodeManager = DndNodeManager.getInstance()
+    dndNodeManager.pushVersion()
+    await uinode.refreshLayout()
+    uinode.sendMessage(true)
+
+    //update code editor
+    const jsonFileSchema = getActiveUINode(true);
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    if (!_.isEmpty(cachedActiveTab)) {
+      setContent({
+        content: jsonFileSchema,
+        file: cachedActiveTab.tabName,
+        type: 'schema'
+      });
+    }
+  }
 };
 
 export const useCollapseItems = (uinode: IUINode) => {

@@ -45,20 +45,25 @@ export const DesignManager: React.FC<IDesignManager> = props => {
           designerSize = {
             offset,
             widgetLibHeight,
-            filelistHeight: targetHeight
+            filelistHeight: targetHeight,
+            widgetDatasourceHeight
           };
         } else {
           designerSize.offset = offset;
         }
         // rememeber the resize
         localStorage.designerSize = JSON.stringify(designerSize);
-      });
+      }, document.body.offsetHeight - 100);
 
       if (!_.isEmpty(designerSize)) {
-        const { offset, filelistHeight, widgetLibHeight } = designerSize;
+        const { offset, filelistHeight, widgetLibHeight, widgetDatasourceHeight } = designerSize;
 
         target.style.height = `${filelistHeight - offset}px`;
         widgetLib.style.height = `${widgetLibHeight + offset}px`;
+        widdgetDatasource.style.height = `${widgetDatasourceHeight + offset}px`;
+      } else {
+        widgetLib.style.height = `${widgetLibHeight}px`;
+        widdgetDatasource.style.height = `${widgetDatasourceHeight}px`
       }
     }
   }, [localStorage.designerSize]);

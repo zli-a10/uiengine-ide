@@ -56,14 +56,17 @@ export const Main = (props: any) => {
 
   // preview collaspse state
   const [preview, setPreview] = useState(false);
-  const switchPreview = async (status: boolean) => {
-    MemoStore.bucket.preview = status;
-    const rootNode = getActiveUINode() as UINode;
-    await rootNode.refreshLayout();
-    rootNode.sendMessage(true);
-    setPreview(status);
-    activeTab("drawingboard");
-  };
+  const switchPreview = useCallback(
+    async (status: boolean) => {
+      MemoStore.bucket.preview = status;
+      const rootNode = getActiveUINode() as UINode;
+      await rootNode.refreshLayout();
+      rootNode.sendMessage(true);
+      setPreview(status);
+      activeTab("drawingboard");
+    },
+    [preview, activeTab]
+  );
 
   const [resourceTree, setResourceTree] = useState({
     listener: [],
@@ -87,7 +90,7 @@ export const Main = (props: any) => {
       },
       saved: false,
       theme: "",
-      toggleTheme: (theme: string) => { },
+      toggleTheme: (theme: string) => {},
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
@@ -125,17 +128,31 @@ export const Main = (props: any) => {
     ]
   );
 
+  const [allShow, setAllShow] = useState(
+    localStorage.ideHeaderCollapse === "false"
+  );
   const hideAll = useCallback(() => {
     toggleComponentCollapse(true);
     togglePropsCollapse(true);
     toggleHeaderCollapse(true);
-  }, []);
+    setAllShow(false);
+  }, [allShow]);
 
   const showAll = useCallback(() => {
     toggleComponentCollapse(false);
     togglePropsCollapse(false);
     toggleHeaderCollapse(false);
-  }, []);
+    setAllShow(true);
+  }, [allShow]);
+
+  // add shortcut:h
+  const toggleShowAll = useCallback(() => {
+    if (allShow) {
+      hideAll();
+    } else {
+      showAll();
+    }
+  }, [allShow]);
 
   // file save window
   const [visible, changeVisible] = useState(false);
@@ -195,27 +212,30 @@ export const Main = (props: any) => {
         if (data.children) {
           data.children.forEach(async (child: any) => {
             if (child.$template) {
-              let templateData = await fileLoader.loadFile(child.$template, 'schema')
-              templateData = cleanSchema(templateData)
-              let templateStatusNode = {} as IUploadFile
-              templateStatusNode.data = templateData
-              templateStatusNode.path = child.$template
-              templateStatusNode.type = 'schema'
-              templateStatusNode.status = { status: 'new', nodeType: 'file' }
+              let templateData = await fileLoader.loadFile(
+                child.$template,
+                "schema"
+              );
+              templateData = cleanSchema(templateData);
+              let templateStatusNode = {} as IUploadFile;
+              templateStatusNode.data = templateData;
+              templateStatusNode.path = child.$template;
+              templateStatusNode.type = "schema";
+              templateStatusNode.status = { status: "new", nodeType: "file" };
               // save templates
-              await saveFile(templateStatusNode)
+              await saveFile(templateStatusNode);
               // update template status
               saveFileStatus(child.$template, "schema", "dropped");
             }
-          })
+          });
         }
         statusNode.data = data;
         await saveFile(statusNode);
       }
       // update file status
-      let updatedStatus = _.cloneDeep(status)
-      updatedStatus.status = "dropped"
-      saveOpenFileStatus({ file: path, type, status: updatedStatus })
+      let updatedStatus = _.cloneDeep(status);
+      updatedStatus.status = "dropped";
+      saveOpenFileStatus({ file: path, type, status: updatedStatus });
       // remove node from resource tree
       removeNodeFromResourceTree(path, type);
       toggleRefresh();
@@ -227,7 +247,7 @@ export const Main = (props: any) => {
     changeVisible(false);
   }, []);
 
-  const showSaveWindow = useCallback((e: any) => {
+  const showSaveWindow = useCallback(() => {
     changeVisible(true);
   }, []);
 
@@ -236,8 +256,43 @@ export const Main = (props: any) => {
     setFiles(files);
   }, []);
 
+  // shortcut handler
+  const keyPressActions = useCallback(
+    async (e: any) => {
+      // shortcut:alt+v for preview
+      if (e.altKey && e.code === "KeyV") {
+        e.preventDefault();
+        switchPreview(!preview);
+      }
+
+      // shortcut: alt+a for prop window
+      if (e.altKey && e.code === "KeyA") {
+        e.preventDefault();
+        togglePropsCollapse(!propsCollapsed);
+      }
+
+      // shortcut: alt+h for toggle show prop,designer, header
+      if (e.altKey && e.code === "KeyH") {
+        e.preventDefault();
+        toggleShowAll();
+      }
+
+      // shortcut: ctrl+s for show save window
+      if (e.ctrlKey && e.code === "KeyS") {
+        e.preventDefault();
+        showSaveWindow();
+      }
+      // return false;
+    },
+    [preview, propsCollapsed, allShow]
+  );
+
   const [isOverHeader, setIsOverHeader] = useState(false);
   useEffect(() => {
+    // shortcut v == preview, a=attribute
+    // window.onkeydown = keyPressActions;
+    window.addEventListener("keydown", keyPressActions);
+
     const ideEditor: any = document.getElementById("ide-editor");
     if (headerCollapsed) {
       ideEditor.style.height = "100%";
@@ -254,7 +309,7 @@ export const Main = (props: any) => {
     designManager.onmouseout = () => {
       setIsOverHeader(false);
     };
-  }, [isOverHeader, headerCollapsed]);
+  }, [isOverHeader, headerCollapsed, preview, propsCollapsed, allShow]);
 
   const cls = classnames({
     "ide-header": true,
@@ -265,13 +320,13 @@ export const Main = (props: any) => {
   return (
     <GlobalContext.Provider value={contextValue}>
       {headerCollapsed ? (
-        <a className="ide-show" onClick={showAll}>
+        <a className="ide-show" title="shortcut: alt+h" onClick={showAll}>
           <Icon type="caret-right" />
         </a>
       ) : null}
       <div className={cls} id="ide-design-header">
         <div className="left">
-          <div className="button-close">
+          <div className="button-close" title="shortcut: alt+h">
             <Icon type="close" onClick={hideAll} />
           </div>
           <SchemasContext.Consumer>
@@ -304,18 +359,24 @@ export const Main = (props: any) => {
         <div className="right">
           <div className="props">
             <Switch
+              title="shortcut: alt+v"
               checked={preview}
               checkedChildren="Preview"
               unCheckedChildren="Edit"
               onChange={() => switchPreview(!preview)}
             />
             <a
+              title="shortcut: alt+a"
               className="settings"
               onClick={() => togglePropsCollapse(!propsCollapsed)}
             >
               <Icon type="setting" />
             </a>
-            <a className="save" onClick={showSaveWindow}>
+            <a
+              className="save"
+              title="shortcut: ctrl+s"
+              onClick={showSaveWindow}
+            >
               <Icon type="save" />
             </a>
           </div>

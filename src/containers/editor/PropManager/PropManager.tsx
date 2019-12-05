@@ -1,11 +1,11 @@
-import React, { useContext, useState, useMemo, useEffect } from 'react';
-import _ from 'lodash';
-import { Tabs, Icon } from 'antd';
-import Draggable from 'react-draggable';
-import { Debugger } from './Debugger';
-import { Release, Props } from '../PropManager';
-import { GlobalContext, IDEEditorContext } from '../../Context';
-import * as Providers from '../Providers';
+import React, { useContext, useState, useMemo, useEffect } from "react";
+import _ from "lodash";
+import { Tabs, Icon } from "antd";
+import Draggable from "react-draggable";
+import { Debugger } from "./Debugger";
+import { Release, Props } from "../PropManager";
+import { GlobalContext, IDEEditorContext } from "../../Context";
+import * as Providers from "../Providers";
 
 const TabPane = Tabs.TabPane;
 
@@ -15,7 +15,7 @@ export const PropManager: React.FC<IPropManager> = props => {
     GlobalContext
   );
   const { editNode } = useContext(IDEEditorContext);
-  let defaultActiveKey = preview ? '2' : '1';
+  let defaultActiveKey = preview ? "2" : "1";
   const [activeKey, setActiveKey] = useState(defaultActiveKey);
 
   useEffect(() => {
@@ -26,12 +26,12 @@ export const PropManager: React.FC<IPropManager> = props => {
     e.stopPropagation();
   };
 
-  const [animatedClassName, setAnimatedClassName] = useState('showout');
+  const [animatedClassName, setAnimatedClassName] = useState("showout");
 
   useEffect(() => {
-    setAnimatedClassName('showout');
+    setAnimatedClassName("showout");
     _.debounce(() => {
-      setAnimatedClassName('');
+      setAnimatedClassName("");
     }, 1200)();
   }, [editNode]);
 
@@ -46,21 +46,25 @@ export const PropManager: React.FC<IPropManager> = props => {
   //   }
   // }, [minimize]);
 
+  const title = _.get(
+    editNode,
+    "schema.datasource.source",
+    _.get(editNode, "schema.datasource")
+  );
   return !propsCollapsed ? (
     <Draggable onMouseDown={onMouseDown} cancel=".cancel-drag">
       <div className={`props ${animatedClassName}`} id="prop-manager">
         <Providers.Props>
-          <h3 className="prop-title">
-            {_.get(
-              editNode,
-              'schema.datasource.source',
-              _.get(editNode, 'schema.datasource')
-            )}
+          <h3 className="prop-title" title={title}>
+            {_.truncate(title, {
+              length: 40,
+              omission: "..."
+            })}
             <a
               className="close-button"
               onClick={() => {
                 togglePropsCollapsed(true);
-                setAnimatedClassName('');
+                setAnimatedClassName("");
               }}
             >
               <Icon type="close" />

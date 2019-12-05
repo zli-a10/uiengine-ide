@@ -18,6 +18,7 @@ import { useDrop, DropTargetMonitor } from "react-dnd";
 import classNames from "classnames";
 import { searchNodes } from "uiengine";
 import { IUINode } from "uiengine/typings";
+import InputComponent from './InputComponent'
 
 import {
   DND_IDE_NODE_TYPE,
@@ -29,9 +30,9 @@ const stateRuleOptions = [["is", "Is"]];
 const dataRuleOptions = [
   // system
   ["is", "Is"],
-  // customize
-  ["isTrue", "isTrue"],
-  ["isFalse", "isFalse"],
+  // // customize
+  // ["isTrue", "isTrue"],
+  // ["isFalse", "isFalse"],
   // system
   ["not", "Not"],
   ["above", "Above"],
@@ -155,22 +156,26 @@ const SelectorItem = (props: any) => {
 
   // special rule handling
   const changeRule = useCallback((rule: string) => {
-    if (noFillRules.indexOf(rule) > -1) {
-      setIsHidden(true);
-      if (rule === "isFalse") {
-        _.set(data, valueKey, false);
-      } else if (rule === "isTrue") {
-        _.set(data, valueKey, true);
+    try {
+      if (noFillRules.indexOf(rule) > -1) {
+        setIsHidden(true);
+        if (rule === "isFalse") {
+          _.set(data, valueKey, false);
+        } else if (rule === "isTrue") {
+          _.set(data, valueKey, true);
+        } else {
+          _.unset(data, valueKey);
+        }
       } else {
-        _.unset(data, valueKey);
+        setIsHidden(false);
       }
-    } else {
-      setIsHidden(false);
-    }
-    _.set(data, compareRule, rule);
+      _.set(data, compareRule, rule);
 
-    setRule(rule);
-    onChange(root);
+      setRule(rule);
+      onChange(root);
+    } catch (e) {
+      console.log(e)
+    }
   }, []);
 
   // change Compare
@@ -323,31 +328,39 @@ const SelectorItem = (props: any) => {
         ) : null}
         {isHidden ? null : state === "data" ? (
           <Form.Item label="Value">
-            <Input
+            {/* <Input
               disabled={disabled}
               value={value}
               onChange={(e: any) => {
                 changeValue(e.target.value);
                 setDataValue(e.target.value);
               }}
+            /> */}
+            <InputComponent
+              disabled={disabled}
+              value={value}
+              onChange={(val: any) => {
+                changeValue(val);
+                setDataValue(val);
+              }}
             />
           </Form.Item>
         ) : (
-          <Form.Item label="State">
-            <Select
-              disabled={disabled}
-              size="small"
-              value={value ? 1 : 0}
-              onChange={(value: any) => {
-                changeValue(value);
-                setDataValue(value);
-              }}
-            >
-              <Select.Option value={1}>True</Select.Option>
-              <Select.Option value={0}>False</Select.Option>
-            </Select>
-          </Form.Item>
-        )}
+            <Form.Item label="State">
+              <Select
+                disabled={disabled}
+                size="small"
+                value={value ? 1 : 0}
+                onChange={(value: any) => {
+                  changeValue(value);
+                  setDataValue(value);
+                }}
+              >
+                <Select.Option value={1}>True</Select.Option>
+                <Select.Option value={0}>False</Select.Option>
+              </Select>
+            </Form.Item>
+          )}
         <Form.Item label="Del">
           <Button
             disabled={disabled}

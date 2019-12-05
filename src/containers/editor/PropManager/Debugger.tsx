@@ -5,7 +5,7 @@ import { Collapse, Row, Col, Input, Select, Form, Icon } from 'antd';
 import { useDrop } from 'react-dnd';
 import { IDEEditorContext, PropsContext } from '../../Context';
 import * as Panels from './Panels';
-import { getActiveUINode } from '../../../helpers';
+import { getActiveUINode, DndNodeManager } from '../../../helpers';
 import { PluginManager } from 'uiengine';
 import { DND_IDE_NODE_TYPE } from '../../../helpers';
 
@@ -36,7 +36,7 @@ const tailFormItemLayout = {
 };
 
 export const Debugger: React.FC = (props: any) => {
-  const { editNode } = useContext(IDEEditorContext);
+  const { editNode, setContent } = useContext(IDEEditorContext);
   const { time } = useContext(PropsContext);
 
   // preview json
@@ -59,9 +59,9 @@ export const Debugger: React.FC = (props: any) => {
     setStateDataJson(_.clone(dataJson));
   };
 
-  const [struct, setStruct] = useState < any > ('category-id-tree');
-  const [exclude, setExclude] = useState < any > ('empty-record');
-  const [componentID, setComponentID] = useState < any > (_.get(editNode, 'id'));
+  const [struct, setStruct] = useState<any>('category-id-tree');
+  const [exclude, setExclude] = useState<any>('empty-record');
+  const [componentID, setComponentID] = useState<any>(_.get(editNode, 'id'));
 
   const pluginManager = PluginManager.getInstance();
   let pluginData = pluginManager.exportHistoryRecords({
@@ -171,6 +171,18 @@ export const Debugger: React.FC = (props: any) => {
     getJson();
   }, [editNode, time]);
 
+  const updateCodeEditor = () => {
+    const jsonFileSchema = getActiveUINode(true);
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    if (!_.isEmpty(cachedActiveTab)) {
+      setContent({
+        content: jsonFileSchema,
+        file: cachedActiveTab.tabName,
+        type: 'schema'
+      });
+    }
+  }
+
   // change ui tree schema
   const onChangeTreeSchema = useCallback(
     async (d: any) => {
@@ -180,6 +192,9 @@ export const Debugger: React.FC = (props: any) => {
       _.set(editNode.schema, namespace, d.new_value);
       await editNode.refreshLayout();
       editNode.sendMessage(true);
+
+      //update code editor
+      updateCodeEditor()
     },
     [editNode]
   );
@@ -189,6 +204,9 @@ export const Debugger: React.FC = (props: any) => {
       _.merge(editNode.schema, d.new_value);
       await editNode.refreshLayout();
       editNode.sendMessage(true);
+
+      //update code editor
+      updateCodeEditor()
     },
     [editNode]
   );
@@ -201,6 +219,9 @@ export const Debugger: React.FC = (props: any) => {
       _.unset(editNode.schema, namespace);
       await editNode.refreshLayout();
       editNode.sendMessage(true);
+
+      //update code editor
+      updateCodeEditor()
     },
     [editNode]
   );
@@ -341,7 +362,7 @@ export const Debugger: React.FC = (props: any) => {
         <Panel
           header="Nodes"
           key="nodes"
-          // extra={<Icon type="reload" onClick={onRefresh} />}
+        // extra={<Icon type="reload" onClick={onRefresh} />}
         >
           <Collapse accordion bordered={false} defaultActiveKey={'ui-node'}>
             <Panel header="UI Node" key="ui-node">

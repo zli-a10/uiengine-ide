@@ -9,7 +9,8 @@ import {
   IDE_ID,
   getActiveUINode,
   FileLoader,
-  VersionControl
+  VersionControl,
+  MemoStore
 } from '../../helpers';
 import './styles/index.less';
 import ErrorBoundary from './ErrorBoundary';
@@ -23,6 +24,10 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
   const [editNode, setEditNode] = useState();
   const [content, setContent] = useState < Array < IContentList >> ([]);
   const [collapsedNodes, setCollapsedNodes] = useState < Array < string >> ([]);
+
+  useEffect(() => {
+    MemoStore.bucket.preview = false
+  }, [])
 
   const ideEditorContextValue = useMemo < IIDEEditorContext > (
     () => ({

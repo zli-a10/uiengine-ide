@@ -6,7 +6,7 @@
 	},
 	"children": [
 		{
-			"component": "a10:Form.Form",
+			"component": "my:Form.Form",
 			"props": {
 				"isCreate": true
 			},
@@ -16,7 +16,7 @@
 					"component": "div",
 					"children": [
 						{
-							"component": "a10:Form.FormItem",
+							"component": "my:Form.FormItem",
 							"title": "username",
 							"value": "credentials:username",
 							"props": {
@@ -32,7 +32,7 @@
 							}
 						},
 						{
-							"component": "a10:Form.FormItem",
+							"component": "my:Form.FormItem",
 							"title": "password",
 							"value": "credentials:password",
 							"props": {
@@ -49,7 +49,7 @@
 							}
 						},
 						{
-							"component": "a10:Form.SubmitGroup",
+							"component": "my:Form.SubmitGroup",
 							"props": {
 								"buttonAlign": "center",
 								"saveText": "Login",

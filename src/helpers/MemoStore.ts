@@ -12,6 +12,6 @@ export class MemoStore {
   }
 
   static bucket: any = {
-    preview: false
+    preview: true
   };
 }

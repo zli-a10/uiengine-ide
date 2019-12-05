@@ -63,7 +63,7 @@ export default [
       },
 
       {
-        component: "my:Form.Form",
+        component: "a10:Form.Form",
         title: "Form",
         isContainer: true,
         schema: {},
