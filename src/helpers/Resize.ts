@@ -8,7 +8,7 @@ export class Resize {
   size: { width: any; height: any } = { width: 0, height: 0 }
 
   // type could be  n,s,w,e, nw, ne, sw, se
-  constructor(type: string, target: any, handler: any, callback: any, maxY: number) {
+  constructor(type: string, target: any, handler: any, callback: any, maxY: number = 0) {
     this.target = target
     this.handler = handler
     this.callback = callback
