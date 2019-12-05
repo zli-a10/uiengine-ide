@@ -11,7 +11,8 @@ import {
   useSaveTemplate,
   useBreakupFromTemplate,
   useCollapseItems,
-  useCloneNode
+  useCloneNode,
+  IDERegister
 } from '../../helpers';
 
 const ActionMenu = (props: any) => {
@@ -19,6 +20,9 @@ const ActionMenu = (props: any) => {
   const { collapsedNodes } = useContext(IDEEditorContext);
   const { children, uinode } = props;
   const isTemplate = _.has(uinode, 'props.ide_droppable');
+
+  const componentInfo = IDERegister.getComponentInfo(uinode.schema.component)
+  const isContainer = _.get(componentInfo, 'isContainer', false)
 
   const menu = (
     <Menu>
@@ -60,11 +64,13 @@ const ActionMenu = (props: any) => {
           <Icon type="stop" /> Clear Layout
         </a>
       </Menu.Item>
-      <Menu.Item key="unit-unwrapper" onClick={useUnWrapNode(uinode)}>
-        <a target="_blank">
-          <Icon type="menu-fold" /> Remove Layout Wrappers
+      {isContainer ? (
+        <Menu.Item key="unit-unwrapper" onClick={useUnWrapNode(uinode)}>
+          <a target="_blank">
+            <Icon type="menu-fold" /> Remove Layout Wrappers
         </a>
-      </Menu.Item>
+        </Menu.Item>
+      ) : null}
       <Menu.Item key="unit-delete" onClick={useDeleteNode(uinode)}>
         <a target="_blank">
           <Icon type="delete" /> Delete [D|Delete]

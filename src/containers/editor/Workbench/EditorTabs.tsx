@@ -201,7 +201,8 @@ export const EditorTabs = (props: any) => {
     setRightSpan(right);
     setSpitted(true);
     localStorage['drawingBoardLayout'] = key;
-  }, []);
+    activeTab(`drawingboard:${activeTabName}`, 'schema');
+  }, [activeTab, activeTabName]);
 
   const searchNode = useCallback((folder: string, nodes: Array<any>): any => {
     let node;
@@ -434,41 +435,41 @@ export const EditorTabs = (props: any) => {
       })}
     </Tabs>
   ) : (
-    <Row className="splitted-window">
-      <Col span={leftSpan}>
-        <Tabs defaultActiveKey="drawingboard">
-          <TabPane tab="Drawing Board" key="drawingboard">
-            <DrawingBoard {...props} />
-          </TabPane>
-        </Tabs>
-      </Col>
-      <Col span={rightSpan}>
-        <Tabs
-          onEdit={onEdit}
-          onTabClick={onTabClick}
-          hideAdd
-          type="editable-card"
-          defaultActiveKey={activeKey}
-          activeKey={activeKey}
-          tabBarExtraContent={
-            tabs && tabs.length ? (
-              <WindowSizeDown
-                onMenuClick={onMenuClick}
-                onSplitWindow={onSplitWindow}
-                onSave={onSave}
-                activeKey={activeKey}
-                type={type}
-              />
-            ) : null
-          }
-        >
-          {tabs.map((tab: any) => (
-            <TabPane tab={createTabTitle(tab)} key={tab.tab}>
-              <CodeEditor data={tab} />
+      <Row className="splitted-window">
+        <Col span={leftSpan}>
+          <Tabs defaultActiveKey="drawingboard">
+            <TabPane tab="Drawing Board" key="drawingboard">
+              <DrawingBoard {...props} />
             </TabPane>
-          ))}
-        </Tabs>
-      </Col>
-    </Row>
-  );
+          </Tabs>
+        </Col>
+        <Col span={rightSpan}>
+          <Tabs
+            onEdit={onEdit}
+            onTabClick={onTabClick}
+            hideAdd
+            type="editable-card"
+            defaultActiveKey={activeKey}
+            activeKey={activeKey}
+            tabBarExtraContent={
+              tabs && tabs.length ? (
+                <WindowSizeDown
+                  onMenuClick={onMenuClick}
+                  onSplitWindow={onSplitWindow}
+                  onSave={onSave}
+                  activeKey={activeKey}
+                  type={type}
+                />
+              ) : null
+            }
+          >
+            {tabs.map((tab: any) => (
+              <TabPane tab={createTabTitle(tab)} key={tab.tab}>
+                <CodeEditor data={tab} />
+              </TabPane>
+            ))}
+          </Tabs>
+        </Col>
+      </Row>
+    );
 };
