@@ -16,7 +16,8 @@ import {
   FileLoader,
   ShortcutManager,
   DndNodeManager,
-  MemoStore
+  MemoStore,
+  getActiveUINode
 } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 
@@ -172,8 +173,11 @@ export const DrawingBoard: React.FC = (props: any) => {
           "schema",
           activeTab.isTemplate
         );
-        const newSchema = _.cloneDeep(schema);
 
+        // set editing file, otherwise version control can't cache
+        fileLoader.editingFile = activeTab.tabName;
+
+        const newSchema = _.cloneDeep(schema);
         newSchema[0].layout = data;
         setSchema(newSchema);
       }
@@ -184,7 +188,7 @@ export const DrawingBoard: React.FC = (props: any) => {
 
   return (
     <div className="editor" id="drawingboard">
-      <UIEngine layouts={schema} config={newConfig} />
+      <UIEngine layouts={schema} config={newConfig} retainRootNode />
     </div>
   );
 };
