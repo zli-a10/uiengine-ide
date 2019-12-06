@@ -54,11 +54,15 @@ export const useSaveTemplate = (uinode: IUINode) => {
     const schema = uinode.schema;
 
     // save file
-    let targetResource = _.cloneDeep(editingResource)
+    let targetResource = _.cloneDeep(editingResource);
     if (_.get(editingResource, "nodeType", "") === "file") {
-      targetResource = _.get(editingResource, "_parent_", {} as IResourceTreeNode)
+      targetResource = _.get(
+        editingResource,
+        "_parent_",
+        {} as IResourceTreeNode
+      );
     }
-    const name = _.uniqueId("saved_template_") + '.json';
+    const name = _.uniqueId("saved_template_") + ".json";
     // const newPath = `${_.get(targetResource, "_path_")}/${name}`;
     const newPath = `${name}`;
 
@@ -82,23 +86,23 @@ export const useSaveTemplate = (uinode: IUINode) => {
     // refresh the tree
     // setSelectedKey(newPath);
 
-    _.forIn(uinode.schema, function (value, key) {
-      delete uinode.schema[key]
-    })
-    uinode.schema.$template = name
-    const dndNodeManager = DndNodeManager.getInstance()
-    dndNodeManager.pushVersion()
-    await uinode.refreshLayout()
-    uinode.sendMessage(true)
+    _.forIn(uinode.schema, function(value, key) {
+      delete uinode.schema[key];
+    });
+    uinode.schema.$template = name;
+    const dndNodeManager = DndNodeManager.getInstance();
+    dndNodeManager.pushVersion();
+    await uinode.refreshLayout();
+    uinode.sendMessage(true);
 
     //update code editor
     const jsonFileSchema = getActiveUINode(true);
-    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
     if (!_.isEmpty(cachedActiveTab)) {
       setContent({
         content: jsonFileSchema,
         file: cachedActiveTab.tabName,
-        type: 'schema'
+        type: "schema"
       });
     }
   };
@@ -108,23 +112,23 @@ export const useBreakupFromTemplate = (uinode: IUINode) => {
   const { setContent } = useContext(IDEEditorContext);
   return async () => {
     //update schema
-    delete uinode.schema.$$template
-    const dndNodeManager = DndNodeManager.getInstance()
-    dndNodeManager.pushVersion()
-    await uinode.refreshLayout()
-    uinode.sendMessage(true)
+    delete uinode.schema.$$template;
+    const dndNodeManager = DndNodeManager.getInstance();
+    dndNodeManager.pushVersion();
+    await uinode.refreshLayout();
+    uinode.sendMessage(true);
 
     //update code editor
     const jsonFileSchema = getActiveUINode(true);
-    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
     if (!_.isEmpty(cachedActiveTab)) {
       setContent({
         content: jsonFileSchema,
         file: cachedActiveTab.tabName,
-        type: 'schema'
+        type: "schema"
       });
     }
-  }
+  };
 };
 
 export const useCollapseItems = (uinode: IUINode) => {

@@ -14,7 +14,9 @@ import {
   useDeleteNode,
   useCloneNode,
   FileLoader,
-  ShortcutManager
+  ShortcutManager,
+  DndNodeManager,
+  MemoStore
 } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 
@@ -51,58 +53,13 @@ export const DrawingBoard: React.FC = (props: any) => {
   let deleteEditNode = useDeleteNode(editNode);
   let cloneEditNode = useCloneNode(editNode);
 
-  // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
-  const keyPressActions = useCallback(
-    async (e: any) => {
-      // // those allowBubbleKeys set on Main.tsx for preview, attribute window, hide/show windows, save file
-      // const allowBubbleKeys = ["KeyV", "KeyA", "KeyH", "KeyS"];
-      // console.log(allowBubbleKeys.indexOf(e.code), e.code);
-      // if (allowBubbleKeys.indexOf(e.code) === -1) return false;
-
-      // console.log(e);
-      // // shortcut ctrl+z
-      // const versionControl = VersionControl.getInstance();
-      // if (e.ctrlKey && e.code === "KeyZ") {
-      //   const schema = await versionControl.undo();
-
-      //   updateSchema({ schema });
-      // }
-
-      // if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
-      //   const schema = await versionControl.redo();
-
-      //   updateSchema({ schema });
-      // }
-
-      // duplicate | delete
-      const keyMap = {
-        KeyD: "down",
-        KeyU: "up",
-        KeyL: "left",
-        KeyR: "right"
-      };
-
-      if (editNode && e.target.localName === "body") {
-        e.preventDefault();
-        // dup: Bug: ^D  will recover downwards elements
-        if (e.ctrlKey && keyMap[e.code] && editNode) {
-          cloneEditNode(keyMap[e.code])();
-        } else if (e.key === "Delete" || (e.code === "KeyD" && !preview)) {
-          // delete
-          deleteEditNode();
-        }
-        return false;
-      }
-    },
-    [editNode]
-  );
-  const ctrlZ = useCallback(async () => {
+  const undo = useCallback(async () => {
     const versionControl = VersionControl.getInstance();
     const schema = await versionControl.undo();
     updateSchema({ schema });
   }, []);
 
-  const ctrlShiftZ = useCallback(async () => {
+  const redo = useCallback(async () => {
     const versionControl = VersionControl.getInstance();
     const schema = await versionControl.redo();
 
@@ -111,6 +68,7 @@ export const DrawingBoard: React.FC = (props: any) => {
 
   const duplicate = useCallback(
     e => {
+      e.preventDefault();
       const keyMap = {
         KeyD: "down",
         KeyU: "up",
@@ -119,12 +77,12 @@ export const DrawingBoard: React.FC = (props: any) => {
       };
 
       if (editNode && e.target.localName === "body") {
-        e.preventDefault();
         // dup: Bug: ^D  will recover downwards elements
         if (keyMap[e.code] && editNode) {
           cloneEditNode(keyMap[e.code])();
         }
       }
+      return false;
     },
     [editNode]
   );
@@ -136,6 +94,41 @@ export const DrawingBoard: React.FC = (props: any) => {
         // dup: Bug: ^D  will recover downwards elements
         // delete
         deleteEditNode();
+        return false;
+      }
+    },
+    [preview, editNode]
+  );
+
+  const copyNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        MemoStore.bucket.clipboard = editNode.schema;
+      }
+    },
+    [preview, editNode]
+  );
+
+  const cutNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        MemoStore.bucket.clipboard = editNode.schema;
+        deleteEditNode();
+      }
+    },
+    [preview, editNode]
+  );
+
+  const pasteNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        const schema = MemoStore.bucket.clipboard;
+        const dndNodeManager = DndNodeManager.getInstance();
+        dndNodeManager.insertCenter({ schema } as any, editNode);
+        updateSchema(schema);
       }
     },
     [preview, editNode]
@@ -145,8 +138,11 @@ export const DrawingBoard: React.FC = (props: any) => {
     // Update the document title using the browser API
     const shortcutManger = ShortcutManager.getInstance();
     const shortcuts = {
-      ctrlZ,
-      ctrlShiftZ,
+      ctrlZ: undo,
+      ctrlShiftZ: redo,
+      ctrlC: copyNode,
+      ctrlX: cutNode,
+      ctrlV: pasteNode,
       ctrlD: duplicate,
       ctrlU: duplicate,
       ctrlL: duplicate,
@@ -158,8 +154,6 @@ export const DrawingBoard: React.FC = (props: any) => {
   }, [editNode, preview]);
 
   useEffect(() => {
-    // Update the document title using the browser API
-    // window.addEventListener("keydown", keyPressActions);
     // const drawingboard = document.getElementById("drawingboard");
     // if (drawingboard) {
     //   drawingboard.ondblclick = (e: any) => {
