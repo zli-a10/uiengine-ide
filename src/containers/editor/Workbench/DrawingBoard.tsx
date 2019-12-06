@@ -105,7 +105,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     e => {
       if (editNode && e.target.localName === "body") {
         e.preventDefault();
-        MemoStore.bucket.clipboard = editNode.schema;
+        MemoStore.bucket.clipboard = _.cloneDeep(editNode.schema);
       }
     },
     [preview, editNode]
@@ -115,7 +115,7 @@ export const DrawingBoard: React.FC = (props: any) => {
     e => {
       if (editNode && e.target.localName === "body") {
         e.preventDefault();
-        MemoStore.bucket.clipboard = editNode.schema;
+        MemoStore.bucket.clipboard = _.cloneDeep(editNode.schema);
         deleteEditNode();
       }
     },
