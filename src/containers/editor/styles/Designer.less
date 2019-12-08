@@ -24,7 +24,7 @@
 
 .ide-editor {
   display: flex;
-  height: ~'calc(100% - 60px)';
+  height: ~"calc(100% - 60px)";
 
   &.show-max {
     height: 100%;
@@ -78,7 +78,7 @@
 
     .widgets {
       clear: both;
-      height: ~'calc(100% - 226px)';
+      height: ~"calc(100% - 238px)";
     }
 
     .pages {
@@ -131,13 +131,17 @@
   color: #fa14ee;
 }
 
-.ant-tree.ant-tree-directory>li span.ant-tree-node-content-wrapper>span,
-.ant-tree.ant-tree-directory .ant-tree-child-tree>li span.ant-tree-node-content-wrapper>span {
+.ant-tree.ant-tree-directory > li span.ant-tree-node-content-wrapper > span,
+.ant-tree.ant-tree-directory
+  .ant-tree-child-tree
+  > li
+  span.ant-tree-node-content-wrapper
+  > span {
   float: left;
 }
 
 .ant-tree-treenode-selected {
-  >span.ant-tree-switcher {
+  > span.ant-tree-switcher {
     color: #fff;
 
     .anticon {
@@ -150,7 +154,7 @@
   }
 }
 
-.ant-tree-node-selected>.ant-tree-title {
+.ant-tree-node-selected > .ant-tree-title {
   .node-title {
     color: #fff;
   }
