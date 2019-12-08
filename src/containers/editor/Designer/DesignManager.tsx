@@ -25,7 +25,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
     const offsetPatch = componentCollapsed
       ? headerCollapsed
         ? 46
-        : 36
+        : 66
       : headerCollapsed
       ? 6
       : 26;
