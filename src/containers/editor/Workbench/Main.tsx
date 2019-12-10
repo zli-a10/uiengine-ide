@@ -381,7 +381,9 @@ export const Main = (props: any) => {
             </a>
           </div>
 
-          <div className="brand">UIEngine</div>
+          <div className="brand">
+            <img src="logo.png" alt="UIEngine" height="24" />
+          </div>
         </div>
       </div>
 
