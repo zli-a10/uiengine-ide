@@ -54,7 +54,6 @@ export function cleanSchema(
       _.get(schema, "datasource", "")
     );
     if (datasource.indexOf("$dummy") > -1) {
-      console.log(datasource);
       _.unset(schema, "datasource");
     }
 
