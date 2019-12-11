@@ -3,18 +3,18 @@ export default [
   {
     id: "common", // prefix
     title: "Project Common Components",
-    category: 'common',
+    category: "common",
     children: [
       {
-        component: 'my:Provider',
+        component: "my:Provider",
         category: "my",
-        title: 'Provider',
+        title: "Provider",
         isContainer: true,
         schema: {
-          state: "string"
+          state: "object"
         },
         defaultProps: {
-          state: "{value1: 'abc'}"
+          state: { value1: "abc" }
         }
       },
       {
@@ -34,9 +34,9 @@ export default [
         defaultProps: {}
       },
       {
-        component: 'my:Form.Form',
+        component: "my:Form.Form",
         category: "my",
-        title: 'Form',
+        title: "Form",
         isContainer: true,
         schema: {
           state: "string"
@@ -148,9 +148,9 @@ export default [
         defaultProps: {}
       },
       {
-        component: 'my:Table.Table',
+        component: "my:Table.Table",
         category: "my",
-        title: 'Table',
+        title: "Table",
         isContainer: true,
         schema: {},
         defaultProps: {

@@ -56,7 +56,8 @@ export class SchemaPropManager implements ISchemaPropManager {
     componentPropSchema: any,
     value: any,
     uiNode: IUINode,
-    extraInfo?: any
+    extraInfo?: any,
+    replace: boolean = false
   ) {
     const schema: IUISchema = this.generateSchema(
       type,
@@ -64,6 +65,6 @@ export class SchemaPropManager implements ISchemaPropManager {
       value,
       extraInfo
     );
-    await this.dndNodeManager.useSchema(uiNode, schema);
+    await this.dndNodeManager.useSchema(uiNode, schema, replace);
   }
 }
