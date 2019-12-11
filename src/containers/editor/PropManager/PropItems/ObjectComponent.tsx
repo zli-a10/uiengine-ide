@@ -23,7 +23,6 @@ export const ObjectComponent = (props: any) => {
     setInputValue(JSON.stringify(value));
   }, [value, uinode]);
 
-  console.log(value, inputValue);
   return (
     <Form.Item label={formatTitle(name)}>
       <Input.TextArea
