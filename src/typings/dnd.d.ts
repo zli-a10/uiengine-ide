@@ -62,7 +62,7 @@ interface IDndNodeManager {
   insertDown(sourceNode: IUINode, targetNode: IUINode);
 
   delete(sourceNode: IUINode);
-  useSchema(targetNode: IUINode, schema: ILayoutSchema, replace?: boolean);
+  useSchema(targetNode: IUINode, schema: ILayoutSchema, replacePath?: string);
   cleanLayout(sourceNode: IUINode);
   removeWrappers(sourceNode: IUINode);
 }

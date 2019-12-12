@@ -65,6 +65,12 @@ export class SchemaPropManager implements ISchemaPropManager {
       value,
       extraInfo
     );
-    await this.dndNodeManager.useSchema(uiNode, schema, replace);
+    let replacePath = ''
+    try {
+      replacePath = `${_.keys(schema)[0]}.${_.keys(componentPropSchema)[0]}`
+    } catch (e) {
+      console.log(e)
+    }
+    await this.dndNodeManager.useSchema(uiNode, schema, replace ? replacePath : undefined);
   }
 }
