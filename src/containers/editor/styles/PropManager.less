@@ -106,24 +106,36 @@
       line-height: inherit;
     }
 
-    .component-select.ant-select {
-      margin-left: 15px;
+    .component-define {
       margin-top: 15px;
-      margin-bottom: 0;
-      font-size: 18px;
-      background: #fff;
-      width: 93%;
-      border: 1px solid #d9d9d9;
-      border-radius: 3px;
-      font-weight: bold;
-      font-size: 14px;
-      text-align: center;
+      padding: 0 15px;
 
-      .ant-select-selection {
-        border: 0;
-        background: transparent;
+      .component-select {
+        &.ant-select {
+          // margin-left: 15px;
+          margin-bottom: 0;
+          font-size: 18px;
+          background: #fff;
+          width: 98%;
+          border: 1px solid #d9d9d9;
+          border-radius: 3px;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: center;
+
+          .ant-select-selection {
+            border: 0;
+            background: transparent;
+          }
+        }
       }
+
+      .ant-input {
+        height: 26px;
+      }
+
     }
+
 
     .prop-title {
       line-height: 34px;

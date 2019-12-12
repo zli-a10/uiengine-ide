@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo, useEffect } from "react";
 import _ from "lodash";
-import { Collapse, Form, Icon, TreeSelect } from "antd";
+import { Collapse, Form, Icon, TreeSelect, Row, Col } from "antd";
 import { PropItem } from "./PropItem";
 import { IDEEditorContext } from "../../Context";
 import {
@@ -83,18 +83,33 @@ export const Props: React.FC = (props: any) => {
   // console.log("edit node", plugins, _.find(editNode.$events, { event: name }));
   return (
     <div className="ide-props-events">
-      <TreeSelect
-        dropdownClassName="cancel-drag"
-        showSearch
-        className={"component-select"}
-        value={treeValue}
-        dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-        treeData={treeData}
-        placeholder={formatTitle(title)}
-        treeDefaultExpandAll
-        onChange={onTreeChange}
-        disabled={disabled}
-      />
+      <Row className={"component-define"}>
+        <Col span={16}>
+          <TreeSelect
+            dropdownClassName="cancel-drag"
+            showSearch
+            className={"component-select"}
+            value={treeValue}
+            dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+            treeData={treeData}
+            placeholder={formatTitle(title)}
+            treeDefaultExpandAll
+            onChange={onTreeChange}
+            disabled={disabled}
+          />
+        </Col>
+        <Col span={8}>
+          <PropItem
+            section="root"
+            name="id"
+            type="string"
+            noLabel
+            placeholder="Schema ID"
+            data={_.get(editNode, "schema.id")}
+            uinode={editNode}
+          />
+        </Col>
+      </Row>
 
       <Collapse accordion defaultActiveKey={"props"}>
         <Panel header="Component Props" key="props">
