@@ -112,19 +112,27 @@ export const Props: React.FC = (props: any) => {
       </Row>
 
       <Collapse accordion defaultActiveKey={"props"}>
-        <Panel header="Component Props" key="props">
-          <Form
-            {...formItemLayout}
-            style={{ maxHeight: "400px", overflow: "auto" }}
-          >
+        <Panel
+          header="Component Props"
+          key="props"
+          extra={
             <PropItem
               section="root"
               name="inheritProps"
               schema="boolean"
+              switchOnly
+              checkedChildren="Inherit"
+              unCheckedChildren="Uninherit"
               key={`key-inheritProps`}
               uinode={editNode}
-              data={_.get(editNode, `schema.inheritProps`)}
+              data={_.get(editNode, `schema.inheritProps`, true)}
             />
+          }
+        >
+          <Form
+            {...formItemLayout}
+            style={{ maxHeight: "400px", overflow: "auto" }}
+          >
             {Object.entries(restSchema).map((entry: any) => (
               <PropItem
                 section="prop"

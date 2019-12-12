@@ -53,7 +53,10 @@ export function cleanSchema(
       "datasource.source",
       _.get(schema, "datasource", "")
     );
-    if (datasource.indexOf("$dummy") > -1) {
+    if (
+      (_.isString(datasource) && datasource.indexOf("$dummy") > -1) ||
+      !datasource
+    ) {
       _.unset(schema, "datasource");
     }
 
