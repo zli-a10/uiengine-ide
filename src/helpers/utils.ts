@@ -47,6 +47,16 @@ export function cleanSchema(
       schema.$template = childrenTemplate;
     }
 
+    // remove dummy datasource
+    const datasource = _.get(
+      schema,
+      "datasource.source",
+      _.get(schema, "datasource", "")
+    );
+    if (datasource.indexOf("$dummy") > -1) {
+      _.unset(schema, "datasource");
+    }
+
     // remove IDE_ID
     if (exporting) {
       _.unset(schema, IDE_ID);

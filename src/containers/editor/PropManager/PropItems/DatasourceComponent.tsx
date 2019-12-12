@@ -30,10 +30,21 @@ export const DatasourceComponent = (props: any) => {
     _.get(dataSource, "defaultValue")
   );
 
-  const [isLock, setLock] = useState(true);
+  const [isLock, setLock] = useState(false);
   const onClickLock = useCallback(() => {
     setLock(!isLock);
-  }, [isLock]);
+    if (!isLock) {
+      // sync
+      const source = _.get(dataSource, "source");
+      const schema = _.get(dataSource, "schema");
+      if (!_.isNil(source)) {
+        onChangeSchema(source);
+      } else if (!_.isNil(schema)) {
+        onChangeSource(schema);
+      }
+    }
+  }, [isLock, dataSource]);
+
   const onChangeSource = useCallback(
     value => {
       dataSource.source = value;
@@ -111,8 +122,13 @@ export const DatasourceComponent = (props: any) => {
 
   // const [ds, changeDs] = useState(dataSource);
   useEffect(() => {
-    changeSource(_.get(dataSource, "source"));
-    changeSchema(_.get(dataSource, "schema"));
+    const source = _.get(dataSource, "source");
+    const schema = _.get(dataSource, "schema");
+    // if source and schema same, lock it
+    setLock(source === schema);
+
+    changeSource(source);
+    changeSchema(schema);
     changeAutoload(_.get(dataSource, "autoload"));
     changeDefaultValue(_.get(dataSource, "defaultValue"));
     const formatterName = _.get(uinode, "schema.props.formatter.name");
