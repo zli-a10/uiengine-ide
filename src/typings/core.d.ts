@@ -11,7 +11,7 @@ interface IFileTree {
 }
 
 interface IResourceTreeObjects {
-  listener?: Array<IResourceTreeNode>;
+  handler?: Array<IResourceTreeNode>;
   datasource?: Array<IResourceTreeNode>;
   plugin?: Array<IResourceTreeNode>;
   component?: Array<IResourceTreeNode>;
@@ -125,7 +125,7 @@ type EResourceType =
   | "schema"
   | "plugin"
   | "datasource"
-  | "listener"
+  | "handler"
   | "template"
   | "component";
 

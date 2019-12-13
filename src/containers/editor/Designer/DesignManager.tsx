@@ -103,10 +103,10 @@ export const DesignManager: React.FC<IDesignManager> = props => {
             <Icon type="close" />
           </a>
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Schemas" key="1">
+            <TabPane tab="UI Workspace" key="1">
               <PageTree />
             </TabPane>
-            <TabPane tab="Resources" key="2">
+            <TabPane tab="UI Deps" key="2">
               <ResourceTree />
             </TabPane>
           </Tabs>
@@ -115,7 +115,7 @@ export const DesignManager: React.FC<IDesignManager> = props => {
 
         <div className="widgets" id="libary-frame">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Components" key="1">
+            <TabPane tab="UI Components" key="1">
               <Libraries list={librariesData} />
             </TabPane>
 

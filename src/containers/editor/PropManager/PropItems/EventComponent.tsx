@@ -1,16 +1,16 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import _ from 'lodash';
-import { Select, Form } from 'antd';
-import { ListenerManager } from 'uiengine';
+import React, { useCallback, useState, useEffect, useMemo } from "react";
+import _ from "lodash";
+import { Select, Form } from "antd";
+import { ListenerManager } from "uiengine";
 
-import { PropItem } from '../PropItem';
-import { formatTitle } from '../../../../helpers';
+import { PropItem } from "../PropItem";
+import { formatTitle } from "../../../../helpers";
 
 const Option = Select.Option;
 
 export const EventComponent = (props: any) => {
   const { name, onChange, disabled, uinode } = props;
-  const events = _.get(uinode, 'schema.props.$events', []);
+  const events = _.get(uinode, "schema.props.$events", []);
   const eventIndex = _.findIndex(events, {
     eventName: name
   });
@@ -20,46 +20,46 @@ export const EventComponent = (props: any) => {
     event = events[eventIndex];
   }
 
-  let listenerName = _.get(event, 'listener');
+  let handlerName = _.get(event, "handler");
   // console.log(event, eventIndex, "event");
 
   // load listeners
-  const listeners = useMemo(() => {
-    const listenerManager = ListenerManager.getInstance();
-    const list = listenerManager.getListenerConfig('');
+  const handlers = useMemo(() => {
+    const handlerManager = ListenerManager.getInstance();
+    const list = handlerManager.getListenerConfig("");
 
     return { None: {}, ...list };
   }, []);
 
-  const [listener, changeListener] = useState(listenerName);
+  const [handler, changeListener] = useState(handlerName);
   const [describe, changeDescribe] = useState();
-  const onChangeListener = useCallback(
-    (listenerName: any) => {
-      const entry = listeners[listenerName];
+  const onChangeHandler = useCallback(
+    (handlerName: any) => {
+      const entry = handlers[handlerName];
 
       if (entry) {
         const { name: entryName, describe } = entry;
 
         if (_.isEmpty(event)) {
-          const eventSchema = { eventName: name, listener: entryName };
+          const eventSchema = { eventName: name, handler: entryName };
 
           events.push(eventSchema);
         } else {
-          if (listenerName === 'None' && eventIndex > -1) {
+          if (handlerName === "None" && eventIndex > -1) {
             events.splice(eventIndex, 1);
           } else {
-            event.listener = entryName;
+            event.handler = entryName;
           }
         }
         changeDescribe(describe);
         // console.log(_.get(uinode, `schema.props.$events`, []));
         onChange(events);
-      } else if (listenerName === 'None' && eventIndex > -1) {
+      } else if (handlerName === "None" && eventIndex > -1) {
         events.splice(eventIndex, 1);
         changeDescribe({});
         onChange(events);
       }
-      changeListener(listenerName);
+      changeListener(handlerName);
     },
     [eventIndex]
   );
@@ -75,12 +75,12 @@ export const EventComponent = (props: any) => {
   // const [eventOptions, setEventOptions] = useState({});
 
   useEffect(() => {
-    changeListener(listenerName);
+    changeListener(handlerName);
     // setEventOptions(event);
     // schema
-    const entry = listeners[listenerName];
+    const entry = handlers[handlerName];
 
-    if (_.has(entry, 'describe')) {
+    if (_.has(entry, "describe")) {
       changeDescribe(entry.describe);
     }
   }, [event]);
@@ -89,12 +89,12 @@ export const EventComponent = (props: any) => {
     <>
       <Form.Item label={formatTitle(name)}>
         <Select
-          value={listener}
-          onChange={onChangeListener}
+          value={handler}
+          onChange={onChangeHandler}
           disabled={disabled}
-          defaultValue={'None'}
+          defaultValue={"None"}
         >
-          {_.entries(listeners).map((entry: any) => {
+          {_.entries(handlers).map((entry: any) => {
             const [name] = entry;
 
             return (
@@ -105,21 +105,21 @@ export const EventComponent = (props: any) => {
           })}
         </Select>
       </Form.Item>
-      {listener && !_.isEmpty(describe) ? (
+      {handler && !_.isEmpty(describe) ? (
         <div className="sub-options event-options">
           {Object.entries(describe).map((entry: any) => {
-            const [name, listenerSchema] = entry;
+            const [name, handlerSchema] = entry;
 
             return (
               <PropItem
                 section="event"
                 name={`defaultParams.${name}`}
                 isSubOptions={true}
-                schema={listenerSchema}
+                schema={handlerSchema}
                 key={`key-${name}`}
                 uinode={uinode}
                 dataRef={event}
-                event={listener}
+                event={handler}
                 onChangeEvent={onChangeEvent}
                 data={_.get(event, `defaultParams.${name}`)}
               />

@@ -70,7 +70,7 @@ export const Main = (props: any) => {
   );
 
   const [resourceTree, setResourceTree] = useState({
-    listener: [],
+    handler: [],
     plugin: [],
     component: [],
     schema: []

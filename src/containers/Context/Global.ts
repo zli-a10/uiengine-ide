@@ -1,12 +1,12 @@
-import React from 'react';
-import { any } from 'prop-types';
+import React from "react";
+import { any } from "prop-types";
 
-export const GlobalContext = React.createContext < IGlobalContext > ({
+export const GlobalContext = React.createContext<IGlobalContext>({
   ideMode: true,
   preview: false,
   togglePreview: (preview: boolean) => {},
   saved: false,
-  theme: '',
+  theme: "",
   toggleTheme: (theme: string) => {},
   propsCollapsed: false,
   togglePropsCollapsed: (collapsed: boolean) => {},
@@ -15,7 +15,7 @@ export const GlobalContext = React.createContext < IGlobalContext > ({
   componentCollapsed: false,
   toggleComponentCollapsed: (collapsed: boolean) => {},
   resourceTree: {
-    listener: [],
+    handler: [],
     datasource: [],
     plugin: [],
     component: [],

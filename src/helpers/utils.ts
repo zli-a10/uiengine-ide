@@ -674,7 +674,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
   let type = _.isString(dstNode) ? dstNode : dstNode.type;
 
   const jsonSuffixTypes = ["datasource", "schema"];
-  const tsSuffixTypes = ["plugin", "listener", "component"];
+  const tsSuffixTypes = ["plugin", "handler", "component"];
   const suffix =
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
