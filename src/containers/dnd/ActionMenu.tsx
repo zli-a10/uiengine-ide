@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Menu, Dropdown, Icon, TreeSelect, Col, Row, Button } from "antd";
 const ButtonGroup = Button.Group;
 
-import { IDEEditorContext, SchemasContext } from "../Context";
+import { GlobalContext, IDEEditorContext, SchemasContext } from "../Context";
 import {
   IDE_ID,
   useDeleteNode,
@@ -19,6 +19,7 @@ import {
 } from "../../helpers";
 
 const ActionMenu = (props: any) => {
+  const { togglePropsCollapsed } = useContext(GlobalContext);
   const { editingResource } = useContext(SchemasContext);
   const { collapsedNodes } = useContext(IDEEditorContext);
   const { children, uinode } = props;
@@ -196,6 +197,15 @@ const ActionMenu = (props: any) => {
           </a>
         </Menu.Item>
       </Menu.SubMenu>
+      <Menu.Divider />
+      <Menu.Item
+        key="show-prop-window"
+        onClick={() => togglePropsCollapsed(false)}
+      >
+        <a target="_blank">
+          <Icon type="setting" /> Properties... [^Q]
+        </a>
+      </Menu.Item>
     </Menu>
   );
 
