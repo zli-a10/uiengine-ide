@@ -26,6 +26,12 @@ export class ShortcutManager {
     }
 
     window.onkeydown = (e: any) => {
+      // if (_.get(e, "target.localName") === "input") {
+      //   console.log(e);
+      //   e.stopPropagation();
+      //   return;
+      // }
+
       for (let key in this.shortcuts) {
         const keys = _.words(key).map((k: string) => k.toLowerCase());
         if (

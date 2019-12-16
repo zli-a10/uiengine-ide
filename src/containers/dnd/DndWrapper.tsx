@@ -333,6 +333,7 @@ export const UIEngineDndWrapper = (props: any) => {
         className={cls}
         onContextMenu={(e: any) => {
           e.stopPropagation();
+          return false;
         }}
       >
         <div
