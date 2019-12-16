@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
-import _ from 'lodash';
-import { Menu, Dropdown, Icon } from 'antd';
+import React, { useContext, useState, useCallback, useEffect } from "react";
+import _ from "lodash";
+import { Menu, Dropdown, Icon, TreeSelect, Col, Row, Button } from "antd";
+const ButtonGroup = Button.Group;
 
-import { GlobalContext, IDEEditorContext, SchemasContext } from '../Context';
+import { IDEEditorContext, SchemasContext } from "../Context";
 import {
   IDE_ID,
   useDeleteNode,
@@ -12,31 +13,117 @@ import {
   useBreakupFromTemplate,
   useCollapseItems,
   useCloneNode,
+  useCreateNode,
   IDERegister
-} from '../../helpers';
+  // DndNodeManager
+} from "../../helpers";
 
 const ActionMenu = (props: any) => {
   const { editingResource } = useContext(SchemasContext);
   const { collapsedNodes } = useContext(IDEEditorContext);
   const { children, uinode } = props;
-  const isTemplate = _.has(uinode, 'props.ide_droppable');
+  const isTemplate = _.has(uinode, "props.ide_droppable");
 
-  const componentInfo = IDERegister.getComponentInfo(uinode.schema.component)
-  const isContainer = _.get(componentInfo, 'isContainer', false)
+  const componentInfo = IDERegister.getComponentInfo(uinode.schema.component);
+  const isContainer = _.get(componentInfo, "isContainer", false);
+
+  const [treeValue, selectTreeValue] = useState("div");
+  useEffect(() => {
+    const component = _.get(uinode, "schema.component");
+    selectTreeValue(component);
+  }, [uinode]);
+
+  const onTreeChange = useCallback(
+    (value: any, label: any, extra: any) => {
+      console.log(value, label, extra);
+      if (value && value.indexOf("component-category-") === -1) {
+        selectTreeValue(value);
+      }
+    },
+    [treeValue, uinode]
+  );
+  const treeData = IDERegister.componentsLibrary;
 
   const menu = (
     <Menu>
+      <Menu.Item
+        key="create-element-inplace"
+        onClick={({ domEvent }) => {
+          // console.log(e);
+          domEvent.stopPropagation();
+          return false;
+        }}
+      >
+        <Row onClick={(e: any) => e.stopPropagation()}>
+          <Col span={12}>
+            <TreeSelect
+              dropdownClassName="cancel-drag"
+              showSearch
+              className={"component-select"}
+              value={treeValue}
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+              treeData={treeData}
+              placeholder={"Search and Append Node"}
+              treeDefaultExpandAll
+              onChange={onTreeChange}
+            />
+          </Col>
+          <Col span={12}>
+            <ButtonGroup>
+              <Button
+                size="small"
+                icon="down"
+                onClick={useCreateNode(
+                  { component: treeValue },
+                  uinode
+                )("down")}
+              />
+
+              <Button
+                size="small"
+                icon="up"
+                onClick={useCreateNode({ component: treeValue }, uinode)("up")}
+              />
+              <Button
+                type="primary"
+                size="small"
+                icon="plus"
+                onClick={useCreateNode(
+                  { component: treeValue },
+                  uinode
+                )("center")}
+              />
+              <Button
+                size="small"
+                icon="left"
+                onClick={useCreateNode(
+                  { component: treeValue },
+                  uinode
+                )("left")}
+              />
+              <Button
+                size="small"
+                icon="right"
+                onClick={useCreateNode(
+                  { component: treeValue },
+                  uinode
+                )("right")}
+              />
+            </ButtonGroup>
+          </Col>
+        </Row>
+      </Menu.Item>
       <Menu.Item key="unit-collapse" onClick={useCollapseItems(uinode)}>
-        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, '**any-id')) >
-          -1 ? (
-            <a target="_blank">
-              <Icon type="fullscreen" /> Expand Items
-            </a>
-          ) : (
-            <a target="_blank">
-              <Icon type="fullscreen-exit" /> Collapse Items
-            </a>
-          )}
+        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) >
+        -1 ? (
+          <a target="_blank">
+            <Icon type="fullscreen" /> Expand Items
+          </a>
+        ) : (
+          <a target="_blank">
+            <Icon type="fullscreen-exit" /> Collapse Items
+          </a>
+        )}
       </Menu.Item>
       {!editingResource || isTemplate ? null : (
         <Menu.Item
@@ -68,7 +155,7 @@ const ActionMenu = (props: any) => {
         <Menu.Item key="unit-unwrapper" onClick={useUnWrapNode(uinode)}>
           <a target="_blank">
             <Icon type="menu-fold" /> Remove Layout Wrappers
-        </a>
+          </a>
         </Menu.Item>
       ) : null}
       <Menu.Item key="unit-delete" onClick={useDeleteNode(uinode)}>
@@ -85,25 +172,25 @@ const ActionMenu = (props: any) => {
           </span>
         }
       >
-        <Menu.Item key="unit-clone-left" onClick={useCloneNode(uinode)('left')}>
+        <Menu.Item key="unit-clone-left" onClick={useCloneNode(uinode)("left")}>
           <a target="_blank">
             <Icon type="left" /> Clone to Left [^L]
           </a>
         </Menu.Item>
         <Menu.Item
           key="unit-clone-right"
-          onClick={useCloneNode(uinode)('right')}
+          onClick={useCloneNode(uinode)("right")}
         >
           <a target="_blank">
             <Icon type="right" /> Clone to Right [^R]
           </a>
         </Menu.Item>
-        <Menu.Item key="unit-clone-up" onClick={useCloneNode(uinode)('up')}>
+        <Menu.Item key="unit-clone-up" onClick={useCloneNode(uinode)("up")}>
           <a target="_blank">
             <Icon type="up" /> Clone to Up [^U]
           </a>
         </Menu.Item>
-        <Menu.Item key="unit-clone-down" onClick={useCloneNode(uinode)('down')}>
+        <Menu.Item key="unit-clone-down" onClick={useCloneNode(uinode)("down")}>
           <a target="_blank">
             <Icon type="down" /> Clone to Down [^D]
           </a>
@@ -112,7 +199,15 @@ const ActionMenu = (props: any) => {
     </Menu>
   );
 
-  return <Dropdown overlay={menu}>{children}</Dropdown>;
+  return (
+    <Dropdown
+      overlayClassName="component-context-menu"
+      overlay={menu}
+      trigger={["contextMenu"]}
+    >
+      {children}
+    </Dropdown>
+  );
 };
 
 export default ActionMenu;

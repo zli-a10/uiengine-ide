@@ -146,6 +146,18 @@ export const useCloneNode = (uinode: IUINode) => {
   };
 };
 
+export const useCreateNode = (schema: any, targetNode: IUINode) => {
+  const { chooseEditNode } = useContext(IDEEditorContext);
+  return (pos: string) => async () => {
+    const dndNodeManager = DndNodeManager.getInstance();
+    const insertNode = { schema } as IUINode;
+    const method = `insert${_.upperFirst(pos)}`;
+    dndNodeManager[method](insertNode, targetNode);
+    chooseEditNode(insertNode);
+    // return copiedNode;
+  };
+};
+
 export const useCreateFile = (type: EResourceType, templateName?: string) => {
   const { setContent, activeTab } = useContext(IDEEditorContext);
   // const { setEditingResource } = useContext(SchemasContext);

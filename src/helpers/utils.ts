@@ -8,7 +8,7 @@ import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function (result: any, value, key) {
+    return _.transform(object, function(result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -504,11 +504,12 @@ export const getPluginTree = (plugins: any) => {
           };
         }
       } else {
-        let combTitle = key + ': ' + plugin
+        let combTitle = key + ": " + plugin;
         result = {
           key: _.uniqueId(key),
           name: combTitle,
-          title: combTitle.length > 16 ? combTitle.substr(0, 16) + '...' : combTitle,
+          title:
+            combTitle.length > 16 ? combTitle.substr(0, 16) + "..." : combTitle,
           children: [],
           isTemplate: true,
           nodeType: "file",
@@ -680,7 +681,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
       : tsSuffixTypes.indexOf(type) > -1
-        ? ".ts"
-        : ".tsx";
+      ? ".ts"
+      : ".tsx";
   return suffix;
 };
