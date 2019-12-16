@@ -5,7 +5,7 @@ import { Collapse, Row, Col, Input, Select, Form, Icon } from 'antd';
 import { useDrop } from 'react-dnd';
 import { IDEEditorContext, PropsContext } from '../../Context';
 import * as Panels from './Panels';
-import { getActiveUINode, DndNodeManager } from '../../../helpers';
+import { getActiveUINode, DndNodeManager, VersionControl } from '../../../helpers';
 import { PluginManager } from 'uiengine';
 import { DND_IDE_NODE_TYPE } from '../../../helpers';
 
@@ -171,7 +171,7 @@ export const Debugger: React.FC = (props: any) => {
     getJson();
   }, [editNode, time]);
 
-  const updateCodeEditor = () => {
+  const updateCodeEditorAndCache = () => {
     const jsonFileSchema = getActiveUINode(true);
     const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
     if (!_.isEmpty(cachedActiveTab)) {
@@ -181,6 +181,9 @@ export const Debugger: React.FC = (props: any) => {
         type: 'schema'
       });
     }
+
+    const versionControl = VersionControl.getInstance();
+    versionControl.push(jsonFileSchema);
   }
 
   // change ui tree schema
@@ -192,9 +195,8 @@ export const Debugger: React.FC = (props: any) => {
       _.set(editNode.schema, namespace, d.new_value);
       await editNode.refreshLayout();
       editNode.sendMessage(true);
-
-      //update code editor
-      updateCodeEditor()
+      //update code editor, cache
+      updateCodeEditorAndCache()
     },
     [editNode]
   );
@@ -205,8 +207,8 @@ export const Debugger: React.FC = (props: any) => {
       await editNode.refreshLayout();
       editNode.sendMessage(true);
 
-      //update code editor
-      updateCodeEditor()
+      //update code editor, cache
+      updateCodeEditorAndCache()
     },
     [editNode]
   );
@@ -220,8 +222,8 @@ export const Debugger: React.FC = (props: any) => {
       await editNode.refreshLayout();
       editNode.sendMessage(true);
 
-      //update code editor
-      updateCodeEditor()
+      //update code editor, cache
+      updateCodeEditorAndCache()
     },
     [editNode]
   );

@@ -23,17 +23,17 @@ export class SchemaPropManager implements ISchemaPropManager {
   /**
    * Generate uiengine layout schema
    *
-   * @param type
+   * @param section
    * @param componentPropSchema  {entryName1: IComponentInfo, entryName2:IComponentInfo }
    * @param value
    */
   generateSchema(
-    type: string,
+    section: string,
     componentPropSchema: any,
     value: any,
     extraInfo?: any
   ) {
-    if (!type) type = "root";
+    if (!section) section = "root";
     const errors = this.validateSchemaValue(componentPropSchema, value);
     if (errors !== true) return false;
     const schemaEntries = Object.entries(componentPropSchema);
@@ -41,12 +41,10 @@ export class SchemaPropManager implements ISchemaPropManager {
     if (schemaEntries.length) {
       schemaEntries.forEach((schema: any) => {
         const [name, info] = schema;
-        let generator = schemaGenerators[type] || schemaGenerators["root"];
+        let generator = schemaGenerators[section] || schemaGenerators["root"];
         if (generator) {
           const finalSchema = generator(name, info, value, extraInfo);
-          console.log("result1, ", result);
           result = _.merge(result, finalSchema);
-          console.log("result2, ", result);
         }
       });
     }
@@ -54,18 +52,29 @@ export class SchemaPropManager implements ISchemaPropManager {
   }
 
   async applySchema(
-    type: string,
+    section: string,
     componentPropSchema: any,
     value: any,
     uiNode: IUINode,
-    extraInfo?: any
+    extraInfo?: any,
+    replace: boolean = false
   ) {
     const schema: IUISchema = this.generateSchema(
-      type,
+      section,
       componentPropSchema,
       value,
       extraInfo
     );
-    await this.dndNodeManager.useSchema(uiNode, schema);
+    let replacePath = "";
+    try {
+      replacePath = `${_.keys(schema)[0]}.${_.keys(componentPropSchema)[0]}`;
+    } catch (e) {
+      console.log(e);
+    }
+    await this.dndNodeManager.useSchema(
+      uiNode,
+      schema,
+      replace ? replacePath : undefined
+    );
   }
 }

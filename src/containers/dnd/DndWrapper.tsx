@@ -319,19 +319,22 @@ export const UIEngineDndWrapper = (props: any) => {
   const flex = _.get(uinode, "schema.layout.flex");
   const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
   const dataSource = _.get(uinode, `dataNode.source.source`, "");
-  const actionName =
-    dataSource.indexOf("$dummy") === 0 ? _.get(uinode, "id") : dataSource;
+  // const actionName =
+  //   dataSource.indexOf("$dummy") === 0 ? _.get(uinode, "id") : dataSource;
 
   return (
-    <div
-      ref={isDroppable ? ref : null}
-      onClick={wrapperClick}
-      onMouseOver={mouseOver}
-      onMouseOut={mouseOut}
-      style={{ ...background, ...borderStyle, display, flex }}
-      className={cls}
-    >
-      <ActionMenu uinode={uinode}>
+    <ActionMenu uinode={uinode}>
+      <div
+        ref={isDroppable ? ref : null}
+        onClick={wrapperClick}
+        onMouseOver={mouseOver}
+        onMouseOut={mouseOut}
+        style={{ ...background, ...borderStyle, display, flex }}
+        className={cls}
+        onContextMenu={(e: any) => {
+          e.stopPropagation();
+        }}
+      >
         <div
           className="component-action"
           title={`Component: ${uinode.schema.component}, ID: ${_.get(
@@ -360,8 +363,8 @@ export const UIEngineDndWrapper = (props: any) => {
             ))}
           </div>
         </div>
-      </ActionMenu>
-      {children}
-    </div>
+        {children}
+      </div>
+    </ActionMenu>
   );
 };

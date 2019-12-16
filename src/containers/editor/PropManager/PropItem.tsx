@@ -1,46 +1,51 @@
-import React, { useState, useContext, useEffect } from 'react';
-import _ from 'lodash';
-import { schemaTidy, SchemaPropManager, getActiveUINode } from '../../../helpers';
-import * as propComponents from './PropItems';
-import { GlobalContext, PropsContext, IDEEditorContext } from '../../Context';
+import React, { useState, useContext, useEffect } from "react";
+import _ from "lodash";
+import {
+  schemaTidy,
+  SchemaPropManager,
+  getActiveUINode
+} from "../../../helpers";
+import * as propComponents from "./PropItems";
+import { GlobalContext, PropsContext, IDEEditorContext } from "../../Context";
 
 const schemaPropManager = SchemaPropManager.getInstance();
 
 export const PropItem = (props: IComponentSchema) => {
-  const { schema, data, name, uinode, section = 'prop' } = props;
+  const { schema, data, name, uinode, section = "prop" } = props;
   const { preview } = useContext(GlobalContext);
   const { refresh } = useContext(PropsContext);
   const { setContent } = useContext(IDEEditorContext);
 
   const standardSchema = schemaTidy(schema);
-  let { type = 'string', ...schemaProps } = standardSchema;
+  let { type = "string", ...schemaProps } = standardSchema;
 
   let componentType = props.type;
 
   if (!componentType) {
-    componentType = type || 'string';
+    componentType = type || "string";
   }
   const componentName = `${_.upperFirst(componentType)}Component`;
   const Com = propComponents[componentName];
   const [value, setValue] = useState(data);
 
-  const onChange = (v: any) => {
+  const onChange = (v: any, replace?: boolean) => {
     setValue(v);
     schemaPropManager.applySchema(
       section,
       name ? { [name]: standardSchema } : standardSchema,
       v,
       uinode,
-      props
+      props,
+      replace
     );
     const jsonFileSchema = getActiveUINode(true);
-    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || '{}');
+    const cachedActiveTab = JSON.parse(localStorage.cachedActiveTab || "{}");
 
     if (!_.isEmpty(cachedActiveTab)) {
       setContent({
         content: jsonFileSchema,
         file: cachedActiveTab.tabName,
-        type: 'schema'
+        type: "schema"
       });
     }
     refresh();
@@ -51,13 +56,13 @@ export const PropItem = (props: IComponentSchema) => {
   }, [data, uinode]);
 
   // disable the element if it's template
-  const disabled = _.has(uinode, 'props.ide_droppable') || preview;
+  const disabled = _.has(uinode, "props.ide_droppable") || preview;
 
   if (Com) {
     return (
       <Com
         onChange={onChange}
-        defaultValue={_.get(standardSchema, 'default')}
+        defaultValue={_.get(standardSchema, "default")}
         value={value}
         uinode={uinode}
         disabled={disabled}
@@ -73,5 +78,4 @@ export const PropItem = (props: IComponentSchema) => {
     componentType
   );
   return null;
-
 };

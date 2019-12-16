@@ -352,7 +352,11 @@ export class DndNodeManager implements IDndNodeManager {
     await this.refresh();
   }
 
-  async useSchema(targetNode: IUINode, schema: IUISchema) {
+  async useSchema(
+    targetNode: IUINode,
+    schema: IUISchema,
+    replacePath?: string
+  ) {
     this.selectNode({} as IUINode, targetNode);
     function customizer(objValue: any, srcValue: any) {
       if (_.isArray(objValue) && _.isArray(srcValue)) {
@@ -362,7 +366,17 @@ export class DndNodeManager implements IDndNodeManager {
         return srcValue;
       }
     }
-    _.mergeWith(this.targetSchema, schema, customizer);
+    if (replacePath) {
+      // for (let key in schema) {
+      //   if (_.get(this.targetSchema, key)) {
+      //     delete this.targetSchema[key];
+      //   }
+      // }
+      // _.merge(this.targetSchema, schema);
+      _.set(this.targetSchema, replacePath, _.get(schema, replacePath, undefined))
+    } else {
+      _.mergeWith(this.targetSchema, schema, customizer);
+    }
     await this.refresh();
   }
 

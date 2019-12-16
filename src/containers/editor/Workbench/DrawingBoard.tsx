@@ -13,7 +13,11 @@ import {
   VersionControl,
   useDeleteNode,
   useCloneNode,
-  FileLoader
+  FileLoader,
+  ShortcutManager,
+  DndNodeManager,
+  MemoStore,
+  getActiveUINode
 } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 
@@ -50,29 +54,22 @@ export const DrawingBoard: React.FC = (props: any) => {
   let deleteEditNode = useDeleteNode(editNode);
   let cloneEditNode = useCloneNode(editNode);
 
-  // _.set(config, `widgetConfig.uiengineWrapper`, UIEngineDndProvider);
-  const keyPressActions = useCallback(
-    async (e: any) => {
-      // // those allowBubbleKeys set on Main.tsx for preview, attribute window, hide/show windows, save file
-      // const allowBubbleKeys = ["KeyV", "KeyA", "KeyH", "KeyS"];
-      // console.log(allowBubbleKeys.indexOf(e.code), e.code);
-      // if (allowBubbleKeys.indexOf(e.code) === -1) return false;
+  const undo = useCallback(async () => {
+    const versionControl = VersionControl.getInstance();
+    const schema = await versionControl.undo();
+    updateSchema({ schema });
+  }, []);
 
-      // shortcut ctrl+z
-      const versionControl = VersionControl.getInstance();
-      if (e.ctrlKey && e.code === "KeyZ") {
-        const schema = await versionControl.undo();
+  const redo = useCallback(async () => {
+    const versionControl = VersionControl.getInstance();
+    const schema = await versionControl.redo();
 
-        updateSchema({ schema });
-      }
+    updateSchema({ schema });
+  }, []);
 
-      if (e.ctrlKey && e.shiftKey && e.code === "KeyZ") {
-        const schema = await versionControl.redo();
-
-        updateSchema({ schema });
-      }
-
-      // duplicate | delete
+  const duplicate = useCallback(
+    e => {
+      e.preventDefault();
       const keyMap = {
         KeyD: "down",
         KeyU: "up",
@@ -81,28 +78,83 @@ export const DrawingBoard: React.FC = (props: any) => {
       };
 
       if (editNode && e.target.localName === "body") {
-        e.preventDefault();
         // dup: Bug: ^D  will recover downwards elements
-        if (e.ctrlKey && keyMap[e.code] && editNode) {
+        if (keyMap[e.code] && editNode) {
           cloneEditNode(keyMap[e.code])();
-        } else if (e.key === "Delete" || (e.code === "KeyD" && !preview)) {
-          // delete
-          deleteEditNode();
         }
-        return false;
       }
+      return false;
     },
     [editNode]
   );
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    window.addEventListener("keydown", keyPressActions);
-  }, [editNode]);
+  const deleteNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        // dup: Bug: ^D  will recover downwards elements
+        // delete
+        deleteEditNode();
+        return false;
+      }
+    },
+    [preview, editNode]
+  );
+
+  const copyNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        MemoStore.bucket.clipboard = _.cloneDeep(editNode.schema);
+      }
+    },
+    [preview, editNode]
+  );
+
+  const cutNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        MemoStore.bucket.clipboard = _.cloneDeep(editNode.schema);
+        deleteEditNode();
+      }
+    },
+    [preview, editNode]
+  );
+
+  const pasteNode = useCallback(
+    e => {
+      if (editNode && e.target.localName === "body") {
+        e.preventDefault();
+        const schema = MemoStore.bucket.clipboard;
+        const dndNodeManager = DndNodeManager.getInstance();
+        dndNodeManager.insertCenter({ schema } as any, editNode);
+        updateSchema(schema);
+      }
+    },
+    [preview, editNode]
+  );
 
   useEffect(() => {
     // Update the document title using the browser API
-    // window.addEventListener("keydown", keyPressActions);
+    const shortcutManger = ShortcutManager.getInstance();
+    const shortcuts = {
+      ctrlZ: undo,
+      ctrlShiftZ: redo,
+      ctrlC: copyNode,
+      ctrlX: cutNode,
+      ctrlV: pasteNode,
+      ctrlD: duplicate,
+      ctrlU: duplicate,
+      ctrlL: duplicate,
+      ctrlR: duplicate,
+      Delete: deleteNode,
+      d: deleteNode
+    };
+    shortcutManger.register(shortcuts);
+  }, [editNode, preview]);
+
+  useEffect(() => {
     // const drawingboard = document.getElementById("drawingboard");
     // if (drawingboard) {
     //   drawingboard.ondblclick = (e: any) => {
@@ -121,8 +173,11 @@ export const DrawingBoard: React.FC = (props: any) => {
           "schema",
           activeTab.isTemplate
         );
-        const newSchema = _.cloneDeep(schema);
 
+        // set editing file, otherwise version control can't cache
+        fileLoader.editingFile = activeTab.tabName;
+
+        const newSchema = _.cloneDeep(schema);
         newSchema[0].layout = data;
         setSchema(newSchema);
       }
@@ -133,7 +188,7 @@ export const DrawingBoard: React.FC = (props: any) => {
 
   return (
     <div className="editor" id="drawingboard">
-      <UIEngine layouts={schema} config={newConfig} />
+      <UIEngine layouts={schema} config={newConfig} retainRootNode />
     </div>
   );
 };

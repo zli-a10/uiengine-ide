@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 /**
  * use for storing some common data, like context data to the none React class
  */
@@ -12,6 +12,7 @@ export class MemoStore {
   }
 
   static bucket: any = {
-    preview: true
+    preview: true,
+    clipboard: null
   };
 }

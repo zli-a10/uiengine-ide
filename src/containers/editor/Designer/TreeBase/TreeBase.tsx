@@ -68,8 +68,8 @@ export const TreeBase = (props: any) => {
                     const schema = JSON.parse(text.content);
                     const uiNode = getActiveUINode();
                     uiNode.schema = schema;
-                    uiNode.refreshLayout();
-                    uiNode.sendMessage(true);
+                    // uiNode.refreshLayout();
+                    // uiNode.sendMessage(true);
                   } catch (e) {
                     console.error(e);
                   }

@@ -15,35 +15,38 @@ import { FileLoader } from '../FileLoader';
 const execution: IPluginExecution = async (param: IPluginParam) => {
   const uiNode: IUINode = _.get(param, 'uiNode');
 
-  const fileLoader = FileLoader.getInstance();
-  // parse $$template
+  if (!_.isNil(uiNode)) {
+    const schema = uiNode.schema
 
-  if (_.has(uiNode.schema, '$template')) {
-    const path = _.get(uiNode.schema, '$template');
-    const isSysTemplate = _.get(uiNode.schema, 'isSysTemplate');
+    if (_.has(schema, '$template')) {
+      const templatePath: string = _.get(schema, '$template');
+      const isSysTemplate: boolean = _.get(schema, 'isSysTemplate');
 
-    try {
-      let schema = await fileLoader.loadFile(path, 'schema', isSysTemplate);
+      try {
+        const fileLoader = FileLoader.getInstance();
+        const loadedSchema = await fileLoader.loadFile(templatePath, 'schema', isSysTemplate);
 
-      console.log(schema, '.............schema');
-      if (!schema) {
-        schema = {
-          component: 'div',
-          content: `Load template ${path} failed, please make sure the file was not deleted`
-        };
+        if (_.isNil(loadedSchema)) {
+          return {
+            component: 'div',
+            content: `Load template ${templatePath} failed, please make sure the file was not deleted`
+          };
+        } else {
+          _.unset(schema, '$template');
+          _.set(schema, '$$template', templatePath);
+          return loadedSchema
+        }
+      } catch (e) {
+        console.warn(e.message);
       }
-      _.merge(uiNode.schema, schema);
-      _.unset(uiNode.schema, '$template');
-      _.set(uiNode.schema, '$$template', path);
-      await uiNode.refreshLayout();
-    } catch (e) {
-      console.warn(e.message);
     }
   }
+
+  // parse $$template
 };
 
 export const $template: IPlugin = {
-  categories: ['ui.parser'],
+  categories: ['ui.parser.before'],
   paramKeys: ['uiNode'],
   priority: 202,
   execution,
