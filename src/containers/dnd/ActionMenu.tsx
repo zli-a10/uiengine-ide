@@ -21,7 +21,7 @@ import {
 const ActionMenu = (props: any) => {
   const { togglePropsCollapsed } = useContext(GlobalContext);
   const { editingResource } = useContext(SchemasContext);
-  const { collapsedNodes } = useContext(IDEEditorContext);
+  const { collapsedNodes, chooseEditNode } = useContext(IDEEditorContext);
   const { children, uinode } = props;
   const isTemplate = _.has(uinode, "props.ide_droppable");
 
@@ -36,13 +36,19 @@ const ActionMenu = (props: any) => {
 
   const onTreeChange = useCallback(
     (value: any, label: any, extra: any) => {
-      console.log(value, label, extra);
       if (value && value.indexOf("component-category-") === -1) {
         selectTreeValue(value);
       }
     },
     [treeValue, uinode]
   );
+
+  const onShowPropmanager = useCallback(() => {
+    chooseEditNode(uinode);
+    // console.log(uinode);
+    togglePropsCollapsed(false);
+  }, [uinode, chooseEditNode]);
+
   const treeData = IDERegister.componentsLibrary;
 
   const menu = (
@@ -198,10 +204,7 @@ const ActionMenu = (props: any) => {
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.Divider />
-      <Menu.Item
-        key="show-prop-window"
-        onClick={() => togglePropsCollapsed(false)}
-      >
+      <Menu.Item key="show-prop-window" onClick={onShowPropmanager}>
         <a target="_blank">
           <Icon type="setting" /> Properties... [^Q]
         </a>
