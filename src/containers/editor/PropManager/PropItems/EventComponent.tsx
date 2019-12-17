@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import _ from 'lodash'
-import { Select, Form } from 'antd'
+import { Select, Form, Button, List, Row, Col, message } from 'antd'
 import { ListenerManager } from 'uiengine'
 
 import { PropItem } from '../PropItem'
@@ -19,113 +19,257 @@ export const EventComponent = (props: any) => {
   if (eventIndex > -1) {
     event = events[eventIndex]
   }
-
-  let handlerName = _.get(event, 'listener')
-  // console.log(event, eventIndex, "event");
+  let eventHandlerList = _.get(event, 'listener', [])
+  if (eventHandlerList && _.isString(eventHandlerList)) {
+    eventHandlerList = [eventHandlerList]
+  }
 
   // load listeners
   const handlers = useMemo(() => {
     const handlerManager = ListenerManager.getInstance()
     const list = handlerManager.getListenerConfig('')
 
-    return { None: {}, ...list }
+    return { ...list }
   }, [])
+  const [handlerName, changeHandlerName] = useState()
+  const [hanlderDescribe, changeHandlerDescribe] = useState()
+  const [handlerList, changeHandlerList] = useState(eventHandlerList)
 
-  const [handler, changeListener] = useState(handlerName)
-  const [describe, changeDescribe] = useState()
   const onChangeHandler = useCallback(
-    (handlerName: any) => {
+    (index: any, handlerName: any) => {
       const entry = handlers[handlerName]
-
-      if (entry) {
-        const { name: entryName, describe } = entry
-
-        if (_.isEmpty(event)) {
-          const eventSchema = { eventName: name, listener: entryName }
-
-          events.push(eventSchema)
-        } else {
-          if (handlerName === 'None' && eventIndex > -1) {
-            events.splice(eventIndex, 1)
+      if (_.includes(handlerList, handlerName)) {
+        message.warning('There is already a duplicate handler!')
+      } else {
+        if (entry) {
+          const newHandlerList = _.cloneDeep(handlerList)
+          newHandlerList[index] = handlerName
+          changeHandlerList(newHandlerList)
+          if (_.isEmpty(event)) {
+            const eventSchema = { eventName: name, listener: _.cloneDeep(newHandlerList) }
+            events.push(eventSchema)
           } else {
-            event.listener = entryName
+            events[eventIndex].listener = _.cloneDeep(newHandlerList)
           }
+          onChange(events)
+          changeHandlerName(handlerName)
+          changeHandlerDescribe(entry.describe)
         }
-        changeDescribe(describe)
-        // console.log(_.get(uinode, `schema.props.$events`, []));
-        onChange(events)
-      } else if (handlerName === 'None' && eventIndex > -1) {
-        events.splice(eventIndex, 1)
-        changeDescribe({})
-        onChange(events)
       }
-      changeListener(handlerName)
     },
-    [eventIndex]
+    [eventIndex, handlerList]
+  );
+  const onAddHandler = useCallback(
+    (e: any) => {
+      const newHandlerList = _.cloneDeep(handlerList)
+      let newHandlerName = ''
+      let findNewHandlerName = false
+      _.forIn(handlers, (item: any) => {
+        if (!findNewHandlerName && !_.includes(newHandlerList, item.name)) {
+          findNewHandlerName = true
+          newHandlerName = item.name
+        }
+      })
+      if (newHandlerName === '') {
+        message.warning('No more new handlers')
+      } else {
+        const entry = handlers[newHandlerName]
+        if (entry) {
+          const newHandlerList = _.cloneDeep(handlerList)
+          newHandlerList.push(newHandlerName)
+          changeHandlerList(newHandlerList)
+          if (_.isEmpty(event)) {
+            const eventSchema = { eventName: name, listener: _.cloneDeep(newHandlerList) }
+            events.push(eventSchema)
+          } else {
+            events[eventIndex].listener = _.cloneDeep(newHandlerList)
+          }
+          onChange(events)
+          changeHandlerName(newHandlerName)
+          changeHandlerDescribe(entry.describe)
+        }
+      }
+    }, [handlerList]
+  )
+
+  const onDeleteHandler = useCallback(
+    (index: any) => {
+      const newHandlerList = _.cloneDeep(handlerList)
+      newHandlerList.splice(index, 1)
+      changeHandlerList(newHandlerList)
+      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      onChange(events)
+    },
+    [handlerList]
+  )
+
+  const onEditListener = useCallback(
+    (index: any) => {
+      if (handlerName === handlerList[index]) {
+        changeHandlerName('')
+        changeHandlerDescribe({})
+      } else {
+        changeHandlerName(handlerList[index])
+        const entry = handlers[handlerList[index]];
+        if (entry) {
+          changeHandlerDescribe(entry.describe)
+        } else {
+          changeHandlerDescribe({})
+        }
+      }
+    },
+    [handlerList, handlerName, hanlderDescribe]
+  )
+
+  const onMoveupHandler = useCallback(
+    (index: any) => {
+      const newHandlerList = _.cloneDeep(handlerList)
+      const handlerName = newHandlerList[index]
+      newHandlerList.splice(index, 1)
+      newHandlerList.splice(index - 1, 0, handlerName)
+      changeHandlerList(newHandlerList)
+      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      onChange(events)
+    },
+    [handlerList]
+  )
+
+  const onMovedownHandler = useCallback(
+    (index: any) => {
+      const newHandlerList = _.cloneDeep(handlerList)
+      const handlerName = newHandlerList[index]
+      newHandlerList.splice(index, 1)
+      newHandlerList.splice(index + 1, 0, handlerName)
+      changeHandlerList(newHandlerList)
+      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      onChange(events)
+    },
+    [handlerList]
   )
 
   // datatarget item only
   const onChangeEvent = useCallback(
     (event: any) => {
-      onChange(events)
+      onChange(events);
     },
     [eventIndex]
-  )
-  // const [eventOptions, setEventOptions] = useState({});
-
-  useEffect(() => {
-    changeListener(handlerName)
-    // setEventOptions(event);
-    // schema
-    const entry = handlers[handlerName]
-
-    if (_.has(entry, 'describe')) {
-      changeDescribe(entry.describe)
-    }
-  }, [event])
+  );
 
   return (
     <>
-      <Form.Item label={formatTitle(name)}>
-        <Select
-          value={handler}
-          onChange={onChangeHandler}
-          disabled={disabled}
-          defaultValue={'None'}
-        >
-          {_.entries(handlers).map((entry: any) => {
-            const [name] = entry
+      <Row type="flex" justify="space-around" style={{ paddingTop: "10px" }}>
+        <Col span={8}>
+          {formatTitle(name)}
+        </Col>
+        <Col span={16} style={{ textAlign: "right" }}>
+          Add Handler{" "}
+          <Button
+            icon="plus"
+            size="small"
+            onClick={onAddHandler}
+            disabled={disabled}
+          />
+        </Col>
+      </Row>
+      {
+        handlerList.length ? (
+          <List
+            size="small"
+            bordered
+            dataSource={handlerList}
+            renderItem={(item: any, index: number) => (
+              <List.Item>
+                <div style={{ maxHeight: "400px", overflow: "auto", width: "100%" }}>
+                  <Row>
+                    <Col span={14}>
+                      <Select
+                        defaultValue={'None'}
+                        value={item}
+                        onChange={onChangeHandler.bind({}, index)}
+                        disabled={disabled}
+                      >
+                        {_.entries(handlers).map((entry: any) => {
+                          const [name] = entry;
+                          return (
+                            <Option value={name} key={name}>
+                              {name}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </Col>
+                    <Col span={10}>
+                      <Button
+                        type="danger"
+                        size="small"
+                        icon="delete"
+                        disabled={disabled}
+                        onClick={onDeleteHandler.bind({}, index)}
+                      >
+                      </Button>
+                      {_.isEmpty(handlers[item].describe) ? null : (
+                        <Button
+                          size="small"
+                          icon={handlerName === item ? "down" : "right"}
+                          disabled={disabled}
+                          onClick={onEditListener.bind({}, index)}
+                        >
+                        </Button>
+                      )}
+                      {index === 0 ? null : (
+                        <Button
+                          size="small"
+                          icon="arrow-up"
+                          disabled={disabled}
+                          onClick={onMoveupHandler.bind({}, index)}
+                        >
+                        </Button>
+                      )}
+                      {index === handlerList.length - 1 ? null : (
+                        <Button
+                          size="small"
+                          icon="arrow-down"
+                          disabled={disabled}
+                          onClick={onMovedownHandler.bind({}, index)}
+                        >
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
 
-            return (
-              <Option value={name} key={name}>
-                {name}
-              </Option>
+                  <Row>
+                    <Col>
+                      {handlerName === item && !_.isEmpty(hanlderDescribe) ? (
+                        <div className="sub-options event-options modal-body">
+                          {Object.entries(hanlderDescribe).map((entry: any) => {
+                            const [name, listenerSchema] = entry;
+                            return (
+                              <PropItem
+                                section="event"
+                                name={`defaultParams.${name}`}
+                                isSubOptions={true}
+                                schema={listenerSchema}
+                                key={`key-${name}`}
+                                uinode={uinode}
+                                dataRef={event}
+                                event={handlerName}
+                                onChangeEvent={onChangeEvent}
+                                data={_.get(event, `defaultParams.${name}`)}
+                              />
+                            );
+                          })}
+                        </div>
+                      ) : null
+                      }
+                    </Col>
+                  </Row>
+                </div>
+              </List.Item>
             )
-          })}
-        </Select>
-      </Form.Item>
-      {handler && !_.isEmpty(describe) ? (
-        <div className="sub-options event-options">
-          {Object.entries(describe).map((entry: any) => {
-            const [name, handlerSchema] = entry
-
-            return (
-              <PropItem
-                section="event"
-                name={`defaultParams.${name}`}
-                isSubOptions={true}
-                schema={handlerSchema}
-                key={`key-${name}`}
-                uinode={uinode}
-                dataRef={event}
-                event={handler}
-                onChangeEvent={onChangeEvent}
-                data={_.get(event, `defaultParams.${name}`)}
-              />
-            )
-          })}
-        </div>
-      ) : null}
+            }
+          />
+        ) : null
+      }
     </>
   )
 }

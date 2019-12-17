@@ -54,8 +54,7 @@ const TargetItem = (props: any) => {
   useEffect(() => {
     const initDataSource = async () => {
       let newNodes: any = (await analysisDataSource(datasource)) || [];
-
-      newNodes = convertNodes(newNodes, [], true);
+      // newNodes = convertNodes(newNodes, [], true);
       setSchemas(newNodes);
     };
 
@@ -166,7 +165,7 @@ const TargetItem = (props: any) => {
           </Form.Item>
         </>
       ) : null}
-      <Form.Item label=" ">
+      <Form.Item colon={false}>
         <Button type="danger" size="small" icon="delete" onClick={onRemoveItem}>
           Delete
         </Button>
@@ -323,7 +322,7 @@ export const DatatargetComponent = (props: any) => {
           )}
         ></List>
       </div>
-      <Form.Item label=" " className="add-target">
+      <Form.Item className="add-target" colon={false}>
         <Button type="primary" size="small" icon="plus" onClick={onAddItem}>
           Add Target
         </Button>
