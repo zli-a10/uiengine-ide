@@ -7,7 +7,7 @@ import React, {
 } from "react";
 
 import { Switch, Icon, Modal } from "antd";
-import { UINode } from "uiengine";
+import { UINode, MemoStore } from "uiengine";
 import _ from "lodash";
 import classnames from "classnames";
 
@@ -18,10 +18,10 @@ import {
   saveFile,
   saveFileStatus,
   cleanSchema,
-  MemoStore,
   ShortcutManager
 } from "../../../helpers";
 import { StagingFileTree } from "./StagingFileTree";
+MemoStore.bucket.ideMode = true;
 
 export const Main = (props: any) => {
   const { activeTab } = useContext(IDEEditorContext);

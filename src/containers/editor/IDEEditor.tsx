@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import * as _ from "lodash";
+import { MemoStore } from "uiengine";
 import { IUINode } from "uiengine/typings";
 import { Main, DesignManager, PropManager } from "./";
 import { IDEEditorContext } from "../Context";
@@ -9,8 +10,7 @@ import {
   IDE_ID,
   getActiveUINode,
   FileLoader,
-  VersionControl,
-  MemoStore
+  VersionControl
 } from "../../helpers";
 import "./styles/index.less";
 // import ErrorBoundary from "./ErrorBoundary";

@@ -163,6 +163,8 @@ const ActionMenu = (props: any) => {
           }}
         />
       </Menu.Item> */}
+      <Menu.Divider />
+
       <Menu.Item key="unit-collapse" onClick={useCollapseItems(uinode)}>
         {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) >
         -1 ? (
