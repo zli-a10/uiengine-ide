@@ -42,7 +42,7 @@ export const SubComponent = (props: any) => {
                   schema={entry[1]}
                   key={`key-${entry[0]}`}
                   uinode={uinode}
-                  data={_.get(uinode, `schema.props.${name}.${entry[0]}`)}
+                  data={_.get(dataRef, `${name}.${entry[0]}`)}
                 />
               );
             })

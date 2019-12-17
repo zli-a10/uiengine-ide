@@ -175,7 +175,7 @@ export const Props: React.FC = (props: any) => {
             key="events"
             extra={genExtra("plus", "handler")}
           >
-            <Form {...formItemLayout}>
+            <Form>
               {allEvents.map((name: any) => (
                 <PropItem
                   section="event"
