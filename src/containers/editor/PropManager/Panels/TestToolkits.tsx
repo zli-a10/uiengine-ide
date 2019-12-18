@@ -26,10 +26,10 @@ export const TestToolkits = (props: any) => {
     return async () => {
       const dataMocker = DataMocker.getInstance();
       dataMocker.mode = value;
-      dataMocker.noCache = true;
+      // dataMocker.noCache = true;
       await rootNode.refreshLayout(Date.now());
       rootNode.sendMessage(true);
-      dataMocker.noCache = false;
+      // dataMocker.noCache = false;
     };
   }, []);
 
