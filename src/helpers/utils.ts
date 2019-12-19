@@ -8,7 +8,7 @@ import { searchDepsNodes } from "uiengine";
 
 export function difference(object: any, base: any) {
   function changes(object: any, base: any) {
-    return _.transform(object, function (result: any, value, key) {
+    return _.transform(object, function(result: any, value, key) {
       if (!_.isEqual(value, base[key])) {
         result[key] =
           _.isObject(value) && _.isObject(base[key])
@@ -38,12 +38,14 @@ export function cleanSchema(
       if (_.isArray(data.children)) {
         schema.$children = data.children;
       }
+      _.unset(schema, "$$children");
     }
     if (_.has(schema, "$$template")) {
       const childrenTemplate = _.get(schema, "$$template");
       // _.forIn(schema, (value: any, key: any) => {
       //   _.unset(schema, key);
       // });
+      _.unset(schema, "$$template");
       schema.$template = childrenTemplate;
     }
 
@@ -622,7 +624,9 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
             s === "removed" ||
             s === "renamed"
           ) {
-            fileStatus[type][file].status = _.isObject(status) ? status.status : status;
+            fileStatus[type][file].status = _.isObject(status)
+              ? status.status
+              : status;
           }
         }
       } else {
@@ -681,7 +685,7 @@ export const getFileSuffix = (dstNode: IResourceTreeNode | EResourceType) => {
     jsonSuffixTypes.indexOf(type) > -1
       ? ".json"
       : tsSuffixTypes.indexOf(type) > -1
-        ? ".ts"
-        : ".tsx";
+      ? ".ts"
+      : ".tsx";
   return suffix;
 };
