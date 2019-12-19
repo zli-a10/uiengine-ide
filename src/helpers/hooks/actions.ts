@@ -46,7 +46,7 @@ export const useRemoveChildren = (uinode: IUINode) => {
 };
 
 export const useSaveTemplate = (uinode: IUINode) => {
-  const { editingResource, setSelectedKey } = useContext(SchemasContext);
+  const { editingResource, setSelectedKey, toggleRefresh } = useContext(SchemasContext);
   const { setContent } = useContext(IDEEditorContext);
   return async () => {
     if (!editingResource) return;
@@ -63,33 +63,35 @@ export const useSaveTemplate = (uinode: IUINode) => {
       );
     }
     const name = _.uniqueId("saved_template_") + ".json";
-    // const newPath = `${_.get(targetResource, "_path_")}/${name}`;
-    const newPath = `${name}`;
+    const newPath = _.has(targetResource, "path") ? `${_.get(targetResource, "path")}/${name}` : name;
+    // const newPath = `${name}`;
 
     // and update the tree
     const children: any = _.get(targetResource, "children", []);
     children.push({
       key: newPath,
-      name,
+      name: newPath,
       title: name,
+      path: newPath,
       // _editing_: 'rename',
       isTemplate: false,
       nodeType: "file",
-      value: name,
+      value: newPath,
       server: true,
       type: "schema"
     });
     targetResource.children = children;
     const treeRoot = getTreeRoot(targetResource);
     fileLoader.saveFile(newPath, schema, "schema", treeRoot);
-    saveFileStatus(name, "schema", "new");
+    saveFileStatus(newPath, "schema", "new");
     // refresh the tree
     // setSelectedKey(newPath);
+    toggleRefresh()
 
-    _.forIn(uinode.schema, function(value, key) {
+    _.forIn(uinode.schema, function (value, key) {
       delete uinode.schema[key];
     });
-    uinode.schema.$template = name;
+    uinode.schema.$template = newPath;
     const dndNodeManager = DndNodeManager.getInstance();
     dndNodeManager.pushVersion();
     await uinode.refreshLayout();

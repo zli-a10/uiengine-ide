@@ -56,7 +56,7 @@ interface IIDEEditorContext {
   activeTabName: string;
   tabs: Array<{ tab: string; language: string; treeNode?: IResourceTreeNode }>;
   activeTab: (tab: string, language?: string, oldTabName?: string, isTemplate?: boolean) => any;
-  removeTab: (tab: string) => any;
+  removeTab: (tabs: string[]) => any;
   layout: string;
   setLayout: (path: string) => any;
   focusMode: { isFocus: false; topSchema: {} };

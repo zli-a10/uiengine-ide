@@ -18,6 +18,19 @@ export const ActionMenu = (props: any) => {
 
   const { removeTab, setContent, tabs } = useContext(IDEEditorContext);
 
+  const getDeletedKeys = (dataNode: IResourceTreeNode, deletedKeys: string[]) => {
+    if (dataNode.nodeType === 'folder') {
+      if (dataNode.children) {
+        dataNode.children.forEach((node: IResourceTreeNode) => {
+          getDeletedKeys(node, deletedKeys)
+        })
+      }
+    } else {
+      deletedKeys.push(dataNode.key)
+    }
+  }
+
+
   const actionmMap: any = useMemo(
     () => ({
       add: () => {
@@ -42,7 +55,9 @@ export const ActionMenu = (props: any) => {
         resourceActions.delete(dataRef);
         // const selectedKeys = [_.get(dataRef, "_parent_._key_", "root")];
         // onSelect(selectedKeys);
-        removeTab(dataRef.key);
+        let deletedKeys: string[] = []
+        getDeletedKeys(dataRef, deletedKeys)
+        removeTab(deletedKeys)
         onRefresh();
       },
       undelete: () => {
@@ -117,10 +132,10 @@ export const ActionMenu = (props: any) => {
           <a>Delete</a>
         </Menu.Item>
       ) : (
-        <Menu.Item key="undelete">
-          <a>Undelete</a>
-        </Menu.Item>
-      )}
+          <Menu.Item key="undelete">
+            <a>Undelete</a>
+          </Menu.Item>
+        )}
       {isFolder ? null : (
         <Menu.Item key="clone">
           <a>Clone</a>
