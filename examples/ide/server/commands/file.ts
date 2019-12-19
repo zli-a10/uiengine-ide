@@ -55,7 +55,7 @@ const walkSync = (
         children: tmpFiles
       }
       filelist.push(node)
-    } else if (!folderOnly && file.indexOf('index.') !== 0) {
+    } else if (!folderOnly) {
       const p = dir ? `${dir}/${file}` : file
       const key = p.replace(readpath, '')
       // console.log(key)
@@ -120,7 +120,7 @@ function rewriteIndex(type: string, newFileName: string, oldFileName?: string) {
 
 function deleteFolderRecursive(path: string) {
   if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(function(file: any, index: any) {
+    fs.readdirSync(path).forEach(function (file: any, index: any) {
       var curPath = path + '/' + file
       if (fs.lstatSync(curPath).isDirectory()) {
         // recurse
@@ -150,7 +150,7 @@ export function writeFile(options: ICommandOptions) {
         const newName = get(options, 'status.newPath')
         const newPath = `${getPath(options, true)}/${newName}`
         // console.log("renaming", newName, newPath);
-        fs.rename(readpath, newPath, function() {
+        fs.rename(readpath, newPath, function () {
           console.log('file from %s to %s was renamed', readpath, newPath)
           rewriteIndex(type, newPath, readpath)
         })

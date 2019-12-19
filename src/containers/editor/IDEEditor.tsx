@@ -83,104 +83,99 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
           setCurrentTab(current);
         }
       },
-      removeTab: (tab: string) => {
+      removeTab: (deleteTabs: string[]) => {
+        debugger
         const newTabs: any = _.clone(tabs);
-        const index: any = _.findIndex(newTabs, { tab });
+        const newContentList: any = _.clone(content);
+        const fileLoader = FileLoader.getInstance();
+        const versionControl = VersionControl.getInstance();
+        versionControl.clearHistories();
 
-        if (index > -1) {
-          let newCurrentTab = newTabs[index + 1]
-            ? newTabs[index + 1]
-            : newTabs[index - 1];
-
-          newTabs.splice(index, 1);
-          setTabs(newTabs);
-          const fileLoader = FileLoader.getInstance();
-          const versionControl = VersionControl.getInstance();
-
-          versionControl.clearHistories();
-          if (!newCurrentTab) {
-            localStorage.cachedActiveTab = JSON.stringify({});
-            fileLoader.editingFile = "";
-            setCurrentTab("drawingboard");
-            const sandbox: any = {
-              component: "div",
-              props: {
-                className: "sandbox"
+        deleteTabs.forEach((deleteTab: string) => {
+          const index: any = _.findIndex(newTabs, { tab: deleteTab });
+          //remove tab
+          if (index > -1) {
+            newTabs.splice(index, 1);
+          }
+          //remove content
+          const conentIndex = _.findIndex(newContentList, { file: deleteTab });
+          if (conentIndex > -1) {
+            newContentList.splice(conentIndex, 1);
+          }
+        })
+        if (newTabs.length === 0) {
+          localStorage.cachedActiveTab = JSON.stringify({});
+          fileLoader.editingFile = "";
+          setCurrentTab("drawingboard");
+          const sandbox: any = {
+            component: "div",
+            props: {
+              className: "sandbox"
+            },
+            children: [
+              {
+                component: "h1",
+                content: "Sandbox"
               },
-              children: [
-                {
-                  component: "h1",
-                  content: "Sandbox"
-                },
-                {
-                  component: "p",
-                  content:
-                    "Please Drag and Drop an element from left Components tab, and then try to edit it on prop window."
+              {
+                component: "p",
+                content:
+                  "Please Drag and Drop an element from left Components tab, and then try to edit it on prop window."
+              }
+            ]
+          };
+          try {
+            const uiNode = getActiveUINode();
+            uiNode.schema = sandbox;
+            uiNode.refreshLayout();
+            uiNode.sendMessage(true);
+          } catch (e) {
+            console.error(e);
+          }
+        } else if (_.includes(deleteTabs, fileLoader.editingFile)) {
+          fileLoader.editingFile = newTabs[0].tab
+          setActiveTabName(newTabs[0].tab);
+          localStorage.cachedActiveTab = JSON.stringify({
+            tabName: newTabs[0].tab,
+            isTemplate: false
+          });
+          if (newTabs[0].language === "schema") {
+            const text = _.find(content, { file: newTabs[0].tab });
+
+            if (text) {
+              if (_.isString(text.content)) {
+                try {
+                  const schema = JSON.parse(text.content);
+                  const uiNode = getActiveUINode();
+
+                  uiNode.schema = schema;
+                  uiNode.refreshLayout();
+                  uiNode.sendMessage(true);
+                } catch (e) {
+                  console.error(e);
                 }
-              ]
-            };
-
-            try {
-              const uiNode = getActiveUINode();
-
-              uiNode.schema = sandbox;
-              uiNode.refreshLayout();
-              uiNode.sendMessage(true);
-            } catch (e) {
-              console.error(e);
+              }
+            }
+            if (localStorage["drawingBoardLayout"]) {
+              setCurrentTab(newTabs[0].tab);
+            } else {
+              setCurrentTab("drawingboard");
             }
           } else {
-            fileLoader.editingFile = newCurrentTab.tab;
-            setActiveTabName(newCurrentTab.tab);
-            localStorage.cachedActiveTab = JSON.stringify({
-              tabName: newCurrentTab.tab,
-              isTemplate: false
-            });
-            if (newCurrentTab.language === "schema") {
-              const text = _.find(content, { file: newCurrentTab.tab });
-
-              if (text) {
-                if (_.isString(text.content)) {
-                  try {
-                    const schema = JSON.parse(text.content);
-                    const uiNode = getActiveUINode();
-
-                    uiNode.schema = schema;
-                    uiNode.refreshLayout();
-                    uiNode.sendMessage(true);
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }
-              }
-              if (localStorage["drawingBoardLayout"]) {
-                setCurrentTab(newCurrentTab.tab);
-              } else {
-                setCurrentTab("drawingboard");
-              }
-            } else {
-              setCurrentTab(newCurrentTab.tab);
-            }
+            setCurrentTab(newTabs[0].tab);
           }
         }
-
-        // remove content
-        const newContentList: any = _.clone(content);
-        const conentIndex = _.findIndex(newContentList, { file: tab });
-
-        if (conentIndex > -1) {
-          newContentList.splice(conentIndex, 1);
-          setContent(newContentList);
-        }
+        setTabs(newTabs);
+        setContent(newContentList);
       },
       layout: "",
-      setLayout: (path: string) => {},
+      setLayout: (path: string) => { },
       focusMode: { isFocus: false, topSchema: {} },
       updateFocusMode: false,
       help: "",
-      setHelp: (help: string) => {},
+      setHelp: (help: string) => { },
       refresh: "",
-      toggleRefresh: (refresh: string) => {},
+      toggleRefresh: (refresh: string) => { },
       editNode,
       chooseEditNode: (editNode?: IUINode) => {
         setEditNode(editNode);

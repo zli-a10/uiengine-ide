@@ -318,7 +318,7 @@ export const EditorTabs = (props: any) => {
         if (targetKey === 'drawingboard') {
           message.warning('drawingboard can not be closed!');
         } else {
-          removeTab(targetKey);
+          removeTab([targetKey]);
         }
       }
     },
