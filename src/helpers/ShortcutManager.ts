@@ -38,7 +38,7 @@ export class ShortcutManager {
           (keys.indexOf("ctrl") !== -1 && !e.ctrlKey) ||
           (keys.indexOf("shift") !== -1 && !e.shiftKey) ||
           (keys.indexOf("alt") !== -1 && !e.altKey) ||
-          keys.indexOf(e.key.toLowerCase()) === -1
+          (e.key && keys.indexOf(e.key.toLowerCase()) === -1)
         ) {
           continue;
         }
