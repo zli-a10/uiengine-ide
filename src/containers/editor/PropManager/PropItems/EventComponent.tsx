@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import _ from 'lodash'
 import { Select, Form, Button, List, Row, Col, message } from 'antd'
-import { ListenerManager } from 'uiengine'
+import { HandlerManager } from 'uiengine'
 
 import { PropItem } from '../PropItem'
 import { formatTitle } from '../../../../helpers'
@@ -19,15 +19,15 @@ export const EventComponent = (props: any) => {
   if (eventIndex > -1) {
     event = events[eventIndex]
   }
-  let eventHandlerList = _.get(event, 'listener', [])
+  let eventHandlerList = _.get(event, 'handler', [])
   if (eventHandlerList && _.isString(eventHandlerList)) {
     eventHandlerList = [eventHandlerList]
   }
 
-  // load listeners
+  // load handlers
   const handlers = useMemo(() => {
-    const handlerManager = ListenerManager.getInstance()
-    const list = handlerManager.getListenerConfig('')
+    const handlerManager = HandlerManager.getInstance()
+    const list = handlerManager.getHandlerConfig('')
 
     return { ...list }
   }, [])
@@ -46,10 +46,10 @@ export const EventComponent = (props: any) => {
           newHandlerList[index] = handlerName
           changeHandlerList(newHandlerList)
           if (_.isEmpty(event)) {
-            const eventSchema = { eventName: name, listener: _.cloneDeep(newHandlerList) }
+            const eventSchema = { eventName: name, handler: _.cloneDeep(newHandlerList) }
             events.push(eventSchema)
           } else {
-            events[eventIndex].listener = _.cloneDeep(newHandlerList)
+            events[eventIndex].handler = _.cloneDeep(newHandlerList)
           }
           onChange(events)
           changeHandlerName(handlerName)
@@ -79,10 +79,10 @@ export const EventComponent = (props: any) => {
           newHandlerList.push(newHandlerName)
           changeHandlerList(newHandlerList)
           if (_.isEmpty(event)) {
-            const eventSchema = { eventName: name, listener: _.cloneDeep(newHandlerList) }
+            const eventSchema = { eventName: name, handler: _.cloneDeep(newHandlerList) }
             events.push(eventSchema)
           } else {
-            events[eventIndex].listener = _.cloneDeep(newHandlerList)
+            events[eventIndex].handler = _.cloneDeep(newHandlerList)
           }
           onChange(events)
           changeHandlerName(newHandlerName)
@@ -97,13 +97,13 @@ export const EventComponent = (props: any) => {
       const newHandlerList = _.cloneDeep(handlerList)
       newHandlerList.splice(index, 1)
       changeHandlerList(newHandlerList)
-      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      events[eventIndex].handler = _.cloneDeep(newHandlerList)
       onChange(events)
     },
     [handlerList]
   )
 
-  const onEditListener = useCallback(
+  const onEditHandler = useCallback(
     (index: any) => {
       if (handlerName === handlerList[index]) {
         changeHandlerName('')
@@ -128,7 +128,7 @@ export const EventComponent = (props: any) => {
       newHandlerList.splice(index, 1)
       newHandlerList.splice(index - 1, 0, handlerName)
       changeHandlerList(newHandlerList)
-      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      events[eventIndex].handler = _.cloneDeep(newHandlerList)
       onChange(events)
     },
     [handlerList]
@@ -141,7 +141,7 @@ export const EventComponent = (props: any) => {
       newHandlerList.splice(index, 1)
       newHandlerList.splice(index + 1, 0, handlerName)
       changeHandlerList(newHandlerList)
-      events[eventIndex].listener = _.cloneDeep(newHandlerList)
+      events[eventIndex].handler = _.cloneDeep(newHandlerList)
       onChange(events)
     },
     [handlerList]
@@ -212,7 +212,7 @@ export const EventComponent = (props: any) => {
                           size="small"
                           icon={handlerName === item ? "down" : "right"}
                           disabled={disabled}
-                          onClick={onEditListener.bind({}, index)}
+                          onClick={onEditHandler.bind({}, index)}
                         >
                         </Button>
                       )}
@@ -242,13 +242,13 @@ export const EventComponent = (props: any) => {
                       {handlerName === item && !_.isEmpty(hanlderDescribe) ? (
                         <div className="sub-options event-options modal-body">
                           {Object.entries(hanlderDescribe).map((entry: any) => {
-                            const [name, listenerSchema] = entry;
+                            const [name, handlerSchema] = entry;
                             return (
                               <PropItem
                                 section="event"
                                 name={`defaultParams.${name}`}
                                 isSubOptions={true}
-                                schema={listenerSchema}
+                                schema={handlerSchema}
                                 key={`key-${name}`}
                                 uinode={uinode}
                                 dataRef={event}

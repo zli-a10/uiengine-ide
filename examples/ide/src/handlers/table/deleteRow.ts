@@ -1,8 +1,8 @@
 // import _ from "lodash";
 
-import { IListenerConfig, IListener, IListenerParam } from "uiengine/typings";
+import { IHandlerConfig, IHandler, IHandlerParam } from "uiengine/typings";
 
-const listener: IListener = async (directParam: IListenerParam) => {
+const handler: IHandler = async (directParam: IHandlerParam) => {
   // const event: Event = _.get(directParam, "event");
   // const uiNode: IUINode = _.get(directParam, "uiNode");
   // const datasource = _.get(directParam, "datasource");
@@ -11,12 +11,12 @@ const listener: IListener = async (directParam: IListenerParam) => {
   // uiNode.dataNode.deleteData(datasource);
 };
 
-export const deleteRow: IListenerConfig = {
+export const deleteRow: IHandlerConfig = {
   name: "deleteRow",
   paramKeys: ["event", "uiNode", "datasource"],
   // debugList: ["options.recirect"],
   debugList: [],
-  listener,
+  handler,
   weight: 0,
   describe: {
     datasource: "string"
