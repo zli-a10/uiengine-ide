@@ -1,8 +1,12 @@
 // import _ from "lodash";
 
-import { IHandlerConfig, IHandler, IHandlerParam } from "uiengine/typings";
+import {
+  IHandlerConfig,
+  IMatchModeHandler,
+  IHandlerParam,
+} from "uiengine/typings";
 
-const handler: IHandler = async (directParam: IHandlerParam) => {
+const handler: IMatchModeHandler = async (directParam: IHandlerParam) => {
   // const event: Event = _.get(directParam, "event");
   // const uiNode: IUINode = _.get(directParam, "uiNode");
   // const datasource = _.get(directParam, "datasource");
@@ -13,10 +17,10 @@ const handler: IHandler = async (directParam: IHandlerParam) => {
 
 export const deleteRow: IHandlerConfig = {
   name: "deleteRow",
-  paramKeys: ["event", "uiNode", "datasource"],
-  // debugList: ["options.recirect"],
-  debugList: [],
   handler,
+  matchMode: true,
+  paramKeys: ["event", "uiNode", "datasource"],
+  debugList: [],
   weight: 0,
   describe: {
     datasource: "string"

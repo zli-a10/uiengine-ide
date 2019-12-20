@@ -2,12 +2,12 @@ import _ from "lodash";
 
 import {
   IHandlerConfig,
-  IHandler,
+  IMatchModeHandler,
   IHandlerParam,
   IUINode
 } from "uiengine/typings";
 
-const handler: IHandler = (directParam: IHandlerParam) => {
+const handler: IMatchModeHandler = (directParam: IHandlerParam) => {
   // const uiNode: IUINode = _.get(directParam, 'uiNode')
   // const layout: string = _.get(directParam, 'layout')
   // const container: string = _.get(directParam, 'container')
@@ -26,10 +26,11 @@ const handler: IHandler = (directParam: IHandlerParam) => {
 
 export const loadUI: IHandlerConfig = {
   name: "loadUI",
-  paramKeys: ["uiNode", "layout", "container"],
-  // what params you want to show on Prop window
-  debugList: ["uiNode.id", "layout", "container"],
   handler,
+  matchMode: true,
+  // what params you want to show on Prop window
+  paramKeys: ["uiNode", "layout", "container"],
+  debugList: ["uiNode.id", "layout", "container"],
   weight: 0,
   // describe defined your UI schema json, can be read by UIEngine IDE
   // and IDE will use it to generate editable UI at Prop Window > Events panel

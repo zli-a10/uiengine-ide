@@ -4,12 +4,12 @@ import { submitToAPI } from "uiengine";
 
 import {
   IHandlerConfig,
-  IHandler,
+  IMatchModeHandler,
   IHandlerParam,
   IUINode
 } from "uiengine/typings";
 
-const handler: IHandler = async (directParam: IHandlerParam) => {
+const handler: IMatchModeHandler = async (directParam: IHandlerParam) => {
   // const event: Event = _.get(directParam, 'event')
   const uiNode: IUINode = _.get(directParam, "uiNode");
   // const props = _.get(directParam, 'props')
@@ -30,10 +30,11 @@ const handler: IHandler = async (directParam: IHandlerParam) => {
 
 export const login: IHandlerConfig = {
   name: "login",
+  handler,
+  matchMode: true,
   paramKeys: ["event", "props", "uiNode"],
   // debugList: ["options.recirect"],
   debugList: [],
-  handler,
   weight: 0,
   describe: {
     // options: [
