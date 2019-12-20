@@ -62,14 +62,6 @@ export function cleanSchema(
       _.unset(schema, "datasource");
     }
 
-    // remove IDE_ID
-    if (exporting) {
-      _.unset(schema, IDE_ID);
-      _.unset(schema, "_id");
-      _.unset(schema, IDE_DEP_COLORS);
-      _.unset(schema, IDE_COLOR);
-    }
-
     // remove empty node
     if (_.isEmpty(schema) && parent) {
       for (let name in parent) {
@@ -435,9 +427,9 @@ export const updateDepsColor = (uiNode: IUINode) => {
   let nodes;
   let myId = getUINodeLable(uiNode);
   depsNodes.forEach((depNode: IUINode) => {
-    nodes = _.get(depNode, `schema.${IDE_DEP_COLORS}`, {});
-    nodes[myId] = uiNode.schema[IDE_COLOR];
-    _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
+    nodes = _.get(depNode, `${IDE_DEP_COLORS}`, {});
+    nodes[myId] = uiNode[IDE_COLOR];
+    _.set(depNode, `${IDE_DEP_COLORS}`, nodes);
   });
 };
 
@@ -453,7 +445,7 @@ export const removeDepsSchema = (uiNode: IUINode) => {
         if (depId !== uiNode.id) {
           newDeps.push(depSchema);
         } else {
-          _.unset(depNode, `schema.${IDE_DEP_COLORS}.${depId}`);
+          _.unset(depNode, `${IDE_DEP_COLORS}.${depId}`);
         }
       });
       _.set(state, "deps", newDeps);

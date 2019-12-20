@@ -182,14 +182,14 @@ export const IDEEditor: React.FC<IIDEEditor> = props => {
       },
       collapsedNodes,
       setCollapsedNode: (uiNode: IUINode) => {
-        let id = _.get(uiNode.schema, IDE_ID, _.uniqueId(IDE_ID));
+        let id = _.get(uiNode, IDE_ID, _.uniqueId(IDE_ID));
         const index = collapsedNodes.indexOf(id);
 
         if (index === -1) {
-          _.set(uiNode.schema, IDE_ID, id);
+          _.set(uiNode, IDE_ID, id);
           collapsedNodes.push(id);
         } else {
-          _.unset(uiNode.schema, IDE_ID);
+          _.unset(uiNode, IDE_ID);
           collapsedNodes.splice(index, 1);
         }
         // console.log("collapsedNodes", collapsedNodes);
