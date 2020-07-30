@@ -18,11 +18,7 @@ const execution: IPluginExecution = async (param: IPluginParam) => {
   const dataMocker = DataMocker.getInstance();
 
   const $children = _.get(dataNode, "uiNode.schema.$children");
-  if (
-    dataMocker.mode !== NO_MOCK &&
-    _.isArray($children) &&
-    !_.isArray(dataNode.data)
-  ) {
+  if (dataMocker.mode !== NO_MOCK && _.isArray($children)) {
     dataMocker.noCache = true;
     return dataMocker.generateTableData(dataNode.uiNode);
   }

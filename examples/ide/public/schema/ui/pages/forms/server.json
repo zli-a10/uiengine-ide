@@ -470,7 +470,7 @@
 												"$events": [
 													{
 														"eventName": "onSaveClick",
-														"listener": "submitData",
+														"handler": "submitData",
 														"defaultParams": {
 															"target": {
 																"mode": "sync",

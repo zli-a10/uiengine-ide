@@ -3,13 +3,13 @@ import _ from "lodash";
 import { submitToAPI } from "uiengine";
 
 import {
-  IListenerConfig,
-  IListener,
-  IListenerParam,
+  IHandlerConfig,
+  IMatchModeHandler,
+  IHandlerParam,
   IUINode
 } from "uiengine/typings";
 
-const listener: IListener = async (directParam: IListenerParam) => {
+const handler: IMatchModeHandler = async (directParam: IHandlerParam) => {
   // const event: Event = _.get(directParam, 'event')
   const uiNode: IUINode = _.get(directParam, "uiNode");
   // const props = _.get(directParam, 'props')
@@ -28,12 +28,13 @@ const listener: IListener = async (directParam: IListenerParam) => {
   });
 };
 
-export const login: IListenerConfig = {
+export const login: IHandlerConfig = {
   name: "login",
+  handler,
+  matchMode: true,
   paramKeys: ["event", "props", "uiNode"],
   // debugList: ["options.recirect"],
   debugList: [],
-  listener,
   weight: 0,
   describe: {
     // options: [

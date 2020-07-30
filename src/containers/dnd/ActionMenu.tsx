@@ -1,6 +1,15 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
 import _ from "lodash";
-import { Menu, Dropdown, Icon, TreeSelect, Col, Row, Button } from "antd";
+import {
+  Menu,
+  Dropdown,
+  Icon,
+  TreeSelect,
+  Col,
+  Row,
+  Button,
+  Input
+} from "antd";
 const ButtonGroup = Button.Group;
 
 import { GlobalContext, IDEEditorContext, SchemasContext } from "../Context";
@@ -21,12 +30,12 @@ import {
 const ActionMenu = (props: any) => {
   const { togglePropsCollapsed } = useContext(GlobalContext);
   const { editingResource } = useContext(SchemasContext);
-  const { collapsedNodes } = useContext(IDEEditorContext);
+  const { collapsedNodes, chooseEditNode } = useContext(IDEEditorContext);
   const { children, uinode } = props;
   const isTemplate = _.has(uinode, "props.ide_droppable");
 
   const componentInfo = IDERegister.getComponentInfo(uinode.schema.component);
-  const isContainer = _.get(componentInfo, "isContainer", false);
+  const isContainer = _.get(componentInfo, "isContainer");
 
   const [treeValue, selectTreeValue] = useState("div");
   useEffect(() => {
@@ -36,13 +45,19 @@ const ActionMenu = (props: any) => {
 
   const onTreeChange = useCallback(
     (value: any, label: any, extra: any) => {
-      console.log(value, label, extra);
       if (value && value.indexOf("component-category-") === -1) {
         selectTreeValue(value);
       }
     },
     [treeValue, uinode]
   );
+
+  const onShowPropmanager = useCallback(() => {
+    chooseEditNode(uinode);
+    // console.log(uinode);
+    togglePropsCollapsed(false);
+  }, [uinode, chooseEditNode]);
+
   const treeData = IDERegister.componentsLibrary;
 
   const menu = (
@@ -58,14 +73,12 @@ const ActionMenu = (props: any) => {
         <Row onClick={(e: any) => e.stopPropagation()}>
           <Col span={12}>
             <TreeSelect
-              dropdownClassName="cancel-drag"
               showSearch
               className={"component-select"}
               value={treeValue}
               dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
               treeData={treeData}
               placeholder={"Search and Append Node"}
-              treeDefaultExpandAll
               onChange={onTreeChange}
             />
           </Col>
@@ -85,15 +98,17 @@ const ActionMenu = (props: any) => {
                 icon="up"
                 onClick={useCreateNode({ component: treeValue }, uinode)("up")}
               />
-              <Button
-                type="primary"
-                size="small"
-                icon="plus"
-                onClick={useCreateNode(
-                  { component: treeValue },
-                  uinode
-                )("center")}
-              />
+              {isContainer === false ? null : (
+                <Button
+                  type="primary"
+                  size="small"
+                  icon="plus"
+                  onClick={useCreateNode(
+                    { component: treeValue },
+                    uinode
+                  )("center")}
+                />
+              )}
               <Button
                 size="small"
                 icon="left"
@@ -114,8 +129,44 @@ const ActionMenu = (props: any) => {
           </Col>
         </Row>
       </Menu.Item>
+      {/* <Menu.Item
+        key="test"
+        onClick={({ domEvent }) => {
+          // console.log(e);
+          domEvent.stopPropagation();
+          domEvent.preventDefault();
+          return false;
+        }}
+        onKeyPress={(e: any) => {
+          e.preventDefault();
+        }}
+        onKeyDown={(e: any) => {
+          e.preventDefault();
+        }}
+        onKeyUp={(e: any) => {
+          e.preventDefault();
+        }}
+      >
+        <input
+          onClick={(e: any) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          onKeyPress={(e: any) => {
+            e.stopPropagation();
+          }}
+          onKeyDown={(e: any) => {
+            e.stopPropagation();
+          }}
+          onKeyUp={(e: any) => {
+            e.stopPropagation();
+          }}
+        />
+      </Menu.Item> */}
+      <Menu.Divider />
+
       <Menu.Item key="unit-collapse" onClick={useCollapseItems(uinode)}>
-        {collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) >
+        {collapsedNodes.indexOf(_.get(uinode, `${IDE_ID}`, "**any-id")) >
         -1 ? (
           <a target="_blank">
             <Icon type="fullscreen" /> Expand Items
@@ -198,10 +249,7 @@ const ActionMenu = (props: any) => {
         </Menu.Item>
       </Menu.SubMenu>
       <Menu.Divider />
-      <Menu.Item
-        key="show-prop-window"
-        onClick={() => togglePropsCollapsed(false)}
-      >
+      <Menu.Item key="show-prop-window" onClick={onShowPropmanager}>
         <a target="_blank">
           <Icon type="setting" /> Properties... [^Q]
         </a>

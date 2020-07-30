@@ -38,12 +38,14 @@ export function cleanSchema(
       if (_.isArray(data.children)) {
         schema.$children = data.children;
       }
+      _.unset(schema, "$$children");
     }
     if (_.has(schema, "$$template")) {
       const childrenTemplate = _.get(schema, "$$template");
       // _.forIn(schema, (value: any, key: any) => {
       //   _.unset(schema, key);
       // });
+      _.unset(schema, "$$template");
       schema.$template = childrenTemplate;
     }
 
@@ -58,14 +60,6 @@ export function cleanSchema(
       !datasource
     ) {
       _.unset(schema, "datasource");
-    }
-
-    // remove IDE_ID
-    if (exporting) {
-      _.unset(schema, IDE_ID);
-      _.unset(schema, "_id");
-      _.unset(schema, IDE_DEP_COLORS);
-      _.unset(schema, IDE_COLOR);
     }
 
     // remove empty node
@@ -433,9 +427,9 @@ export const updateDepsColor = (uiNode: IUINode) => {
   let nodes;
   let myId = getUINodeLable(uiNode);
   depsNodes.forEach((depNode: IUINode) => {
-    nodes = _.get(depNode, `schema.${IDE_DEP_COLORS}`, {});
-    nodes[myId] = uiNode.schema[IDE_COLOR];
-    _.set(depNode, `schema.${IDE_DEP_COLORS}`, nodes);
+    nodes = _.get(depNode, `${IDE_DEP_COLORS}`, {});
+    nodes[myId] = uiNode[IDE_COLOR];
+    _.set(depNode, `${IDE_DEP_COLORS}`, nodes);
   });
 };
 
@@ -451,7 +445,7 @@ export const removeDepsSchema = (uiNode: IUINode) => {
         if (depId !== uiNode.id) {
           newDeps.push(depSchema);
         } else {
-          _.unset(depNode, `schema.${IDE_DEP_COLORS}.${depId}`);
+          _.unset(depNode, `${IDE_DEP_COLORS}.${depId}`);
         }
       });
       _.set(state, "deps", newDeps);
@@ -617,12 +611,14 @@ export function updateFileStatus(files: Array<IFileStatusGroup>) {
           delete fileStatus[type][file];
         } else {
           if (
-            (fileStatus[type][file] !== "new" &&
-              fileStatus[type][file] !== "renamed") ||
+            (fileStatus[type][file].status !== "new" &&
+              fileStatus[type][file].status !== "renamed") ||
             s === "removed" ||
             s === "renamed"
           ) {
-            fileStatus[type][file] = status;
+            fileStatus[type][file].status = _.isObject(status)
+              ? status.status
+              : status;
           }
         }
       } else {

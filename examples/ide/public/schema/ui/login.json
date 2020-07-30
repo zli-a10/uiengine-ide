@@ -57,7 +57,7 @@
 								"$events": [
 									{
 										"eventName": "onSaveClick",
-										"listener": "login",
+										"handler": "login",
 										"defaultParams": {
 											"target": {
 												"targets": [

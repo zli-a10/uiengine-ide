@@ -12,11 +12,12 @@ import { NO_MOCK } from "../consts";
  *
  * @param dataNode
  */
-const execution: IPluginExecution = async (param: IPluginParam) => {
+const execution: IPluginExecution = (param: IPluginParam) => {
   const dataNode: IDataNode = _.get(param, "dataNode");
   const dataMocker = DataMocker.getInstance();
-  if (dataMocker.mode !== NO_MOCK && dataNode.schema) {
-    return dataMocker.generate(dataNode.schema);
+  if (dataMocker.mode !== NO_MOCK) {
+    const data = dataMocker.generate(dataNode.schema);
+    return data;
   }
 };
 

@@ -18,25 +18,20 @@ import {
   getApiHost
 } from "../../../../helpers";
 
-const dataMocker = DataMocker.getInstance();
-
 export const TestToolkits = (props: any) => {
   const { formItemLayout } = props;
   const rootNode: any = getActiveUINode(false);
 
-  const onRefreshData = useCallback(
-    (value: any) => {
-      return async () => {
-        dataMocker.mode = value;
-        dataMocker.noCache = true;
-        // console.log(value);
-        await rootNode.refreshLayout();
-        rootNode.sendMessage(true);
-        dataMocker.noCache = false;
-      };
-    },
-    [dataMocker]
-  );
+  const onRefreshData = useCallback((value: any) => {
+    return async () => {
+      const dataMocker = DataMocker.getInstance();
+      dataMocker.mode = value;
+      // dataMocker.noCache = true;
+      await rootNode.refreshLayout(Date.now());
+      rootNode.sendMessage(true);
+      // dataMocker.noCache = false;
+    };
+  }, []);
 
   const [selectedValue, setValue] = useState(NO_MOCK);
   // const [host, setHost] = useState();

@@ -9,7 +9,7 @@ import { IDEEditor, IDERegister } from 'uiengine-ide'
 import * as serviceWorker from './serviceWorker'
 import components from './component'
 import * as plugins from './plugins'
-import * as listeners from './listeners'
+import * as handlers from './handlers'
 import configLayoutWrappers from './config/wrappers'
 import { MockJSConverter } from './utils/MockJSConverter'
 import websocketOptions from './config/websocket'
@@ -17,7 +17,7 @@ import './index.less'
 
 UIEngineRegister.registerComponents(components)
 UIEngineRegister.registerPlugins(plugins)
-UIEngineRegister.registerListeners(listeners)
+UIEngineRegister.registerHandlers(handlers)
 
 IDERegister.registerSchemaConverter(MockJSConverter)
 IDERegister.registerWebsocket(websocketOptions)

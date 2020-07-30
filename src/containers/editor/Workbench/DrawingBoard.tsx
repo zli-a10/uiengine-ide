@@ -6,7 +6,7 @@ import React, {
   useState
 } from "react";
 import _ from "lodash";
-import { UIEngine, UIEngineRegister } from "uiengine";
+import { UIEngine, UIEngineRegister, MemoStore } from "uiengine";
 import { UIEngineDndWrapper } from "../../dnd";
 import { GlobalContext, SchemasContext, IDEEditorContext } from "../../Context";
 import {
@@ -15,9 +15,7 @@ import {
   useCloneNode,
   FileLoader,
   ShortcutManager,
-  DndNodeManager,
-  MemoStore,
-  getActiveUINode
+  DndNodeManager
 } from "../../../helpers";
 import * as plugins from "../../../helpers/plugins";
 

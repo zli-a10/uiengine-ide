@@ -50,7 +50,7 @@ const dataRuleOptions = [
 
 const updateDepsNodeColor = (uiNode: IUINode, deps: Array<any>) => {
   // remove all deps color first
-  _.unset(uiNode, `schema.${IDE_DEP_COLORS}`);
+  _.unset(uiNode, `${IDE_DEP_COLORS}`);
 
   // update deps color
   deps.forEach((dep: any) => {

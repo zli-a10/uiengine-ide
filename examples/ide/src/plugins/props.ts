@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ListenerManager } from 'uiengine'
+import { HandlerManager } from 'uiengine'
 
 import {
   IPlugin,
@@ -13,22 +13,22 @@ function getDefaultEventConfig(component: string, type: string) {
   const onChangeWithEvent: IEventConfig = {
     eventName: 'onChange',
     receiveParams: ['event'],
-    listener: 'updateData'
+    handler: 'updateData'
   }
   const onChangeWithValue: IEventConfig = {
     eventName: 'onChange',
     receiveParams: ['value'],
-    listener: 'updateData'
+    handler: 'updateData'
   }
   const onChangeWithEventExport: IEventConfig = {
     eventName: 'onChangeWithEvent',
     receiveParams: ['event'],
-    listener: 'updateData'
+    handler: 'updateData'
   }
   const onChangeWithValueExport: IEventConfig = {
     eventName: 'onChangeWithValue',
     receiveParams: ['value'],
-    listener: 'updateData'
+    handler: 'updateData'
   }
 
   const com = component.includes('my:Form.FormItem') ? type : component
@@ -113,7 +113,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
     eventConfigs = getDefaultEventConfig(component, type)
   }
 
-  const manager = ListenerManager.getInstance()
+  const manager = HandlerManager.getInstance()
   let eventFuncs = manager.getStaticEventProps(
     eventConfigs.map((config: IEventConfig) => {
       // console.log(config);
@@ -122,7 +122,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
         receiveParams,
         defaultParams,
         target,
-        listener,
+        handler,
         ...rest
       } = config
 
@@ -134,7 +134,7 @@ const execution: IPluginExecution = async (directParam: IPluginParam) => {
           uiNode
         },
         target: _.isString(target) ? target : uiNode.id,
-        listener: _.isString(listener) ? listener : '',
+        handler: _.isString(handler) ? handler : '',
         ...rest
       }
     })

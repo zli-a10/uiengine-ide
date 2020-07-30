@@ -54,11 +54,11 @@ export const UIEngineDndWrapper = (props: any) => {
   if (!_.isObject(uinode.schema)) return null;
   // will remove if export schema
   // add a wrapper ID
-  if (!uinode.schema[IDE_ID]) {
-    uinode.schema[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
+  if (!uinode[IDE_ID]) {
+    uinode[IDE_ID] = _.uniqueId(`${IDE_ID}-`);
   }
-  if (!uinode.schema[IDE_COLOR]) {
-    uinode.schema[IDE_COLOR] = randColor(0, 255, 0.6);
+  if (!uinode[IDE_COLOR]) {
+    uinode[IDE_COLOR] = randColor(0, 255, 0.6);
   }
 
   // is it a template
@@ -73,7 +73,7 @@ export const UIEngineDndWrapper = (props: any) => {
 
   // id isCollapsed
   const isCollapsed =
-    collapsedNodes.indexOf(_.get(uinode, `schema.${IDE_ID}`, "**any-id")) > -1;
+    collapsedNodes.indexOf(_.get(uinode, `${IDE_ID}`, "**any-id")) > -1;
 
   // define drop
   const [{ isOver, isOverCurrent }, drop] = useDrop({
@@ -290,8 +290,8 @@ export const UIEngineDndWrapper = (props: any) => {
     "wrapper-edit":
       editNode &&
       uinode &&
-      editNode.schema[IDE_ID] !== undefined &&
-      editNode.schema[IDE_ID] === uinode.schema[IDE_ID],
+      editNode[IDE_ID] !== undefined &&
+      editNode[IDE_ID] === uinode[IDE_ID],
     // "wrapper-edit-animation": editing,
     "wrapper-dropped": dropNode === uinode,
     "wrapper-collapsed": isCollapsed,
@@ -309,7 +309,7 @@ export const UIEngineDndWrapper = (props: any) => {
   const background = useMemo(
     () =>
       !isContainer && editNode !== uinode
-        ? { backgroundColor: uinode.schema[IDE_COLOR] }
+        ? { backgroundColor: uinode[IDE_COLOR] }
         : {},
     []
   );
@@ -317,7 +317,7 @@ export const UIEngineDndWrapper = (props: any) => {
   // get uinode layout to keep same layout with preview
   const display = _.get(uinode, "schema.layout.display");
   const flex = _.get(uinode, "schema.layout.flex");
-  const depsColors = _.get(uinode, `schema.${IDE_DEP_COLORS}`, {});
+  const depsColors = _.get(uinode, `${IDE_DEP_COLORS}`, {});
   const dataSource = _.get(uinode, `dataNode.source.source`, "");
   // const actionName =
   //   dataSource.indexOf("$dummy") === 0 ? _.get(uinode, "id") : dataSource;
@@ -333,6 +333,7 @@ export const UIEngineDndWrapper = (props: any) => {
         className={cls}
         onContextMenu={(e: any) => {
           e.stopPropagation();
+          return false;
         }}
       >
         <div

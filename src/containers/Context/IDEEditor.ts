@@ -6,7 +6,7 @@ export const IDEEditorContext = React.createContext<IIDEEditorContext>({
   tabs: [],
   activeTabName: "",
   activeTab: (tab: string, language?: string, oldTabName?: string, isTemplate?: boolean) => { },
-  removeTab: (tab: string) => { },
+  removeTab: (tabs: string[]) => { },
   layout: "",
   setLayout: (path: string) => { },
   focusMode: { isFocus: false, topSchema: {} },

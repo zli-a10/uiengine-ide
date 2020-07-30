@@ -4,6 +4,7 @@ import { DataSourceSelector } from "./DataSource";
 import { Switch, Form, Input, Row, Col, Icon, Select, InputNumber } from "antd";
 import { IDERegister, DndNodeManager } from "../../../../helpers";
 import { PropItem } from "../PropItem";
+import { UIEngineRegister } from "uiengine";
 
 export const DatasourceComponent = (props: any) => {
   const { onChange, value, name, uinode, disabled, ...rest } = props;
@@ -21,7 +22,9 @@ export const DatasourceComponent = (props: any) => {
   } else if (_.isObject(value)) {
     dataSource = value;
   }
-
+  if (!dataSource.generate) {
+    dataSource.generate = { source: "", generator: "" }
+  }
   // change source and update layout
   const [source, changeSource] = useState(_.get(dataSource, "source"));
   const [schema, changeSchema] = useState(_.get(dataSource, "schema"));
@@ -29,8 +32,38 @@ export const DatasourceComponent = (props: any) => {
   const [defaultValue, changeDefaultValue] = useState(
     _.get(dataSource, "defaultValue")
   );
-
+  const [generate, changeGenerate] = useState(_.get(dataSource, "generate"));
+  const [generateFlag, changeGenerateFlag] = useState(generate.source === "" ? false : true);
   const [isLock, setLock] = useState(false);
+  const onChangeGenerate = useCallback(
+    (value: boolean) => {
+      changeGenerateFlag(value)
+      if (!value) {
+        changeGenerate({ source: "", generator: "" })
+        dataSource.generate = { source: "", generator: "" }
+        onChange(dataSource)
+      }
+    },
+    [dataSource]
+  );
+  const onChangeGenerateSource = useCallback(
+    (e: any) => {
+      dataSource.generate.source = e.target.value
+      changeGenerate({ source: e.target.value, generator: generate.generator })
+      onChange(dataSource)
+    },
+    [dataSource]
+  );
+  const onChangeGenerateGenerator = useCallback(
+    value => {
+      if (dataSource.generate.source !== "") {
+        dataSource.generate.generator = value
+        changeGenerate({ source: generate.source, generator: value })
+        onChange(dataSource)
+      }
+    },
+    [dataSource]
+  );
   const onClickLock = useCallback(() => {
     setLock(!isLock);
     if (!isLock) {
@@ -159,12 +192,12 @@ export const DatasourceComponent = (props: any) => {
           {isLock ? (
             <Icon onClick={onClickLock} type="lock" style={{ color: "red" }} />
           ) : (
-            <Icon
-              onClick={onClickLock}
-              type="unlock"
-              style={{ color: "green" }}
-            />
-          )}
+              <Icon
+                onClick={onClickLock}
+                type="unlock"
+                style={{ color: "green" }}
+              />
+            )}
         </div>
       </div>
       {name ? null : (
@@ -204,13 +237,13 @@ export const DatasourceComponent = (props: any) => {
                     disabled={disabled}
                   />
                 ) : (
-                  <Input
-                    value={defaultValue}
-                    onChange={onChangeDefaultValue}
-                    disabled={disabled}
-                    size="small"
-                  />
-                )}
+                      <Input
+                        value={defaultValue}
+                        onChange={onChangeDefaultValue}
+                        disabled={disabled}
+                        size="small"
+                      />
+                    )}
               </Col>
             </Row>
           </Form.Item>
@@ -234,27 +267,63 @@ export const DatasourceComponent = (props: any) => {
               </Form.Item>
               {_.has(IDERegister.formatters, `${formatter}.params`)
                 ? Object.entries(IDERegister.formatters[formatter].params).map(
-                    (entry: any) => {
-                      return (
-                        <PropItem
-                          section="prop"
-                          name={`formatter.${entry[0]}`}
-                          schema={entry[1]}
-                          key={`key-${entry[0]}`}
-                          uinode={uinode}
-                          data={_.get(
-                            uinode,
-                            `schema.props.formatter.${entry[0]}`
-                          )}
-                        />
-                      );
-                    }
-                  )
+                  (entry: any) => {
+                    return (
+                      <PropItem
+                        section="prop"
+                        name={`formatter.${entry[0]}`}
+                        schema={entry[1]}
+                        key={`key-${entry[0]}`}
+                        uinode={uinode}
+                        data={_.get(
+                          uinode,
+                          `schema.props.formatter.${entry[0]}`
+                        )}
+                      />
+                    );
+                  }
+                )
                 : null}
             </>
           ) : null}
+          <Form.Item label="Generate">
+            <Switch
+              disabled={disabled}
+              onChange={onChangeGenerate}
+              checked={generateFlag}
+            />
+          </Form.Item>
+          {generateFlag ?
+            <Form.Item label="Source">
+              <Input
+                value={generate.source}
+                onChange={onChangeGenerateSource}
+                disabled={disabled}
+                size="small"
+              />
+            </Form.Item>
+            : null}
+          {generateFlag && generate.source !== "" ?
+            <Form.Item label="Generator">
+              <Select
+                defaultValue=""
+                value={generate.generator}
+                onChange={onChangeGenerateGenerator}
+              >
+                <Select.Option value="">----</Select.Option>
+                {Object.entries(UIEngineRegister.searchMap('generators')).map(
+                  (item: any, index: any) => (
+                    <Select.Option value={item[0]} key={index}>
+                      {item[1].name}
+                    </Select.Option>
+                  )
+                )}
+              </Select>
+            </Form.Item>
+            : null}
         </>
-      )}
+      )
+      }
     </>
   );
 };

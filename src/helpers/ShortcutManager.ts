@@ -26,13 +26,19 @@ export class ShortcutManager {
     }
 
     window.onkeydown = (e: any) => {
+      // if (_.get(e, "target.localName") === "input") {
+      //   console.log(e);
+      //   e.stopPropagation();
+      //   return;
+      // }
+
       for (let key in this.shortcuts) {
         const keys = _.words(key).map((k: string) => k.toLowerCase());
         if (
           (keys.indexOf("ctrl") !== -1 && !e.ctrlKey) ||
           (keys.indexOf("shift") !== -1 && !e.shiftKey) ||
           (keys.indexOf("alt") !== -1 && !e.altKey) ||
-          keys.indexOf(e.key.toLowerCase()) === -1
+          (e.key && keys.indexOf(e.key.toLowerCase()) === -1)
         ) {
           continue;
         }

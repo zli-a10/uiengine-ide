@@ -7,7 +7,7 @@ import React, {
 } from "react";
 
 import { Switch, Icon, Modal } from "antd";
-import { UINode } from "uiengine";
+import { UINode, MemoStore } from "uiengine";
 import _ from "lodash";
 import classnames from "classnames";
 
@@ -18,10 +18,11 @@ import {
   saveFile,
   saveFileStatus,
   cleanSchema,
-  MemoStore,
-  ShortcutManager
+  ShortcutManager,
+  loadFileStatus
 } from "../../../helpers";
 import { StagingFileTree } from "./StagingFileTree";
+MemoStore.bucket.ideMode = true;
 
 export const Main = (props: any) => {
   const { activeTab } = useContext(IDEEditorContext);
@@ -91,7 +92,7 @@ export const Main = (props: any) => {
       },
       saved: false,
       theme: "",
-      toggleTheme: (theme: string) => {},
+      toggleTheme: (theme: string) => { },
       propsCollapsed,
       togglePropsCollapsed: (collapsed: boolean) => {
         togglePropsCollapse(collapsed);
@@ -217,7 +218,10 @@ export const Main = (props: any) => {
               // save templates
               await saveFile(templateStatusNode);
               // update template status
-              saveFileStatus(child.$template, "schema", "dropped");
+              const statusObj = loadFileStatus('schema', child.$template)
+              if (!_.isEmpty(statusObj)) {
+                saveFileStatus(child.$template, "schema", "dropped");
+              }
             }
           });
         }
